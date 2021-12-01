@@ -1,6 +1,5 @@
 namespace Models
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -28,12 +27,8 @@ namespace Models
 
         //public int? Id_Giai { get; set; }
         [ForeignKey("ID_Giai")]
-        [JsonIgnore]
         public virtual DS_Giai DS_Giai { get; set; }
-
-        [JsonIgnore]
         public virtual ICollection<DS_Cap> DS_Cap { get; set; }
-        [JsonIgnore]
         public virtual ICollection<DS_Bang> DS_Bang { get; set; }
 
     }

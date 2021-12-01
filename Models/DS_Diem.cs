@@ -1,6 +1,5 @@
 ﻿namespace Models
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -19,13 +18,10 @@
         //public int? Id_Trinh { get; set; }
 
         [ForeignKey("ID_Cap")]
-        [JsonIgnore]
         public virtual DS_Cap DS_Cap { get; set; }
         [ForeignKey("ID_Vong")]
-        [JsonIgnore]
         public virtual DS_Vong DS_Vong { get; set; }
         [ForeignKey("ID_Trinh")]
-        [JsonIgnore]
         public virtual DS_Trinh DS_Trinh { get; set; }
 
     }

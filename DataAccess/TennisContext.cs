@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using Newtonsoft.Json.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;

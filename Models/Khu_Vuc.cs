@@ -1,6 +1,5 @@
 namespace Models
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -19,8 +18,6 @@ namespace Models
         public string MaKhuVuc { get; set; }
 
         public string Ten { get; set; }
-
-        [JsonIgnore]
         public virtual ICollection<DS_VDV> DS_VDV { get; set; }
     }
 }

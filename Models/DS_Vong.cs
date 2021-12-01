@@ -1,6 +1,5 @@
 namespace Models
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -22,9 +21,7 @@ namespace Models
         public string Ten { get; set; }
         [StringLength(1)]
         public string MaVong { get; set; }
-        [JsonIgnore]
         public virtual ICollection<DS_Diem> DS_Diem { get; set; }
-        [JsonIgnore]
         public virtual ICollection<DS_Tran> DS_Tran { get; set; }
     }
 }
