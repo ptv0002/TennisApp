@@ -1,0 +1,50 @@
+﻿@model AccountViewModel
+@{
+    ViewData["Title"] = "Tạo Tài Khoản";
+    Layout = "~/Views/Shared/_ShareLogin.cshtml";
+}
+<div class="col-lg-5 d-none d-lg-block register-image"></div>
+<div class="col-lg-7">
+    <div class="p-5">
+        <div class="text-center">
+            <h1 class="h4 text-gray-900 mb-4">Tạo Tài Khoản</h1>
+        </div>
+        <form class="user">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <input type="text" asp-for="FullName" class="form-control form-control-user" placeholder="Họ và Tên" required>
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="text" asp-for="Username" class="form-control form-control-user" placeholder="Username: Admin" required>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="col-sm-6">
+                    <input type="email" asp-for="Email" class="form-control form-control-user" placeholder="Email" required>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <input type="password" asp-for="Password" class="form-control form-control-user" placeholder="Mật Khẩu" required>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="col-sm-6">
+                    <input type="password" asp-for="ConfirmPassword" class="form-control form-control-user" placeholder="Xác Nhận Mật Khẩu" required>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <button type="submit" formmethod="post" class="btn btn-primary btn-user btn-block">
+                Đăng Ký
+            </button>
+        </form>
+    </div>
+</div>
+<style>
+    .register-image {
+        background-image: url('../sbadmin/img/RG.jpg');
+        background-position: center;
+        background-size: cover;
+    }
+</style>

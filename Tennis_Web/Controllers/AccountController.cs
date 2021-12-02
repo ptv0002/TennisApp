@@ -31,9 +31,22 @@ namespace Tennis_Web.Controllers
 
             return RedirectToAction("Login", "Account");
         }
+        [Route("Admin")]
+        [Route("Account/Login")]
         [HttpGet]
         public IActionResult Login()
         {
+            if (!_userManager.Users.Any())
+            {
+                return ViewComponent(MessagePage.COMPONENTNAME,
+                    new MessagePage.Message()
+                    {
+                        Title = "Thông báo",
+                        Secondwait = 5,
+                        Htmlcontent = "Hệ thống chưa có người quản trị. Chuyển sang đăng ký mới người quản trị hệ thống",
+                        Urlredirect = Url.Action("Register", "Account")
+                    });
+            }
             return View();
         }
         [HttpPost, ActionName("Login")]
@@ -74,6 +87,45 @@ namespace Tennis_Web.Controllers
                 }
                 ModelState.AddModelError(string.Empty, "Đăng nhập không thành công");
             }
+            return View(model);
+        }
+        [Route("Account/Register")]
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost, ActionName("Register")]
+        public async Task<IActionResult> Register(AccountViewModel model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                // Copy data from ViewModel to IdentityUser
+                var user = new AppUser
+                {
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    UserName = "Admin"
+                };
+
+                // Store user data in AspNetUsers database table
+                var result = await _userManager.CreateAsync(user, model.Password);
+                await _userManager.AddToRoleAsync(user, "Admin");
+
+                // ----------------- Replace if needed -----------------
+                if (result.Succeeded)
+                {
+
+                    return RedirectToAction("Index", "Admin");
+
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
             return View(model);
         }
     }

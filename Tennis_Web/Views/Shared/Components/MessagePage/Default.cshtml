@@ -1,0 +1,22 @@
+﻿@model Tennis_Web.MessagePage.Message
+@{
+    Layout = "~/Views/Shared/_ShareLogin.cshtml";
+    ViewData["Title"] = @Model.Title;
+}
+<div class="col-lg-6 d-none d-lg-block confirmation-image"></div>
+<div class="col-lg-6">
+    <div class="p-5">
+        <div class="text-center">
+            <h1 class="h4 text-gray-900 mb-2">@Model.Title</h1>
+            <p>@Html.Raw(Model.Htmlcontent) </p>
+            <p class="mb-4">Chuyển đến - <a href="@Model.Urlredirect">Tạo Tài Khoản</a></p>
+        </div>
+    </div>
+</div>
+<style>
+    .confirmation-image {
+        background-image: url('../sbadmin/img/CF.jpg');
+        background-position: center;
+        background-size: cover;
+    }
+</style>
