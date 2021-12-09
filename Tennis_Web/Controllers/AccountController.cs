@@ -31,8 +31,8 @@ namespace Tennis_Web.Controllers
 
             return RedirectToAction("Login", "Account");
         }
-        [Route("Admin")]
-        [Route("Account/Login")]
+        //[Route("Admin")]
+        //[Route("Account/Login")]
         [HttpGet]
         public IActionResult Login()
         {
@@ -55,12 +55,12 @@ namespace Tennis_Web.Controllers
             bool a1, a2, a3;
             if (ModelState.IsValid)
             {
-                // Tìm user bằng Email
+                // Find user by Emaik
                 AppUser user = await _userManager.FindByEmailAsync(model.UsernameOrEmail);
-                // Tìm user  bằng Username
+                // Find user by Username
                 if (user == null)
                     user = await _userManager.FindByNameAsync(model.UsernameOrEmail);
-                // Báo lỗi nếu không tìm ra
+                // Return error if not found
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Tài khoản không tồn tại");
@@ -70,26 +70,28 @@ namespace Tennis_Web.Controllers
                                     model.Password, model.RememberMe, false); // Không apply LOGOUT feature nên set giá trị false
                 if (result.Succeeded)
                 {
-                    a1 = await _userManager.IsInRoleAsync(user, "Admin");
-                    a2 = await _userManager.IsInRoleAsync(user, "Manager");
-                    a3 = await _userManager.IsInRoleAsync(user, "Referee");
-                    switch (a1, a2, a3)
+                    //a1 = await _userManager.IsInRoleAsync(user, "Admin");
+                    //a2 = await _userManager.IsInRoleAsync(user, "Manager");
+                    //a3 = await _userManager.IsInRoleAsync(user, "Referee");
+                    a1 = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Manager") || await _userManager.IsInRoleAsync(user, "Referee");
+                    switch (a1)
                     {
-                        case (true, true or false, true or false):
-                            return RedirectToAction("Index", "Admin"); // Redirect tới trang chủ của Admin
-                        case (false, true, true or false):
-                            return RedirectToAction("Index", "Manager"); // Redirect tới trang chủ của Manager
-                        case (false, false, true):
-                            return RedirectToAction("Index", "Referee"); // Redirect tới trang chủ của Referee
+                        //case (true, true or false, true or false):
+                        //    return RedirectToAction("Index", "Admin"); 
+                        //case (false, true, true or false):
+                        //    return RedirectToAction("Index", "Manager"); 
+                        //case (false, false, true):
+                        //    return RedirectToAction("Index", "Referee"); 
+                        case (true):
+                            return RedirectToAction("Index", "Home");
                         default:
-                            return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect tới trang chủ của VDV
+                            return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
                     }
                 }
                 ModelState.AddModelError(string.Empty, "Đăng nhập không thành công");
             }
             return View(model);
         }
-        [Route("Account/Register")]
         [HttpGet]
         public IActionResult Register()
         {
@@ -98,35 +100,64 @@ namespace Tennis_Web.Controllers
         [HttpPost, ActionName("Register")]
         public async Task<IActionResult> Register(AccountViewModel model)
         {
-
+            
             if (ModelState.IsValid)
             {
-                // Copy data from ViewModel to IdentityUser
-                var user = new AppUser
+                if (!_userManager.Users.Any())
                 {
-                    FullName = model.FullName,
-                    Email = model.Email,
-                    UserName = "Admin"
-                };
+                    // Copy data from ViewModel to IdentityUser
+                    var user = new AppUser
+                    {
+                        FullName = model.FullName,
+                        Email = model.Email,
+                        UserName = "Admin"
+                    };
 
-                // Store user data in AspNetUsers database table
-                var result = await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRoleAsync(user, "Admin");
+                    // Store user data in Users database table
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    var result2 = await _roleManager.FindByNameAsync("Admin"); // Check for "Admin" role in DB
+                    if (result2 == null)  // No "Admin" role found
+                    {
+                        // Create new role
+                        var newRole = new IdentityRole("Admin");
+                        var rsNewRole = await _roleManager.CreateAsync(newRole);
+                        if (!rsNewRole.Succeeded)
+                        {
+                            // Display error and return to default index page if Creating "Admin" is unsuccessful
+                            return ViewComponent(MessagePage.COMPONENTNAME,
+                            new MessagePage.Message()
+                            {
+                                Title = "Thông báo",
+                                Secondwait = 60,
+                                Htmlcontent = "Lỗi hệ thống. Trở về mặc định",
+                                Urlredirect = Url.Action("Index", "Home", new { area = "NoRole" })
+                            });
+                        }
+                    }
+                    await _userManager.AddToRoleAsync(user, "Admin");
 
-                // ----------------- Replace if needed -----------------
-                if (result.Succeeded)
-                {
+                    if (result.Succeeded)
+                    {
 
-                    return RedirectToAction("Index", "Admin");
+                        return RedirectToAction("Index", "Home");
 
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+
+                return View(model);
             }
-
-            return View(model);
+            return ViewComponent(MessagePage.COMPONENTNAME,
+                new MessagePage.Message()
+                {
+                    Title = "Thông báo",
+                    Secondwait = 60,
+                    Htmlcontent = "Lỗi hệ thống. Trở về mặc định",
+                    Urlredirect = Url.Action("Index", "Home", new { area = "NoRole" })
+                });
         }
     }
 }

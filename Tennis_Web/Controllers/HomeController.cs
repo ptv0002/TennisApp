@@ -17,11 +17,13 @@ namespace Tennis_Web.Controllers
         {
             _logger = logger;
         }
-        [Route("")]
+        public IActionResult Default()
+        {
+            return RedirectToAction("Index", "NoRole", new { area = "NoRole" });
+        }
         public IActionResult Index()
         {
-            return RedirectToAction("Index","NoRole", new { area ="NoRole"});
+            return View();
         }
-
     }
 }
