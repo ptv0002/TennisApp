@@ -138,9 +138,12 @@ namespace Tennis_Web.Controllers
 
                     if (result.Succeeded)
                     {
-
-                        return RedirectToAction("Index", "Home");
-
+                        var rs = await _signInManager.PasswordSignInAsync(user.UserName,
+                                    model.Password, false, false);
+                        if (rs.Succeeded)
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                     foreach (var error in result.Errors)
                     {
