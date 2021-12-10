@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,19 +10,16 @@
     {
         [Key]
         public int Id { get; set; }
-
+        [DisplayName("Điểm")]
         public decimal? Diem { get; set; }
-
-        //public int? Id_Cap { get; set; } // Mã cặp = null trống tương ứng với Điểm thưởng cho Trình
-
-        //public int? Id_Vong { get; set; }
-        //public int? Id_Trinh { get; set; }
-
         [ForeignKey("ID_Cap")]
+        [DisplayName("ID Cặp")]
         public virtual DS_Cap DS_Cap { get; set; }
         [ForeignKey("ID_Vong")]
+        [DisplayName("ID Vòng")]
         public virtual DS_Vong DS_Vong { get; set; }
         [ForeignKey("ID_Trinh")]
+        [DisplayName("ID Trình")]
         public virtual DS_Trinh DS_Trinh { get; set; }
 
     }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,25 +18,20 @@
         public int Id { get; set; }
 
         [StringLength(10)]
-        public string MaCap { get; set; } 
+        [DisplayName("Mã Cặp")]
+        public string MaCap { get; set; }
+        [DisplayName("Điểm")]
+        public decimal? Diem { get; set; } // Total point to split
 
-        public decimal? Diem { get; set; } // Tổng điểm của cặp được phân bổ
-
-
-        //public int Id_Trinh{ get; set; }
         [ForeignKey("ID_Trinh")]
+        [DisplayName("ID Vòng")]
         public virtual DS_Trinh DS_Trinh { get; set; }
 
-        //public int? Id_Bang { get; set; }
         [ForeignKey("ID_Bang")]
         public virtual DS_Bang DS_Bang { get; set; }
 
-        //public int? ID_Vdv1 { get; set; }
         [ForeignKey("ID_Vdv1")]
         public virtual DS_VDV VDV1 { get; set; }
-
-
-        //public int? ID_Vdv2 { get; set; }
 
         [ForeignKey("ID_Vdv2")]
         [InverseProperty("DS_Caps")]

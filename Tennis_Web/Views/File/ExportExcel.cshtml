@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Xuất ra file Excel";
+}
+@model IEnumerable<Models.DS_Trinh>
+<hr/>
+<a asp-action="EmptyExcel" asp-controller="File" class="mb-3 btn btn-primary">Xuất file Excel trống</a>
+
+<h4>Chọn trình đấu để xuất ra file Excel</h4>
+@foreach (var item in Model)
+{
+    <a asp-action="Export" asp-controller="File" asp-route-id="@item.Id">
+        • Giải @item.DS_Giai.Ten - Trình @item.Trinh
+    </a>
+}

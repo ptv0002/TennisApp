@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.8.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +26,7 @@
   <ItemGroup>
     <Folder Include="Areas\NoRole\Data\" />
     <Folder Include="Areas\NoRole\Models\" />
+    <Folder Include="wwwroot\current file\" />
   </ItemGroup>
 
 </Project>

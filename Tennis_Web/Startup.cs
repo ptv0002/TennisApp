@@ -64,6 +64,14 @@ namespace Tennis_Web
                 options.SignIn.RequireConfirmedEmail = false;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
                 options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
 
+                // Config Cookie
+                services.ConfigureApplicationCookie(options =>
+                {
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                    options.LoginPath = $"/Account/Login";                                 // Url login page
+                    options.LogoutPath = $"/Account/Logout";
+                    options.AccessDeniedPath = $"/Account/AccessDenied";
+                });
             });
 
             services.AddControllersWithViews();
@@ -86,6 +94,8 @@ namespace Tennis_Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
