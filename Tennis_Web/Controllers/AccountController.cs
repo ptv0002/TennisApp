@@ -115,27 +115,45 @@ namespace Tennis_Web.Controllers
 
                     // Store user data in Users database table
                     var result = await _userManager.CreateAsync(user, model.Password);
-                    var result2 = await _roleManager.FindByNameAsync("Admin"); // Check for "Admin" role in DB
-                    if (result2 == null)  // No "Admin" role found
+                    var result1 = await _roleManager.FindByNameAsync("Admin"); // Check for "Admin" role in DB
+                    var result2 = await _roleManager.FindByNameAsync("Manager"); // Check for "Admin" role in DB
+                    var result3 = await _roleManager.FindByNameAsync("Referee"); // Check for "Admin" role in DB
+                    bool upfail = false ;
+
+                    if (result1 == null)  // No "Admin" role found
                     {
                         // Create new role
                         var newRole = new IdentityRole("Admin");
                         var rsNewRole = await _roleManager.CreateAsync(newRole);
-                        if (!rsNewRole.Succeeded)
+                        upfail =  ! rsNewRole.Succeeded;
+                    }
+                    if (result2 == null)  // No "Manager" role found
+                    {
+                        // Create new role
+                        var newRole = new IdentityRole("Manager");
+                        var rsNewRole = await _roleManager.CreateAsync(newRole);
+                        upfail = upfail && rsNewRole.Succeeded;
+                    }
+                    if (result3 == null)  // No "Referee" role found
+                    {
+                        // Create new role
+                        var newRole = new IdentityRole("Referee");
+                        var rsNewRole = await _roleManager.CreateAsync(newRole);
+                        upfail = upfail && rsNewRole.Succeeded;
+                    }
+                    if (upfail) // Không tạo đủ Role
+                    {
+                        // Display error and return to default index page if Creating "Admin" is unsuccessful
+                        return ViewComponent(MessagePage.COMPONENTNAME,
+                        new MessagePage.Message()
                         {
-                            // Display error and return to default index page if Creating "Admin" is unsuccessful
-                            return ViewComponent(MessagePage.COMPONENTNAME,
-                            new MessagePage.Message()
-                            {
-                                Title = "Thông báo",
-                                Secondwait = 60,
-                                Htmlcontent = "Lỗi hệ thống. Trở về mặc định",
-                                Urlredirect = Url.Action("Index", "Home", new { area = "NoRole" })
-                            });
-                        }
+                            Title = "Thông báo",
+                            Secondwait = 60,
+                            Htmlcontent = "Lỗi hệ thống. Trở về mặc định",
+                            Urlredirect = Url.Action("Index", "Home", new { area = "NoRole" })
+                        });
                     }
                     await _userManager.AddToRoleAsync(user, "Admin");
-
                     if (result.Succeeded)
                     {
                         var rs = await _signInManager.PasswordSignInAsync(user.UserName,
