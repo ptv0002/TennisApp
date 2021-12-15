@@ -42,27 +42,30 @@ namespace Tennis_Web.Controllers
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
             {
-                // "D:/Data/Visual Studio Projects/TennisApp/Models/bin/Debug/net5.0/Models.dll"
-                var types = Assembly.LoadFrom("../../TennisApp/Models/bin/Debug/net5.0/Models.dll").GetTypes();
+                var types = _context.Model.GetEntityTypes();
+                //_context.Model.GetEntityTypes().ElementAt(1).GetTableName()
+                //var types = Assembly.LoadFrom("D:/Data/Visual Studio Projects/TennisApp/Models/bin/Debug/net5.0/Models.dll").GetTypes();
+
                 foreach (var t in types) 
                 {
-                    bool a1 = t.Name == "AppUser";
-                    bool a2 = t.Name == "DS_ThongBao";
-                    bool a3 = t.Name == "Khu_Vuc";
+                    //bool a1 = t.Name == "AppUser";
+                    //bool a2 = t.Name == "DS_ThongBao";
+                    //bool a3 = t.Name == "Khu_Vuc";
                     // Create sheets for every class, except for those listed above
-                    if (!(a1 || a2 || a3))
+                    if ((t.DisplayName().StartsWith("DS_")))
                     {
                         // Add sheet for every class
-                        var sheet = package.Workbook.Worksheets.Add(t.Name);
+                        var sheet = package.Workbook.Worksheets.Add(t.DisplayName());
                         int i = 1;
                         foreach (var f in t.GetProperties()) 
                         {
                             // Print column headers, except for some conditions below
-                            if (!(f.Name == "Id" || f.PropertyType.Name == "ICollection`1"))
-                            {
+                            //if (!(f.Name == "Id" || f.PropertyType.Name == "ICollection`1"))
+                            //if (!(f.Name == "Id" || f.PropertyInfo.Name == "ICollection`1"))
+                            //{
                                 sheet.Cells[1, i].Value = f.Name;
                                 i++;
-                            }    
+                            //}    
                         }
                         // Format Column Headers and Column size
                         sheet.Columns.AutoFit();
