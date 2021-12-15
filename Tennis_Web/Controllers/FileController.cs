@@ -27,6 +27,11 @@ namespace Tennis_Web.Controllers
             var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenByDescending(m => m.Trinh).ToList();
             return View(model);
         }
+        public IActionResult Import(bool id)
+        {
+
+            return View();
+        }
         public IActionResult Export(int id)
         {
 
@@ -37,7 +42,8 @@ namespace Tennis_Web.Controllers
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
             {
-                var types = Assembly.LoadFrom("D:/Data/Visual Studio Projects/TennisApp/Models/bin/Debug/net5.0/Models.dll").GetTypes();
+                // "D:/Data/Visual Studio Projects/TennisApp/Models/bin/Debug/net5.0/Models.dll"
+                var types = Assembly.LoadFrom("../../TennisApp/Models/bin/Debug/net5.0/Models.dll").GetTypes();
                 foreach (var t in types) 
                 {
                     bool a1 = t.Name == "AppUser";

@@ -1,5 +1,46 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Nhập dữ liệu từ Excel";
 }
+@model ImportExcelViewModel
+<hr />
+<form asp-action="ImportExcel" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label class="control-label">Receipt File</label>
+        <input asp-for="Doc" class="form-control font-weight-bold" multiple />
+    </div>
+    <div class="form-group">
+        <label class="control-label">Receipt File</label>
+        <input asp-for="Doc" class="form-control font-weight-bold" multiple />
+    </div> 
+
+</form>
+<h4>Chọn trình đấu để xuất ra file Excel</h4>
+
+<a asp-action="Import" asp-controller="File" class="mb-3 btn btn-primary">Upload</a>
+
+<h4>Chọn trình đấu để xuất ra file Excel</h4>
+
+<a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger">Delete</a>
+
+<div class="modal fade show" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteLabel">Are you sure?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to
+                <label class="text-danger">permanently delete </label>
+                this employee? This process cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a asp-action="DeleteEmployee" class="btn btn-danger" asp-route-id="@Model.Id">Yes, delete it</a>
+            </div>
+        </div>
+    </div>
+</div>
