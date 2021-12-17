@@ -3,7 +3,7 @@
 }
 @model IEnumerable<Models.DS_Trinh>
 <hr/>
-<a asp-action="EmptyExcel" asp-controller="File" class="mb-3 btn btn-primary">Xuất file Excel trống</a>
+<a asp-action="DownloadExcel" asp-controller="File" class="mb-3 btn btn-primary">Xuất file Excel trống</a>
 
 <h4>Chọn trình đấu để xuất ra file Excel</h4>
 @foreach (var item in Model)

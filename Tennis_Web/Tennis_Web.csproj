@@ -26,7 +26,7 @@
   <ItemGroup>
     <Folder Include="Areas\NoRole\Data\" />
     <Folder Include="Areas\NoRole\Models\" />
-    <Folder Include="wwwroot\current file\" />
+    <Folder Include="Doc\" />
   </ItemGroup>
 
 </Project>

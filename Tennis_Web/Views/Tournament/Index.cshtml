@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Thông tin giải đấu";
+}
+@model Tennis_Web.Models.TournamentTabViewModel
+<ul class="nav nav-tabs">
+    <li role="presentation" class="@(Model.ActiveTab == Tennis_Web.Models.Tab.Parameters ? "active" : string.Empty)">
+        <a asp-route-tabname="Parameters" asp-action="SwitchToTabs">Tham số giải đấu</a>
+    </li>
+    <li role="presentation" class="@(Model.ActiveTab == Tennis_Web.Models.Tab.Players ? "active" : string.Empty)">
+        <a asp-route-tabname="Players" asp-action="SwitchToTabs">Danh sách VĐV</a>
+    </li>
+    <li role="presentation" class="@(Model.ActiveTab == Tennis_Web.Models.Tab.Divisions ? "active" : string.Empty)">
+        <a asp-route-tabname="Divisions" asp-action="SwitchToTabs">Bốc thăm chia bảng</a>
+    </li>
+</ul>
+@switch (Model.ActiveTab)
+{
+    case Tennis_Web.Models.Tab.Parameters:
+        @await Component.InvokeAsync("Parameters");
+        break;
+    case Tennis_Web.Models.Tab.Players:
+        @await Component.InvokeAsync("Players");
+        break;
+    case Tennis_Web.Models.Tab.Divisions:
+        @await Component.InvokeAsync("Divisions");
+        break;
+    default:
+        break;
+}
+<div class="tab-content mt-3"></div>

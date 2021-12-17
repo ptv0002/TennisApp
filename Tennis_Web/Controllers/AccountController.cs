@@ -52,7 +52,7 @@ namespace Tennis_Web.Controllers
         [HttpPost, ActionName("Login")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            bool a1, a2, a3;
+            bool a1;
             if (ModelState.IsValid)
             {
                 // Find user by Emaik
@@ -70,18 +70,9 @@ namespace Tennis_Web.Controllers
                                     model.Password, model.RememberMe, false); // Không apply LOGOUT feature nên set giá trị false
                 if (result.Succeeded)
                 {
-                    //a1 = await _userManager.IsInRoleAsync(user, "Admin");
-                    //a2 = await _userManager.IsInRoleAsync(user, "Manager");
-                    //a3 = await _userManager.IsInRoleAsync(user, "Referee");
                     a1 = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Manager") || await _userManager.IsInRoleAsync(user, "Referee");
                     switch (a1)
                     {
-                        //case (true, true or false, true or false):
-                        //    return RedirectToAction("Index", "Admin"); 
-                        //case (false, true, true or false):
-                        //    return RedirectToAction("Index", "Manager"); 
-                        //case (false, false, true):
-                        //    return RedirectToAction("Index", "Referee"); 
                         case (true):
                             return RedirectToAction("Index", "Home");
                         default:

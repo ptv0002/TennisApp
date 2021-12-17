@@ -1,7 +1,8 @@
-namespace Models
+﻿namespace Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,12 +17,15 @@ namespace Models
         public int Id { get; set; }
 
         [StringLength(20)]
+        [DisplayName("Họ")]
         public string Ho { get; set; }
 
         [StringLength(7)]
+        [DisplayName("Tên")]
         public string Ten { get; set; }
 
         [StringLength(25)]
+        [DisplayName("Tên Tắt")]
         public string Ten_Tat { get; set; }
 
         [StringLength(40)]
@@ -32,6 +36,7 @@ namespace Models
 
         public string FileAnh { get; set; }
 
+        [DisplayName("SĐT")]
         public string Tel { get; set; }
 
         [StringLength(40)]
@@ -39,16 +44,21 @@ namespace Models
 
         public bool? Status { get; set; }
 
+        [DisplayName("Điểm")]
         public int? Diem { get; set; }
 
+        [DisplayName("Điểm Cũ")]
         public int? DiemCu { get; set; }
 
+        [DisplayName("Công Ty")]
         public string CongTy { get; set; }
 
+        [DisplayName("Chức Vụ")]
         public string ChucVu { get; set; }
 
         //public int? Id_KhuVuc { get; set; }
         [ForeignKey("ID_KhuVuc")]
+        [DisplayName("ID Khu Vực")]
         public virtual Khu_Vuc Khu_Vuc { get; set; }
         public virtual ICollection<DS_Cap> DS_Caps { get; set; }
      //  [JsonIgnore]

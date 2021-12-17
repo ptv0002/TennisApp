@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Tennis_Web.Models;
 
 namespace Tennis_Web.Controllers
 {
@@ -27,9 +28,18 @@ namespace Tennis_Web.Controllers
             var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenByDescending(m => m.Trinh).ToList();
             return View(model);
         }
-        public IActionResult Import(bool id)
+        public IActionResult Import(bool isPartial, ImportExcelViewModel model)
         {
+            // Delete entire DB data and add new data from Excel
+            if (isPartial == false) 
+            { 
+                
+            }
+            // Add on to DB from Excel
+            else 
+            {
 
+            }
             return View();
         }
         public IActionResult Export(int id)
@@ -37,7 +47,8 @@ namespace Tennis_Web.Controllers
 
             return View();
         }
-        public IActionResult EmptyExcel(int id)
+        // Download empty Excel format
+        public FileResult DownloadExcel(int id)
         {
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
@@ -49,7 +60,7 @@ namespace Tennis_Web.Controllers
                 foreach (var t in types) 
                 {
                     //bool a1 = t.Name == "AppUser";
-                    //bool a2 = t.Name == "DS_ThongBao";
+                    //bool a2 = t.Name == "Thong_Bao";
                     //bool a3 = t.Name == "Khu_Vuc";
                     // Create sheets for every class, except for those listed above
                     if ((t.DisplayName().StartsWith("DS_")))
@@ -76,6 +87,9 @@ namespace Tennis_Web.Controllers
             }
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Giải Đấu.xlsx");
+            // Eventually switching 
+            //string path = "/Doc/Giải Đấu.xlsx";
+            //return File(path, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Giải Đấu.xlsx");
         }
     }
 }

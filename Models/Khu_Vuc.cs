@@ -1,7 +1,8 @@
-namespace Models
+﻿namespace Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,9 +15,9 @@ namespace Models
 
         [Key]
         public int Id { get; set; }
-
+        [DisplayName("Mã Khu Vực")]
         public string MaKhuVuc { get; set; }
-
+        [DisplayName("Tên")]
         public string Ten { get; set; }
         public virtual ICollection<DS_VDV> DS_VDV { get; set; }
     }

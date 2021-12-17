@@ -29,9 +29,9 @@ namespace Tennis_Web
         {
             // Đăng ký TennisContext
             services.AddDbContext<TennisContext>(options => {
-                // Đọc chuỗi kết nối
+                // Read connection string
                 string connectstring = Configuration.GetConnectionString("TennisConnection");
-                // Sử dụng MS SQL Server
+                // User MS SQL Server
                 options.UseSqlServer(connectstring);
             });
 

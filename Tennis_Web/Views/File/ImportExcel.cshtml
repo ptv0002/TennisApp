@@ -5,41 +5,34 @@
 <hr />
 <form asp-action="ImportExcel" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group">
-        <label class="control-label">Receipt File</label>
-        <input asp-for="Doc" class="form-control font-weight-bold" multiple />
+    <h4>Nhập thêm vào cơ sở dữ liệu</h4>
+    <div class="form-group row">
+        <input asp-for="patialImport" class="form-control col-9 mr-3 ml-3" multiple />
+        <a asp-action="Import" asp-controller="File" class="mb-3 btn btn-primary col-2" asp-route-isPartial="true" asp-route-model="@Model">Thêm mới</a>
     </div>
-    <div class="form-group">
-        <label class="control-label">Receipt File</label>
-        <input asp-for="Doc" class="form-control font-weight-bold" multiple />
-    </div> 
-
+    <h4>Xóa toàn bộ dữ liệu và thêm mới</h4>
+    <div class="form-group row">
+        <input asp-for="fullImport" class="form-control col-9 mr-3 ml-3" multiple />
+        <a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger col-2">Xóa và thêm mới</a>
+    </div>
 </form>
-<h4>Chọn trình đấu để xuất ra file Excel</h4>
-
-<a asp-action="Import" asp-controller="File" class="mb-3 btn btn-primary">Upload</a>
-
-<h4>Chọn trình đấu để xuất ra file Excel</h4>
-
-<a data-toggle="modal" data-target="#deleteModal" class="btn btn-danger">Delete</a>
-
 <div class="modal fade show" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteLabel">Are you sure?</h5>
+                <h5 class="modal-title" id="deleteLabel">Bạn có chắc chắn?</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to
-                <label class="text-danger">permanently delete </label>
-                this employee? This process cannot be undone.
+                Bạn có chắc chắn muốn xóa 
+                <label class="text-danger">toàn bộ dữ liệu vĩnh viễn</label>
+                và thêm mới từ file Excel? Hành động này không thể bị khôi phục.
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a asp-action="DeleteEmployee" class="btn btn-danger" asp-route-id="@Model.Id">Yes, delete it</a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                <a asp-action="Import" asp-controller="File"  class="btn btn-danger" asp-route-isPartial ="false" asp-route-model="@Model">Xóa và thêm mới</a>
             </div>
         </div>
     </div>

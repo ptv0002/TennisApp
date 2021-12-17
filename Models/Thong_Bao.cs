@@ -2,19 +2,20 @@ namespace Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class DS_ThongBao
+    public class Thong_Bao
     {
         [Key]
         public int Id { get; set; }
 
         [StringLength(80)]
+        [DisplayName("Tên")]
         public string Ten { get; set; }
-
+        [DisplayName("Ngày")]
         public DateTime? Ngay { get; set; }
-
         public string FileTB { get; set; }
     }
 }
