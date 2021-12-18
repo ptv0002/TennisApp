@@ -1,30 +1,26 @@
 ﻿@{
-    ViewData["Title"] = "Thông tin giải đấu";
+    ViewData["Title"] = "Chọn trình đấu để xem thông tin";
+    //var vm = new List<TournamentTabViewModel>();
+    //int i = 0;
 }
-@model Tennis_Web.Models.TournamentTabViewModel
-<ul class="nav nav-tabs">
-    <li role="presentation" class="@(Model.ActiveTab == Tennis_Web.Models.Tab.Parameters ? "active" : string.Empty)">
-        <a asp-route-tabname="Parameters" asp-action="SwitchToTabs">Tham số giải đấu</a>
-    </li>
-    <li role="presentation" class="@(Model.ActiveTab == Tennis_Web.Models.Tab.Players ? "active" : string.Empty)">
-        <a asp-route-tabname="Players" asp-action="SwitchToTabs">Danh sách VĐV</a>
-    </li>
-    <li role="presentation" class="@(Model.ActiveTab == Tennis_Web.Models.Tab.Divisions ? "active" : string.Empty)">
-        <a asp-route-tabname="Divisions" asp-action="SwitchToTabs">Bốc thăm chia bảng</a>
-    </li>
-</ul>
-@switch (Model.ActiveTab)
+@model IEnumerable<Models.DS_Trinh>
+<hr />
+@foreach (var item in Model)
 {
-    case Tennis_Web.Models.Tab.Parameters:
-        @await Component.InvokeAsync("Parameters");
-        break;
-    case Tennis_Web.Models.Tab.Players:
-        @await Component.InvokeAsync("Players");
-        break;
-    case Tennis_Web.Models.Tab.Divisions:
-        @await Component.InvokeAsync("Divisions");
-        break;
-    default:
-        break;
+    //var vmItem = new TournamentTabViewModel()
+    //{
+    //    IsCurrent = ViewBag.isCurrent,
+    //    TrinhID = item.Id
+    //};
+    //vm.Add(vmItem);
+
+    @*@(vmItem.IsCurrent = ViewBag.isCurrent)
+        @(vmItem.ID_Trinh = item.Id)*@
+    @*@vm.Add(vmItem);*@
+    <div class="row ml-1">
+        <a asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-TrinhID="@item.Id">
+            • Giải @item.DS_Giai.Ten - Trình @item.Trinh
+        </a>
+    </div>
+    //i++;
 }
-<div class="tab-content mt-3"></div>

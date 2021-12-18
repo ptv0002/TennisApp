@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataAccess;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,48 +12,58 @@ namespace Tennis_Web.Controllers
 {
     public class TournamentController : Controller
     {
-        public IActionResult Index(TournamentTabViewModel model)
+        private readonly TennisContext _context;
+        public TournamentController(TennisContext context)
         {
+            _context = context;
+        }
+        public IActionResult Index(bool? isCurrent)
+        {
+            var model = new List<DS_Trinh>();
+            if (isCurrent == true)
+            {
+                ViewBag.isCurrent = true;
+            }
+            else model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenByDescending(m => m.Trinh).ToList();
+            return View(model);
+        }
+        public IActionResult SwitchToTabs(string tabname, bool? isCurrent, int? TrinhID)
+        {
+            var vm = new TournamentTabViewModel()
+            {
+                IsCurrent = isCurrent,
+                TrinhID = TrinhID
+            };
+            switch (tabname)
+            {
+                case "Parameter":
+                    vm.ActiveTab = Tab.Parameter;
+                    break;
+                case "Player":
+                    vm.ActiveTab = Tab.Player;
+                    break;
+                case "Division":
+                    vm.ActiveTab = Tab.Division;
+                    break;
+                default:
+                    vm.ActiveTab = Tab.Parameter;
+                    break;
+            }
+            return RedirectToAction(nameof(TournamentInfo), vm);
+        }
+        public IActionResult TournamentInfo(TournamentTabViewModel model, bool? isCurrent, int? TrinhID)
+        {
+
             if (model == null)
             {
                 model = new TournamentTabViewModel
                 {
-                    ActiveTab = Tab.Parameters
+                    ActiveTab = Tab.Parameter,
+                    IsCurrent = isCurrent,
+                    TrinhID = TrinhID
                 };
             }
-            return View();
-        }
-        public IActionResult SwitchToTabs(string tabname )
-        {
-            var vm = new TournamentTabViewModel();
-            switch (tabname)
-            {
-                case "Parameters":
-                    vm.ActiveTab = Tab.Parameters;
-                    break;
-                case "Players":
-                    vm.ActiveTab = Tab.Players;
-                    break;
-                case "Divisions":
-                    vm.ActiveTab = Tab.Divisions;
-                    break;
-                default:
-                    vm.ActiveTab = Tab.Parameters;
-                    break;
-            }
-            return RedirectToAction(nameof(Index), vm);
-        }
-        public IActionResult ShowTournament(bool? isCurrent)
-        {
-            if (isCurrent == true)
-            {
-                
-            }
-            else
-            {
-
-            }
-            return View();
+            return View(model);
         }
     }
 }

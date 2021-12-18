@@ -1,4 +1,5 @@
-﻿using DataAccess;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -15,9 +16,11 @@ namespace Tennis_Web.Controllers
     public class FileController : Controller
     {
         private readonly TennisContext _context;
-        public FileController(TennisContext context)
+        private readonly INotyfService _notyf;
+        public FileController(TennisContext context, INotyfService notyf)
         {
             _context = context;
+            _notyf = notyf;
         }
         public IActionResult ImportExcel()
         {

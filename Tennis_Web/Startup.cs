@@ -1,4 +1,6 @@
-﻿using DataAccess;
+﻿using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
+using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +29,14 @@ namespace Tennis_Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Toast Notification Extension Configuration
+            services.AddNotyf(config => 
+            {
+                config.DurationInSeconds = 15;
+                config.IsDismissable = true;
+                config.Position = NotyfPosition.TopCenter;
+            });
+
             // Đăng ký TennisContext
             services.AddDbContext<TennisContext>(options => {
                 // Read connection string
@@ -98,6 +108,7 @@ namespace Tennis_Web
             app.UseAuthentication();
 
             app.UseAuthorization();
+            app.UseNotyf();
 
             app.UseEndpoints(endpoints =>
             {

@@ -64,14 +64,14 @@
                 <li class="sidebar-heading"> Quản lý Giải đấu </li>
                 <li class="nav-item">
                     <!-- Nav Item - New Tournament -->
-                    <a class="nav-link @ViewBag.CActive" asp-controller="Tournament" asp-action="ShowTournament" asp-route-isCurrent="true">
+                    <a class="nav-link @ViewBag.CActive" asp-controller="Tournament" asp-action="Index" asp-route-isCurrent="true">
                         <i class="fas fa-fw fa-running"></i>
                         <span>Giải Đấu</span>
                     </a>                        
                 </li>
                 <li class="nav-item">
                     <!-- Nav Item - Old Tournaments -->
-                    <a class="nav-link @ViewBag.BActive" asp-controller="Tournament" asp-action="ShowTournament">
+                    <a class="nav-link @ViewBag.BActive" asp-controller="Tournament" asp-action="Index">
                         <i class="fas fa-fw fa-calendar-alt"></i>
                         <span>Xem các giải trước</span>
                     </a>
@@ -156,7 +156,6 @@
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
@@ -205,6 +204,6 @@
     <!-- Page level custom scripts -->
     <script src="~/sbadmin/js/demo/chart-area-demo.js"></script>
     <script src="~/sbadmin/js/demo/chart-pie-demo.js"></script>
-
+    @await Component.InvokeAsync("Notyf")
 </body>
 </html>

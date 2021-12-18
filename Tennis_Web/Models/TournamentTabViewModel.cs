@@ -8,13 +8,13 @@ namespace Tennis_Web.Models
     public class TournamentTabViewModel
     {
         public Tab ActiveTab { get; set; }
-        public int? Trinh { get; set; }
-
+        public bool? IsCurrent { get; set; }
+        public int? TrinhID { get; set; }
     }
     public enum Tab
     {
-        Parameters,
-        Players,
-        Divisions
+        Parameter,
+        Player,
+        Division
     }
 }

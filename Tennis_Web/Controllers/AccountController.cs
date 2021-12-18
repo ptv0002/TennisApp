@@ -107,8 +107,8 @@ namespace Tennis_Web.Controllers
                     // Store user data in Users database table
                     var result = await _userManager.CreateAsync(user, model.Password);
                     var result1 = await _roleManager.FindByNameAsync("Admin"); // Check for "Admin" role in DB
-                    var result2 = await _roleManager.FindByNameAsync("Manager"); // Check for "Admin" role in DB
-                    var result3 = await _roleManager.FindByNameAsync("Referee"); // Check for "Admin" role in DB
+                    var result2 = await _roleManager.FindByNameAsync("Manager"); // Check for "Manager" role in DB
+                    var result3 = await _roleManager.FindByNameAsync("Referee"); // Check for "Referee" role in DB
                     bool upfail = false ;
 
                     if (result1 == null)  // No "Admin" role found
