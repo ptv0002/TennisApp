@@ -1,26 +1,54 @@
 ﻿@{
     ViewData["Title"] = "Chọn trình đấu để xem thông tin";
-    //var vm = new List<TournamentTabViewModel>();
-    //int i = 0;
+    if (ViewBag.isCurrent == true)
+    {
+        ViewBag.CActive = "active";
+    }
+    else ViewBag.BActive = "active";
+    @if (Model != null)
+    {
+        ViewData["Title"] = "Chọn trình đấu để xem thông tin";
+    }
+    else ViewData["Title"] = "Thêm giải đấu mới";
 }
 @model IEnumerable<Models.DS_Trinh>
 <hr />
-@foreach (var item in Model)
+@if (Model != null)
 {
-    //var vmItem = new TournamentTabViewModel()
-    //{
-    //    IsCurrent = ViewBag.isCurrent,
-    //    TrinhID = item.Id
-    //};
-    //vm.Add(vmItem);
-
-    @*@(vmItem.IsCurrent = ViewBag.isCurrent)
-        @(vmItem.ID_Trinh = item.Id)*@
-    @*@vm.Add(vmItem);*@
-    <div class="row ml-1">
-        <a asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-TrinhID="@item.Id">
-            • Giải @item.DS_Giai.Ten - Trình @item.Trinh
-        </a>
-    </div>
-    //i++;
+    @foreach (var item in Model)
+    {
+        string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
+        <div class="row ml-1">
+            <a asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-trinhID="@item.Id" asp-route-detailedTitle="@title">
+                • @title
+            </a>
+        </div>
+    }
+    <a class="btn btn-danger mt-2" data-toggle="modal" data-target="#deleteModal">Kết thúc giải đấu</a>
 }
+else
+{
+    <a class="btn btn-primary" asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-detailedTitle="giải mới">Thêm mới</a>
+}
+
+<div class="modal fade show" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteLabel">Bạn có chắc chắn?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn
+                <label class="text-danger">kết thúc giải đấu</label>
+                ? Hành động này không thể bị khôi phục.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                <a asp-action="EndTournament" asp-controller="Tournament" class="btn btn-danger">Kết thúc giải đấu</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -50,8 +50,8 @@
                 Nhập kết quả
             </li>
             <!-- Nav Item -->
-            <li class="nav-item">
-                <a class="nav-link @ViewBag.RActive" asp-controller="Shipping" asp-action="Index">
+            <li class="nav-item @ViewBag.RActive">
+                <a class="nav-link" asp-controller="Shipping" asp-action="Index">
                     <i class="fas fa-fw fa-chalkboard-teacher"></i>
                     <span>Kết quả thi đấu</span>
                 </a>
@@ -62,32 +62,32 @@
                 <li> <hr class="sidebar-divider"> </li>
                 <!-- Heading -->
                 <li class="sidebar-heading"> Quản lý Giải đấu </li>
-                <li class="nav-item">
+                <li class="nav-item @ViewBag.CActive">
                     <!-- Nav Item - New Tournament -->
-                    <a class="nav-link @ViewBag.CActive" asp-controller="Tournament" asp-action="Index" asp-route-isCurrent="true">
+                    <a class="nav-link" asp-controller="Tournament" asp-action="Index" asp-route-isCurrent="true">
                         <i class="fas fa-fw fa-running"></i>
-                        <span>Giải Đấu</span>
-                    </a>                        
+                        <span>Giải đấu hiện tại</span>
+                    </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item @ViewBag.BActive">
                     <!-- Nav Item - Old Tournaments -->
-                    <a class="nav-link @ViewBag.BActive" asp-controller="Tournament" asp-action="Index">
+                    <a class="nav-link" asp-controller="Tournament" asp-action="Index">
                         <i class="fas fa-fw fa-calendar-alt"></i>
                         <span>Xem các giải trước</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item @ViewBag.PActive">
                     <!-- Nav Item - Players -->
-                    <a class="nav-link @ViewBag.PActive" asp-area="Admin" asp-controller="Maintenance" asp-action="Index">
-                        <i class="fas fa-fw fa-wrench"></i>
-                        <span>Vận Động Viên</span>
+                    <a class="nav-link" asp-area="Admin" asp-controller="Maintenance" asp-action="Index">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Vận động viên</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item @ViewBag.AActive">
                     <!-- Nav Item - Announcements -->
-                    <a class="nav-link @ViewBag.AActive" asp-controller="Vehicle" asp-action="Index">
+                    <a class="nav-link" asp-controller="Vehicle" asp-action="Index">
                         <i class="fas fa-fw fa-bullhorn"></i>
-                        <span>Thông báo Chung</span>
+                        <span>Thông báo chung</span>
                     </a>
                 </li>
             }
@@ -96,26 +96,30 @@
             {<!-- Divider -->
                 <li> <hr class="sidebar-divider"> </li>
                 <li class="sidebar-heading"> Quản trị hệ thống </li>
-                <li class="nav-item">
-                    <a class="nav-link @ViewBag.UActive" asp-controller="Manager" asp-action="Index">
-                        <i class="fas fa-fw fa-users"></i>
+                <li class="nav-item @ViewBag.UActive">
+                    <a class="nav-link" asp-controller="Manager" asp-action="Index">
+                        <i class="fas fa-fw fa-user-circle"></i>
                         <span>Người sử dụng</span>
                     </a>
-                    <a class="nav-link @ViewBag.IActive" asp-controller="File" asp-action="ImportExcel">
+                </li>
+                <li class="nav-item @ViewBag.IActive">
+                    <a class="nav-link" asp-controller="File" asp-action="ImportExcel">
                         <i class="fas fa-fw fa-file-import"></i>
                         <span>Cập nhật từ Excel</span>
                     </a>
-                    <a class="nav-link @ViewBag.EActive" asp-controller="File" asp-action="ExportExcel">
+                </li>
+                <li class="nav-item @ViewBag.EActive">
+                    <a class="nav-link" asp-controller="File" asp-action="ExportExcel">
                         <i class="fas fa-fw fa-file-export"></i>
                         <span>Xuất ra file Excel</span>
                     </a>
                 </li>
-            }
-            <!-- Sidebar Toggler (Sidebar) -->
-            <li class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </li>
-        </ul>
+                }
+                <!-- Sidebar Toggler (Sidebar) -->
+                <li class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </li>
+            </ul>
         <!-- End of Sidebar -->
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column min-vh-100">

@@ -5,13 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
-namespace Tennis_Web.Views.Shared.Components.Player
+namespace Tennis_Web.Views.Shared.Components.Info
 {
-    public class PlayerViewComponent : ViewComponent
+    public class InfoViewComponent : ViewComponent
     {
-        public PlayerViewComponent() { }
+        public InfoViewComponent() { }
         public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel model)
         {
+
             return View();
         }
     }

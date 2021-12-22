@@ -10,9 +10,11 @@ namespace Tennis_Web.Models
         public Tab ActiveTab { get; set; }
         public bool? IsCurrent { get; set; }
         public int? TrinhID { get; set; }
+        public string DetailedTitle { get; set; }
     }
     public enum Tab
     {
+        Info,
         Parameter,
         Player,
         Division

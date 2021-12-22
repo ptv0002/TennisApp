@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataAccess;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,11 @@ namespace Tennis_Web.Areas.NoRole.Controllers
     [Route("[Action]")]
     public class NoRoleController : Controller
     {
+        private readonly TennisContext _context;
+        public NoRoleController(TennisContext context)
+        {
+            _context = context;
+        }
         public IActionResult Index()
         {
             return View();

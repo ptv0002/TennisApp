@@ -20,6 +20,8 @@ namespace Models
         public string Ten { get; set; }
         [DisplayName("Ngày")]
         public DateTime? Ngay { get; set; }
+        [DisplayName("Ghi Chú")]
+        public string GhiChu { get; set; }
         public virtual ICollection<DS_Trinh> DS_Trinh { get; set; }
     }
 }

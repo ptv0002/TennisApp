@@ -1,21 +1,32 @@
 ﻿@{
-    ViewData["Title"] = "Thông tin giải đấu";
+    ViewData["Title"] = "Thông tin " + Model.DetailedTitle;
+    if (Model.IsCurrent == true)
+    {
+        ViewBag.CActive = "active";
+    }
+    else ViewBag.BActive = "active";
 }
 @model Tennis_Web.Models.TournamentTabViewModel
 <ul class="nav nav-tabs">
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Info ? "active" : string.Empty)">
+        <a asp-route-tabname="Info" asp-route-isCurrent="@Model.IsCurrent" asp-route-trinhID="@Model.TrinhID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs">Thông tin chung</a>
+    </li>
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Parameter ? "active" : string.Empty)">
-        <a asp-route-tabname="Parameter" asp-route-isCurrent="@Model.IsCurrent" asp-route-TrinhID="@Model.TrinhID" asp-action="SwitchToTabs">Tham số giải đấu</a>
+        <a asp-route-tabname="Parameter" asp-route-isCurrent="@Model.IsCurrent" asp-route-trinhID="@Model.TrinhID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs">Tham số giải đấu</a>
     </li>
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Player ? "active" : string.Empty)">
-        <a asp-route-tabname="Player" asp-route-isCurrent="@Model.IsCurrent" asp-route-TrinhID="@Model.TrinhID" asp-action="SwitchToTabs">Danh sách VĐV</a>
+        <a asp-route-tabname="Player" asp-route-isCurrent="@Model.IsCurrent" asp-route-trinhID="@Model.TrinhID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs">Danh sách VĐV</a>
     </li>
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Division ? "active" : string.Empty)">
-        <a asp-route-tabname="Division" asp-route-isCurrent="@Model.IsCurrent" asp-route-TrinhID="@Model.TrinhID" asp-action="SwitchToTabs">Bốc thăm chia bảng</a>
+        <a asp-route-tabname="Division" asp-route-isCurrent="@Model.IsCurrent" asp-route-trinhID="@Model.TrinhID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs">Bốc thăm chia bảng</a>
     </li>
 </ul>
 <div class="tab-content mt-3">
     @switch (Model.ActiveTab)
     {
+        case Tennis_Web.Models.Tab.Info:
+            @await Component.InvokeAsync("Info", Model);
+            break;
         case Tennis_Web.Models.Tab.Parameter:
             @await Component.InvokeAsync("Parameter", Model);
             break;

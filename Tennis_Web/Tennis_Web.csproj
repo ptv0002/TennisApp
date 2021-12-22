@@ -27,7 +27,10 @@
   <ItemGroup>
     <Folder Include="Areas\NoRole\Data\" />
     <Folder Include="Areas\NoRole\Models\" />
-    <Folder Include="Doc\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Files\Giải Đấu.xlsx" />
   </ItemGroup>
 
 </Project>
