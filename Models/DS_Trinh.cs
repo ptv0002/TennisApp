@@ -19,6 +19,12 @@
         public int Id { get; set; }
         [DisplayName("Trình")]
         public int? Trinh { get; set; }
+        public decimal? TL_VoDich { get; set; }
+        public decimal? TL_ChungKet { get; set; }
+        public decimal? TL_BanKet { get; set; }
+        public decimal? TL_TuKet { get; set; }
+        public decimal? TL_Bang { get; set; }
+        public int? Diem_PB { get; set; }  // Điểm trừ trước khi phân bổ
         [DisplayName("Tổng Điểm")]
         public int? TongDiem { get; set; }
         [DisplayName("Điểm Trừ")]
