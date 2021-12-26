@@ -24,9 +24,11 @@
         [DisplayName("Tên")]
         public string Ten { get; set; }
 
-        [StringLength(25)]
+        [StringLength(40)]
         [DisplayName("Tên Tắt")]
         public string Ten_Tat { get; set; }
+
+        public bool? Tham_Gia { get; set; }
 
         [StringLength(40)]
         public string CLB { get; set; }
