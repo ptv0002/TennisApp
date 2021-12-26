@@ -12,6 +12,11 @@ namespace Tennis_Web.Views.Shared.Components.Division
         public DivisionViewComponent() { }
         public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel model)
         {
+            if (model.IsCurrent == true)
+            {
+                ViewBag.test = "Current";
+            }
+            else ViewBag.test = "Previous";
             return View();
         }
     }

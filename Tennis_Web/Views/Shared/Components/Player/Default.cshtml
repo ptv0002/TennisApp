@@ -1,1 +1,40 @@
-﻿<p>Player</p>
+﻿@model Tennis_Web.Models.PlayerTab
+<table class="table">
+    <thead>
+        <tr>
+            @if (Model.ViewModel.IsCurrent == true)
+            {
+                <th></th>
+            }
+            <th>
+                Tên tắt
+            </th>
+            <th>
+                CLB
+            </th>
+            <th>
+                Điểm cũ
+            </th>
+            <th>
+                Điểm
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PlayerList)
+        {
+            <tr>
+                @if (Model.ViewModel.IsCurrent == true)
+                {
+                    <td>
+                        <a asp-action="DeleteTab" asp-route-id="@item.Id" class="btn btn-danger">Xóa</a>
+                    </td>
+                }
+                <td>@item.Ten_Tat</td>
+                <td>@item.CLB</td>
+                <td>@item.DiemCu</td>
+                <td>@item.Diem</td>
+            </tr>
+        }
+    </tbody>
+</table>    

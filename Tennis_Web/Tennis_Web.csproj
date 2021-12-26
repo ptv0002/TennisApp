@@ -29,8 +29,4 @@
     <Folder Include="Areas\NoRole\Models\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\Files\Giải Đấu.xlsx" />
-  </ItemGroup>
-
 </Project>

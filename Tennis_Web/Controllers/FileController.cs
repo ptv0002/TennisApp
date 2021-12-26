@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using DataAccess;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -26,24 +27,21 @@ namespace Tennis_Web.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult ImportExcel(bool isPartial, ImportExcelViewModel model)
+        {
+            if (isPartial == false) // Delete all DB info
+            {
+                
+            }
+            // Add new info from Excel
+            //ImportFromExcel();
+            return View();
+        }
         public IActionResult ExportExcel()
         {
             var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenByDescending(m => m.Trinh).ToList();
             return View(model);
-        }
-        public IActionResult Import(bool isPartial, ImportExcelViewModel model)
-        {
-            // Delete entire DB data and add new data from Excel
-            if (isPartial == false) 
-            { 
-                
-            }
-            // Add on to DB from Excel
-            else 
-            {
-
-            }
-            return View();
         }
         public IActionResult Export(int id)
         {
@@ -81,7 +79,7 @@ namespace Tennis_Web.Controllers
                 package.Save();
             }
             stream.Position = 0;
-            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Giải Đấu.xlsx");
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Giai_Dau.xlsx");
             // Eventually switching 
             //string path = "/Doc/Giải Đấu.xlsx";
         }

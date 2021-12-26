@@ -1,23 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DataAccess;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tennis_Web.Controllers;
 using Tennis_Web.Models;
 
 namespace Tennis_Web.Views.Shared.Components.Parameter
 {
     public class ParameterViewComponent : ViewComponent 
     {
-        public ParameterViewComponent() { }
-        public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel model)
+        private readonly TennisContext _context;
+        private readonly IWebHostEnvironment _environment;
+        public ParameterViewComponent(TennisContext context, IWebHostEnvironment environment) 
         {
-            if (model.IsCurrent == true)
+            _context = context;
+            _environment = environment;
+        }
+        public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel vm)
+        {
+            bool a1 = vm.IsCurrent == true;
+            bool a2 = vm.ID == null;
+            DS_Trinh item = new();
+            switch (a1, a2)
             {
-                ViewBag.test = "Current";
+                case (true, false or true): // Current tournament
+                    var sheet = new MethodController(_context, _environment).GetWorkSheet("DS_Trinh");
+                    var row = (int)vm.ID;
+                    item.Id = Convert.ToInt32(sheet.Cells[row, 1].Text);
+                    item.ChenhLech = int.TryParse(sheet.Cells[row, 2].Text, out var a) ? a : null;
+                    item.DiemTru = int.TryParse(sheet.Cells[row, 3].Text, out var b) ? b : null;
+                    item.Diem_PB = int.TryParse(sheet.Cells[row, 4].Text, out var c) ? c : null;
+                    item.TL_BanKet = decimal.TryParse(sheet.Cells[row, 6].Text, out var d) ? d : null;
+                    item.TL_Bang = decimal.TryParse(sheet.Cells[row, 7].Text, out var e) ? e : null;
+                    item.TL_ChungKet = decimal.TryParse(sheet.Cells[row, 8].Text, out var f) ? f : null;
+                    item.TL_TuKet = decimal.TryParse(sheet.Cells[row, 9].Text, out var g) ? g : null;
+                    item.TL_VoDich = decimal.TryParse(sheet.Cells[row, 10].Text, out var h) ? h : null;
+                    item.TongDiem = int.TryParse(sheet.Cells[row, 11].Text, out var i) ? i : null;
+                    item.Trinh = int.TryParse(sheet.Cells[row, 12].Text, out var j) ? j : null;
+                    break;
+                case (false, false): // Previous tournament
+                    var table = await _context.DS_Trinhs.FindAsync(vm.ID);
+                    item.Id = table.Id;
+                    item.Trinh = table.Trinh;
+                    item.TL_VoDich = table.TL_VoDich;
+                    item.TL_ChungKet = table.TL_ChungKet;
+                    item.TL_BanKet = table.TL_BanKet;
+                    item.TL_TuKet = table.TL_TuKet;
+                    item.TL_Bang = table.TL_Bang;
+                    item.TongDiem = table.TongDiem;
+                    item.ChenhLech = table.ChenhLech;
+                    item.Diem_PB = table.Diem_PB;
+                    item.DiemTru = table.DiemTru;
+                    break;
+                default: // Error or other unanticipated scenario
+                    ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
+                    break;
             }
-            else ViewBag.test = "Previous";
-            return View();
+            ViewBag.IsCurrent = vm.IsCurrent;
+            return View(item);
         }
     }
 }

@@ -11,7 +11,6 @@ namespace Tennis_Web.Models
     }
     public class ImportExcelViewModel
     {
-        public IFormFile fullImport { get; set; }
-        public IFormFile patialImport { get; set; }
+        public IFormFile File { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿@{
-    ViewData["Title"] = "Chọn trình đấu để xem thông tin";
     if (ViewBag.isCurrent == true)
     {
         ViewBag.CActive = "active";
@@ -7,48 +6,41 @@
     else ViewBag.BActive = "active";
     @if (Model != null)
     {
-        ViewData["Title"] = "Chọn trình đấu để xem thông tin";
+        ViewData["Title"] = "Chọn giải đấu để xem thông tin";
     }
     else ViewData["Title"] = "Thêm giải đấu mới";
 }
-@model IEnumerable<Models.DS_Trinh>
+@model IEnumerable<Models.DS_Giai>
 <hr />
 @if (Model != null)
 {
-    @foreach (var item in Model)
+    foreach (var item in Model)
     {
-        string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
-        <div class="row ml-1">
-            <a asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-trinhID="@item.Id" asp-route-detailedTitle="@title">
-                • @title
+        <div class="row ml-2">
+            <a asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-giaiID="@item.Id">
+                • Giải @item.Ten
             </a>
         </div>
+        if (ViewBag.isCurrent == true)
+        {
+            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+            {
+                BtnMsg = "Kết thúc",
+                Message = "kết thúc giải đấu",
+                ActionName = "EndTournament",
+                ControllerName = "Tournament"
+            };
+            <button type="button" class="btn btn-primary mt-2 mr-2" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Kết thúc giải đấu</button>
+            arg.BtnMsg = "Xóa";
+            arg.Message = "xóa giải đấu";
+            arg.ActionName = "DeleteTournament";
+            <button type="button" class="btn btn-danger mt-2" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa giải đấu</button>
+        }
     }
-    <a class="btn btn-danger mt-2" data-toggle="modal" data-target="#deleteModal">Kết thúc giải đấu</a>
 }
 else
 {
     <a class="btn btn-primary" asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-detailedTitle="giải mới">Thêm mới</a>
 }
-
-<div class="modal fade show" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteLabel">Bạn có chắc chắn?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Bạn có chắc chắn muốn
-                <label class="text-danger">kết thúc giải đấu</label>
-                ? Hành động này không thể bị khôi phục.
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                <a asp-action="EndTournament" asp-controller="Tournament" class="btn btn-danger">Kết thúc giải đấu</a>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>

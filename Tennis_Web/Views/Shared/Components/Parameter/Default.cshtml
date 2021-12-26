@@ -1,8 +1,138 @@
-﻿@*<table class="table">
-    <thead>
-        <tr>
-
-        </tr>
-    </thead>
-</table>*@
-<p>@ViewBag.test</p>
+﻿@{ 
+    bool a1 = ViewBag.IsCurrent == true;
+}
+@model Models.DS_Trinh
+<form>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="Id" type="hidden" />
+    
+    <dl class="row">
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.Trinh)
+        </dt>
+        <dd class="col-sm-6">
+            <input asp-for="Trinh" class="form-control" disabled/>
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.TL_VoDich)
+        </dt>
+        <dd class="col-sm-6">
+            @if (a1)
+            {
+                <input asp-for="TL_VoDich" class="form-control" id="TL_VoDich" />
+                <span asp-validation-for="TL_VoDich" class="text-danger"></span>
+            }
+            else
+            {<input asp-for="TL_VoDich" class="form-control" disabled/>}
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.TL_ChungKet)
+        </dt>
+        <dd class="col-sm-6">
+            @if (a1)
+            {
+                <input asp-for="TL_ChungKet" class="form-control" id="TL_ChungKet" />
+                <span asp-validation-for="TL_ChungKet" class="text-danger"></span>
+            }
+            else
+            {<input asp-for="TL_ChungKet" class="form-control" disabled />}
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.TL_BanKet)
+        </dt>
+        <dd class="col-sm-6">
+            @if (a1)
+            {
+                <input asp-for="TL_BanKet" class="form-control" id="TL_BanKet" />
+                <span asp-validation-for="TL_BanKet" class="text-danger"></span>
+            }
+            else
+            {<input asp-for="TL_BanKet" class="form-control" disabled />}
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.TL_TuKet)
+        </dt>
+        <dd class="col-sm-6">
+            @if (a1)
+            {
+                <input asp-for="TL_TuKet" class="form-control" id="TL_TuKet" />
+                <span asp-validation-for="TL_TuKet" class="text-danger"></span>
+            }
+            else
+            {<input asp-for="TL_TuKet" class="form-control" disabled />}
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.TL_Bang)
+        </dt>
+        <dd class="col-sm-6">
+            <input asp-for="TL_Bang" class="form-control" id="TL_Bang" disabled />
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.TongDiem)
+        </dt>
+        <dd class="col-sm-6">
+            <input asp-for="TongDiem" class="form-control" disabled />
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.ChenhLech)
+        </dt>
+        <dd class="col-sm-6">
+            <input asp-for="ChenhLech" class="form-control" disabled />
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.Diem_PB)
+        </dt>
+        <dd class="col-sm-6">
+            @if (a1)
+            {
+                <input asp-for="Diem_PB" class="form-control" required />
+                <span asp-validation-for="Diem_PB" class="text-danger"></span>
+            }
+            else 
+            {<input asp-for="Diem_PB" class="form-control" disabled />}
+        </dd>
+        <dt class="col-sm-4 font-weight-bold">
+            @Html.DisplayNameFor(m => m.DiemTru)
+        </dt>
+        <dd class="col-sm-6">
+            @if (a1)
+            {
+                <input asp-for="DiemTru" class="form-control" required />
+                <span asp-validation-for="DiemTru" class="text-danger"></span>
+            }
+            else
+            {<input asp-for="DiemTru" class="form-control" disabled />}
+        </dd>
+    </dl>
+    @if (a1)
+    {
+        <div class="form-group">
+            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" asp-route-isCurrent="true"/>
+        </div>
+    }
+    
+</form>
+<script type="text/javascript">
+    $(function () {
+        function UpdateTL_Bang() {
+            var tl_vd = $("#TL_VoDich").val();
+            var tl_ck = $("#TL_ChungKet").val();
+            var tl_bk = $("#TL_BanKet").val();
+            var tl_tk = $("#TL_TuKet").val();
+            var tl_bang = 100 - tl_vd - tl_ck - tl_bk - tl_tk
+            $("#TL_Bang").val(tl_bang)
+        }
+        jQuery('#TL_VoDich').on('input', function () {
+            UpdateTL_Bang()
+        });
+        jQuery('#TL_ChungKet').on('input', function () {
+            UpdateTL_Bang()
+        });
+        jQuery('#TL_BanKet').on('input', function () {
+            UpdateTL_Bang()
+        });
+        jQuery('#TL_TuKet').on('input', function () {
+            UpdateTL_Bang()
+        });
+    });
+</script>

@@ -1,0 +1,31 @@
+﻿@model Tennis_Web.Controllers.MethodController.ConfirmViewModal
+<div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteLabel">Xác nhận</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="ConfirmModal">
+                    <input type="hidden" asp-for="BtnMsg" />
+                    <input type="hidden" asp-for="Message" />
+                    <input type="hidden" asp-for="ActionName" />
+                    <input type="hidden" asp-for="ControllerName" />
+                    <input type="hidden" asp-for="RouteValues" />
+                </form>
+                Bạn có chắc chắn muốn
+                <label class="text-danger">
+                    @Model.Message?
+                </label>
+                Hành động này không thể bị khôi phục.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                <button class="btn btn-danger" type="button" data-save="modal">@Model.BtnMsg</button>
+            </div>
+        </div>
+    </div>
+</div>    

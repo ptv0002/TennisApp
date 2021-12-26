@@ -114,12 +114,12 @@
                         <span>Xuất ra file Excel</span>
                     </a>
                 </li>
-                }
-                <!-- Sidebar Toggler (Sidebar) -->
-                <li class="text-center d-none d-md-inline">
-                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
-                </li>
-            </ul>
+            }
+            <!-- Sidebar Toggler (Sidebar) -->
+            <li class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </li>
+        </ul>
         <!-- End of Sidebar -->
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column min-vh-100">
@@ -208,6 +208,8 @@
     <!-- Page level custom scripts -->
     <script src="~/sbadmin/js/demo/chart-area-demo.js"></script>
     <script src="~/sbadmin/js/demo/chart-pie-demo.js"></script>
-    @await Component.InvokeAsync("Notyf")
+    @*@await Component.InvokeAsync("Notyf")*@
+    @RenderSection("Scripts", required: false)
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>
