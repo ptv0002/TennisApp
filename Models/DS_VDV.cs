@@ -56,6 +56,8 @@
         [DisplayName("Chức Vụ")]
         public string ChucVu { get; set; }
 
+        //[DisplayName("Tham Gia")]
+        //public bool? ThamGia { get; set; }
         //public int? Id_KhuVuc { get; set; }
         [ForeignKey("ID_KhuVuc")]
         [DisplayName("ID Khu Vực")]

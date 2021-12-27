@@ -17,7 +17,7 @@
         </a>
     </div>
 }
-<ul class="nav nav-tabs mt-2">
+<ul class="nav nav-tabs mt-3">
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Info ? "active" : string.Empty)">
         <a asp-route-tabname="Info" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs">Thông tin chung</a>
     </li>

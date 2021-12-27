@@ -28,19 +28,20 @@ namespace Tennis_Web.Views.Shared.Components.Parameter
             switch (a1, a2)
             {
                 case (true, false or true): // Current tournament
-                    var sheet = new MethodController(_context, _environment).GetWorkSheet("DS_Trinh");
+                    var temp = new MethodController(_context, _environment);
+                    var sheet = temp.GetWorkSheet("DS_Trinh");
                     var row = (int)vm.ID;
-                    item.Id = Convert.ToInt32(sheet.Cells[row, 1].Text);
-                    item.ChenhLech = int.TryParse(sheet.Cells[row, 2].Text, out var a) ? a : null;
-                    item.DiemTru = int.TryParse(sheet.Cells[row, 3].Text, out var b) ? b : null;
-                    item.Diem_PB = int.TryParse(sheet.Cells[row, 4].Text, out var c) ? c : null;
-                    item.TL_BanKet = decimal.TryParse(sheet.Cells[row, 6].Text, out var d) ? d : null;
-                    item.TL_Bang = decimal.TryParse(sheet.Cells[row, 7].Text, out var e) ? e : null;
-                    item.TL_ChungKet = decimal.TryParse(sheet.Cells[row, 8].Text, out var f) ? f : null;
-                    item.TL_TuKet = decimal.TryParse(sheet.Cells[row, 9].Text, out var g) ? g : null;
-                    item.TL_VoDich = decimal.TryParse(sheet.Cells[row, 10].Text, out var h) ? h : null;
-                    item.TongDiem = int.TryParse(sheet.Cells[row, 11].Text, out var i) ? i : null;
-                    item.Trinh = int.TryParse(sheet.Cells[row, 12].Text, out var j) ? j : null;
+                    item.Id = Convert.ToInt32(sheet.Cells[row, temp.GetColumn("Id", sheet)].Text);
+                    item.ChenhLech = int.TryParse(sheet.Cells[row, temp.GetColumn("ChenhLech", sheet)].Text, out var a) ? a : null;
+                    item.DiemTru = int.TryParse(sheet.Cells[row, temp.GetColumn("DiemTru", sheet)].Text, out var b) ? b : null;
+                    item.Diem_PB = int.TryParse(sheet.Cells[row, temp.GetColumn("Diem_PB", sheet)].Text, out var c) ? c : null;
+                    item.TL_BanKet = decimal.TryParse(sheet.Cells[row, temp.GetColumn("TL_BanKet", sheet)].Text, out var d) ? d : null;
+                    item.TL_Bang = decimal.TryParse(sheet.Cells[row, temp.GetColumn("TL_Bang", sheet)].Text, out var e) ? e : null;
+                    item.TL_ChungKet = decimal.TryParse(sheet.Cells[row, temp.GetColumn("TL_ChungKet", sheet)].Text, out var f) ? f : null;
+                    item.TL_TuKet = decimal.TryParse(sheet.Cells[row, temp.GetColumn("TL_TuKet", sheet)].Text, out var g) ? g : null;
+                    item.TL_VoDich = decimal.TryParse(sheet.Cells[row, temp.GetColumn("TL_VoDich", sheet)].Text, out var h) ? h : null;
+                    item.TongDiem = int.TryParse(sheet.Cells[row, temp.GetColumn("TongDiem", sheet)].Text, out var i) ? i : null;
+                    item.Trinh = int.TryParse(sheet.Cells[row, temp.GetColumn("Trinh", sheet)].Text, out var j) ? j : null;
                     break;
                 case (false, false): // Previous tournament
                     var table = await _context.DS_Trinhs.FindAsync(vm.ID);

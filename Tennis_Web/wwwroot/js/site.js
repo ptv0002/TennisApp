@@ -3,6 +3,7 @@
 
 // Write your JavaScript code.
 $(function () {
+    // ---------------- Script for confirm modal popup ----------------
     // Show confirm modal popup
     var placeholderElement = $('#modal-placeholder');
     // Listen to the button and get data that's passed in
@@ -25,4 +26,29 @@ $(function () {
             placeholderElement.find('.modal').modal('hide');
         })
     })
+    // ---------------- Script for updating TL_Bang - Parameter Tab ----------------
+    function UpdateTL_Bang() {
+        var tl_vd = $("#TL_VoDich").val();
+        var tl_ck = $("#TL_ChungKet").val();
+        var tl_bk = $("#TL_BanKet").val();
+        var tl_tk = $("#TL_TuKet").val();
+        var tl_bang = 100 - tl_vd - tl_ck - tl_bk - tl_tk
+        $("#TL_Bang").val(tl_bang)
+    }
+    $('#TL_VoDich').on('input', function (event) {
+        UpdateTL_Bang()
+        event.preventDefault();
+    });
+    $('#TL_ChungKet').on('input', function (event) {
+        event.preventDefault();
+        UpdateTL_Bang()
+    });
+    $('#TL_BanKet').on('input', function (event) {
+        event.preventDefault();
+        UpdateTL_Bang()
+    });
+    $('#TL_TuKet').on('input', function (event) {
+        event.preventDefault();
+        UpdateTL_Bang()
+    });
 })

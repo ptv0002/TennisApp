@@ -30,11 +30,11 @@
                 ActionName = "EndTournament",
                 ControllerName = "Tournament"
             };
-            <button type="button" class="btn btn-primary mt-2 mr-2" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Kết thúc giải đấu</button>
+            <button type="button" class="btn btn-primary mt-3 mr-2" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Kết thúc giải đấu</button>
             arg.BtnMsg = "Xóa";
             arg.Message = "xóa giải đấu";
             arg.ActionName = "DeleteTournament";
-            <button type="button" class="btn btn-danger mt-2" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa giải đấu</button>
+            <button type="button" class="btn btn-danger mt-3" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa giải đấu</button>
         }
     }
 }

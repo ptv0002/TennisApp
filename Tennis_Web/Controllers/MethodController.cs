@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -27,19 +28,39 @@ namespace Tennis_Web.Controllers
             public string ControllerName { get; set; }
             public object RouteValues { get; set; }
         }
-
+        public int GetColumn(string columnName, ExcelWorksheet sheet)
+        {
+            var idx = sheet.Cells["1:1"].First(c => c.Value.ToString() == columnName).Start.Column;
+            return idx;
+        }
         public ExcelWorksheet GetWorkSheet(string sheetName)
         {
-            var workbook = GetExcel();
-            return workbook.Worksheets[sheetName];
+            var package = GetExcel();
+            return package.Workbook.Worksheets[sheetName];
         }
         public ExcelWorksheet GetWorkSheet(int index)
         {
-            var workbook = GetExcel();
-            return workbook.Worksheets[index];
+            var package = GetExcel();
+            return package.Workbook.Worksheets[index];
         }
-        
-        public ExcelWorkbook GetExcel()
+        public List<DS_Trinh> GetLevelList()
+        {
+            var levels = new List<DS_Trinh>();
+            var temp = new MethodController(_context, _environment);
+            var levSheet = temp.GetWorkSheet("DS_Trinh");
+            int rowCount = levSheet.Dimension.End.Row;
+            for (int row = 2; row < rowCount + 1; row++)
+            {
+                DS_Trinh item = new()
+                {
+                    Id = Convert.ToInt32(levSheet.Cells[row, temp.GetColumn("Id", levSheet)].Text),
+                    Trinh = Convert.ToInt32(levSheet.Cells[row, temp.GetColumn("Trinh", levSheet)].Text)
+                };
+                levels.Add(item);
+            }
+            return levels;
+        }
+        public ExcelPackage GetExcel()
         {
             // Index | Sheet
             //   0   | DS_Bang
@@ -52,9 +73,9 @@ namespace Tennis_Web.Controllers
             //   7   | DS_Vong
             var path = Path.Combine(_environment.WebRootPath, "Files/") + "Giai_Dau.xlsx";
             FileInfo file = new(path);
-            return new ExcelPackage(file).Workbook;
+            return new ExcelPackage(file);
         }
-        public void ImportFromExcel(ExcelWorkbook excel)
+        public void ImportFromExcel(ExcelPackage excel)
         {
 
         }

@@ -1,6 +1,8 @@
-﻿
+﻿@{
+    bool a1 = ViewBag.IsCurrent == true;
+}
 @model Models.DS_Giai
-<form>
+<form asp-action="UpdateInfo">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input asp-for="Id" type="hidden" />
     <dl class="row">
@@ -8,26 +10,84 @@
             Tên
         </dt>
         <dd class="col-sm-10">
-            <input asp-for="Ten" class="form-control" required />
-            <span asp-validation-for="Ten" class="text-danger"></span>
+            @if (a1)
+            {
+                <input asp-for="Ten" class="form-control" required />
+                <span asp-validation-for="Ten" class="text-danger"></span>
+            }
+            else
+            {<input asp-for="Ten" class="form-control" disabled />}
         </dd>
         <dt class="col-sm-2 font-weight-bold">
             Ngày
         </dt>
         <dd class="col-sm-10">
-            <input asp-for="Ngay" class="form-control" required />
-            <span asp-validation-for="Ngay" class="text-danger"></span>
+            @if (a1)
+            {
+                <input asp-for="Ngay" class="form-control" required />
+                <span asp-validation-for="Ngay" class="text-danger"></span>
+            }
+            else
+            {<input asp-for="Ngay" class="form-control" disabled />}
         </dd>
         <dt class="col-sm-2 font-weight-bold">
             Ghi chú
         </dt>
         <dd class="col-sm-10">
-            <textarea asp-for="GhiChu" class="form-control"></textarea>
+            @if (a1)
+            {
+                <textarea asp-for="GhiChu" class="form-control"></textarea>
+            }
+            else
+            { <textarea asp-for="GhiChu" class="form-control" disabled></textarea>}
         </dd>
-
+        <dt class="col-sm-2 font-weight-bold">
+            DS Trình
+        </dt>
+        <dd class="col-sm-4">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            Trình
+                        </th>
+                        @if (a1)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.LevelList)
+                    {
+                        <tr>
+                            @if (a1)
+                            {
+                                <td>
+                                    <input class="form-control" value="@item.Trinh"/>
+                                </td>
+                                <td class="col-1">
+                                    <button type="button" asp-route-id="@item.Id" class="btn btn-danger">Xóa</button>
+                                </td>
+                            }
+                            else 
+                            {
+                                <td>@item.Trinh</td> 
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (a1)
+            {
+                <button id="add" type="submit" class="btn btn-primary">Thêm</button>
+            }
+        </dd>
     </dl>
-    <div class="form-group">
-        <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
-    </div>
-
+    @if (a1)
+    {
+        <div class="form-group">
+            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+        </div>
+    }
 </form>

@@ -20,10 +20,4 @@ namespace Tennis_Web.Models
         Player,
         Division
     }
-    public class PlayerTab
-    {
-        public int? Id { get; set; }
-        public IEnumerable<DS_VDV> PlayerList { get; set; }
-        public TournamentTabViewModel ViewModel { get; set; }
-    }
 }

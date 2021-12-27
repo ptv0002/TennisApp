@@ -62,13 +62,7 @@ namespace Tennis_Web.Views.Shared.Components.Player
                 default: // New tournament, error or other unanticipated scenario
                     break;
             }
-            ViewData["DS_VDV"] = new SelectList(_context.DS_VDVs.Where(m => m.Status == true), "Id", "Ten_Tat");
-            var playerTab = new PlayerTab()
-            {
-                PlayerList = model,
-                ViewModel = vm
-            };
-            return View(playerTab);
+            return View(model);
         }
     }
 }
