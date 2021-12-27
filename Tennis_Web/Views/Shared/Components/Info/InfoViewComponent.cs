@@ -35,21 +35,20 @@ namespace Tennis_Web.Views.Shared.Components.Info
                     item.Ngay = DateTime.TryParse(tourSheet.Cells[2, temp.GetColumn("Ngay", tourSheet)].Text, out var a) ? a : null;
                     item.Ten = tourSheet.Cells[2, temp.GetColumn("Ten", tourSheet)].Text;
                     item.GhiChu = tourSheet.Cells[2, temp.GetColumn("GhiChu", tourSheet)].Text;
-                    levels = temp.GetLevelList();
+                    item.DS_Trinh = temp.GetLevelList();
                     break;
                 case (false, false): // Previous tournament
                     var table = await _context.DS_Giais.FindAsync(vm.ID);
                     item.Ngay = table.Ngay;
                     item.Ten = table.Ten;
                     item.GhiChu = table.GhiChu;
-                    levels = await _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Id == vm.ID).ToListAsync();
+                    item.DS_Trinh = await _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Id == vm.ID).ToListAsync();
                     break;
                 default: // Error or other unanticipated scenario
                     ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
                     break;
             }
             ViewBag.IsCurrent = vm.IsCurrent;
-            ViewBag.LevelList = levels;
             return View(item);
         }
     }
