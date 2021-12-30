@@ -16,23 +16,23 @@
         </div>
     </div>
 </div>
-<table class="table table-bordered dataTable">
+<table class="table dataTable">
     <thead>
-        <tr class="row">
-            <th class="sorting" aria-controls="dataTable" aria-label="Position: activate to sort column ascending">
+        <tr>
+            <th class="sorting" aria-controls="dataTable" aria-label="Tên tắt: activate to sort column ascending">
                 Tên tắt
             </th>
             @if (a1)
             {
-                <th></th>
+                <th>Tham gia</th>
             }
-            <th>
+            <th class="sorting" aria-controls="dataTable" aria-label="CLB: activate to sort column ascending">
                 CLB
             </th>
-            <th>
+            <th class="sorting" aria-controls="dataTable" aria-label="Điểm cũ: activate to sort column ascending">
                 Điểm cũ
             </th>
-            <th>
+            <th class="sorting" aria-controls="dataTable" aria-label="Điểm: activate to sort column ascending">
                 Điểm
             </th>
         </tr>
@@ -44,7 +44,7 @@
                 <td>@item.Ten_Tat</td>
                 @if (a1)
                 {
-                    <td></td>
+                    <td><input asp-for="@item.Tham_Gia" class="form-check-input" /></td>
                 }
                 <td>@item.CLB</td>
                 <td>@item.DiemCu</td>

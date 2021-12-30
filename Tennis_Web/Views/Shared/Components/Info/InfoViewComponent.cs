@@ -27,27 +27,32 @@ namespace Tennis_Web.Views.Shared.Components.Info
             bool a2 = vm.ID == null;
             DS_Giai item = new();
             var levels = new List<DS_Trinh>();
-            switch (a1, a2) 
+            if (vm.ID != null)
             {
-                case (true, false or true): // Current tournament
-                    var temp = new MethodController(_context, _environment);
-                    var tourSheet = temp.GetWorkSheet("DS_Giai");
-                    item.Ngay = DateTime.TryParse(tourSheet.Cells[2, temp.GetColumn("Ngay", tourSheet)].Text, out var a) ? a : null;
-                    item.Ten = tourSheet.Cells[2, temp.GetColumn("Ten", tourSheet)].Text;
-                    item.GhiChu = tourSheet.Cells[2, temp.GetColumn("GhiChu", tourSheet)].Text;
-                    item.DS_Trinh = temp.GetLevelList();
-                    break;
-                case (false, false): // Previous tournament
-                    var table = await _context.DS_Giais.FindAsync(vm.ID);
-                    item.Ngay = table.Ngay;
-                    item.Ten = table.Ten;
-                    item.GhiChu = table.GhiChu;
-                    item.DS_Trinh = await _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Id == vm.ID).ToListAsync();
-                    break;
-                default: // Error or other unanticipated scenario
-                    ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
-                    break;
+                var table = await _context.DS_Giais.FindAsync(vm.ID);
+                item.Ngay = table.Ngay;
+                item.Ten = table.Ten;
+                item.GhiChu = table.GhiChu;
+                item.DS_Trinh = await _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Id == vm.ID).ToListAsync();
             }
+            else { ModelState.AddModelError(string.Empty, "Lỗi hệ thống!"); }
+            //switch (a1, a2) 
+            //{
+            //    case (true, false or true): // Current tournament
+            //        var temp = new MethodController(_context, _environment);
+            //        var tourSheet = temp.GetWorkSheet("DS_Giai");
+            //        item.Ngay = DateTime.TryParse(tourSheet.Cells[2, temp.GetColumn("Ngay", tourSheet)].Text, out var a) ? a : null;
+            //        item.Ten = tourSheet.Cells[2, temp.GetColumn("Ten", tourSheet)].Text;
+            //        item.GhiChu = tourSheet.Cells[2, temp.GetColumn("GhiChu", tourSheet)].Text;
+            //        item.DS_Trinh = temp.GetLevelList();
+            //        break;
+            //    case (false, false): // Previous tournament
+                    
+            //        break;
+            //    default: // Error or other unanticipated scenario
+                    
+            //        break;
+            //}
             ViewBag.IsCurrent = vm.IsCurrent;
             return View(item);
         }

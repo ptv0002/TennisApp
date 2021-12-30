@@ -26,19 +26,28 @@ namespace Tennis_Web.Controllers
         public IActionResult Index(bool? isCurrent)
         {
             var model = new List<DS_Giai>();
-            if (isCurrent == true)
+            var isOld = _context.DS_VDVs.Any(m => m.Tham_Gia == true);
+            if (isOld == true)
             {
-                // Get Tournament name from Tournament sheet (DS_Giai) | index = 3 (start at 0)
-                var tournament = new MethodController(_context, _environment).GetWorkSheet("DS_Giai");
-                DS_Giai giai = new()
+                var last = _context.DS_Giais.Last();
+                if (isCurrent == true)
                 {
-                    Ten = tournament.Cells[2, 4].Text
-                };
-                model.Add(giai);
-                ViewBag.isCurrent = true;
-            }
-            else model = _context.DS_Giais.OrderByDescending(m => m.Ngay).ToList();
+                    //// Get Tournament name from Tournament sheet (DS_Giai) | index = 3 (start at 0)
+                    //var tournament = new MethodController(_context, _environment).GetWorkSheet("DS_Giai");
+                    //DS_Giai giai = new()
+                    //{
+                    //    Ten = tournament.Cells[2, 4].Text
+                    //};
+                    model.Add(last);
+                    ViewBag.isCurrent = true;
+                }
+                else
+                {
+                    model = _context.DS_Giais.OrderByDescending(m => m.Ngay).Where(m => m.Id != last.Id).ToList();
+                }
 
+            }
+            else { }
             return View(model);
         }
         public IActionResult SwitchToTabs(string tabname, bool? isCurrent, int? id, string detailedTitle)
@@ -70,9 +79,11 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult TournamentInfo(TournamentTabViewModel model, bool? isCurrent, int? giaiID, int? trinhID)
         {
+            bool a1 = giaiID == null;
+            bool a2 = trinhID == null;
+            // Assign default value for first time access
             if (model.ID == null && model.IsCurrent == null)
             {
-                // Assign default value for first time access
                 model = new TournamentTabViewModel
                 {
                     ActiveTab = Tab.Info,
@@ -80,28 +91,17 @@ namespace Tennis_Web.Controllers
                     ID = giaiID
                 };
             }
-            var levels = new List<DS_Trinh>();
-            if (model.IsCurrent == true)
+            if (a1 && !a2)
             {
-                var temp = new MethodController(_context, _environment);
-                // Get Tournament name from Tournament sheet (DS_Giai)
-                var tourSheet = temp.GetWorkSheet("DS_Giai");
-                ViewBag.TournamentTitle = tourSheet.Cells[2, temp.GetColumn("Ten", tourSheet)].Text;
-                // Get Level name from Level sheet(DS_Trinh)
-                levels = temp.GetLevelList();
+                var temp = _context.DS_Trinhs.Find(trinhID);
+                //model.ID = temp.ID_Giai;
             }
-            else
+            else if (a1 && a2)
             {
-                // Handle going back to Tournament Info from Level Info
-                if (giaiID == null)
-                {
-                    var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == trinhID);
-                    giaiID = temp.First().DS_Giai.Id;
-                }
-                model.ID = giaiID;
-                levels = _context.DS_Trinhs.Where(m => m.DS_Giai.Id == giaiID).ToList();
+                ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
+                return View(model);
             }
-            ViewBag.LevelList = levels.OrderByDescending(m => m.Trinh);
+            ViewBag.LevelList = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.Trinh).Where(m => m.DS_Giai.Id == model.ID).ToList();
             return View(model);
         }
         public IActionResult LevelInfo(TournamentTabViewModel model, bool? isCurrent, int? trinhID, string detailedTitle)
@@ -132,59 +132,71 @@ namespace Tennis_Web.Controllers
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
         [HttpPost]
-        public IActionResult UpdateParameter(DS_Trinh item)
+        public async Task<IActionResult> UpdateParameter(DS_Trinh item)
         {
-            var temp = new MethodController(_context, _environment);
-            var excel = temp.GetExcel();
-            var row = item.Id;
-            using (excel)
-            {
-                var sheet = excel.Workbook.Worksheets["DS_Trinh"];
-                sheet.Cells[row, temp.GetColumn("DiemTru", sheet)].Value = item.DiemTru;
-                sheet.Cells[row, temp.GetColumn("Diem_PB", sheet)].Value = item.Diem_PB;
-                sheet.Cells[row, temp.GetColumn("TL_BanKet", sheet)].Value = item.TL_BanKet;
-                sheet.Cells[row, temp.GetColumn("TL_Bang", sheet)].Value = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet; // TL_Bang
-                sheet.Cells[row, temp.GetColumn("TL_ChungKet", sheet)].Value = item.TL_ChungKet;
-                sheet.Cells[row, temp.GetColumn("TL_TuKet", sheet)].Value = item.TL_TuKet;
-                sheet.Cells[row, temp.GetColumn("TL_VoDich", sheet)].Value = item.TL_VoDich;
-                excel.Save();
-            }
-            var tourSheet = temp.GetWorkSheet("DS_Giai");
-            var levSheet = temp.GetWorkSheet("DS_Trinh");
-            string tournament = tourSheet.Cells[2, temp.GetColumn("Ten", tourSheet)].Text;
-            string level = levSheet.Cells[row, temp.GetColumn("Trinh", levSheet)].Text; 
+            //var temp = new MethodController(_context, _environment);
+            //var excel = temp.GetExcel();
+            //var row = item.Id;
+            //using (excel)
+            //{
+            //    var sheet = excel.Workbook.Worksheets["DS_Trinh"];
+            //    sheet.Cells[row, temp.GetColumn("DiemTru", sheet)].Value = item.DiemTru;
+            //    sheet.Cells[row, temp.GetColumn("Diem_PB", sheet)].Value = item.Diem_PB;
+            //    sheet.Cells[row, temp.GetColumn("TL_BanKet", sheet)].Value = item.TL_BanKet;
+            //    sheet.Cells[row, temp.GetColumn("TL_Bang", sheet)].Value = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet; // TL_Bang
+            //    sheet.Cells[row, temp.GetColumn("TL_ChungKet", sheet)].Value = item.TL_ChungKet;
+            //    sheet.Cells[row, temp.GetColumn("TL_TuKet", sheet)].Value = item.TL_TuKet;
+            //    sheet.Cells[row, temp.GetColumn("TL_VoDich", sheet)].Value = item.TL_VoDich;
+            //    excel.Save();
+            //}
+            //var tourSheet = temp.GetWorkSheet("DS_Giai");
+            //var levSheet = temp.GetWorkSheet("DS_Trinh");
+            //string tournament = tourSheet.Cells[2, temp.GetColumn("Ten", tourSheet)].Text;
+            //string level = levSheet.Cells[row, temp.GetColumn("Trinh", levSheet)].Text; 
+            var model = _context.DS_Trinhs.Find(item.Id);
+            model.Trinh = item.Trinh;
+            model.DiemTru = item.DiemTru;
+            model.Diem_PB = item.Diem_PB;
+            model.TL_VoDich = item.TL_VoDich;
+            model.TL_ChungKet = item.TL_ChungKet;
+            model.TL_BanKet = item.TL_BanKet;
+            model.TL_TuKet = item.TL_TuKet;
+            model.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet; // TL_Bang
+            _context.Update(item);
+            await _context.SaveChangesAsync();
+
+            var temp = _context.DS_Giais.Find(/*model.ID_Giai*/);
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
                 ActiveTab = Tab.Parameter,
                 IsCurrent = true,
-                ID = row,
-                DetailedTitle = "Giải " + tournament + " - Trình " + level
+                ID = model.Id,
+                DetailedTitle = "Giải " + temp.Ten + " - Trình " + model.Trinh
             };
             return RedirectToAction(nameof(LevelInfo), vm);
         }
-        public IActionResult DeleteTournament()
+        public async Task<IActionResult> DeleteLevel(int id)
         {
-            var excel = new MethodController(_context, _environment).GetExcel();
-            using (excel)
+            var item = await _context.DS_Trinhs.FindAsync(id);
+            _context.Remove(item);
+            await _context.SaveChangesAsync();
+            // Assign value for view model
+            var vm = new TournamentTabViewModel
             {
-                for (int i = 0; i < excel.Workbook.Worksheets.Count; i++)
-                {
-                    // Clear cells
-                    var sheet = excel.Workbook.Worksheets[i];
-                    sheet.Cells["2:1000"].Clear();
-                }
-                excel.Save();
-            }
-            return RedirectToAction(nameof(Index), true); 
+                ActiveTab = Tab.Info,
+                IsCurrent = true
+            };
+            return RedirectToAction(nameof(TournamentInfo), vm);
         }
-        public IActionResult EndTournament()
+        public async Task<IActionResult> EndTournament()
         {
-            // Import all data from Excel file
-            var temp = new MethodController(_context, _environment);
-            temp.ImportFromExcel(temp.GetExcel());
-            // Clear Excel file after
-            return DeleteTournament();
+            // Reset Participation status to all false
+            var list = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
+            list.ForEach(m => m.Tham_Gia = false);
+            _context.Update(list);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index), true);
         }
     }
 }

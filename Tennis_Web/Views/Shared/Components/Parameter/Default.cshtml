@@ -11,7 +11,13 @@
             @Html.DisplayNameFor(m => m.Trinh)
         </dt>
         <dd class="col-sm-10 row">
-            <input asp-for="Trinh" class="form-control col-sm-3" disabled />
+            @if (a1)
+            {
+                <input asp-for="Trinh" class="form-control col-sm-3" required />
+                <span asp-validation-for="Trinh" class="text-danger"></span>
+            }
+            else
+            {<input asp-for="Trinh" class="form-control col-sm-3" disabled />}
         </dd>
         <dt class="col-sm-2 font-weight-bold">
             @Html.DisplayNameFor(m => m.TL_VoDich)
@@ -19,7 +25,7 @@
         <dd class="col-sm-10 row ">
             @if (a1)
             {
-                <input asp-for="TL_VoDich" class="form-control col-sm-3" id="TL_VoDich" /> 
+                <input asp-for="TL_VoDich" class="form-control col-sm-3" id="TL_VoDich" />
                 <label class="text-lg"> %</label>
                 <span asp-validation-for="TL_VoDich" class="text-danger"></span>
             }
@@ -123,8 +129,17 @@
     </dl>
     @if (a1)
     {
+        var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+        {
+            BtnMsg = "Xóa",
+            Message = "xóa trình đấu",
+            ActionName = "DeleteLevel",
+            ControllerName = "Tournament",
+            RouteValues = new { Id = Model.Id }
+        };
         <div class="form-group">
-            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" formmethod="post"/>
+            <input type="submit" value="Lưu thay đổi" class="btn btn-primary mr-2" formmethod="post"/>
+            <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa trình đấu</button>
         </div>
     }
 
