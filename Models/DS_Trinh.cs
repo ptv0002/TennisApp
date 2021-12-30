@@ -38,6 +38,7 @@
         [DisplayName("Chênh Lệch")]
         public int? ChenhLech { get; set; }
         [DisplayName("ID Giải")]
+        public int ID_Giai { get; set; }
         [ForeignKey("ID_Giai")]
         public virtual DS_Giai DS_Giai { get; set; }
         public virtual ICollection<DS_Cap> DS_Cap { get; set; }

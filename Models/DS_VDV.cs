@@ -27,6 +27,9 @@
         [DisplayName("Tên Tắt")]
         public string Ten_Tat { get; set; }
 
+        [StringLength(10)]
+        [DisplayName("Mã Cặp")]
+        public string Ma_Cap { get; set; }
         public bool? Tham_Gia { get; set; }
 
         [StringLength(40)]

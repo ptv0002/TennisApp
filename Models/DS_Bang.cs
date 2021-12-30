@@ -18,7 +18,7 @@
         public decimal? Diem { get; set; } // Total point to split
         [DisplayName("Tên")]
         public string Ten { get; set; }
-        //public int? ID_Trinh { get; set; }
+        public int ID_Trinh { get; set; }
         [ForeignKey("ID_Trinh")]
         [DisplayName("ID Trình")]
         public virtual DS_Trinh DS_Trinh { get; set; }

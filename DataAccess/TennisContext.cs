@@ -41,21 +41,21 @@ namespace DataAccess
                 }
             }
             modelBuilder.Entity<DS_Diem>()
-                .Property(c => c.Diem).HasColumnType("decimal(5,3)");
+                .Property(c => c.Diem).HasColumnType("decimal(6,3)");
             modelBuilder.Entity<DS_Bang>()
-                .Property(c => c.Diem).HasColumnType("decimal(5,3)");
+                .Property(c => c.Diem).HasColumnType("decimal(6,3)");
             modelBuilder.Entity<DS_Cap>()
-                .Property(c => c.Diem).HasColumnType("decimal(5,3)");
+                .Property(c => c.Diem).HasColumnType("decimal(6,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_VoDich).HasColumnType("decimal(5,3)");
+                .Property(c => c.TL_VoDich).HasColumnType("decimal(6,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_ChungKet).HasColumnType("decimal(5,3)");
+                .Property(c => c.TL_ChungKet).HasColumnType("decimal(6,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_BanKet).HasColumnType("decimal(5,3)");
+                .Property(c => c.TL_BanKet).HasColumnType("decimal(6,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_TuKet).HasColumnType("decimal(5,3)");
+                .Property(c => c.TL_TuKet).HasColumnType("decimal(6,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_Bang).HasColumnType("decimal(5,3)");
+                .Property(c => c.TL_Bang).HasColumnType("decimal(6,3)");
         }
     }
 }
