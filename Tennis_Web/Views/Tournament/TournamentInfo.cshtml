@@ -8,7 +8,7 @@
 }
 @model Tennis_Web.Models.TournamentTabViewModel
 <hr/>
-@foreach (Models.DS_Trinh item in ViewBag.LevelList)
+@*@foreach (var item in ViewBag.LevelList)
 {
     string title = "Giải " + ViewBag.TournamentTitle + " - Trình " + @item.Trinh;
     <div class="row ml-2">
@@ -16,10 +16,13 @@
             • Trình @item.Trinh
         </a>
     </div>
-}
+}*@
 <ul class="nav nav-tabs mt-3">
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Info ? "active" : string.Empty)">
         <a asp-route-tabname="Info" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs">Thông tin chung</a>
+    </li>
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.LevelList ? "active" : string.Empty)">
+        <a asp-route-tabname="LevelList" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs">Danh sách trình</a>
     </li>
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Player ? "active" : string.Empty)">
         <a asp-route-tabname="Player" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs">Danh sách VĐV tham gia</a>
@@ -30,6 +33,9 @@
     {
         case Tennis_Web.Models.Tab.Info:
             @await Component.InvokeAsync("Info", Model);
+            break;
+        case Tennis_Web.Models.Tab.LevelList:
+            @await Component.InvokeAsync("LevelList", Model);
             break;
         case Tennis_Web.Models.Tab.Player:
             @await Component.InvokeAsync("Player", Model);

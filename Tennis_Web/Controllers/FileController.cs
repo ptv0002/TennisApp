@@ -55,8 +55,6 @@ namespace Tennis_Web.Controllers
             using (var package = new ExcelPackage(stream))
             {
                 var types = _context.Model.GetEntityTypes();
-                //_context.Model.GetEntityTypes().ElementAt(1).GetTableName()
-                //var types = Assembly.LoadFrom("D:/Data/Visual Studio Projects/TennisApp/Models/bin/Debug/net5.0/Models.dll").GetTypes();
 
                 foreach (var t in types) 
                 {

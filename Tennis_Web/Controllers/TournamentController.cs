@@ -23,34 +23,13 @@ namespace Tennis_Web.Controllers
             _context = context;
             _environment = environment;
         }
-        public IActionResult Index(bool? isCurrent)
+        public IActionResult Index(bool isCurrent)
         {
-            var model = new List<DS_Giai>();
-            var isOld = _context.DS_VDVs.Any(m => m.Tham_Gia == true);
-            if (isOld == true)
-            {
-                var last = _context.DS_Giais.Last();
-                if (isCurrent == true)
-                {
-                    //// Get Tournament name from Tournament sheet (DS_Giai) | index = 3 (start at 0)
-                    //var tournament = new MethodController(_context, _environment).GetWorkSheet("DS_Giai");
-                    //DS_Giai giai = new()
-                    //{
-                    //    Ten = tournament.Cells[2, 4].Text
-                    //};
-                    model.Add(last);
-                    ViewBag.isCurrent = true;
-                }
-                else
-                {
-                    model = _context.DS_Giais.OrderByDescending(m => m.Ngay).Where(m => m.Id != last.Id).ToList();
-                }
-
-            }
-            else { }
+            var model = _context.DS_Giais.OrderByDescending(m => m.Ngay).Where(m => m.GiaiMoi == isCurrent).ToList();
+            ViewBag.isCurrent = isCurrent;
             return View(model);
         }
-        public IActionResult SwitchToTabs(string tabname, bool? isCurrent, int? id, string detailedTitle)
+        public IActionResult SwitchToTabs(string tabname, bool isCurrent, int? id, string detailedTitle)
         {
             var vm = new TournamentTabViewModel()
             {
@@ -69,6 +48,9 @@ namespace Tennis_Web.Controllers
                 case "Info":
                     vm.ActiveTab = Tab.Info;
                     return RedirectToAction(nameof(TournamentInfo), vm);
+                case "LevelList":
+                    vm.ActiveTab = Tab.LevelList;
+                    return RedirectToAction(nameof(TournamentInfo), vm);
                 case "Player":
                     vm.ActiveTab = Tab.Player;
                     return RedirectToAction(nameof(TournamentInfo), vm);
@@ -77,12 +59,12 @@ namespace Tennis_Web.Controllers
                     return RedirectToAction(nameof(TournamentInfo), vm);
             }
         }
-        public IActionResult TournamentInfo(TournamentTabViewModel model, bool? isCurrent, int? giaiID, int? trinhID)
+        public IActionResult TournamentInfo(TournamentTabViewModel model, bool isCurrent, int? giaiID, int? trinhID)
         {
             bool a1 = giaiID == null;
             bool a2 = trinhID == null;
             // Assign default value for first time access
-            if (model.ID == null && model.IsCurrent == null)
+            if (model.ID == null)
             {
                 model = new TournamentTabViewModel
                 {
@@ -94,19 +76,52 @@ namespace Tennis_Web.Controllers
             if (a1 && !a2)
             {
                 var temp = _context.DS_Trinhs.Find(trinhID);
-                //model.ID = temp.ID_Giai;
+                model.ID = temp.ID_Giai;
             }
             else if (a1 && a2)
             {
                 ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
                 return View(model);
             }
-            ViewBag.LevelList = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.Trinh).Where(m => m.DS_Giai.Id == model.ID).ToList();
+            //ViewBag.LevelList = _context.DS_Trinhs.OrderByDescending(m => m.Trinh).Where(m => m.ID_Giai == model.ID).ToList();
+            ViewBag.TournamentTitle = _context.DS_Giais.Find(model.ID).Ten;
             return View(model);
         }
-        public IActionResult LevelInfo(TournamentTabViewModel model, bool? isCurrent, int? trinhID, string detailedTitle)
+        [HttpPost]
+        public IActionResult UpdateInfo(DS_Giai model)
         {
-            if (model.ID == null && model.IsCurrent == null)
+            // Find and update Tournament Info
+            var item = _context.DS_Giais.Find(model.Id);
+            item.Ten = model.Ten;
+            item.GhiChu = model.GhiChu;
+            item.Ngay = model.Ngay;
+            _context.Update(item);
+            // Assign value for view model
+            var vm = new TournamentTabViewModel
+            {
+                ActiveTab = Tab.Info,
+                IsCurrent = true
+            };
+            return RedirectToAction(nameof(TournamentInfo), vm);
+        }
+
+        public async Task<IActionResult> EndTournament(int id)
+        {
+            // Find the current Tournament and set IsCurrent to false
+            var item = _context.DS_Giais.Find(id);
+            item.GiaiMoi = false;
+            _context.Update(item);
+            // Reset Participation status to all false
+            var list = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
+            list.ForEach(m => m.Tham_Gia = false);
+            _context.Update(list);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index), true);
+        }
+        // ----------------------------------------------------- Level Related -----------------------------------------------------
+        public IActionResult LevelInfo(TournamentTabViewModel model, bool isCurrent, int? trinhID, string detailedTitle)
+        {
+            if (model.ID == null)
             {
                 // Assign default value for first time access
                 model = new TournamentTabViewModel
@@ -119,18 +134,7 @@ namespace Tennis_Web.Controllers
             }
             return View(model);
         }
-        [HttpPost]
-        public IActionResult UpdateInfo(DS_Giai item)
-        {
-           
-            // Assign value for view model
-            var vm = new TournamentTabViewModel
-            {
-                ActiveTab = Tab.Info,
-                IsCurrent = true
-            };
-            return RedirectToAction(nameof(TournamentInfo), vm);
-        }
+        
         [HttpPost]
         public async Task<IActionResult> UpdateParameter(DS_Trinh item)
         {
@@ -165,7 +169,7 @@ namespace Tennis_Web.Controllers
             _context.Update(item);
             await _context.SaveChangesAsync();
 
-            var temp = _context.DS_Giais.Find(/*model.ID_Giai*/);
+            var temp = _context.DS_Giais.Find(model.ID_Giai);
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
@@ -176,6 +180,18 @@ namespace Tennis_Web.Controllers
             };
             return RedirectToAction(nameof(LevelInfo), vm);
         }
+        public async Task<IActionResult> AddLevel(string newLevel)
+        {
+            _context.Add(new DS_Trinh { Trinh = Convert.ToInt32(newLevel)});
+            await _context.SaveChangesAsync();
+            // Assign value for view model
+            var vm = new TournamentTabViewModel
+            {
+                ActiveTab = Tab.LevelList,
+                IsCurrent = true
+            };
+            return RedirectToAction(nameof(TournamentInfo), vm);
+        }
         public async Task<IActionResult> DeleteLevel(int id)
         {
             var item = await _context.DS_Trinhs.FindAsync(id);
@@ -184,19 +200,10 @@ namespace Tennis_Web.Controllers
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
-                ActiveTab = Tab.Info,
+                ActiveTab = Tab.LevelList,
                 IsCurrent = true
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
-        }
-        public async Task<IActionResult> EndTournament()
-        {
-            // Reset Participation status to all false
-            var list = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
-            list.ForEach(m => m.Tham_Gia = false);
-            _context.Update(list);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index), true);
         }
     }
 }

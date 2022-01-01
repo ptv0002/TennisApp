@@ -9,7 +9,7 @@ namespace Tennis_Web.Models
     public class TournamentTabViewModel
     {
         public Tab ActiveTab { get; set; }
-        public bool? IsCurrent { get; set; }
+        public bool IsCurrent { get; set; }
         public int? ID { get; set; }
         public string DetailedTitle { get; set; }
     }
@@ -18,6 +18,7 @@ namespace Tennis_Web.Models
         Info,
         Parameter,
         Player,
-        Division
+        Division,
+        LevelList
     }
 }

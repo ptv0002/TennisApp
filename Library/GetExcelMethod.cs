@@ -11,9 +11,8 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class GetExcelMethod<T>
+    public class GetExcelMethod
     {
-        private IEnumerable<T> List { get; set; }
         public GetExcelMethod()
         {
         }
@@ -31,22 +30,6 @@ namespace Library
         {
             var package = GetExcel();
             return package.Workbook.Worksheets[index];
-        }
-        public List<T> GetLevelList()
-        {
-            var levels = new List<T>();
-            var levSheet = GetWorkSheet("DS_Trinh");
-            int rowCount = levSheet.Dimension.End.Row;
-            for (int row = 2; row < rowCount + 1; row++)
-            {
-                //T item = new()
-                //{
-                ////    Id = Convert.ToInt32(levSheet.Cells[row, GetColumn("Id", levSheet)].Text),
-                ////    Trinh = Convert.ToInt32(levSheet.Cells[row, GetColumn("Trinh", levSheet)].Text)
-                //};
-                //levels.Add(/*item*/);
-            }
-            return levels;
         }
         public ExcelPackage GetExcel()
         {

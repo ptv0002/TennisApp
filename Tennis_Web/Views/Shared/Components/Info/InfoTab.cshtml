@@ -1,7 +1,5 @@
 ﻿@{
     bool a1 = ViewBag.IsCurrent == true;
-    int count = 0;
-    string a2 = "tablerow" + count;
 }
 @model Models.DS_Giai
 <form asp-action="UpdateInfo">
@@ -43,52 +41,6 @@
             else
             { <textarea asp-for="GhiChu" class="form-control" disabled></textarea>}
         </dd>
-        <dt class="col-sm-2 font-weight-bold">
-            DS Trình
-        </dt>
-        <dd class="col-sm-4">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>
-                            Trình
-                        </th>
-                        @if (a1)
-                        {
-                            <th></th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.DS_Trinh)
-                    {
-                        <tr class=@a2>
-                            @if (a1)
-                            {
-                                <td>
-                                    @item.Trinh
-                                </td>
-                            }
-                            else
-                            {
-                                <td>@item.Trinh</td>
-
-                            }
-                        </tr>
-                        count++;
-                    }
-                </tbody>
-                @if (a1)
-                {
-                    <tfoot>
-                        <tr>
-                            <td><input type="text" id="txtName"/></td>
-                            <td><input type="button" id="addLevel" value="Add" class="btn btn-primary"/></td>
-                        </tr>
-                    </tfoot>
-                }
-            </table>
-        </dd>
     </dl>
     @if (a1)
     {
@@ -97,10 +49,11 @@
             BtnMsg = "Kết thúc",
             Message = "kết thúc giải đấu",
             ActionName = "EndTournament",
-            ControllerName = "Tournament"
+            ControllerName = "Tournament",
+            RouteValues = new { id = Model.Id}
         };
         <div class="form-group">
-            <input type="submit" id="saveTournament" value="Lưu thay đổi" class="btn btn-primary mr-2" formmethod="post" />
+            <input type="submit" value="Lưu thay đổi" class="btn btn-primary mr-2" formmethod="post" />
             <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Kết thúc giải đấu</button>
         </div>
     }

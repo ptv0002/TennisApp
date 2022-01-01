@@ -1,4 +1,4 @@
-namespace Models
+﻿namespace Models
 {
     using System;
     using System.Collections.Generic;
@@ -15,12 +15,14 @@ namespace Models
 
         [Key]
         public int Id { get; set; }
+        [DisplayName("Giải Mới")]
+        public bool GiaiMoi { get; set; }
         [StringLength(120)]
-        [DisplayName("T�n")]
+        [DisplayName("Tên")]
         public string Ten { get; set; }
-        [DisplayName("Ng�y")]
+        [DisplayName("Ngày")]
         public DateTime? Ngay { get; set; }
-        [DisplayName("Ghi Ch�")]
+        [DisplayName("Ghi Chú")]
         public string GhiChu { get; set; }
         public virtual ICollection<DS_Trinh> DS_Trinh { get; set; }
     }
