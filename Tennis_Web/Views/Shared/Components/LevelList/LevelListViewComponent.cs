@@ -9,10 +9,10 @@ using Tennis_Web.Models;
 
 namespace Tennis_Web.Views.Shared.Components.LevelList
 {
-    public class LevelLisViewComponent : ViewComponent
+    public class LevelListViewComponent : ViewComponent
     {
         private readonly TennisContext _context;
-        public LevelLisViewComponent(TennisContext context)
+        public LevelListViewComponent(TennisContext context)
         {
             _context = context;
         }

@@ -18,7 +18,7 @@ namespace Library
             public string Message { get; set; }
             public List<T> List { get; set; }
         }
-        public ResultModel ImportWorkSheet(IFormFile file, string sheetName, List<string> listOfColumns)
+        public ResultModel ImportWorkSheet(IFormFile file, string sheetName)
         {
             var model = new ResultModel();
             // Check if file is empty
@@ -39,12 +39,9 @@ namespace Library
             var ms = new MemoryStream();
             file.CopyTo(ms);
             var excel = new ExcelPackage(ms);
-            // Check if list of columns is valid
-            if (!ValidColumnList(listOfColumns).Succeeded) return ValidColumnList(listOfColumns);
-            // Check if 
-            return model;
+            return ToList(excel, sheetName);
         }
-        public ResultModel ImportWorkSheet(string path, string sheetName, List<string> listOfColumns)
+        public ResultModel ImportWorkSheet(string path, string sheetName)
         {
             var model = new ResultModel();
             FileInfo file = new(path);
@@ -55,28 +52,7 @@ namespace Library
                 return model;
             }
             var excel = new ExcelPackage(path);
-            // Check if list of columns is valid
-            if (!ValidColumnList(listOfColumns).Succeeded) return ValidColumnList(listOfColumns);
-            if (!ToList(excel, sheetName).Succeeded) 
-            {
-
-            }
-            return model;
-        }
-        public ResultModel ValidColumnList(List<string> listOfColumns)
-        {
-            var model = new ResultModel();
-            foreach (var col in listOfColumns)
-            {
-                if(typeof(T).GetProperty(col) == null)
-                {
-                    model.Succeeded = false;
-                    model.Message = "Column " + col + " is invalid!";
-                }
-                return model;
-            }
-            model.Succeeded = true;
-            return model;
+            return ToList(excel, sheetName);
         }
         public ResultModel ToList(ExcelPackage excel, string sheetName)
         {
@@ -114,25 +90,6 @@ namespace Library
             }
             model.Succeeded = true;
             model.List = list;
-            return model;
-        }
-        public ResultModel SaveToDatabase(DbContext context, List<T> list, List<string> listOfColumns)
-        {
-            var model = new ResultModel();
-            var entity = context.Model.FindEntityType(typeof(T).ToString());
-            if (entity == null)
-            {
-                model.Succeeded = false;
-                model.Message = "Type can't be found in the provided context!";
-                return model;
-            }
-            foreach(var col in listOfColumns)
-            {
-                
-            }
-            entity.GetProperties();    
-
-            model.Succeeded = true;
             return model;
         }
         public int? GetColumn(string columnName, ExcelWorksheet sheet)

@@ -180,9 +180,13 @@ namespace Tennis_Web.Controllers
             };
             return RedirectToAction(nameof(LevelInfo), vm);
         }
-        public async Task<IActionResult> AddLevel(string newLevel)
+        [HttpPost]
+        public async Task<IActionResult> AddLevel(string newLevel, string idGiai)
         {
-            _context.Add(new DS_Trinh { Trinh = Convert.ToInt32(newLevel)});
+            _context.Add(new DS_Trinh { 
+                Trinh = Convert.ToInt32(newLevel),
+                ID_Giai = Convert.ToInt32(idGiai)
+            });
             await _context.SaveChangesAsync();
             // Assign value for view model
             var vm = new TournamentTabViewModel
