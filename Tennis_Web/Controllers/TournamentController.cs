@@ -63,8 +63,9 @@ namespace Tennis_Web.Controllers
         {
             bool a1 = giaiID == null;
             bool a2 = trinhID == null;
+            bool a3 = model.ID == null;
             // Assign default value for first time access
-            if (model.ID == null)
+            if (!a1 && a3)
             {
                 model = new TournamentTabViewModel
                 {
@@ -78,7 +79,7 @@ namespace Tennis_Web.Controllers
                 var temp = _context.DS_Trinhs.Find(trinhID);
                 model.ID = temp.ID_Giai;
             }
-            else if (a1 && a2)
+            else if (a1 && a2 && a3)
             {
                 ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
                 return View(model);
@@ -100,7 +101,8 @@ namespace Tennis_Web.Controllers
             var vm = new TournamentTabViewModel
             {
                 ActiveTab = Tab.Info,
-                IsCurrent = true
+                IsCurrent = true,
+                ID = model.Id
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
@@ -180,7 +182,7 @@ namespace Tennis_Web.Controllers
             };
             return RedirectToAction(nameof(LevelInfo), vm);
         }
-        [HttpPost]
+        //[HttpPost]
         public async Task<IActionResult> AddLevel(string newLevel, string idGiai)
         {
             _context.Add(new DS_Trinh { 
@@ -192,7 +194,8 @@ namespace Tennis_Web.Controllers
             var vm = new TournamentTabViewModel
             {
                 ActiveTab = Tab.LevelList,
-                IsCurrent = true
+                IsCurrent = true,
+                ID = Convert.ToInt32(idGiai)
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
@@ -205,7 +208,8 @@ namespace Tennis_Web.Controllers
             var vm = new TournamentTabViewModel
             {
                 ActiveTab = Tab.LevelList,
-                IsCurrent = true
+                IsCurrent = true,
+                ID = item.ID_Giai
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }

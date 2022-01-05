@@ -171,5 +171,26 @@ namespace Tennis_Web.Controllers
                     Urlredirect = Url.Action("Index", "Home", new { area = "NoRole" })
                 });
         }
+        public IActionResult Index()
+        {
+            var model = _userManager.Users.ToList();
+            return View(model);
+        }
+        public IActionResult Update(bool isNew)
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Update(AppUser model)
+        {
+            await _userManager.CreateAsync(model, model.PasswordHash);
+            return RedirectToAction(nameof(Index));
+        }
+        
+        public IActionResult Delete(int id)
+        {
+            var model = _userManager.Users.ToList();
+            return View(model);
+        }
     }
 }

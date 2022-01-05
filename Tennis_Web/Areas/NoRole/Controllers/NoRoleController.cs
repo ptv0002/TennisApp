@@ -23,9 +23,9 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public IActionResult Index()
         {
-            FileInfo file = new("D:/Giai_Dau.xlsx");
-            var temp = new SetExcelMethod<DS_Giai>();
-            temp.ImportWorkSheet("D:/Giai_Dau.xlsx", "DS_Giai");
+            //FileInfo file = new("D:/Giai_Dau.xlsx");
+            //var temp = new SetExcelMethod<DS_Giai>();
+            //temp.ImportWorkSheet("D:/Giai_Dau.xlsx", "DS_Giai");
             return View();
         }
     }

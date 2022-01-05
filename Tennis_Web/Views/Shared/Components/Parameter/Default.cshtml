@@ -138,9 +138,12 @@
             RouteValues = new { Id = Model.Id }
         };
         <div class="form-group">
-            <input type="submit" value="Lưu thay đổi" class="btn btn-primary mr-2" formmethod="post"/>
+            <input type="submit" value="Lưu thay đổi" class="btn btn-primary mr-2" formmethod="post" />
             <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa trình đấu</button>
         </div>
     }
 
 </form>
+
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>

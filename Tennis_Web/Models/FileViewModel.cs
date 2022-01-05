@@ -9,8 +9,9 @@ namespace Tennis_Web.Models
     public class FileViewModel
     {
     }
-    public class ImportExcelViewModel
+    public class EntityListViewModel
     {
-        public IFormFile File { get; set; }
+        public bool IsSelected { get; set; }
+        public string EntityName { get; set; }
     }
 }

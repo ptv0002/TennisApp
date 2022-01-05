@@ -43,15 +43,13 @@
             </li>
             <!-- ============== Match Results (Trọng tài - Referee) =============== -->
             <!-- Divider -->
-            <li>
-                <hr class="sidebar-divider">
-            </li>
+            <li> <hr class="sidebar-divider"> </li>
             <li class="sidebar-heading">
                 Nhập kết quả
             </li>
             <!-- Nav Item -->
             <li class="nav-item @ViewBag.RActive">
-                <a class="nav-link" asp-controller="Shipping" asp-action="Index">
+                <a class="nav-link" asp-controller="Match" asp-action="Index">
                     <i class="fas fa-fw fa-chalkboard-teacher"></i>
                     <span>Kết quả thi đấu</span>
                 </a>
@@ -85,7 +83,7 @@
                 </li>
                 <li class="nav-item @ViewBag.AActive">
                     <!-- Nav Item - Announcements -->
-                    <a class="nav-link" asp-controller="Vehicle" asp-action="Index">
+                    <a class="nav-link" asp-controller="File" asp-action="AnnouncementIndex">
                         <i class="fas fa-fw fa-bullhorn"></i>
                         <span>Thông báo chung</span>
                     </a>

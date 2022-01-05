@@ -1,15 +1,26 @@
 ﻿@{
     ViewData["Title"] = "Nhập dữ liệu từ Excel";
 }
-@model Tennis_Web.Models.ImportExcelViewModel
+@model List<Tennis_Web.Models.EntityListViewModel>
 <hr />
 <form asp-action="ImportExcel" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <h4 class="text-black-50">Chọn danh sách nhập dữ liệu</h4>
     <div class="form-group">
-        <input class="form-control mr-3" asp-for="File" type="file" multiple />
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <div class="col ml-2">
+                <input type="hidden" asp-for="@Model[i].EntityName" />
+                <input asp-for="@Model[i].IsSelected" class="form-check-input" />
+                <label class="form-check-label text-black-50">@Model[i].EntityName</label>
+            </div>
+        }
     </div>
     <div class="form-group">
-        <input class="mr-2 btn btn-primary" formmethod="post" type="submit" asp-route-isPartial="true" value="Thêm mới"/>
+        <input class="form-control mr-3" type="file" name="file" multiple />
+    </div>
+    <div class="form-group">
+        <input class="mr-2 btn btn-primary" formmethod="post" type="submit" asp-route-isPartial="true" value="Thêm mới" />
         <a class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Xóa và thêm mới</a>
     </div>
     <div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none">
@@ -30,7 +41,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                    <input class="btn btn-danger" formmethod="post" type="submit" asp-route-isPartial="false" value="Xóa và thêm mới"/>
+                    <input class="btn btn-danger" formmethod="post" type="submit" asp-route-isPartial="false" value="Xóa và thêm mới" />
                 </div>
             </div>
         </div>
