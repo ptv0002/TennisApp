@@ -1,8 +1,10 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using DataAccess;
+using Library;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -25,18 +27,50 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult ImportExcel()
         {
-            return View();
+            return View(GetEntityLists());
         }
         [HttpPost]
-        public IActionResult ImportExcel(bool isPartial, ImportExcelViewModel model)
+        public IActionResult ImportExcel(bool isPartial, IFormFile file, List<EntityListViewModel> list)
         {
-            if (isPartial == false) // Delete all DB info
+            if(list.All(m => m.IsSelected == false))
             {
-                
+                ModelState.AddModelError(string.Empty, "Chọn ít nhất 1 danh sách để nhập dữ liệu!");
+                return View(list);
             }
-            // Add new info from Excel
-            //ImportFromExcel();
-            return View();
+            var temp = new SetExcelMethod<DS_Giai>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].IsSelected == true) 
+                {
+                    var a = temp.ImportWorkSheet(file, list[i].EntityName);
+                    if (!a.Succeeded)
+                    {
+                        ModelState.AddModelError(string.Empty, a.Message);
+                        return View(list);
+                    }
+                    if (isPartial == false) // Delete all DB info
+                    {
+                        
+                    }
+                    else
+                    {
+
+                    }
+                    // Add new info from Excel
+                }
+            }
+            return View(list);
+        }
+        public List<EntityListViewModel> GetEntityLists()
+        {
+            var list = new List<EntityListViewModel>();
+            var types = _context.Model.GetEntityTypes();
+
+            foreach (var t in types)
+            {
+                if (t.DisplayName().StartsWith("DS_")) list.Add(new EntityListViewModel() { EntityName = t.DisplayName() });
+            }
+            return list;
         }
         public IActionResult ExportExcel()
         {
@@ -58,7 +92,6 @@ namespace Tennis_Web.Controllers
 
                 foreach (var t in types) 
                 {
-                    // Create sheets for every class, except for those listed above
                     if (t.DisplayName().StartsWith("DS_"))
                     {
                         // Add sheet for every class
