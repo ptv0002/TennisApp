@@ -14,9 +14,9 @@
         [DisplayName("Mã Trận")]
         public string Ma_Tran { get; set; }
         [DisplayName("KQ1")]
-        public int? Kq_1 { get; set; }
+        public int Kq_1 { get; set; }
         [DisplayName("KQ2")]
-        public int? Kq_2 { get; set; }
+        public int Kq_2 { get; set; }
         public int? ID_Cap1 { get; set; }
         [DisplayName("ID Cặp 1")]
         [ForeignKey("ID_Cap1")]

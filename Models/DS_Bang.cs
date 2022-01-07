@@ -15,7 +15,7 @@
         [Key]
         public int Id { get; set; }
         [DisplayName("Điểm")]
-        public decimal? Diem { get; set; } // Total point to split
+        public decimal Diem { get; set; } // Total point to split
         [DisplayName("Tên")]
         public string Ten { get; set; }
         public int ID_Trinh { get; set; }

@@ -18,25 +18,25 @@
         [Key]
         public int Id { get; set; }
         [DisplayName("Trình")]
-        public int? Trinh { get; set; }
+        public int Trinh { get; set; }
         [DisplayName("Tỉ lệ Vô Địch")]
-        public decimal? TL_VoDich { get; set; }
+        public decimal TL_VoDich { get; set; }
         [DisplayName("Tỉ lệ Chung Kết")]
-        public decimal? TL_ChungKet { get; set; }
+        public decimal TL_ChungKet { get; set; }
         [DisplayName("Tỉ lệ Bán Kết")]
-        public decimal? TL_BanKet { get; set; }
+        public decimal TL_BanKet { get; set; }
         [DisplayName("Tỉ lệ Tứ Kết")]
-        public decimal? TL_TuKet { get; set; }
+        public decimal TL_TuKet { get; set; }
         [DisplayName("Tỉ lệ Bảng")]
-        public decimal? TL_Bang { get; set; }
+        public decimal TL_Bang { get; set; }
         [DisplayName("Điểm phân bổ")]
-        public int? Diem_PB { get; set; }  // Điểm trừ trước khi phân bổ
+        public int Diem_PB { get; set; }  // Điểm trừ trước khi phân bổ
         [DisplayName("Tổng Điểm")]
-        public int? TongDiem { get; set; }
+        public int TongDiem { get; set; }
         [DisplayName("Điểm Trừ")]
-        public int? DiemTru { get; set; }
+        public int DiemTru { get; set; }
         [DisplayName("Chênh Lệch")]
-        public int? ChenhLech { get; set; }
+        public int ChenhLech { get; set; }
         [DisplayName("ID Giải")]
         public int ID_Giai { get; set; }
         [ForeignKey("ID_Giai")]

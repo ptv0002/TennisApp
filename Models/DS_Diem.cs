@@ -11,7 +11,7 @@
         [Key]
         public int Id { get; set; }
         [DisplayName("Điểm")]
-        public decimal? Diem { get; set; }
+        public decimal Diem { get; set; }
         public int ID_Cap { get; set; }
         [ForeignKey("ID_Cap")]
         [DisplayName("ID Cặp")]
