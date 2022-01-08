@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Models.DS_VDV>
+
+@{
+    ViewData["Title"] = "Danh sách VĐV";
+}
+<p>
+    <a asp-action="Update" class="btn btn-primary">Thêm mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Ho)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ten)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ten_Tat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CLB)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KhachMoi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileAnh)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Diem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiemCu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CongTy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChucVu)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ho)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ten)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ten_Tat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CLB)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.KhachMoi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileAnh)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Diem)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DiemCu)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CongTy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChucVu)
+                </td>
+                <td>
+                    <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-info">Sửa</a>
+                </td>
+            </tr>
+
+        }
+    </tbody>
+</table>

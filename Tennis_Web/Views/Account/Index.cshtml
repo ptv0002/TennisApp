@@ -3,16 +3,16 @@
 }
 @model IEnumerable<Models.AppUser>
 <p>
-    <a asp-action="Update" asp-route-isNew="true" class="btn btn-primary">Thêm mới</a>
+    <a asp-action="Update" class="btn btn-primary">Thêm mới</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Tên tài khoản
+                Username
             </th>
             <th>
-                Username
+                Tên tài khoản
             </th>
             <th>
                 Email
@@ -23,21 +23,31 @@
     <tbody>
         @foreach (var item in Model)
         {
+            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+            {
+                BtnMsg = "Xóa",
+                Message = "xóa tài khoản " + item.UserName,
+                ActionName = "Delete",
+                ControllerName = "Account",
+                RouteValues = new { id = item.Id }
+            };
             <tr>
                 <td>
-                    @item.FullName
+                    @item.UserName
                 </td>
                 <td>
-                    @item.UserName
+                    @item.FullName
                 </td>
                 <td>
                     @item.Email
                 </td>
                 <td>
                     <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-info">Sửa</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Xóa</a>
+                    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>

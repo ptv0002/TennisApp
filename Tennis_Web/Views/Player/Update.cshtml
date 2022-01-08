@@ -1,0 +1,103 @@
+﻿@model Models.DS_VDV
+@{
+    ViewData["Title"] = "Thông tin VĐV";
+}
+<hr />
+<form asp-action="Update" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <dl class="row">
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="Ho" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Ho" class="form-control" />
+            <span asp-validation-for="Ho" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="Ten" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Ten" class="form-control" />
+            <span asp-validation-for="Ten" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="Ten_Tat" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Ten_Tat" class="form-control" required />
+            <span asp-validation-for="Ten_Tat" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="Tel" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Tel" class="form-control" required />
+            <span asp-validation-for="Tel" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="CLB" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="CLB" class="form-control" />
+            <span asp-validation-for="CLB" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="Email" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="KhachMoi" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="KhachMoi" class="form-check-input" />
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="CongTy" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="CongTy" class="form-control" />
+            <span asp-validation-for="CongTy" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="ChucVu" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="ChucVu" class="form-control" />
+            <span asp-validation-for="ChucVu" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="DiemCu" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="DiemCu" class="form-control" disabled />
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="Diem" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Diem" class="form-control" disabled />
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="Status" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Status" class="form-check-input" />
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="FileAnh" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <input class="form-control" type="file" name="fileAnh" multiple/>
+        </dd>
+    </dl>
+    <div class="form-group">
+        <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+    </div>
+    <div>
+        <a asp-action="Index">Quay lại trang trước</a>
+    </div>
+</form>
