@@ -12,8 +12,10 @@
         {
             //DS_Diem = new HashSet<DS_Diem>();
             DS_Trans = new HashSet<DS_Tran>();
-            
+
         }
+        [NotMapped]
+        public string ma { get; set; }
         [Key]
         public int Id { get; set; }
 
