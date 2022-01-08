@@ -27,7 +27,7 @@
         [DisplayName("ID Trình")]
         public virtual DS_Trinh DS_Trinh { get; set; }
 
-        public int ID_Bang { get; set; }
+        public int? ID_Bang { get; set; }
         [ForeignKey("ID_Bang")]
         [DisplayName("ID Bảng")]
         public virtual DS_Bang DS_Bang { get; set; }

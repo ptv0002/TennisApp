@@ -17,5 +17,6 @@ namespace Models
         [DisplayName("Ngày")]
         public DateTime? Ngay { get; set; }
         public string FileTB { get; set; }
+        public bool HienThi { get; set; }
     }
 }

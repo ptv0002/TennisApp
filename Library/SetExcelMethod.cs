@@ -40,13 +40,6 @@ namespace Library
             var ms = new MemoryStream();
             file.CopyTo(ms);
             var excel = new ExcelPackage(ms);
-            // Check sheetName có trong file Excel ko
-            if (excel.Workbook.Worksheets[sheetName] == null)
-            {
-                model.Succeeded = false;
-                model.Message = "Sheet name doesn't in File Excel !";
-                return model;
-            };
             return ToList(excel, sheetName);
         }
         public ResultModel ImportWorkSheet(string path, string sheetName)
@@ -60,6 +53,11 @@ namespace Library
                 return model;
             }
             var excel = new ExcelPackage(path);
+            return ToList(excel, sheetName);
+        }
+        public ResultModel ToList(ExcelPackage excel, string sheetName)
+        {
+            var model = new ResultModel();
             // Check sheetName có trong file Excel ko
             if (excel.Workbook.Worksheets[sheetName] == null)
             {
@@ -67,12 +65,7 @@ namespace Library
                 model.Message = "Sheet name doesn't in File Excel !";
                 return model;
             };
-            return ToList(excel, sheetName);
-        }
-        public ResultModel ToList(ExcelPackage excel, string sheetName)
-        {
             // Check if sheetName is valid
-            var model = new ResultModel();
             if (!(typeof(T).Name == sheetName))
             {
                 model.Succeeded = false;

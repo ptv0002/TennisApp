@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
+    <PackageReference Include="Audit.EntityFramework.Core" Version="19.0.3" />
     <PackageReference Include="EPPlus" Version="5.8.3" />
     <PackageReference Include="jquery.datatables" Version="1.10.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
