@@ -1,2 +1,105 @@
 ﻿@{
+    ViewData["Title"] = "Thông tin tài khoản";
 }
+@model Tennis_Web.Models.AccountViewModel
+<hr/>
+<form asp-action="Update">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <dl class="row">
+        <dt class="col-sm-3 font-weight-bold">
+            @Html.DisplayNameFor(model => model.Username)
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Username" class="form-control" required />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+        @if (ViewBag.Id == null)
+        {
+            <dd class="col-sm-9">
+                <input asp-for="Password" class="form-control" required />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </dd>
+            <dt class="col-sm-3 font-weight-bold">
+                @Html.DisplayNameFor(model => model.ConfirmPassword)
+            </dt>
+            <dd class="col-sm-9">
+                <input asp-for="ConfirmPassword" class="form-control" required />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </dd>
+        }
+        else
+        {
+            <dd class="col-sm-9">
+                <a class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Thay đổi mật khẩu</a>
+            </dd>
+        }
+        <dt class="col-sm-3 font-weight-bold">
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="FullName" class="form-control" required />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-9">
+            <input asp-for="Email" class="form-control" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            @Html.DisplayNameFor(model => model.RoleName)
+        </dt>
+        <dd class="col-sm-9">
+            <select asp-for="RoleName" class="form-control" asp-items="ViewBag.RoleName"></select>
+        </dd>
+        <dt class="col-sm-3 font-weight-bold">
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+        <dd class="col-sm-9">
+            <textarea asp-for="Note" class="form-control"></textarea>
+        </dd>
+    </dl>
+    <div class="form-group">
+        <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+    </div>
+    <div>
+        <a asp-action="Index">Quay lại trang trước</a>
+    </div>
+</form>
+
+
+<form asp-action="ResetPassword">
+    <div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteLabel" aria-hidden="true" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteLabel">Thay đổi mật khẩu</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" value="@ViewBag.Id" name="id" />
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label font-weight-bold"></label>
+                        <input asp-for="Password" class="form-control" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="control-label font-weight-bold"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" required />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                    <input class="btn btn-danger" formmethod="post" type="submit" value="Thay đổi" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

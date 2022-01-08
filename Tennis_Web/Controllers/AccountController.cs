@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -176,21 +177,62 @@ namespace Tennis_Web.Controllers
             var model = _userManager.Users.ToList();
             return View(model);
         }
-        public IActionResult Update(bool isNew)
+        public async Task<IActionResult> Update(string id)
         {
-            return View();
+            string selectedValue = null;
+            var model = new AccountViewModel();
+            if(id != null)
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                model.Username = user.UserName;
+                model.Email = user.Email;
+                model.Note = user.GhiChu;
+                model.FullName = user.FullName;
+                var roles = await _userManager.GetRolesAsync(user);
+                selectedValue = roles[0];
+            }
+            ViewBag.RoleName = new SelectList(_roleManager.Roles, "Name", "Name", selectedValue);
+            ViewBag.Id = id;
+            return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Update(AppUser model)
+        public async Task<IActionResult> Update(string id, AccountViewModel model)
         {
-            await _userManager.CreateAsync(model, model.PasswordHash);
-            return RedirectToAction(nameof(Index));
-        }
-        
-        public IActionResult Delete(int id)
-        {
-            var model = _userManager.Users.ToList();
+            var user = new AppUser();
+            if (id != null) user = await _userManager.FindByIdAsync(id);
+            user.FullName = model.FullName;
+            user.UserName = model.Username;
+            user.Email = model.Email;
+            user.GhiChu = model.Note;
+            var result = new IdentityResult();
+            if (id == null) 
+            { 
+                await _userManager.CreateAsync(user, model.Password);
+                result = await _userManager.AddToRoleAsync(user, model.RoleName);
+            }
+            else
+            {
+                await _userManager.UpdateAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
+                await _userManager.RemoveFromRolesAsync(user, roles);
+                result = await _userManager.AddToRoleAsync(user, model.RoleName);
+            }
+            if (result.Succeeded) return RedirectToAction(nameof(Index));
             return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string id, AccountViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            await _userManager.ResetPasswordAsync(user, token, model.Password);
+            return RedirectToAction(nameof(Update), new { isNew = false, id });
+        }
+        public async Task<IActionResult> Delete(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            await _userManager.DeleteAsync(user);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
