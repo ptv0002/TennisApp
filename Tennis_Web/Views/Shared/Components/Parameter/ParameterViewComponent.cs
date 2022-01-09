@@ -16,8 +16,12 @@ namespace Tennis_Web.Views.Shared.Components.Parameter
         }
         public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel vm)
         {
-            var item = await new DatabaseMethod<DS_Trinh>(_context).GetOjectFromDBAsync(vm.ID);
-            if (item == null) ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
+            var item = (DS_Trinh)vm.CurrentModel;
+            if (item == null)
+            {
+                item = await new DatabaseMethod<DS_Trinh>(_context).GetOjectFromDBAsync(vm.ID);
+                if (item == null) ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
+            }
             ViewBag.IsCurrent = vm.IsCurrent;
             return View(item);
         }

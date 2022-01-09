@@ -11,6 +11,7 @@ using Tennis_Web.Models;
 using OfficeOpenXml;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Library;
 
 namespace Tennis_Web.Controllers
 {
@@ -89,22 +90,29 @@ namespace Tennis_Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult UpdateInfo(DS_Giai model)
+        public async Task<IActionResult> UpdateInfo(DS_Giai item)
         {
             // Find and update Tournament Info
-            var item = _context.DS_Giais.Find(model.Id);
-            item.Ten = model.Ten;
-            item.GhiChu = model.GhiChu;
-            item.Ngay = model.Ngay;
-            _context.Update(item);
+            var columnsToSave = new List<string> { "Ten", "GhiChu", "Ngay", "Random"};
+            var result = await new DatabaseMethod<DS_Giai>(_context).SaveObjectToDBAsync(item.Id, item, columnsToSave);
+
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
                 ActiveTab = Tab.Info,
                 IsCurrent = true,
-                ID = model.Id
+                ID = item.Id
             };
+
+            // If save unsuccessfully, view error and display View with "item" 
+            if (!result.Succeeded)
+            {
+                vm.CurrentModel = item;
+                ModelState.AddModelError(string.Empty, result.Message);
+            }
+            // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(TournamentInfo), vm);
+
         }
 
         public async Task<IActionResult> EndTournament(int id)
@@ -113,9 +121,13 @@ namespace Tennis_Web.Controllers
             var item = _context.DS_Giais.Find(id);
             item.GiaiMoi = false;
             _context.Update(item);
-            // Reset Participation status to all false
-            var list = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
-            list.ForEach(m => m.Tham_Gia = false);
+            // Reset Participation status to all false and Pair code to null
+            var list = _context.DS_VDVs.ToList();
+            list.ForEach(m =>
+                            {
+                                m.Tham_Gia = false;
+                                m.Ma_Cap = null;
+                            });
             _context.Update(list);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index), true);
@@ -140,47 +152,28 @@ namespace Tennis_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateParameter(DS_Trinh item)
         {
-            //var temp = new MethodController(_context, _environment);
-            //var excel = temp.GetExcel();
-            //var row = item.Id;
-            //using (excel)
-            //{
-            //    var sheet = excel.Workbook.Worksheets["DS_Trinh"];
-            //    sheet.Cells[row, temp.GetColumn("DiemTru", sheet)].Value = item.DiemTru;
-            //    sheet.Cells[row, temp.GetColumn("Diem_PB", sheet)].Value = item.Diem_PB;
-            //    sheet.Cells[row, temp.GetColumn("TL_BanKet", sheet)].Value = item.TL_BanKet;
-            //    sheet.Cells[row, temp.GetColumn("TL_Bang", sheet)].Value = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet; // TL_Bang
-            //    sheet.Cells[row, temp.GetColumn("TL_ChungKet", sheet)].Value = item.TL_ChungKet;
-            //    sheet.Cells[row, temp.GetColumn("TL_TuKet", sheet)].Value = item.TL_TuKet;
-            //    sheet.Cells[row, temp.GetColumn("TL_VoDich", sheet)].Value = item.TL_VoDich;
-            //    excel.Save();
-            //}
-            //var tourSheet = temp.GetWorkSheet("DS_Giai");
-            //var levSheet = temp.GetWorkSheet("DS_Trinh");
-            //string tournament = tourSheet.Cells[2, temp.GetColumn("Ten", tourSheet)].Text;
-            //string level = levSheet.Cells[row, temp.GetColumn("Trinh", levSheet)].Text; 
-
-            var model = _context.DS_Trinhs.Find(item.Id);
-            model.Trinh = item.Trinh;
-            model.DiemTru = item.DiemTru;
-            model.Diem_PB = item.Diem_PB;
-            model.TL_VoDich = item.TL_VoDich;
-            model.TL_ChungKet = item.TL_ChungKet;
-            model.TL_BanKet = item.TL_BanKet;
-            model.TL_TuKet = item.TL_TuKet;
-            model.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet; // TL_Bang
-            _context.Update(item);
-            await _context.SaveChangesAsync();
-
-            var temp = _context.DS_Giais.Find(model.ID_Giai);
+            // Find and update Parameters from DS_Trinh
+            item.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet;
+            var columnsToSave = new List<string> { "Trinh", "DiemTru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
+            var result = await new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDBAsync(item.Id, item, columnsToSave);
+           
+            var temp = _context.DS_Giais.Find(item.ID_Giai);
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
                 ActiveTab = Tab.Parameter,
                 IsCurrent = true,
-                ID = model.Id,
-                DetailedTitle = "Giải " + temp.Ten + " - Trình " + model.Trinh
+                ID = item.Id,
+                DetailedTitle = "Giải " + temp.Ten + " - Trình " + item.Trinh
             };
+
+            // If save unsuccessfully, view error and display View with "item" 
+            if (!result.Succeeded)
+            {
+                vm.CurrentModel = item;
+                ModelState.AddModelError(string.Empty, result.Message);
+            }
+            // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(LevelInfo), vm);
         }
         //[HttpPost]

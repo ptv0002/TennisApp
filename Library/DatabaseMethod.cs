@@ -43,7 +43,7 @@ namespace Library
             var model = new ResultModel<T>();
             var destination = await _context.Set<T>().FindAsync(id);
             // Convert all column names to upper
-            columnsToSave.ConvertAll(m => m.ToUpper());
+            columnsToSave = columnsToSave.Select(m => m.ToUpper()).ToList();
             foreach(var prop in typeof(T).GetProperties())
             {
                 // Check if property is in the list to save, if yes, save value and remove the column from the list
@@ -57,7 +57,7 @@ namespace Library
             if (columnsToSave.Count == 1)
             {
                 model.Succeeded = false;
-                model.Message = columnsToSave.First() + "is not a valid column!";
+                model.Message = columnsToSave.First() + " is not a valid column!";
                 return model;
             }
             else if (columnsToSave.Count > 2)

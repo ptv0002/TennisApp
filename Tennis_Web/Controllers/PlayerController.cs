@@ -32,7 +32,12 @@ namespace Tennis_Web.Controllers
         {
             var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "CLB", "KhachMoi", "FileAnh", "Tel", "Email", "Status", "CongTy", "ChucVu" };
             var result = await new DatabaseMethod<DS_VDV>(_context).SaveObjectToDBAsync(id, source, columnsToSave);
-            return RedirectToAction(nameof(Index));
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            ModelState.AddModelError(string.Empty, result.Message);
+            return View(source);
         }
     }
 }
