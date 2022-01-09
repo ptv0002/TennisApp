@@ -37,12 +37,12 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Chọn ít nhất 1 danh sách để nhập dữ liệu!");
                 return View(list);
             }
-            var temp = new SetExcelMethod<DS_Giai>();
+            var temp = new ExcelMethod<DS_Giai>();
             for (int i = 0; i < list.Count; i++)
             {
                 if (list[i].IsSelected == true) 
                 {
-                    var a = temp.ImportWorkSheet(file, list[i].EntityName);
+                    var a = temp.ExcelToList(file, list[i].EntityName);
                     if (!a.Succeeded)
                     {
                         ModelState.AddModelError(string.Empty, a.Message);

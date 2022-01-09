@@ -1,14 +1,10 @@
 ﻿using DataAccess;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Tennis_Web.Controllers;
 using Tennis_Web.Models;
 
 namespace Tennis_Web.Views.Shared.Components.Player
@@ -16,53 +12,34 @@ namespace Tennis_Web.Views.Shared.Components.Player
     public class PlayerViewComponent : ViewComponent
     {
         private readonly TennisContext _context;
-        public readonly IWebHostEnvironment _environment;
-        public PlayerViewComponent(TennisContext context, IWebHostEnvironment environment)
+        public PlayerViewComponent(TennisContext context)
         {
             _context = context;
-            _environment = environment;
         }
         public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel vm)
         {
-            bool a1 = vm.IsCurrent == true;
-            bool a2 = vm.ID == null;
-            var model = new List<DS_VDV>();
-            //switch (a1, a2)
-            //{
-            //    case (true, false): // Current tournament
-            //        var player = new MethodController(_context, _environment).GetWorkSheet("DS_VDV");
-            //        int rowCount = player.Dimension.End.Row;
-            //        for (int row = 2; row < rowCount + 1; row++) // Row index starts at 1
-            //        {
-            //            DS_VDV item = new()
-            //            {
-            //                Ten_Tat = player.Cells[row, 15].Text,
-            //                CLB = player.Cells[row, 2].Text,
-            //                DiemCu = Convert.ToInt32(player.Cells[row, 6].Text),
-            //                Diem = Convert.ToInt32(player.Cells[row, 5].Text)
-            //            };
-            //            model.Add(item);
-            //        }
-            //        model.OrderByDescending(m => m.DiemCu);
-            //        break;
-            //    case (false, false): // Previous tournament
-            //        var dsCap = await _context.DS_Caps./*Include(m => m.DS_Trinh).*/Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.DS_Trinh.Id == vm.ID).ToListAsync();
-            //        foreach (var cap in dsCap)
-            //        {
-            //            model.Add(cap.VDV1);
-            //            model.Add(cap.VDV2);
-            //            //if (cap.DS_Trinh.Id == vm.TrinhID)
-            //            //{
-            //            //    model.Add(cap.VDV1);
-            //            //    model.Add(cap.VDV2);
-            //            //}
-            //        }
-            //        model.OrderByDescending(m => m.Diem);
-            //        break;
-            //    default: // New tournament, error or other unanticipated scenario
-            //        break;
-            //}
-            return View(model);
+            var players = new List<DS_VDV>();
+            if (vm.IsCurrent == true) 
+            {
+                // Display for current tournament
+            }
+            else 
+            {
+                /*
+                // Display for previous tournament
+                // Get all levels from given tournament
+                var levels = await _context.DS_Trinhs.Where(m => m.ID_Giai == vm.ID).Select(m => m.Id).ToListAsync();
+                // Get all pairs with Level Id from the level id list
+                var vdv1_Ids = await _context.DS_Caps.Where(m => levels.Contains((int)m.ID_Trinh)).Select(m => m.ID_Vdv1).ToListAsync();
+                var vdv2_Ids = await _context.DS_Caps.Where(m => levels.Contains((int)m.ID_Trinh)).Select(m => m.ID_Vdv2).ToListAsync();
+                // Get all players with from Player Id found in Player1 and Player2 lists
+                players = await _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id)).ToListAsync();
+                */
+            }
+            players = await _context.DS_VDVs.ToListAsync();
+            
+            ViewBag.IsCurrent = vm.IsCurrent;
+            return View(players);
         }
     }
 }

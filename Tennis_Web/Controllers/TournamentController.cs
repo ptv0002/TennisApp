@@ -159,6 +159,7 @@ namespace Tennis_Web.Controllers
             //var levSheet = temp.GetWorkSheet("DS_Trinh");
             //string tournament = tourSheet.Cells[2, temp.GetColumn("Ten", tourSheet)].Text;
             //string level = levSheet.Cells[row, temp.GetColumn("Trinh", levSheet)].Text; 
+
             var model = _context.DS_Trinhs.Find(item.Id);
             model.Trinh = item.Trinh;
             model.DiemTru = item.DiemTru;

@@ -13,13 +13,6 @@ namespace Tennis_Web.Controllers
 {
     public class MethodController : Controller
     {
-        private readonly TennisContext _context;
-        private readonly IWebHostEnvironment _environment;
-        public MethodController(TennisContext context, IWebHostEnvironment environment)
-        {
-            _context = context;
-            _environment = environment;
-        }
         public class ConfirmViewModal
         {
             public string BtnMsg { get; set; }

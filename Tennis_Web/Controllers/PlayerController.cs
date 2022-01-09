@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using Library;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System;
@@ -23,23 +24,15 @@ namespace Tennis_Web.Controllers
         }
         public async Task<IActionResult> Update(int? id)
         {
-            var model = new DS_VDV();
-            if (id != null)
-            {
-                var item = await _context.DS_VDVs.FindAsync(id);
-                foreach (var prop in model.GetType().GetProperties())
-                {
-                    //prop.SetValue(model, item.GetType().GetProperty(prop.Name).GetValue(item));
-                    prop.SetValue(model, prop.GetValue(item));
-                }
-            }
-            return View(model);
+            var destination = await new DatabaseMethod<DS_VDV>(_context).GetOjectFromDBAsync(id);
+            return View(destination);
         }
         [HttpPost]
-        public async Task<IActionResult> Update(string id, DS_VDV model)
+        public async Task<IActionResult> Update(int? id, DS_VDV source)
         {
-
-            return View(model);
+            var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "CLB", "KhachMoi", "FileAnh", "Tel", "Email", "Status", "CongTy", "ChucVu" };
+            var result = await new DatabaseMethod<DS_VDV>(_context).SaveObjectToDBAsync(id, source, columnsToSave);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

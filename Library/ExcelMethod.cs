@@ -11,17 +11,11 @@ using System.Reflection;
 
 namespace Library
 {
-    public class SetExcelMethod<T> where T : new()
+    public class ExcelMethod<T> where T : new()
     {
-        public class ResultModel
+        public ResultModel<T> ExcelToList(IFormFile file, string sheetName)
         {
-            public bool Succeeded { get; set; }
-            public string Message { get; set; }
-            public List<T> List { get; set; }
-        }
-        public ResultModel ImportWorkSheet(IFormFile file, string sheetName)
-        {
-            var model = new ResultModel();
+            var model = new ResultModel<T>();
             // Check if file is empty
             if (file == null || file.Length <= 0)
             {
@@ -42,9 +36,9 @@ namespace Library
             var excel = new ExcelPackage(ms);
             return ToList(excel, sheetName);
         }
-        public ResultModel ImportWorkSheet(string path, string sheetName)
+        private ResultModel<T> ExcelToList(string path, string sheetName)
         {
-            var model = new ResultModel();
+            var model = new ResultModel<T>();
             FileInfo file = new(path);
             if (!(file.Extension == ".xlsx" || file.Extension == ".xls"))
             {
@@ -55,14 +49,14 @@ namespace Library
             var excel = new ExcelPackage(path);
             return ToList(excel, sheetName);
         }
-        public ResultModel ToList(ExcelPackage excel, string sheetName)
+        private ResultModel<T> ToList(ExcelPackage excel, string sheetName)
         {
-            var model = new ResultModel();
+            var model = new ResultModel<T>();
             // Check sheetName có trong file Excel ko
             if (excel.Workbook.Worksheets[sheetName] == null)
             {
                 model.Succeeded = false;
-                model.Message = "Sheet name doesn't in File Excel !";
+                model.Message = "Sheet name doesn't exist in Excel File!";
                 return model;
             };
             // Check if sheetName is valid
@@ -94,7 +88,7 @@ namespace Library
                     else if ((cellValue == null) && (ocol.Value.PropertyType.Name.ToString().ToUpper() != "STRING"))
                     {
                         model.Succeeded = false;
-                        model.Message = "Dữ liệu cột " + ocol.Value.Name + " không được rỗng !";
+                        model.Message = "'" + ocol.Value.Name + "' column cannot be empty!";
                         return model;
                     }
                     ocol.Value.SetValue(type, Convert.ChangeType(cellValue, propType));
@@ -105,7 +99,7 @@ namespace Library
             model.List = listrows;
             return model;
         }
-        public int GetColumn(string columnName, ExcelWorksheet sheet)
+        private int GetColumn(string columnName, ExcelWorksheet sheet)
         {
             var testcolumn = sheet.Cells["1:1"].FirstOrDefault(c => c.Value.ToString().ToUpper() == columnName.ToUpper());
             var idx = 0;

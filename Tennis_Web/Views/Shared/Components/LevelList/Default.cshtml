@@ -2,60 +2,65 @@
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model IEnumerable<Models.DS_Trinh>
-<form asp-action="AddLevel">
-    <table class="table table-bordered dataTable" id="tblLevel">
-        <thead>
-            <tr>
-                <th>
-                    Trình
-                </th>
-                @if (a1)
-                {
-                    <th></th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                string title = "Giải " + item.DS_Giai.Ten + " - Trình " + @item.Trinh;
-                <tr>
-                    <td>
-                        <a asp-action="LevelInfo" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-trinhID="@item.Id" asp-route-detailedTitle="@title" asp-route-model="null">
-                            @item.Trinh
-                        </a>
-                    </td>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <form asp-action="AddLevel">
+                <table class="table table-bordered dataTable" id="tblLevel">
+                    <thead>
+                        <tr>
+                            <th>
+                                Trình
+                            </th>
+                            @if (a1)
+                            {
+                                <th></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            string title = "Giải " + item.DS_Giai.Ten + " - Trình " + @item.Trinh;
+                            <tr>
+                                <td>
+                                    <a asp-action="LevelInfo" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-trinhID="@item.Id" asp-route-detailedTitle="@title" asp-route-model="null">
+                                        @item.Trinh
+                                    </a>
+                                </td>
+                                @if (a1)
+                                {
+                                    var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                                    {
+                                        BtnMsg = "Xóa",
+                                        Message = "xóa trình đấu " + item.Trinh,
+                                        ActionName = "DeleteLevel",
+                                        ControllerName = "Tournament",
+                                        RouteValues = new { id = item.Id }
+                                    };
+                                    <td><button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
                     @if (a1)
                     {
-                        var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-                        {
-                            BtnMsg = "Xóa",
-                            Message = "xóa trình đấu " + item.Trinh,
-                            ActionName = "DeleteLevel",
-                            ControllerName = "Tournament",
-                            RouteValues = new { id = item.Id }
-                        };
-                        <td><button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button></td>
+                        <tfoot>
+                            <tr>
+                                <td>
+                                    <input type="text" name="newLevel" class="form-control" />
+                                    <input type="hidden" value="@Model.First().ID_Giai" name="idGiai" />
+                                </td>
+                                <td>
+                                    <input type="submit" value="Thêm" class="btn btn-primary" />
+                                </td>
+                            </tr>
+                        </tfoot>
                     }
-                </tr>
-            }
-        </tbody>
-        @if (a1)
-        {
-            <tfoot>
-                <tr>
-                    <td>
-                        <input type="text" name="newLevel" class="form-control" />
-                        <input type="hidden" value="@Model.First().ID_Giai" name="idGiai" />
-                    </td>
-                    <td>
-                        <input type="submit" value="Thêm" class="btn btn-primary" />
-                    </td>
-                </tr>
-            </tfoot>
-        }
-    </table>
-</form>
-
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- Modal placeholder -->
 <div id="modal-placeholder"></div>
