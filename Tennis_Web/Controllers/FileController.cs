@@ -37,11 +37,13 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Chọn ít nhất 1 danh sách để nhập dữ liệu!");
                 return View(list);
             }
-            var temp = new ExcelMethod<DS_Giai>();
             for (int i = 0; i < list.Count; i++)
             {
+                // ------------- Error: Need to dynamically create ExcelMethod with the give entityName -------------
+                var temp = new ExcelMethod<DS_Giai>();
                 if (list[i].IsSelected == true) 
                 {
+                    // ------------------- Need fixes -------------------
                     var a = temp.ExcelToList(file, list[i].EntityName);
                     if (!a.Succeeded)
                     {

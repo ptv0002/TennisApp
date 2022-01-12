@@ -115,7 +115,12 @@ namespace Tennis_Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Default}/{id?}");
-                    //pattern: "{area:exists}/{controller=NoRole}/{action=Index}/{id?}");
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{action=Index}/{id?}",
+                //    defaults: new { area = "NoRole", controller = "NoRole", action = "Index" });
+
+                //pattern: "{area:exists}/{controller=NoRole}/{action=Index}/{id?}");
                 //endpoints.MapControllerRoute(
                 //  name: "admin",
                 //  pattern: "{controller=Account}/{action=Login}/{id?}");

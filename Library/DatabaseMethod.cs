@@ -45,14 +45,14 @@ namespace Library
         {
             // --------------------- Possible error ---------------------
             // 1. Not null field doesn't get filled when ADDing new object
-            // 2. Update null value to a not null field (extra column in columnsToSave
+            // 2. Update null value to a not null field (extra column in columnsToSave)
             // ----------------------------------------------------------
             var model = new ResultModel<T>();
             var destination = await _context.Set<T>().FindAsync(id);
             bool bfind = new();
             if (destination==null) { bfind = false; } else { bfind = true; }
-
-            foreach (var col in columnsToSave)
+            var temp = TestListCol(columnsToSave);
+            foreach (var col in temp)
             {
                 var prop = typeof(T).GetProperties().First(m => m.Name.ToUpper() == col);
                     prop.SetValue(destination, prop.GetValue(source));
@@ -64,7 +64,6 @@ namespace Library
             }
             else _context.Add(destination);
             
-            // await _context.SaveChangesAsync();  // Lưu sau
             model.Succeeded = true;
             model.Message = "Save to database successfully!";
 
@@ -76,7 +75,7 @@ namespace Library
         /// <param name="source"></param>
         /// <param name="columnsToSave"></param>
         /// <returns></returns>
-        public List<string> TestListCol (T source, List<string> columnsToSave)
+        public List<string> TestListCol (List<string> columnsToSave)
         {
             List<string> listCol = new();
             columnsToSave = columnsToSave.Select(m => m.ToUpper()).ToList();

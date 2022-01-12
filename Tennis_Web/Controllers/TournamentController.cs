@@ -85,7 +85,6 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
                 return View(model);
             }
-            //ViewBag.LevelList = _context.DS_Trinhs.OrderByDescending(m => m.Trinh).Where(m => m.ID_Giai == model.ID).ToList();
             ViewBag.TournamentTitle = _context.DS_Giais.Find(model.ID).Ten;
             return View(model);
         }
@@ -93,28 +92,24 @@ namespace Tennis_Web.Controllers
         public async Task<IActionResult> UpdateInfo(DS_Giai item)
         {
             // Find and update Tournament Info
-            var columnsToSave = new List<string> { "Ten", "GhiChu", "Ngay", "Random"};
+            var columnsToSave = new List<string> { "Ten", "GhiChu", "Ngay"};
             var result = await new DatabaseMethod<DS_Giai>(_context).SaveObjectToDBAsync(item.Id, item, columnsToSave);
-
+            await _context.SaveChangesAsync();
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
                 ActiveTab = Tab.Info,
                 IsCurrent = true,
-                ID = item.Id
+                ID = item.Id,
+                Succeeded = result.Succeeded
             };
 
             // If save unsuccessfully, view error and display View with "item" 
-            if (!result.Succeeded)
-            {
-                vm.CurrentModel = item;
-                ModelState.AddModelError(string.Empty, result.Message);
-            }
+            if (!result.Succeeded) vm.CurrentModel = item;
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(TournamentInfo), vm);
 
         }
-
         public async Task<IActionResult> EndTournament(int id)
         {
             // Find the current Tournament and set IsCurrent to false
@@ -156,7 +151,7 @@ namespace Tennis_Web.Controllers
             item.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet;
             var columnsToSave = new List<string> { "Trinh", "DiemTru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
             var result = await new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDBAsync(item.Id, item, columnsToSave);
-           
+            await _context.SaveChangesAsync();
             var temp = _context.DS_Giais.Find(item.ID_Giai);
             // Assign value for view model
             var vm = new TournamentTabViewModel
@@ -164,15 +159,12 @@ namespace Tennis_Web.Controllers
                 ActiveTab = Tab.Parameter,
                 IsCurrent = true,
                 ID = item.Id,
-                DetailedTitle = "Giải " + temp.Ten + " - Trình " + item.Trinh
+                DetailedTitle = "Giải " + temp.Ten + " - Trình " + item.Trinh,
+                Succeeded = result.Succeeded
             };
 
             // If save unsuccessfully, view error and display View with "item" 
-            if (!result.Succeeded)
-            {
-                vm.CurrentModel = item;
-                ModelState.AddModelError(string.Empty, result.Message);
-            }
+            if (!result.Succeeded) vm.CurrentModel = item;
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(LevelInfo), vm);
         }

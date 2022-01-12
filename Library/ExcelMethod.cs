@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace Library
 {
-    public class ExcelMethod<T> where T : new()
+    public class ExcelMethod<T> where T : class, new()
     {
         public ResultModel<T> ExcelToList(IFormFile file, string sheetName)
         {
