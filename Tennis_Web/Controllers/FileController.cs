@@ -37,14 +37,13 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Chọn ít nhất 1 danh sách để nhập dữ liệu!");
                 return View(list);
             }
-            for (int i = 0; i < list.Count; i++)
+            List<EntityListViewModel> ds_table = (List<EntityListViewModel>)list.Select(s => s.IsSelected);
+
+            var temp = new ExcelMethod<DS_Giai>();
+
+            for (int i = 0; i < ds_table.Count; i++)
             {
-                // ------------- Error: Need to dynamically create ExcelMethod with the give entityName -------------
-                var temp = new ExcelMethod<DS_Giai>();
-                if (list[i].IsSelected == true) 
-                {
-                    // ------------------- Need fixes -------------------
-                    var a = temp.ExcelToList(file, list[i].EntityName);
+                    var a = temp.ExcelToList(file, ds_table[i].EntityName);
                     if (!a.Succeeded)
                     {
                         ModelState.AddModelError(string.Empty, a.Message);
@@ -54,12 +53,11 @@ namespace Tennis_Web.Controllers
                     {
                         
                     }
-                    else
-                    {
+                // Copy từ Excel sang List
+                var T = _context.DS_VDVs;
+                var temp = new ExcelMethod<T>();
 
-                    }
-                    // Add new info from Excel
-                }
+
             }
             return View(list);
         }
