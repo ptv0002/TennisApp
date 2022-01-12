@@ -34,6 +34,13 @@ namespace Library
             }
             return destination;
         }
+        /// <summary>
+        /// Lưu dữ liệu kiểu T theo danh sách cột vào 1 đối tượng trong context
+        /// </summary>
+        /// <param name="id"></param> : Đối tượng cần lưu
+        /// <param name="source"></param> : Dữ liệu kiểu T cần lưu vào đối tượng
+        /// <param name="columnsToSave"></param> : Danh sách các cột - ĐÃ HỢP LỆ
+        /// <returns></returns>
         public async Task<ResultModel<T>> SaveObjectToDBAsync(object id, T source, List<string> columnsToSave)
         {
             // --------------------- Possible error ---------------------
@@ -42,45 +49,45 @@ namespace Library
             // ----------------------------------------------------------
             var model = new ResultModel<T>();
             var destination = await _context.Set<T>().FindAsync(id);
-            // Convert all column names to upper
-            columnsToSave = columnsToSave.Select(m => m.ToUpper()).ToList();
-            foreach(var prop in typeof(T).GetProperties())
+            bool bfind = new();
+            if (destination==null) { bfind = false; } else { bfind = true; }
+
+            foreach (var col in columnsToSave)
             {
-                // Check if property is in the list to save, if yes, save value and remove the column from the list
-                if(columnsToSave.Contains(prop.Name.ToUpper()))
-                {
+                var prop = typeof(T).GetProperties().First(m => m.Name.ToUpper() == col);
                     prop.SetValue(destination, prop.GetValue(source));
-                    columnsToSave.Remove(prop.Name.ToUpper());
-                }
-            }
-            // If columnsToSave still has any element, return error message
-            if (columnsToSave.Count == 1)
-            {
-                model.Succeeded = false;
-                model.Message = columnsToSave.First() + " is not a valid column!";
-                return model;
-            }
-            else if (columnsToSave.Count > 2)
-            {
-                model.Succeeded = false;
-                foreach (var col in columnsToSave)
-                {
-                    if (col == columnsToSave.Last()) model.Message = model.Message + "and " + col;
-                    else model.Message = model.Message + col + ", ";
-                }
-                model.Message += " are not valid columns!";
-                return model;
             }
             // If id is null, Update object to DB, if not null, Add object to DB
-            if (id != null)
+            if (bfind)
             {
                 _context.Update(destination);
             }
             else _context.Add(destination);
-            await _context.SaveChangesAsync();
+            
+            // await _context.SaveChangesAsync();  // Lưu sau
             model.Succeeded = true;
             model.Message = "Save to database successfully!";
+
             return model;
+        }
+        /// <summary>
+        /// Lấy danh sách các cột hợp lệ, nếu danh sách bằng rỗng --> không có cột nào hợp lệ
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="columnsToSave"></param>
+        /// <returns></returns>
+        public List<string> TestListCol (T source, List<string> columnsToSave)
+        {
+            List<string> listCol = new();
+            columnsToSave = columnsToSave.Select(m => m.ToUpper()).ToList();
+            foreach (var prop in typeof(T).GetProperties())  // Lấy tất cả các thuộc tính của T (Các cột của Table/Thuộc tính của Models.T)
+            {
+                if (columnsToSave.Contains(prop.Name.ToUpper()) )
+                {
+                    listCol.Add(prop.Name.ToUpper());
+                }
+            }
+            return listCol;
         }
     }
 }

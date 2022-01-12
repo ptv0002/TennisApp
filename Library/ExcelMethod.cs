@@ -72,7 +72,11 @@ namespace Library
             foreach (var prop in typeof(T).GetProperties())  // Lấy tất cả các thuộc tính của T (Các cột của Table/Thuộc tính của Models.T)
             {
                 int col = GetColumn(prop.Name, worksheet);  // col = 0 --> không có cột trên file Excel --> bỏ qua
-                if (col != 0) listcols.Add(col, prop);
+                if (col != 0) 
+                {
+                    //listcols.Add(col, prop);
+                    model.ListCol.Add( col, prop);
+                }
             }
             for (int row = 2; row < worksheet.Dimension.End.Row + 1; row++)
             {
