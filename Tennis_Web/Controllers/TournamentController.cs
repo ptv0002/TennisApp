@@ -93,7 +93,7 @@ namespace Tennis_Web.Controllers
         {
             // Find and update Tournament Info
             var columnsToSave = new List<string> { "Ten", "GhiChu", "Ngay"};
-            var result = await new DatabaseMethod<DS_Giai>(_context).SaveObjectToDBAsync(item.Id, item, columnsToSave);
+            var result = new DatabaseMethod<DS_Giai>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             await _context.SaveChangesAsync();
             // Assign value for view model
             var vm = new TournamentTabViewModel
@@ -150,7 +150,7 @@ namespace Tennis_Web.Controllers
             // Find and update Parameters from DS_Trinh
             item.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet;
             var columnsToSave = new List<string> { "Trinh", "DiemTru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
-            var result = await new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDBAsync(item.Id, item, columnsToSave);
+            var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             await _context.SaveChangesAsync();
             var temp = _context.DS_Giais.Find(item.ID_Giai);
             // Assign value for view model

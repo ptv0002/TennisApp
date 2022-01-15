@@ -11,11 +11,11 @@ using System.Reflection;
 
 namespace Library
 {
-    public class ExcelMethod<T> where T : class, new()
+    public class ExcelMethod/*<T> where T : class, new()*/
     {
-        public ResultModel<T> ExcelToList(IFormFile file, string sheetName)
+        public ResultModel ExcelToList(IFormFile file, string sheetName, Type type)
         {
-            var model = new ResultModel<T>();
+            var model = new ResultModel();
             // Check if file is empty
             if (file == null || file.Length <= 0)
             {
@@ -34,11 +34,11 @@ namespace Library
             var ms = new MemoryStream();
             file.CopyTo(ms);
             var excel = new ExcelPackage(ms);
-            return ToList(excel, sheetName);
+            return ToList(excel, sheetName, type);
         }
-        private ResultModel<T> ExcelToList(string path, string sheetName)
+        private ResultModel ExcelToList(string path, string sheetName, Type type)
         {
-            var model = new ResultModel<T>();
+            var model = new ResultModel();
             FileInfo file = new(path);
             if (!(file.Extension == ".xlsx" || file.Extension == ".xls"))
             {
@@ -47,11 +47,11 @@ namespace Library
                 return model;
             }
             var excel = new ExcelPackage(path);
-            return ToList(excel, sheetName);
+            return ToList(excel, sheetName, type);
         }
-        private ResultModel<T> ToList(ExcelPackage excel, string sheetName)
+        private ResultModel ToList(ExcelPackage excel, string sheetName, Type type)
         {
-            var model = new ResultModel<T>();
+            var model = new ResultModel();
             // Check sheetName có trong file Excel ko
             if (excel.Workbook.Worksheets[sheetName] == null)
             {
@@ -60,16 +60,17 @@ namespace Library
                 return model;
             };
             // Check if sheetName is valid
-            if (!(typeof(T).Name == sheetName))
+            if (!(type.Name == sheetName))
             {
                 model.Succeeded = false;
                 model.Message = "Sheet name doesn't match provided Type!";
                 return model;
             }
             var worksheet = excel.Workbook.Worksheets[sheetName];
-            var listrows = new List<T>();
+            var listrows = new List<object>();
+
             var listcols = new Dictionary<int, PropertyInfo>();
-            foreach (var prop in typeof(T).GetProperties())  // Lấy tất cả các thuộc tính của T (Các cột của Table/Thuộc tính của Models.T)
+            foreach (var prop in type.GetProperties())  // Lấy tất cả các thuộc tính của T (Các cột của Table/Thuộc tính của Models.T)
             {
                 int col = GetColumn(prop.Name, worksheet);  // col = 0 --> không có cột trên file Excel --> bỏ qua
                 if (col != 0) 
@@ -80,7 +81,7 @@ namespace Library
             }
             for (int row = 2; row < worksheet.Dimension.End.Row + 1; row++)
             {
-                T type = new();
+                object obj = new();
                 foreach (var ocol in listcols)  // Lấy tất cả các thuộc tính của T (Các cột của Table/Thuộc tính của Models.T)
                 {
                     var cellValue = worksheet.Cells[row, ocol.Key].Value;
@@ -95,9 +96,9 @@ namespace Library
                         model.Message = "'" + ocol.Value.Name + "' column cannot be empty!";
                         return model;
                     }
-                    ocol.Value.SetValue(type, Convert.ChangeType(cellValue, propType));
+                    ocol.Value.SetValue(obj, Convert.ChangeType(cellValue, propType));
                 }
-                listrows.Add(type);
+                listrows.Add(obj);
             }
             model.Succeeded = true;
             model.List = listrows;

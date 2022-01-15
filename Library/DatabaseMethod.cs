@@ -20,9 +20,9 @@ namespace Library
         {
             _context = context;
         }
-        public async Task<T> GetOjectFromDBAsync(object id)
+        public async Task<object> GetOjectFromDBAsync(object id)
         {
-            var destination = new T();
+            var destination = new object();
             if (id != null)
             {
                 // Get object from DB with given id
@@ -42,13 +42,13 @@ namespace Library
         /// <param name="source"></param> : Dữ liệu kiểu T cần lưu vào đối tượng
         /// <param name="columnsToSave"></param> : Danh sách các cột - ĐÃ HỢP LỆ (Chữ in)
         /// <returns></returns>
-        public ResultModel<T> SaveObjectToDB(object id, T source, List<string> columnsToSave)
+        public ResultModel SaveObjectToDB(object id, T source, List<string> columnsToSave)
         {
             // --------------------- Possible error ---------------------
             // 1. Not null field doesn't get filled when ADDing new object
             // 2. Update null value to a not null field (extra column in columnsToSave)
             // ----------------------------------------------------------
-            var model = new ResultModel<T>();
+            var model = new ResultModel();
             var destination = _context.Set<T>().Find(id);
             PropertyInfo prop;
             foreach (var col in columnsToSave)
@@ -73,9 +73,9 @@ namespace Library
         /// <param name="listObject"></param> : Đối tượng cần lưu, hoặc nhập mới
         /// <param name="columnsToSave"></param> : Danh sách các cột - ĐÃ HỢP LỆ (Chữ in)
         /// <returns></returns>
-        public ResultModel<T> SaveListObjectToDB(List<T> listObject, List<string> columnsToSave)
+        public ResultModel SaveListObjectToDB(List<T> listObject, List<string> columnsToSave)
         {
-            var model = new ResultModel<T>();
+            var model = new ResultModel();
             columnsToSave = TestListCol(columnsToSave);
             if (columnsToSave.Count == 0)
             {
