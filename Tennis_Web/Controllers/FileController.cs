@@ -30,7 +30,7 @@ namespace Tennis_Web.Controllers
             return View(GetEntityLists());
         }
         [HttpPost]
-        public IActionResult ImportExcel(bool isPartial, IFormFile file, List<EntityListViewModel> list)
+        public IActionResult ImportExcel(IFormFile file, List<EntityListViewModel> list)
         {
             if(list.All(m => m.IsSelected == false))
             {
@@ -39,18 +39,11 @@ namespace Tennis_Web.Controllers
             }
             List<EntityListViewModel> ds_table = (List<EntityListViewModel>)list.Select(s => s.IsSelected);
 
-            //Activator.CreateInstance(Type.GetType());
-            //var temp = new ExcelMethod<DS_Giai>();
-
             for (int i = 0; i < ds_table.Count; i++)
             {
                 var type = Type.GetType(ds_table[i].EntityName);
                 var excelToList = new ExcelMethod().ExcelToList(file, ds_table[i].EntityName,type);
 
-                //var genClass = typeof(ExcelMethod<>);
-                //var contructClass = genClass.MakeGenericType(type);
-                //var temp = Activator.CreateInstance(contructClass);
-                //var a = temp.ExcelToList(file, ds_table[i].EntityName);
                 if (!excelToList.Succeeded)
                 {
                     ModelState.AddModelError(string.Empty, excelToList.Message);
@@ -58,16 +51,6 @@ namespace Tennis_Web.Controllers
                 }
                 _context.AddRange(excelToList.List);
                 _context.SaveChanges();
-                //var saveToDB = new DatabaseMethod
-                //if (isPartial == false) // Delete all DB info
-                //{
-
-                //}
-                // Copy từ Excel sang List
-                //var T = _context.DS_VDVs;
-                //var temp = new ExcelMethod<T>();
-
-
             }
             return View(list);
         }

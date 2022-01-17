@@ -17,15 +17,15 @@ namespace Tennis_Web.Views.Shared.Components.Info
             _context = context;
             _notyf = notyf;
         }
-        public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel vm)
+        public IViewComponentResult Invoke(TournamentTabViewModel vm)
         {
-            var item = (DS_Giai) vm.CurrentModel;
+            var item = (DS_Giai)vm.CurrentModel;
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công");
-            else if(vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi");
-            
-            if(vm.Succeeded == true || vm.Succeeded == null)
+            else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
+
+            if (vm.Succeeded != false)
             {
-                item = await new DatabaseMethod<DS_Giai>(_context).GetOjectFromDBAsync(vm.ID);
+                item = new DatabaseMethod<DS_Giai>(_context).GetOjectFromDB(vm.ID);
                 if (item == null) ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
             }
             ViewBag.IsCurrent = vm.IsCurrent;

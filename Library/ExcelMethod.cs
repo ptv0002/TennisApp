@@ -13,6 +13,10 @@ namespace Library
 {
     public class ExcelMethod/*<T> where T : class, new()*/
     {
+        //public ResultModel ListToExcel (List<object> list)
+        //{
+
+        //}
         public ResultModel ExcelToList(IFormFile file, string sheetName, Type type)
         {
             var model = new ResultModel();
@@ -36,7 +40,7 @@ namespace Library
             var excel = new ExcelPackage(ms);
             return ToList(excel, sheetName, type);
         }
-        private ResultModel ExcelToList(string path, string sheetName, Type type)
+        public ResultModel ExcelToList(string path, string sheetName, Type type)
         {
             var model = new ResultModel();
             FileInfo file = new(path);

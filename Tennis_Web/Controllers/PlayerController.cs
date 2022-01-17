@@ -22,17 +22,17 @@ namespace Tennis_Web.Controllers
             var model = _context.DS_VDVs.OrderBy(m => m.Diem).ToList();
             return View(model);
         }
-        public async Task<IActionResult> Update(int? id)
+        public IActionResult Update(int? id)
         {
-            var destination = await new DatabaseMethod<DS_VDV>(_context).GetOjectFromDBAsync(id);
+            var destination = new DatabaseMethod<DS_VDV>(_context).GetOjectFromDB(id);
             return View(destination);
         }
         [HttpPost]
-        public async Task<IActionResult> Update(int? id, DS_VDV source)
+        public IActionResult Update(int? id, DS_VDV source)
         {
             var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "CLB", "KhachMoi", "FileAnh", "Tel", "Email", "Status", "CongTy", "ChucVu" };
-            var result = await new DatabaseMethod<DS_VDV>(_context).SaveObjectToDBAsync(id, source, columnsToSave);
-            await _context.SaveChangesAsync();
+            var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
+            _context.SaveChanges();
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(Index));
@@ -40,9 +40,9 @@ namespace Tennis_Web.Controllers
             ModelState.AddModelError(string.Empty, result.Message);
             return View(source);
         }
-        public async Task<IActionResult> SavePlayerState(List<DS_VDV> dsVDV)
-        {
+        //public async Task<IActionResult> SavePlayerState(List<DS_VDV> dsVDV)
+        //{
 
-        }
+        //}
     }
 }

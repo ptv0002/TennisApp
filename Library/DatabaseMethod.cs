@@ -20,13 +20,13 @@ namespace Library
         {
             _context = context;
         }
-        public async Task<object> GetOjectFromDBAsync(object id)
+        public T GetOjectFromDB(object id)
         {
-            var destination = new object();
+            var destination = new T();
             if (id != null)
             {
                 // Get object from DB with given id
-                var source = await _context.Set<T>().FindAsync(id);
+                var source = _context.Set<T>().Find(id);
                 // Get all info from DB object and save to Destination object
                 foreach (var prop in typeof(T).GetProperties())
                 {

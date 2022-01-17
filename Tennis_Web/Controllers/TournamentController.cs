@@ -89,12 +89,12 @@ namespace Tennis_Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateInfo(DS_Giai item)
+        public IActionResult UpdateInfo(DS_Giai item)
         {
             // Find and update Tournament Info
             var columnsToSave = new List<string> { "Ten", "GhiChu", "Ngay"};
             var result = new DatabaseMethod<DS_Giai>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
@@ -110,7 +110,7 @@ namespace Tennis_Web.Controllers
             return RedirectToAction(nameof(TournamentInfo), vm);
 
         }
-        public async Task<IActionResult> EndTournament(int id)
+        public IActionResult EndTournament(int id)
         {
             // Find the current Tournament and set IsCurrent to false
             var item = _context.DS_Giais.Find(id);
@@ -124,7 +124,7 @@ namespace Tennis_Web.Controllers
                                 m.Ma_Cap = null;
                             });
             _context.Update(list);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index), true);
         }
         // ----------------------------------------------------- Level Related -----------------------------------------------------
@@ -145,13 +145,13 @@ namespace Tennis_Web.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> UpdateParameter(DS_Trinh item)
+        public IActionResult UpdateParameter(DS_Trinh item)
         {
             // Find and update Parameters from DS_Trinh
             item.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet;
             var columnsToSave = new List<string> { "Trinh", "DiemTru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
             var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             var temp = _context.DS_Giais.Find(item.ID_Giai);
             // Assign value for view model
             var vm = new TournamentTabViewModel
@@ -169,13 +169,13 @@ namespace Tennis_Web.Controllers
             return RedirectToAction(nameof(LevelInfo), vm);
         }
         //[HttpPost]
-        public async Task<IActionResult> AddLevel(string newLevel, string idGiai)
+        public IActionResult AddLevel(string newLevel, string idGiai)
         {
             _context.Add(new DS_Trinh { 
                 Trinh = Convert.ToInt32(newLevel),
                 ID_Giai = Convert.ToInt32(idGiai)
             });
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
@@ -185,11 +185,11 @@ namespace Tennis_Web.Controllers
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
-        public async Task<IActionResult> DeleteLevel(int id)
+        public IActionResult DeleteLevel(int id)
         {
-            var item = await _context.DS_Trinhs.FindAsync(id);
+            var item = _context.DS_Trinhs.Find(id);
             _context.Remove(item);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             // Assign value for view model
             var vm = new TournamentTabViewModel
             {
