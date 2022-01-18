@@ -14,10 +14,10 @@ namespace Tennis_Web.Views.Shared.Components.LevelList
         {
             _context = context;
         }
-        public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel vm)
+        public IViewComponentResult Invoke(TabViewModel vm)
         {
             ViewBag.IsCurrent = vm.IsCurrent;
-            var model = await _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.ID_Giai == vm.ID).ToListAsync();
+            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.ID_Giai == vm.ID).ToList();
             return View(model);
         }
     }

@@ -5,7 +5,7 @@
 <div class="card shadow mb-4">
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            <form asp-action="AddLevel">
+            <form asp-action="AddLevel" asp-controller="Tournament">
                 <table class="table table-bordered dataTable" id="tblLevel">
                     <thead>
                         <tr>
@@ -24,7 +24,7 @@
                             string title = "Giải " + item.DS_Giai.Ten + " - Trình " + @item.Trinh;
                             <tr>
                                 <td>
-                                    <a asp-action="LevelInfo" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-trinhID="@item.Id" asp-route-detailedTitle="@title" asp-route-model="null">
+                                    <a asp-action="LevelInfo" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-trinhID="@item.Id" asp-route-detailedTitle="@title" asp-route-model="null" asp-controller="Level">
                                         @item.Trinh
                                     </a>
                                 </td>

@@ -6,15 +6,18 @@
     }
     else ViewBag.BActive = "active";
 }
-@model Tennis_Web.Models.TournamentTabViewModel
+@model Tennis_Web.Models.TabViewModel
 <hr/>
 <a asp-action="TournamentInfo" asp-route-isCurrent="@Model.IsCurrent" class="btn btn-primary" asp-route-trinhID="@Model.ID">Xem thông tin giải đấu</a>
 <ul class="nav nav-tabs mt-3">
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Parameter ? "active" : string.Empty)">
-        <a asp-route-tabname="Parameter" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs">Tham số trình đấu</a>
+        <a asp-route-tabname="Parameter" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Tournament">Tham số trình đấu</a>
+    </li>
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Pair ? "active" : string.Empty)">
+        <a asp-route-tabname="Pair" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Tournament">DS cặp thi đấu</a>
     </li>
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Division ? "active" : string.Empty)">
-        <a asp-route-tabname="Division" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs">Bốc thăm chia bảng</a>
+        <a asp-route-tabname="Division" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Tournament">Bốc thăm chia bảng</a>
     </li>
 </ul>
 <div class="tab-content mt-3">
@@ -22,6 +25,9 @@
     {
         case Tennis_Web.Models.Tab.Parameter:
             @await Component.InvokeAsync("Parameter", Model);
+            break;
+        case Tennis_Web.Models.Tab.Pair:
+            @await Component.InvokeAsync("Pair", Model);
             break;
         case Tennis_Web.Models.Tab.Division:
             @await Component.InvokeAsync("Division", Model);

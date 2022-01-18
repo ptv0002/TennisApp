@@ -42,7 +42,8 @@ namespace Tennis_Web.Controllers
             for (int i = 0; i < ds_table.Count; i++)
             {
                 var type = Type.GetType(ds_table[i].EntityName);
-                var excelToList = new ExcelMethod().ExcelToList(file, ds_table[i].EntityName,type);
+                var instance = Activator.CreateInstance(type);
+                var excelToList = new ExcelMethod<DS_Giai>().ExcelToList(file, ds_table[i].EntityName); 
 
                 if (!excelToList.Succeeded)
                 {
