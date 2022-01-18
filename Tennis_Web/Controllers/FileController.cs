@@ -37,13 +37,27 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Chọn ít nhất 1 danh sách để nhập dữ liệu!");
                 return View(list);
             }
-            List<EntityListViewModel> ds_table = (List<EntityListViewModel>)list.Select(s => s.IsSelected);
-
+            //List<EntityListViewModel> ds_table = (List<EntityListViewModel>)list.Select(EntityListViewModel, s=>s.IsSelected);
+            var ds_table = (from a in list where a.IsSelected select a).ToList ();
+            var ds_entity = from a in _context.Model.GetEntityTypes() select a;
+            Type type = null; 
             for (int i = 0; i < ds_table.Count; i++)
             {
-                var type = Type.GetType(ds_table[i].EntityName);
+                // Tìm Entity phù hợp
+                foreach (var t in ds_entity)
+                {
+                    if (t.FullName().ToUpper() == ds_table[i].EntityName.ToUpper ())
+                    {
+                        type = t.GetType ();
+                        break;
+                    }
+                }
+                if (type==null) // Tìm không ra
+                {
+                    ModelState.AddModelError(string.Empty, "Không có bảng trong CSDL !");
+                    return View(list);
+                }
                 var excelToList = new ExcelMethod().ExcelToList(file, ds_table[i].EntityName,type);
-
                 if (!excelToList.Succeeded)
                 {
                     ModelState.AddModelError(string.Empty, excelToList.Message);
