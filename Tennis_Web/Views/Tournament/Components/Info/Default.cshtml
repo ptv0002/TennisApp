@@ -2,7 +2,7 @@
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model Models.DS_Giai
-<form asp-action="UpdateInfo">
+<form asp-action="UpdateInfo" asp-controller="Tournament">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input asp-for="Id" type="hidden" />
     <dl class="row">

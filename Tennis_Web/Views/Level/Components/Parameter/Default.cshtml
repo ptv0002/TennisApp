@@ -2,7 +2,7 @@
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model Models.DS_Trinh
-<form asp-action="UpdateParameter">
+<form asp-action="UpdateParameter" asp-controller="Level">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input asp-for="Id" type="hidden" />
     <input asp-for="ID_Giai" type="hidden" />
@@ -146,4 +146,29 @@
 </form>
 
 <!-- Modal placeholder -->
-<div id="modal-placeholder"></div>
+<!--<div id="modal-placeholder"></div>-->
+<script type="text/javascript">
+    // ---------------- Script for updating TL_Bang - Parameter Tab ----------------
+    $(function () {
+        function UpdateTL_Bang() {
+            var tl_vd = $("#TL_VoDich").val();
+            var tl_ck = $("#TL_ChungKet").val();
+            var tl_bk = $("#TL_BanKet").val();
+            var tl_tk = $("#TL_TuKet").val();
+            var tl_bang = 100 - tl_vd - tl_ck - tl_bk - tl_tk
+            $("#TL_Bang").val(tl_bang);
+        };
+        $('#TL_VoDich').on('input', function () {
+            UpdateTL_Bang();
+        });
+        $('#TL_ChungKet').on('input', function () {
+            UpdateTL_Bang();
+        });
+        $('#TL_BanKet').on('input', function () {
+            UpdateTL_Bang();
+        });
+        $('#TL_TuKet').on('input', function () {
+            UpdateTL_Bang();
+        });
+    });
+</script>

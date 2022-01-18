@@ -16,28 +16,26 @@ namespace Tennis_Web.Views.Shared.Components.Player
         {
             _context = context;
         }
-        public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel vm)
+        public IViewComponentResult Invoke(TabViewModel vm)
         {
             var players = new List<DS_VDV>();
-            if (vm.IsCurrent == true) 
+            if (vm.IsCurrent == true)
             {
                 // Display for current tournament
+                players = _context.DS_VDVs.ToList();
             }
-            else 
+            else
             {
-                /*
                 // Display for previous tournament
                 // Get all levels from given tournament
-                var levels = await _context.DS_Trinhs.Where(m => m.ID_Giai == vm.ID).Select(m => m.Id).ToListAsync();
+                var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == vm.ID).Select(m => m.Id).ToList();
                 // Get all pairs with Level Id from the level id list
-                var vdv1_Ids = await _context.DS_Caps.Where(m => levels.Contains((int)m.ID_Trinh)).Select(m => m.ID_Vdv1).ToListAsync();
-                var vdv2_Ids = await _context.DS_Caps.Where(m => levels.Contains((int)m.ID_Trinh)).Select(m => m.ID_Vdv2).ToListAsync();
+                var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains((int)m.ID_Trinh)).Select(m => m.ID_Vdv1).ToList();
+                var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains((int)m.ID_Trinh)).Select(m => m.ID_Vdv2).ToList();
                 // Get all players with from Player Id found in Player1 and Player2 lists
-                players = await _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id)).ToListAsync();
-                */
+                players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id)).ToList();
+
             }
-            players = await _context.DS_VDVs.ToListAsync();
-            
             ViewBag.IsCurrent = vm.IsCurrent;
             return View(players);
         }

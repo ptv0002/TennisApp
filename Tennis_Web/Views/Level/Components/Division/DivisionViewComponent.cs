@@ -10,7 +10,7 @@ namespace Tennis_Web.Views.Shared.Components.Division
     public class DivisionViewComponent : ViewComponent
     {
         public DivisionViewComponent() { }
-        public async Task<IViewComponentResult> InvokeAsync(TournamentTabViewModel model)
+        public IViewComponentResult Invoke(TabViewModel model)
         {
             if (model.IsCurrent == true)
             {

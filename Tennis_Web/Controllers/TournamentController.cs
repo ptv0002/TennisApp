@@ -18,11 +18,9 @@ namespace Tennis_Web.Controllers
     public class TournamentController : Controller
     {
         private readonly TennisContext _context;
-        private readonly IWebHostEnvironment _environment;
-        public TournamentController(TennisContext context, IWebHostEnvironment environment)
+        public TournamentController(TennisContext context)
         {
             _context = context;
-            _environment = environment;
         }
         public IActionResult Index(bool isCurrent)
         {
@@ -32,7 +30,7 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult SwitchToTabs(string tabname, bool isCurrent, int? id, string detailedTitle)
         {
-            var vm = new TournamentTabViewModel()
+            var vm = new TabViewModel()
             {
                 IsCurrent = isCurrent,
                 ID = id,
@@ -42,10 +40,13 @@ namespace Tennis_Web.Controllers
             {
                 case "Parameter":
                     vm.ActiveTab = Tab.Parameter;
-                    return RedirectToAction(nameof(LevelInfo), vm);
+                    return RedirectToAction("LevelInfo", "Level", vm);
+                case "Pair":
+                    vm.ActiveTab = Tab.Pair;
+                    return RedirectToAction("LevelInfo", "Level", vm);
                 case "Division":
                     vm.ActiveTab = Tab.Division;
-                    return RedirectToAction(nameof(LevelInfo), vm);
+                    return RedirectToAction("LevelInfo", "Level", vm);
                 case "Info":
                     vm.ActiveTab = Tab.Info;
                     return RedirectToAction(nameof(TournamentInfo), vm);
@@ -60,7 +61,7 @@ namespace Tennis_Web.Controllers
                     return RedirectToAction(nameof(TournamentInfo), vm);
             }
         }
-        public IActionResult TournamentInfo(TournamentTabViewModel model, bool isCurrent, int? giaiID, int? trinhID)
+        public IActionResult TournamentInfo(TabViewModel model, bool isCurrent, int? giaiID, int? trinhID)
         {
             bool a1 = giaiID == null;
             bool a2 = trinhID == null;
@@ -68,7 +69,7 @@ namespace Tennis_Web.Controllers
             // Assign default value for first time access
             if (!a1 && a3)
             {
-                model = new TournamentTabViewModel
+                model = new TabViewModel
                 {
                     ActiveTab = Tab.Info,
                     IsCurrent = isCurrent,
@@ -96,7 +97,7 @@ namespace Tennis_Web.Controllers
             var result = new DatabaseMethod<DS_Giai>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();
             // Assign value for view model
-            var vm = new TournamentTabViewModel
+            var vm = new TabViewModel
             {
                 ActiveTab = Tab.Info,
                 IsCurrent = true,
@@ -127,57 +128,16 @@ namespace Tennis_Web.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index), true);
         }
-        // ----------------------------------------------------- Level Related -----------------------------------------------------
-        public IActionResult LevelInfo(TournamentTabViewModel model, bool isCurrent, int? trinhID, string detailedTitle)
-        {
-            if (model.ID == null)
-            {
-                // Assign default value for first time access
-                model = new TournamentTabViewModel
-                {
-                    ActiveTab = Tab.Parameter,
-                    IsCurrent = isCurrent,
-                    ID = trinhID,
-                    DetailedTitle = detailedTitle
-                };
-            }
-            return View(model);
-        }
-        
-        [HttpPost]
-        public IActionResult UpdateParameter(DS_Trinh item)
-        {
-            // Find and update Parameters from DS_Trinh
-            item.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet;
-            var columnsToSave = new List<string> { "Trinh", "DiemTru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
-            var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
-            _context.SaveChanges();
-            var temp = _context.DS_Giais.Find(item.ID_Giai);
-            // Assign value for view model
-            var vm = new TournamentTabViewModel
-            {
-                ActiveTab = Tab.Parameter,
-                IsCurrent = true,
-                ID = item.Id,
-                DetailedTitle = "Giải " + temp.Ten + " - Trình " + item.Trinh,
-                Succeeded = result.Succeeded
-            };
-
-            // If save unsuccessfully, view error and display View with "item" 
-            if (!result.Succeeded) vm.CurrentModel = item;
-            // If save successfully, view error and display View with model from DB 
-            return RedirectToAction(nameof(LevelInfo), vm);
-        }
-        //[HttpPost]
         public IActionResult AddLevel(string newLevel, string idGiai)
         {
-            _context.Add(new DS_Trinh { 
+            _context.Add(new DS_Trinh
+            {
                 Trinh = Convert.ToInt32(newLevel),
                 ID_Giai = Convert.ToInt32(idGiai)
             });
             _context.SaveChanges();
             // Assign value for view model
-            var vm = new TournamentTabViewModel
+            var vm = new TabViewModel
             {
                 ActiveTab = Tab.LevelList,
                 IsCurrent = true,
@@ -191,7 +151,7 @@ namespace Tennis_Web.Controllers
             _context.Remove(item);
             _context.SaveChanges();
             // Assign value for view model
-            var vm = new TournamentTabViewModel
+            var vm = new TabViewModel
             {
                 ActiveTab = Tab.LevelList,
                 IsCurrent = true,
@@ -199,5 +159,6 @@ namespace Tennis_Web.Controllers
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
+
     }
 }

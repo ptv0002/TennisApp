@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class ResultModel
+    public class ResultModel<T>
     {
         public bool Succeeded { get; set; }
         public string Message { get; set; }
-        public List<object> List { get; set; }
+        public List<T> List { get; set; }
         public Dictionary<int, PropertyInfo> ListCol { get; set; }
     }
 }

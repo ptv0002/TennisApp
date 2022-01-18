@@ -17,7 +17,7 @@ namespace Tennis_Web.Views.Shared.Components.Parameter
             _context = context;
             _notyf = notyf;
         }
-        public IViewComponentResult Invoke(TournamentTabViewModel vm)
+        public IViewComponentResult Invoke(TabViewModel vm)
         {
             var item = (DS_Trinh)vm.CurrentModel;
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công");

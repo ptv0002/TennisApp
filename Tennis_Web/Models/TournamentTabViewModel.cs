@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tennis_Web.Models
 {
-    public class TournamentTabViewModel
+    public class TabViewModel
     {
         public Tab ActiveTab { get; set; }
         public bool IsCurrent { get; set; }
@@ -21,6 +21,7 @@ namespace Tennis_Web.Models
         Parameter,
         Player,
         Division,
-        LevelList
+        LevelList,
+        Pair
     }
 }
