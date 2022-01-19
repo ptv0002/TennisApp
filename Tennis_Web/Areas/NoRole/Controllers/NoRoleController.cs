@@ -23,12 +23,10 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public IActionResult Index()
         {
-            //FileInfo file = new("D:/Giai_Dau.xlsx");
-            //var temp = new SetExcelMethod<DS_Giai>();
-            //temp.ImportWorkSheet("D:/Giai_Dau.xlsx", "DS_Giai");
-            var temp = new ExcelMethod();
-            DS_Vong a = new();
-            temp.ExcelToList("C:/TennisApp/Excel/Giai_Dau.xlsx", "DS_Vong",a);
+            //var temp = new ExcelMethod<DS_Vong>();
+            //ResultModel<DS_Vong> a = temp.ExcelToList("C:/TennisApp/Excel/Giai_Dau.xlsx", "DS_Vong");
+            //_context.AddRange(a.List);
+            //_context.SaveChanges();
             return View();
         }
     }

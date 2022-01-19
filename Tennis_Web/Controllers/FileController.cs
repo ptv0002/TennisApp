@@ -27,56 +27,75 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult ImportExcel()
         {
+            bool? success = (bool?)TempData["Success"];
+            if (success == true)  _notyf.Success("Đã cập nhật các Sheet từ Excel thành công !"); 
             return View(GetEntityLists());
         }
         [HttpPost]
         public IActionResult ImportExcel(IFormFile file, List<EntityListViewModel> list)
         {
-            if(list.All(m => m.IsSelected == false))
+            // Kiểm tra chọn file
+            if (file == null)
+            {
+                ModelState.AddModelError(string.Empty, "Chưa chọn file Excel để cập nhật");
+                return View(list);
+            }
+
+            if (list.All(m => m.IsSelected == false))
             {
                 ModelState.AddModelError(string.Empty, "Chọn ít nhất 1 danh sách để nhập dữ liệu!");
                 return View(list);
             }
-            //List<EntityListViewModel> ds_table = (List<EntityListViewModel>)list.Select(EntityListViewModel, s=>s.IsSelected);
             var ds_table = (from a in list where a.IsSelected select a).ToList ();
-            var ds_entity = from a in _context.Model.GetEntityTypes() select a;
-            Type type = null; 
+            bool lerror = false;
             for (int i = 0; i < ds_table.Count; i++)
             {
-                // Tìm Entity phù hợp
-                foreach (var t in ds_entity)
+                switch (ds_table[i].EntityName)
                 {
-                    if (t.FullName().ToUpper() == ds_table[i].EntityName.ToUpper ())
-                    {
-                        type = t.GetType ();
+                    case "DS_Giai":
+                        var a1 = new ExcelMethod<DS_Giai>().ExcelToList(file,"DS_Giai");
+                        if (a1.Succeeded) { _context.AddRange(a1.List);} else { ModelState.AddModelError(string.Empty, a1.Message); lerror = true; }
                         break;
-                    }
+                    case "DS_Trinh":
+                        var a2 = new ExcelMethod<DS_Trinh>().ExcelToList(file, "DS_Trinh");
+                        if (a2.Succeeded) { _context.AddRange(a2.List); } else { ModelState.AddModelError(string.Empty, a2.Message); lerror = true; }
+                        break; 
+                    case "DS_VDV":
+                        var a3 = new ExcelMethod<DS_VDV>().ExcelToList(file, "DS_VDV");
+                        if (a3.Succeeded) { _context.AddRange(a3.List); } else { ModelState.AddModelError(string.Empty, a3.Message); lerror = true; }
+                        break;
+                    case "DS_Cap":
+                        var a4 = new ExcelMethod<DS_Cap>().ExcelToList(file, "DS_Cap");
+                        if (a4.Succeeded) { _context.AddRange(a4.List); } else { ModelState.AddModelError(string.Empty, a4.Message); lerror = true; }
+                        break;
+                    case "DS_Vong":
+                        var a5 = new ExcelMethod<DS_VDV>().ExcelToList(file, "DS_Vong");
+                        if (a5.Succeeded) { _context.AddRange(a5.List); } else { ModelState.AddModelError(string.Empty, a5.Message); lerror = true; }
+                        break;
+                    default:
+                        ModelState.AddModelError(string.Empty, "Không được cập nhật từ Excel file này !");
+                        lerror = true;
+                        return View(list);
                 }
-                if (type==null) // Tìm không ra
-                {
-                    ModelState.AddModelError(string.Empty, "Không có bảng trong CSDL !");
-                    return View(list);
-                }
-                var excelToList = new ExcelMethod().ExcelToList(file, ds_table[i].EntityName,type);
-                if (!excelToList.Succeeded)
-                {
-                    ModelState.AddModelError(string.Empty, excelToList.Message);
-                    return View(list);
-                }
-                _context.AddRange(excelToList.List);
+            }
+            if (! lerror) 
+            { 
                 _context.SaveChanges();
+                TempData["Success"] = true;
+                return RedirectToAction(nameof(ImportExcel));
             }
             return View(list);
         }
         public List<EntityListViewModel> GetEntityLists()
         {
             var list = new List<EntityListViewModel>();
-            var types = _context.Model.GetEntityTypes();
+            list.Add(new EntityListViewModel() { EntityName = "DS_Giai" });
+            list.Add(new EntityListViewModel() { EntityName = "DS_VDV" });
+            list.Add(new EntityListViewModel() { EntityName = "DS_Vong" });
 
-            foreach (var t in types)
-            {
-                if (t.DisplayName().StartsWith("DS_")) list.Add(new EntityListViewModel() { EntityName = t.DisplayName() });
-            }
+            list.Add(new EntityListViewModel() { EntityName = "DS_Trinh" });
+            list.Add(new EntityListViewModel() { EntityName = "DS_Cap" });
+
             return list;
         }
         public IActionResult ExportExcel()
