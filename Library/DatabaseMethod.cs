@@ -23,7 +23,7 @@ namespace Library
         public T GetOjectFromDB(object id)
         {
             var destination = new T();
-            if (id != null)
+            if (id is not null and not 0)
             {
                 // Get object from DB with given id
                 var source = _context.Set<T>().Find(id);
@@ -49,7 +49,9 @@ namespace Library
             // 2. Update null value to a not null field (extra column in columnsToSave)
             // ----------------------------------------------------------
             var model = new ResultModel<T>();
+            columnsToSave = TestListCol(columnsToSave);
             var destination = _context.Set<T>().Find(id);
+            if (destination == null) destination = new T();
             PropertyInfo prop;
             foreach (var col in columnsToSave)
             {
@@ -57,7 +59,7 @@ namespace Library
                     prop.SetValue(destination, prop.GetValue(source));
             }
             // If id is null, Update object to DB, if not null, Add object to DB
-            if (id!=null)
+            if (id is not null and not 0)
             {
                 _context.Update(destination);
             }

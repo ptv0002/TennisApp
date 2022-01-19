@@ -7,8 +7,8 @@
     else ViewBag.BActive = "active";
 }
 @model Tennis_Web.Models.TabViewModel
-<hr/>
-<a asp-action="TournamentInfo" asp-route-isCurrent="@Model.IsCurrent" class="btn btn-primary" asp-route-trinhID="@Model.ID">Xem thông tin giải đấu</a>
+<hr />
+<a asp-action="TournamentInfo" asp-controller="Tournament" asp-route-isCurrent="@Model.IsCurrent" class="btn btn-primary" asp-route-trinhID="@Model.ID">Xem thông tin giải đấu</a>
 <ul class="nav nav-tabs mt-3">
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Parameter ? "active" : string.Empty)">
         <a asp-route-tabname="Parameter" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Tournament">Tham số trình đấu</a>
@@ -36,3 +36,33 @@
             break;
     }
 </div>
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            // ---------------- Script for updating TL_Bang - Parameter Tab ----------------
+            function UpdateTL_Bang() {
+                var tl_vd = $("#TL_VoDich").val();
+                var tl_ck = $("#TL_ChungKet").val();
+                var tl_bk = $("#TL_BanKet").val();
+                var tl_tk = $("#TL_TuKet").val();
+                var tl_bang = 100 - tl_vd - tl_ck - tl_bk - tl_tk
+                $("#TL_Bang").val(tl_bang);
+            };
+            $('#TL_VoDich').on('input', function () {
+                UpdateTL_Bang();
+            });
+            $('#TL_ChungKet').on('input', function () {
+                UpdateTL_Bang();
+            });
+            $('#TL_BanKet').on('input', function () {
+                UpdateTL_Bang();
+            });
+            $('#TL_TuKet').on('input', function () {
+                UpdateTL_Bang();
+            });
+            $('#txtVdv1').on('input', function () {
+                
+            });
+        });
+    </script>
+}

@@ -29,6 +29,17 @@
             <span asp-validation-for="Ten_Tat" class="text-danger"></span>
         </dd>
         <dt class="col-sm-3 font-weight-bold">
+            <label asp-for="Gioi_Tinh" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-9">
+            <div>
+                @Html.DropDownList("Gioi_Tinh", new List<SelectListItem>{
+                   new SelectListItem{ Text="Nam", Value = "false" },
+                   new SelectListItem{ Text="Nữ", Value = "true" }}, new { @class = "form-control" })
+            </div>
+        </dd>
+        
+        <dt class="col-sm-3 font-weight-bold">
             <label asp-for="Tel" class="control-label"></label>
         </dt>
         <dd class="col-sm-9">
@@ -91,7 +102,7 @@
             <label asp-for="FileAnh" class="control-label"></label>
         </dt>
         <dd class="col-sm-9">
-            <input class="form-control" type="file" name="fileAnh" multiple/>
+            <input class="form-control" type="file" name="fileAnh" multiple />
         </dd>
     </dl>
     <div class="form-group">

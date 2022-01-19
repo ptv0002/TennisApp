@@ -9,35 +9,14 @@
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
             <form asp-action="SavePlayerState" asp-controller="Level">
-                @if (a1)
-                {
-                    <div class="row mb-3">
-                        <div class="col-sm-6">
-                            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" formmethod="post">
-                        </div>
-                        <div class="col-sm-6">
-                            <div id="dataTable_filter" class="dataTables_filter mr-4" style="position: absolute; right: 0;">
-                                <dl class="row">
-                                    <dd>
-                                        Search:
-                                    </dd>
-                                    <dd class="ml-2"><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div id="dataTable_filter" class="dataTables_filter col-sm-12">
-                        <dl class="row">
-                            <dd>
-                                Search:
-                            </dd>
-                            <dd class="ml-2"><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></dd>
-                        </dl>
-                    </div>
-                }
+                <div id="dataTable_filter" class="dataTables_filter col-sm-12">
+                    <dl class="row">
+                        <dd>
+                            Search:
+                        </dd>
+                        <dd class="ml-2"><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></dd>
+                    </dl>
+                </div>
                 <div class="table-responsive">
                     <table class="table dataTable">
                         <thead>
@@ -77,6 +56,12 @@
                         </tbody>
                     </table>
                 </div>
+                @if (a1)
+                {
+                    <div class="form-group">
+                        <input type="submit" value="Lưu thay đổi" class="btn btn-primary" formmethod="post" />
+                    </div>
+                }
             </form>
         </div>
     </div>

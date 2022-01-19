@@ -30,7 +30,14 @@ namespace Tennis_Web.Controllers
         [HttpPost]
         public IActionResult Update(int? id, DS_VDV source)
         {
-            var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "CLB", "KhachMoi", "FileAnh", "Tel", "Email", "Status", "CongTy", "ChucVu" };
+            bool a1 = id == null && _context.DS_VDVs.Any(m => m.Ten_Tat == source.Ten_Tat);
+            bool a2 = _context.DS_VDVs.Any(m => m.Ten_Tat == source.Ten_Tat && m.Id == id);
+            if (a1 || a2)
+            {
+                ModelState.AddModelError(string.Empty, "Tên tắt bị trùng. Nhập tên mới !");
+                return View(source);
+            }
+            var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat","Gioi_Tinh", "CLB", "KhachMoi", "FileAnh", "Tel", "Email", "Status", "CongTy", "ChucVu" };
             var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
             _context.SaveChanges();
             if (result.Succeeded)
@@ -40,9 +47,5 @@ namespace Tennis_Web.Controllers
             ModelState.AddModelError(string.Empty, result.Message);
             return View(source);
         }
-        //public async Task<IActionResult> SavePlayerState(List<DS_VDV> dsVDV)
-        //{
-
-        //}
     }
 }

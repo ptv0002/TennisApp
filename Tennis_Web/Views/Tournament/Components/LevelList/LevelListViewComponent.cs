@@ -17,6 +17,7 @@ namespace Tennis_Web.Views.Shared.Components.LevelList
         public IViewComponentResult Invoke(TabViewModel vm)
         {
             ViewBag.IsCurrent = vm.IsCurrent;
+            ViewBag.ID_Giai = vm.ID;
             var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.ID_Giai == vm.ID).ToList();
             return View(model);
         }
