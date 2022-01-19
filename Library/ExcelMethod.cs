@@ -72,15 +72,14 @@ namespace Library
             }
             var worksheet = excel.Workbook.Worksheets[sheetName];
             var listrows = new List<T>();
-
             var listcols = new Dictionary<int, PropertyInfo>();
             foreach (var prop in typeof(T).GetProperties())  // Lấy tất cả các thuộc tính của T (Các cột của Table/Thuộc tính của Models.T)
             {
                 int col = GetColumn(prop.Name, worksheet);  // col = 0 --> không có cột trên file Excel --> bỏ qua
                 if (col != 0) 
                 {
-                    //listcols.Add(col, prop);
-                    model.ListCol.Add( col, prop);
+                    listcols.Add(col, prop);
+                    //model.ListCol.Add( col, prop);
                 }
             }
             for (int row = 2; row < worksheet.Dimension.End.Row + 1; row++)
@@ -106,9 +105,10 @@ namespace Library
             }
             model.Succeeded = true;
             model.List = listrows;
+            model.ListCol = listcols;
             return model;
         }
-        private int GetColumn(string columnName, ExcelWorksheet sheet)
+        private static int GetColumn(string columnName, ExcelWorksheet sheet)
         {
             var testcolumn = sheet.Cells["1:1"].FirstOrDefault(c => c.Value.ToString().ToUpper() == columnName.ToUpper());
             var idx = 0;

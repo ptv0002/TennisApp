@@ -32,6 +32,7 @@
         [DisplayName("Mã Cặp")]
         public string Ma_Cap { get; set; }
         public bool Tham_Gia { get; set; }
+        public bool Gioi_Tinh { get; set; }
 
         [StringLength(40)]
         public string CLB { get; set; }
