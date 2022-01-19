@@ -32,11 +32,12 @@
         [DisplayName("Mã Cặp")]
         public string Ma_Cap { get; set; }
         public bool Tham_Gia { get; set; }
+        [DisplayName("Giới tính")]
         public bool Gioi_Tinh { get; set; }
 
         [StringLength(40)]
         public string CLB { get; set; }
-
+        [DisplayName("Khách mời")]
         public bool KhachMoi { get; set; }
 
 

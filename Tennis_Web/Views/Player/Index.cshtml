@@ -65,6 +65,9 @@
                                 @Html.DisplayNameFor(model => model.DiemCu)
                             </th>
                             <th>
+                                @Html.DisplayNameFor(model => model.Gioi_Tinh)
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.CongTy)
                             </th>
                             <th>
@@ -76,6 +79,9 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
+                            string gender;
+                            if (item.Gioi_Tinh) gender = "Nữ";
+                            else gender = "Nam";
                             <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Ho)
@@ -109,6 +115,9 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.DiemCu)
+                                </td>
+                                <td>
+                                    @gender
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CongTy)

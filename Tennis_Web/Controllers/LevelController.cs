@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using Library;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -57,18 +58,67 @@ namespace Tennis_Web.Controllers
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(LevelInfo), vm);
         }
-        [HttpPost]
-        public JsonResult AutoComplete(string prefix)
+        public IActionResult ChangePair(int? id, int idTrinh)
         {
-            var model = (from vdv in _context.DS_VDVs
-                             where vdv.Ten_Tat.StartsWith(prefix)
-                             select new
-                             {
-                                 label = vdv.Ten_Tat,
-                                 val = vdv.Id
-                             }).ToList();
-
-            return Json(model);
+            var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == id).FirstOrDefault();
+            if (model == null)
+            {
+                model = new DS_Cap { ID_Trinh = idTrinh };
+            }
+            ViewBag.DS_VDV = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
+            return PartialView(model);
+        }
+        [HttpPost]
+        public IActionResult ChangePair(DS_Cap item)
+        {
+            var vdv1 = _context.DS_VDVs.Where(m => m.Ten_Tat == item.VDV1.Ten_Tat).FirstOrDefault();
+            var vdv2 = _context.DS_VDVs.Where(m => m.Ten_Tat == item.VDV2.Ten_Tat).FirstOrDefault();
+            DS_Cap obj;
+            if (vdv1 != null && vdv1 != null)
+            {
+                obj = new()
+                {
+                    ID_Trinh = item.ID_Trinh,
+                    ID_Vdv1 = vdv1.Id,
+                    ID_Vdv2 = vdv2.Id,
+                    MaCap = item.MaCap
+                };
+            }
+            else
+            {
+                ViewBag.DS_VDV = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
+                ModelState.AddModelError(string.Empty, "Thông tin nhập không chính xác !");
+                return PartialView(item);
+            }
+            var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "MaCap", "ID_Trinh" };
+            var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, obj, columnsToSave);
+            _context.SaveChanges();
+            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == item.ID_Trinh).FirstOrDefault();
+            // Assign value for view model
+            var vm = new TabViewModel
+            {
+                ActiveTab = Tab.Pair,
+                IsCurrent = true,
+                ID = item.Id,
+                DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
+            };
+            return RedirectToAction(nameof(LevelInfo), vm);
+        }
+        public IActionResult DeletePair(int id)
+        { 
+            var item = _context.DS_Caps.Find(id);
+            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == item.ID_Trinh).FirstOrDefault();
+            _context.Remove(item);
+            _context.SaveChanges();
+            // Assign value for view model
+            var vm = new TabViewModel
+            {
+                ActiveTab = Tab.Pair,
+                IsCurrent = true,
+                ID = item.Id,
+                DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
+            };
+            return RedirectToAction(nameof(LevelInfo), vm);
         }
     }
 }

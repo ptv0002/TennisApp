@@ -15,6 +15,9 @@
                             <th>
                                 VĐV 2
                             </th>
+                            <th>
+                                Mã cặp
+                            </th>
                             @if (a1)
                             {
                                 <th></th>
@@ -31,6 +34,9 @@
                                 <td>
                                     @item.VDV2.Ten_Tat
                                 </td>
+                                <td>
+                                    @item.MaCap
+                                </td>
                                 @if (a1)
                                 {
                                     var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
@@ -43,33 +49,20 @@
                                     };
                                     <td>
                                         <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
-                                        <button type="button" class="btn btn-info" >Sửa</button>
+                                        <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#editModal" data-url="@Url.Action("ChangePair", "Level", new { id = item.Id, idTrinh = ViewBag.ID_Trinh })">Sửa</button>
                                     </td>
-                                
-                                 }
+
+                                }
                             </tr>
                         }
                     </tbody>
-                    @if (a1)
-                    {
-                        <tfoot>
-                            <tr>
-                                <td>
-                                    <input type="text" name="newVDV1" id="txtVDV1" class="form-control" />
-                                    <input type="hidden" name="idNewVDV1" />
-                                </td>
-                                <td>
-                                    <input type="text" name="newVDV2" id="txtVDV2" class="form-control" />
-                                    <input type="hidden" name="idNewVDV2" />
-                                </td>
-                                <td>
-                                    <input type="hidden" value="@Model.First().ID_Trinh" name="idTrinh" />
-                                    <input type="submit" value="Thêm" class="btn btn-primary" />
-                                </td>
-                            </tr>
-                        </tfoot>
-                    }
                 </table>
+                @if (a1)
+                {
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#editModal" data-url="@Url.Action("ChangePair", "Level", new { idTrinh = ViewBag.ID_Trinh })">Thêm cặp</button>
+                    </div>
+                }
             </form>
         </div>
     </div>
