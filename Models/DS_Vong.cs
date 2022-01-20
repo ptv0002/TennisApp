@@ -22,8 +22,8 @@ namespace Models
         [DisplayName("Tên")]
         public string Ten { get; set; }
         [StringLength(1)]
-        [DisplayName("Mã Vòng")]
-        public string MaVong { get; set; }
+        [DisplayName("Mã vòng")]
+        public string Ma_Vong { get; set; }
         //public virtual ICollection<DS_Diem> DS_Diem { get; set; }
         //public virtual ICollection<DS_Tran> DS_Tran { get; set; }
     }

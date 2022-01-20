@@ -11,7 +11,7 @@
         public DS_VDV()
         {
             DS_Caps = new HashSet<DS_Cap>();
-            DS_VDVDiem = new HashSet<DS_VDVDiem>();
+            DS_VDV_Diem = new HashSet<DS_VDVDiem>();
         }
         [Key]
         public int Id { get; set; }
@@ -38,10 +38,10 @@
         [StringLength(40)]
         public string CLB { get; set; }
         [DisplayName("Khách mời")]
-        public bool KhachMoi { get; set; }
+        public bool Khach_Moi { get; set; }
 
 
-        public string FileAnh { get; set; }
+        public string File_Anh { get; set; }
 
         [DisplayName("SĐT")]
         public string Tel { get; set; }
@@ -55,19 +55,19 @@
         public int Diem { get; set; }
 
         [DisplayName("Điểm Cũ")]
-        public int DiemCu { get; set; }
+        public int Diem_Cu { get; set; }
 
         [DisplayName("Công Ty")]
-        public string CongTy { get; set; }
+        public string Cong_Ty { get; set; }
 
         [DisplayName("Chức Vụ")]
-        public string ChucVu { get; set; }
+        public string Chuc_Vu { get; set; }
 
         [ForeignKey("ID_KhuVuc")]
         [DisplayName("ID Khu Vực")]
         public virtual Khu_Vuc Khu_Vuc { get; set; }
         public virtual ICollection<DS_Cap> DS_Caps { get; set; }
-        public virtual ICollection<DS_VDVDiem> DS_VDVDiem { get; set; }
+        public virtual ICollection<DS_VDVDiem> DS_VDV_Diem { get; set; }
         //  [JsonIgnore]
         //   public virtual ICollection<DS_Cap> DS_Cap2 { get; set; }
 

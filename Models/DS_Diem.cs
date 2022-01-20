@@ -20,7 +20,7 @@
         [ForeignKey("ID_Vong")]
         [DisplayName("ID Vòng")]
         public virtual DS_Vong DS_Vong { get; set; }
-        public int? ID_Trinh { get; set; }
+        public int ID_Trinh { get; set; }
         [ForeignKey("ID_Trinh")]
         [DisplayName("ID Trình")]
         public virtual DS_Trinh DS_Trinh { get; set; }

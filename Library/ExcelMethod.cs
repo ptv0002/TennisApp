@@ -13,7 +13,7 @@ namespace Library
 {
     public class ExcelMethod<T> where T : class, new()
     {
-        //public ResultModel ListToExcel (List<object> list)
+        //public ResultModel<T> ListToExcel(List<T> list)
         //{
 
         //}

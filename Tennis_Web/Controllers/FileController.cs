@@ -28,7 +28,7 @@ namespace Tennis_Web.Controllers
         public IActionResult ImportExcel()
         {
             bool? success = (bool?)TempData["Success"];
-            if (success == true)  _notyf.Success("Đã cập nhật các Sheet từ Excel thành công !"); 
+            if (success == true)  _notyf.Success("Đã cập nhật các Sheet từ Excel thành công!"); 
             return View(GetEntityLists());
         }
         [HttpPost]
@@ -37,7 +37,7 @@ namespace Tennis_Web.Controllers
             // Kiểm tra chọn file
             if (file == null)
             {
-                ModelState.AddModelError(string.Empty, "Chưa chọn file Excel để cập nhật");
+                ModelState.AddModelError(string.Empty, "Chưa chọn file Excel để cập nhật!");
                 return View(list);
             }
 
@@ -73,7 +73,7 @@ namespace Tennis_Web.Controllers
                         if (a5.Succeeded) { _context.AddRange(a5.List); } else { ModelState.AddModelError(string.Empty, a5.Message); lerror = true; }
                         break;
                     default:
-                        ModelState.AddModelError(string.Empty, "Không được cập nhật từ Excel file này !");
+                        ModelState.AddModelError(string.Empty, "Không được cập nhật từ Excel file này!");
                         lerror = true;
                         return View(list);
                 }
@@ -88,13 +88,15 @@ namespace Tennis_Web.Controllers
         }
         public List<EntityListViewModel> GetEntityLists()
         {
-            var list = new List<EntityListViewModel>();
-            list.Add(new EntityListViewModel() { EntityName = "DS_Giai" });
-            list.Add(new EntityListViewModel() { EntityName = "DS_VDV" });
-            list.Add(new EntityListViewModel() { EntityName = "DS_Vong" });
+            var list = new List<EntityListViewModel>
+            {
+                new EntityListViewModel() { EntityName = "DS_Giai" },
+                new EntityListViewModel() { EntityName = "DS_VDV" },
+                new EntityListViewModel() { EntityName = "DS_Vong" },
 
-            list.Add(new EntityListViewModel() { EntityName = "DS_Trinh" });
-            list.Add(new EntityListViewModel() { EntityName = "DS_Cap" });
+                new EntityListViewModel() { EntityName = "DS_Trinh" },
+                new EntityListViewModel() { EntityName = "DS_Cap" }
+            };
 
             return list;
         }

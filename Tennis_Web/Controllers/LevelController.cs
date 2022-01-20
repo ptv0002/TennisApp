@@ -18,9 +18,9 @@ namespace Tennis_Web.Controllers
         {
             _context = context;
         }
-        public IActionResult LevelInfo(TabViewModel model, bool isCurrent, int? trinhID, string detailedTitle)
+        public IActionResult LevelInfo(TabViewModel model, bool isCurrent, int  trinhID, string detailedTitle)
         {
-            if (model.ID == null)
+            if (model.ID == 0)
             {
                 // Assign default value for first time access
                 model = new TabViewModel
@@ -39,7 +39,7 @@ namespace Tennis_Web.Controllers
         {
             // Find and update Parameters from DS_Trinh
             item.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet;
-            var columnsToSave = new List<string> { "Trinh", "DiemTru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
+            var columnsToSave = new List<string> { "Trinh", "Diem_Tru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
             var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();
             var temp = _context.DS_Giais.Find(item.ID_Giai);
@@ -58,7 +58,7 @@ namespace Tennis_Web.Controllers
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(LevelInfo), vm);
         }
-        public IActionResult ChangePair(int? id, int idTrinh)
+        public IActionResult ChangePair(int id, int idTrinh)
         {
             var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == id).FirstOrDefault();
             if (model == null)
@@ -81,16 +81,16 @@ namespace Tennis_Web.Controllers
                     ID_Trinh = item.ID_Trinh,
                     ID_Vdv1 = vdv1.Id,
                     ID_Vdv2 = vdv2.Id,
-                    MaCap = item.MaCap
+                    Ma_Cap = item.Ma_Cap
                 };
             }
             else
             {
                 ViewBag.DS_VDV = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
-                ModelState.AddModelError(string.Empty, "Thông tin nhập không chính xác !");
+                ModelState.AddModelError(string.Empty, "Thông tin nhập không chính xác!");
                 return PartialView(item);
             }
-            var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "MaCap", "ID_Trinh" };
+            var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Ma_Cap", "ID_Trinh" };
             var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, obj, columnsToSave);
             _context.SaveChanges();
             var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == item.ID_Trinh).FirstOrDefault();

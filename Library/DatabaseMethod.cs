@@ -70,41 +70,6 @@ namespace Library
             return model;
         }
         /// <summary>
-        /// Lưu dữ liệu kiểu T theo danh sách cột vào 1 đối tượng trong context
-        /// </summary>
-        /// <param name="listObject"></param> : Đối tượng cần lưu, hoặc nhập mới
-        /// <param name="columnsToSave"></param> : Danh sách các cột - ĐÃ HỢP LỆ (Chữ in)
-        /// <returns></returns>
-        public ResultModel<T> SaveListObjectToDB(List<T> listObject, List<string> columnsToSave)
-        {
-            var model = new ResultModel<T>();
-            columnsToSave = TestListCol(columnsToSave);
-            if (columnsToSave.Count == 0)
-            {
-                model.Succeeded = false;
-                model.Message = "Not data !";
-                return model;
-            }
-            foreach (var obj in listObject)
-            {
-                model = SaveObjectToDB(null, obj, columnsToSave);
-                if (!model.Succeeded)
-                {
-                    model.Succeeded = false;
-                    model.Message = "Update Error !";
-                    return model;
-                }
-            }
-            if (!model.Succeeded)
-            {
-                model.Succeeded = true;
-                model.Message = "Save to database successfully!";
-                return model;
-            }
-            _context.SaveChanges();
-            return model;
-        }
-        /// <summary>
         /// Lấy danh sách các cột hợp lệ, nếu danh sách bằng rỗng --> không có cột nào hợp lệ
         /// </summary>
         /// <param name="source"></param>

@@ -35,6 +35,7 @@
   <ItemGroup>
     <Folder Include="Areas\NoRole\Data\" />
     <Folder Include="Areas\NoRole\Models\" />
+    <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 
 </Project>
