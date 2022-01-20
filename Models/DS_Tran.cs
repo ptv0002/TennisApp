@@ -11,18 +11,18 @@
         public int Id { get; set; }
 
         [StringLength(15)]
-        [DisplayName("Mã Trận")]
+        [DisplayName("Mã trận")]
         public string Ma_Tran { get; set; }
-        [DisplayName("KQ1")]
+        [DisplayName("KQ 1")]
         public int Kq_1 { get; set; }
-        [DisplayName("KQ2")]
+        [DisplayName("KQ 2")]
         public int Kq_2 { get; set; }
-        public int ID_Cap1 { get; set; }
         [DisplayName("ID Cặp 1")]
+        public int ID_Cap1 { get; set; }
         [ForeignKey("ID_Cap1")]
         public virtual DS_Cap DS_Cap1 { get; set; }
-        public int ID_Cap2 { get; set; }
         [DisplayName("ID Cặp 2")]
+        public int? ID_Cap2 { get; set; }
         [ForeignKey("ID_Cap2")]
         [InverseProperty("DS_Trans")]
         public virtual DS_Cap DS_Cap2 { get; set; }
