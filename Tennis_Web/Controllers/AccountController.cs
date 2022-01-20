@@ -64,7 +64,7 @@ namespace Tennis_Web.Controllers
                 // Return error if not found
                 if (user == null)
                 {
-                    ModelState.AddModelError(string.Empty, "Tài khoản không tồn tại");
+                    ModelState.AddModelError(string.Empty, "Tài khoản không tồn tại!");
                     return View(model);
                 }
                 var result = await _signInManager.PasswordSignInAsync(user.UserName,
@@ -80,7 +80,7 @@ namespace Tennis_Web.Controllers
                             return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
                     }
                 }
-                ModelState.AddModelError(string.Empty, "Đăng nhập không thành công");
+                ModelState.AddModelError(string.Empty, "Đăng nhập không thành công!");
             }
             return View(model);
         }
@@ -186,7 +186,7 @@ namespace Tennis_Web.Controllers
                 var user = await _userManager.FindByIdAsync(id);
                 model.Username = user.UserName;
                 model.Email = user.Email;
-                model.Note = user.GhiChu;
+                model.Note = user.Ghi_Chu;
                 model.FullName = user.FullName;
                 var roles = await _userManager.GetRolesAsync(user);
                 selectedValue = roles[0];
@@ -203,7 +203,7 @@ namespace Tennis_Web.Controllers
             user.FullName = model.FullName;
             user.UserName = model.Username;
             user.Email = model.Email;
-            user.GhiChu = model.Note;
+            user.Ghi_Chu = model.Note;
             var result = new IdentityResult();
             if (id == null) 
             { 

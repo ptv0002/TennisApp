@@ -8,6 +8,6 @@ namespace Models {
         public string FullName { set; get; }
 
         [MaxLength(100)]
-        public string GhiChu { set; get; }
+        public string Ghi_Chu { set; get; }
     }
 }

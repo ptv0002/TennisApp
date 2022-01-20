@@ -32,11 +32,11 @@
         [DisplayName("Điểm phân bổ")]
         public int Diem_PB { get; set; }  // Điểm trừ trước khi phân bổ
         [DisplayName("Tổng Điểm")]
-        public int TongDiem { get; set; }
+        public int Tong_Diem { get; set; }
         [DisplayName("Điểm Trừ")]
-        public int DiemTru { get; set; }
+        public int Diem_Tru { get; set; }
         [DisplayName("Chênh Lệch")]
-        public int ChenhLech { get; set; }
+        public int Chenh_Lech { get; set; }
         [DisplayName("ID Giải")]
         public int ID_Giai { get; set; }
         [ForeignKey("ID_Giai")]

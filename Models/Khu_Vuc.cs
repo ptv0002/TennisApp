@@ -15,8 +15,8 @@
 
         [Key]
         public int Id { get; set; }
-        [DisplayName("Mã Khu Vực")]
-        public string MaKhuVuc { get; set; }
+        [DisplayName("Mã khu vực")]
+        public string Ma_KhuVuc { get; set; }
         [DisplayName("Tên")]
         public string Ten { get; set; }
         public virtual ICollection<DS_VDV> DS_VDV { get; set; }

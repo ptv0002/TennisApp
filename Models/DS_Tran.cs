@@ -17,11 +17,11 @@
         public int Kq_1 { get; set; }
         [DisplayName("KQ2")]
         public int Kq_2 { get; set; }
-        public int? ID_Cap1 { get; set; }
+        public int ID_Cap1 { get; set; }
         [DisplayName("ID Cặp 1")]
         [ForeignKey("ID_Cap1")]
         public virtual DS_Cap DS_Cap1 { get; set; }
-        public int? ID_Cap2 { get; set; }
+        public int ID_Cap2 { get; set; }
         [DisplayName("ID Cặp 2")]
         [ForeignKey("ID_Cap2")]
         [InverseProperty("DS_Trans")]

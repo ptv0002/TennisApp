@@ -10,7 +10,7 @@ namespace Tennis_Web.Models
     {
         public Tab ActiveTab { get; set; }
         public bool IsCurrent { get; set; }
-        public int? ID { get; set; }
+        public int ID { get; set; }
         public string DetailedTitle { get; set; }
         public object CurrentModel { get; set; }
         public bool? Succeeded { get; set; }

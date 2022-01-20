@@ -24,11 +24,11 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult Index(bool isCurrent)
         {
-            var model = _context.DS_Giais.OrderByDescending(m => m.Ngay).Where(m => m.GiaiMoi == isCurrent).ToList();
+            var model = _context.DS_Giais.OrderByDescending(m => m.Ngay).Where(m => m.Giai_Moi == isCurrent).ToList();
             ViewBag.isCurrent = isCurrent;
             return View(model);
         }
-        public IActionResult SwitchToTabs(string tabname, bool isCurrent, int? id, string detailedTitle)
+        public IActionResult SwitchToTabs(string tabname, bool isCurrent, int id, string detailedTitle)
         {
             var vm = new TabViewModel()
             {
@@ -61,11 +61,11 @@ namespace Tennis_Web.Controllers
                     return RedirectToAction(nameof(TournamentInfo), vm);
             }
         }
-        public IActionResult TournamentInfo(TabViewModel model, bool isCurrent, int? giaiID, int? trinhID)
+        public IActionResult TournamentInfo(TabViewModel model, bool isCurrent, int giaiID, int trinhID)
         {
-            bool a1 = giaiID == null;
-            bool a2 = trinhID == null;
-            bool a3 = model.ID == null;
+            bool a1 = giaiID == 0;
+            bool a2 = trinhID == 0;
+            bool a3 = model.ID == 0;
             // Assign default value for first time access
             if (!a1 && a3)
             {
@@ -93,7 +93,7 @@ namespace Tennis_Web.Controllers
         public IActionResult UpdateInfo(DS_Giai item)
         {
             // Find and update Tournament Info
-            var columnsToSave = new List<string> { "Ten", "GhiChu", "Ngay"};
+            var columnsToSave = new List<string> { "Ten", "Ghi_Chu", "Ngay" };
             var result = new DatabaseMethod<DS_Giai>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();
             // Assign value for view model
@@ -115,7 +115,7 @@ namespace Tennis_Web.Controllers
         {
             // Find the current Tournament and set IsCurrent to false
             var item = _context.DS_Giais.Find(id);
-            item.GiaiMoi = false;
+            item.Giai_Moi = false;
             _context.Update(item);
             // Reset Participation status to all false and Pair code to null
             var list = _context.DS_VDVs.ToList();
@@ -124,7 +124,7 @@ namespace Tennis_Web.Controllers
                                 m.Tham_Gia = false;
                                 m.Ma_Cap = null;
                             });
-            _context.Update(list);
+            _context.UpdateRange(list);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index), true);
         }
@@ -159,6 +159,18 @@ namespace Tennis_Web.Controllers
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
-
+        public IActionResult SavePlayerState(List<DS_VDV> list)
+        {
+            _context.UpdateRange(list);
+            _context.SaveChanges();
+            // Assign value for view model
+            var vm = new TabViewModel
+            {
+                ActiveTab = Tab.Player,
+                IsCurrent = true,
+                Succeeded = true
+            };
+            return RedirectToAction(nameof(TournamentInfo), vm);
+        }
     }
 }

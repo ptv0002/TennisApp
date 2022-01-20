@@ -91,16 +91,16 @@
             <label class="text-lg"> %</label>
         </dd>
         <dt class="col-sm-2 font-weight-bold">
-            @Html.DisplayNameFor(m => m.TongDiem)
+            @Html.DisplayNameFor(m => m.Tong_Diem)
         </dt>
         <dd class="col-sm-10 row">
-            <input asp-for="TongDiem" class=" form-control col-sm-3" disabled />
+            <input asp-for="Tong_Diem" class=" form-control col-sm-3" disabled />
         </dd>
         <dt class="col-sm-2 font-weight-bold">
-            @Html.DisplayNameFor(m => m.ChenhLech)
+            @Html.DisplayNameFor(m => m.Chenh_Lech)
         </dt>
         <dd class="col-sm-10 row">
-            <input asp-for="ChenhLech" class=" form-control col-sm-3" disabled />
+            <input asp-for="Chenh_Lech" class=" form-control col-sm-3" disabled />
         </dd>
         <dt class="col-sm-2 font-weight-bold">
             @Html.DisplayNameFor(m => m.Diem_PB)
@@ -115,16 +115,16 @@
             {<input asp-for="Diem_PB" class=" form-control col-sm-3" disabled />}
         </dd>
         <dt class="col-sm-2 font-weight-bold">
-            @Html.DisplayNameFor(m => m.DiemTru)
+            @Html.DisplayNameFor(m => m.Diem_Tru)
         </dt>
         <dd class="col-sm-10 row">
             @if (a1)
             {
-                <input asp-for="DiemTru" class=" form-control col-sm-3" required />
-                <span asp-validation-for="DiemTru" class="text-danger"></span>
+                <input asp-for="Diem_Tru" class=" form-control col-sm-3" required />
+                <span asp-validation-for="Diem_Tru" class="text-danger"></span>
             }
             else
-            {<input asp-for="DiemTru" class=" form-control col-sm-3" disabled />}
+            {<input asp-for="Diem_Tru" class=" form-control col-sm-3" disabled />}
         </dd>
     </dl>
     @if (a1)

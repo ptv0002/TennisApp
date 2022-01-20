@@ -15,8 +15,8 @@ namespace Models
         [DisplayName("Tên")]
         public string Ten { get; set; }
         [DisplayName("Ngày")]
-        public DateTime? Ngay { get; set; }
-        public string FileTB { get; set; }
-        public bool HienThi { get; set; }
+        public DateTime Ngay { get; set; }
+        public string File_TB { get; set; }
+        public bool Hien_Thi { get; set; }
     }
 }
