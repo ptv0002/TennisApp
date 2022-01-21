@@ -26,7 +26,7 @@ namespace Tennis_Web.Views.Shared.Components.Player
             {
                 if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công!");
                 // Display for current tournament
-                players = _context.DS_VDVs.ToList();
+                players = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
             }
             else
             {
@@ -37,7 +37,7 @@ namespace Tennis_Web.Views.Shared.Components.Player
                 var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1).ToList();
                 var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2).ToList();
                 // Get all players with from Player Id found in Player1 and Player2 lists
-                players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id)).ToList();
+                players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id)).OrderByDescending(m => m.Diem).ToList();
 
             }
             ViewBag.IsCurrent = vm.IsCurrent;

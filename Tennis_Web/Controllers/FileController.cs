@@ -25,6 +25,21 @@ namespace Tennis_Web.Controllers
             _context = context;
             _notyf = notyf;
         }
+        public IActionResult AnnouncementIndex()
+        {
+            var model = _context.Thong_Baos.OrderByDescending(m => m.Ngay).ToList();
+            return View(model);
+        }
+        public IActionResult UpdateAnnouncement(int id)
+        {
+            var destination = _context.Thong_Baos.Find(id);
+            return View(destination);
+        }
+        //public IActionResult UpdateAnnouncement(int id, Thong_Bao source)
+        //{
+        //    var model;
+        //    return View(model);
+        //}
         public IActionResult ImportExcel()
         {
             bool? success = (bool?)TempData["Success"];

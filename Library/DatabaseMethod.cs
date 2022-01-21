@@ -20,21 +20,21 @@ namespace Library
         {
             _context = context;
         }
-        public T GetOjectFromDB(object id)
-        {
-            var destination = new T();
-            if (id is not null and not 0)
-            {
-                // Get object from DB with given id
-                var source = _context.Set<T>().Find(id);
-                // Get all info from DB object and save to Destination object
-                foreach (var prop in typeof(T).GetProperties())
-                {
-                    prop.SetValue(destination, prop.GetValue(source));
-                }
-            }
-            return destination;
-        }
+        //public T GetOjectFromDB(object id)
+        //{
+        //    var destination = new T();
+        //    if (id is not null and not 0)
+        //    {
+        //        // Get object from DB with given id
+        //        var source = _context.Set<T>().Find(id);
+        //        // Get all info from DB object and save to Destination object
+        //        foreach (var prop in typeof(T).GetProperties())
+        //        {
+        //            prop.SetValue(destination, prop.GetValue(source));
+        //        }
+        //    }
+        //    return destination;
+        //}
         /// <summary>
         /// Lưu dữ liệu kiểu T theo danh sách cột vào 1 đối tượng trong context
         /// </summary>

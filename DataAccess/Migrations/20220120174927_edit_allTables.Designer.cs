@@ -13,6 +13,7 @@ namespace DataAccess.Migrations
     [Migration("20220120174927_edit_allTables")]
     partial class edit_allTables
     {
+
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
