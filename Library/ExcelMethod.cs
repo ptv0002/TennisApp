@@ -79,12 +79,13 @@ namespace Library
                 if (col != 0) 
                 {
                     listcols.Add(col, prop);
-                    //model.ListCol.Add( col, prop);
                 }
             }
             for (int row = 2; row < worksheet.Dimension.End.Row + 1; row++)
             {
                 T obj = new();
+                int i = 1;
+                bool emptyobject = false;
                 foreach (var ocol in listcols)  // Lấy tất cả các thuộc tính của T (Các cột của Table/Thuộc tính của Models.T)
                 {
                     var cellValue = worksheet.Cells[row, ocol.Key].Value;
@@ -100,7 +101,10 @@ namespace Library
                         return model;
                     }
                     ocol.Value.SetValue(obj, Convert.ChangeType(cellValue, propType));
+                    if (i==1 && (cellValue==null || cellValue.ToString() == "0")) emptyobject = true; 
+                    i++;
                 }
+                if (emptyobject) break;
                 listrows.Add(obj);
             }
             model.Succeeded = true;
@@ -110,8 +114,8 @@ namespace Library
         }
         private static int GetColumn(string columnName, ExcelWorksheet sheet)
         {
-            var testcolumn = sheet.Cells["1:1"].FirstOrDefault(c => c.Value.ToString().ToUpper() == columnName.ToUpper());
-            var idx = 0;
+            var testcolumn = sheet.Cells["1:1"].Where(c=>c.Value !=null).FirstOrDefault(c => c.Value.ToString().ToUpper() == columnName.ToUpper());
+            int idx = 0;
             if (testcolumn != null) idx = testcolumn.Start.Column;
             return idx;
         }
