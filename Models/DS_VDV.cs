@@ -1,5 +1,6 @@
 ﻿namespace Models
 {
+    using Microsoft.AspNetCore.Http;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -40,7 +41,9 @@
         [DisplayName("Khách mời")]
         public bool Khach_Moi { get; set; }
 
-
+        [NotMapped]
+        public IFormFile Picture { get; set; }
+        [DisplayName("File ảnh")]
         public string File_Anh { get; set; }
 
         [DisplayName("SĐT")]

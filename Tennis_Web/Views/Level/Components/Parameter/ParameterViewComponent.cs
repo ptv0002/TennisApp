@@ -25,7 +25,7 @@ namespace Tennis_Web.Views.Shared.Components.Parameter
 
             if (vm.Succeeded != false)
             {
-                item = new DatabaseMethod<DS_Trinh>(_context).GetOjectFromDB(vm.ID);
+                item = _context.DS_Trinhs.Find(vm.ID);
                 if (item == null) ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
             }
             ViewBag.IsCurrent = vm.IsCurrent;

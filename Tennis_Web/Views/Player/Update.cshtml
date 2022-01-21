@@ -38,7 +38,7 @@
                    new SelectListItem{ Text="Nữ", Value = "true" }}, new { @class = "form-control" })
             </div>
         </dd>
-        
+
         <dt class="col-sm-3 font-weight-bold">
             <label asp-for="Tel" class="control-label"></label>
         </dt>
@@ -102,8 +102,28 @@
             <label asp-for="File_Anh" class="control-label"></label>
         </dt>
         <dd class="col-sm-9">
-            <input class="form-control" type="file" name="fileAnh" multiple />
+            <input class="form-control" type="file" asp-for="Picture" multiple />
         </dd>
+        @if (Model.File_Anh != null)
+        {
+            <dt class="col-sm-3 font-weight-bold">
+                <label class="control-label">Tên file</label>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.File_Anh)
+            </dd>
+
+            <dt class="col-sm-3 font-weight-bold">
+                <label class="control-label">Hình ảnh</label>
+            </dt>
+            <dd class="col-sm-9">
+                <img src="@ViewBag.ImageDataURL" width="600" />
+            </dd>
+            <dt class="col-sm-3 font-weight-bold"></dt>
+            <dd class="col-sm-9">
+                <a class="btn btn-danger" asp-action="DeleteImage" asp-route-id="@Model.Id">Remove Image</a>
+            </dd>
+        }
     </dl>
     <div class="form-group">
         <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />

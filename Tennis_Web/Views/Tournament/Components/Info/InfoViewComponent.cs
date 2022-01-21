@@ -25,7 +25,7 @@ namespace Tennis_Web.Views.Shared.Components.Info
 
             if (vm.Succeeded != false)
             {
-                item = new DatabaseMethod<DS_Giai>(_context).GetOjectFromDB(vm.ID);
+                item =_context.DS_Giais.Find(vm.ID);
                 if (item == null) ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
             }
             ViewBag.IsCurrent = vm.IsCurrent;

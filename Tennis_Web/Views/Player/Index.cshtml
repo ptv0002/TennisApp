@@ -3,16 +3,13 @@
 @{
     ViewData["Title"] = "Danh sách VĐV";
 }
-@*<p>
-    <a asp-action="Update" class="btn btn-primary">Thêm mới</a>
-</p>*@
 <div class="card shadow mb-4">
     @*<div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
         </div>*@
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            <div class="row mb-3">
+            @*<div class="row mb-3">
                 <div class="col-sm-6">
                     <a asp-action="Update" class="btn btn-primary">Thêm mới</a>
                 </div>
@@ -26,6 +23,12 @@
                         </dl>
                     </div>
                 </div>
+            </div>*@
+            <div id="dataTable_filter" class="dataTables_filter col-sm-12">
+                <dl class="row">
+                    <dd>Search:</dd>
+                    <dd class="ml-2"><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></dd>
+                </dl>
             </div>
             <div class="table-responsive">
                 <table class="table dataTable">
@@ -53,12 +56,6 @@
                                 @Html.DisplayNameFor(model => model.Tel)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Email)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Status)
-                            </th>
-                            <th>
                                 @Html.DisplayNameFor(model => model.Diem)
                             </th>
                             <th>
@@ -66,12 +63,6 @@
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Gioi_Tinh)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Cong_Ty)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Chuc_Vu)
                             </th>
                             <th></th>
                         </tr>
@@ -105,12 +96,6 @@
                                     @Html.DisplayFor(modelItem => item.Tel)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Email)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Status)
-                                </td>
-                                <td>
                                     @Html.DisplayFor(modelItem => item.Diem)
                                 </td>
                                 <td>
@@ -120,12 +105,6 @@
                                     @gender
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Cong_Ty)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Chuc_Vu)
-                                </td>
-                                <td>
                                     <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-info">Sửa</a>
                                 </td>
                             </tr>
@@ -133,6 +112,9 @@
                         }
                     </tbody>
                 </table>
+                <div class="form-group">
+                    <a asp-action="Update" class="btn btn-primary">Thêm mới</a>
+                </div>
             </div>
         </div>
     </div>

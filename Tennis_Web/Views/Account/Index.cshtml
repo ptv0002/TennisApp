@@ -2,52 +2,69 @@
     ViewData["Title"] = "Danh sách tài khoản";
 }
 @model IEnumerable<Models.AppUser>
-<p>
-    <a asp-action="Update" class="btn btn-primary">Thêm mới</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Username
-            </th>
-            <th>
-                Tên tài khoản
-            </th>
-            <th>
-                Email
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-            {
-                BtnMsg = "Xóa",
-                Message = "xóa tài khoản " + item.UserName,
-                ActionName = "Delete",
-                ControllerName = "Account",
-                RouteValues = new { id = item.Id }
-            };
-            <tr>
-                <td>
-                    @item.UserName
-                </td>
-                <td>
-                    @item.FullName
-                </td>
-                <td>
-                    @item.Email
-                </td>
-                <td>
-                    <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-info">Sửa</a>
-                    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="card shadow mb-4">
+    @*<div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+        </div>*@
+    <div class="card-body">
+        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div id="dataTable_filter" class="dataTables_filter col-sm-12">
+                <dl class="row">
+                    <dd>Search:</dd>
+                    <dd class="ml-2"><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></dd>
+                </dl>
+            </div>
+            <div class="table-responsive">
+                <table class="table dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Username
+                            </th>
+                            <th>
+                                Tên tài khoản
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                            {
+                                BtnMsg = "Xóa",
+                                Message = "xóa tài khoản " + item.UserName,
+                                ActionName = "Delete",
+                                ControllerName = "Account",
+                                RouteValues = new { id = item.Id }
+                            };
+                            <tr>
+                                <td>
+                                    @item.UserName
+                                </td>
+                                <td>
+                                    @item.FullName
+                                </td>
+                                <td>
+                                    @item.Email
+                                </td>
+                                <td>
+                                    <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-info">Sửa</a>
+                                    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-group">
+                <a asp-action="Update" class="btn btn-primary">Thêm mới</a>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Modal placeholder -->
 <div id="modal-placeholder"></div>
