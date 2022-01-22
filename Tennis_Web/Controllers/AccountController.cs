@@ -228,11 +228,14 @@ namespace Tennis_Web.Controllers
             await _userManager.ResetPasswordAsync(user, token, model.Password);
             return RedirectToAction(nameof(Update), new { isNew = false, id });
         }
-        public async Task<IActionResult> Delete(string id)
+        public IActionResult Delete(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            await _userManager.DeleteAsync(user);
-            return RedirectToAction(nameof(Index));
+            //var user = await _userManager.FindByIdAsync(id);
+            //await _userManager.DeleteAsync(user);
+            var user = _context.AppUsers.Find(id);
+            _context.Remove(user);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Account");
         }
     }
 }

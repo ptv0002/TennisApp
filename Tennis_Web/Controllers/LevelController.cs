@@ -104,9 +104,10 @@ namespace Tennis_Web.Controllers
             };
             return RedirectToAction(nameof(LevelInfo), vm);
         }
-        public IActionResult DeletePair(int id)
-        { 
-            var item = _context.DS_Caps.Find(id);
+        public IActionResult DeletePair(string id)
+        {
+            var intId = Convert.ToInt32(id);
+            var item = _context.DS_Caps.Find(intId);
             var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == item.ID_Trinh).FirstOrDefault();
             _context.Remove(item);
             _context.SaveChanges();

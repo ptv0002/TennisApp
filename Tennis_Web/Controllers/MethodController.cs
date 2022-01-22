@@ -19,7 +19,7 @@ namespace Tennis_Web.Controllers
             public string Message { get; set; }
             public string ActionName { get; set; }
             public string ControllerName { get; set; }
-            public object RouteValues { get; set; }
+            public string Id { get; set; }
         }
         
         public IActionResult ConfirmModal(ConfirmViewModal model)
@@ -29,7 +29,7 @@ namespace Tennis_Web.Controllers
         [HttpPost]
         public IActionResult ConfirmModal(ConfirmViewModal model, string any = "")
         {
-            return RedirectToAction(model.ActionName, model.ControllerName, model.RouteValues);
+            return RedirectToAction(model.ActionName, model.ControllerName, new { id = model.Id });
         }
     }
 }

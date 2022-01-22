@@ -25,8 +25,10 @@ namespace Tennis_Web.Views.Shared.Components.Player
             if (vm.IsCurrent == true)
             {
                 if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công!");
+                if (vm.Succeeded == false) _notyf.Error("Lỗi hệ thống!");
                 // Display for current tournament
                 players = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
+                ViewBag.ID_Giai = vm.ID;
             }
             else
             {

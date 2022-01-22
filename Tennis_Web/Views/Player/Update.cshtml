@@ -107,17 +107,10 @@
         @if (Model.File_Anh != null)
         {
             <dt class="col-sm-3 font-weight-bold">
-                <label class="control-label">Tên file</label>
-            </dt>
-            <dd class="col-sm-9">
-                @Html.DisplayFor(model => model.File_Anh)
-            </dd>
-
-            <dt class="col-sm-3 font-weight-bold">
                 <label class="control-label">Hình ảnh</label>
             </dt>
             <dd class="col-sm-9">
-                <img src="@ViewBag.ImageDataURL" width="600" />
+                <img src="@("~/PlayerImg/" + Model.File_Anh)" asp-append-version="true" width="30" alt="@Model.Ten_Tat"/>
             </dd>
             <dt class="col-sm-3 font-weight-bold"></dt>
             <dd class="col-sm-9">

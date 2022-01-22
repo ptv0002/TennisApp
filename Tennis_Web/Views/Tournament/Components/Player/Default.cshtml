@@ -2,13 +2,13 @@
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model List<Models.DS_VDV>
-<div class="card shadow mb-4">
-    @*<div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-        </div>*@
-    <div class="card-body">
-        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            <form asp-action="SavePlayerState" asp-controller="Tournament">
+<form asp-action="SavePlayerState" asp-controller="Tournament">
+    <div class="card shadow mb-4">
+        @*<div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            </div>*@
+        <div class="card-body">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <div id="dataTable_filter" class="dataTables_filter col-sm-12">
                     <dl class="row">
                         <dd>Search:</dd>
@@ -38,30 +38,80 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @*@foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Ten_Tat</td>
+                                        @if (a1)
+                                        {
+                                            <td>
+                                                <input asp-for="@item.Id" type="hidden" />
+                                                <input asp-for="@item.Ho" type="hidden" />
+                                                <input asp-for="@item.Ten" type="hidden" />
+                                                <input asp-for="@item.Ten_Tat" type="hidden" />
+                                                <input asp-for="@item.CLB" type="hidden" />
+                                                <input asp-for="@item.Diem" type="hidden" />
+                                                <input asp-for="@item.Diem_Cu" type="hidden" />
+                                                <input asp-for="@item.Chuc_Vu" type="hidden" />
+                                                <input asp-for="@item.Cong_Ty" type="hidden" />
+                                                <input asp-for="@item.Tel" type="hidden" />
+                                                <input asp-for="@item.Email" type="hidden" />
+                                                <input asp-for="@item.File_Anh" type="hidden" />
+                                                <input asp-for="@item.Gioi_Tinh" type="hidden" />
+                                                <input asp-for="@item.Khach_Moi" type="hidden" />
+                                                <input asp-for="@item.Status" type="hidden" />
+                                                <input asp-for="@item.Ma_Cap" type="hidden" />
+                                                <input asp-for="@item.Tham_Gia" class="ml-0 form-check-input" />
+                                            </td>
+                                        }
+                                        <td>@item.CLB</td>
+                                        <td>@item.Diem_Cu</td>
+                                        <td>@item.Diem</td>
+                                    </tr>
+                                }*@
+                            @for (int i = 0; i < Model.Count(); i++)
                             {
                                 <tr>
-                                    <td>@item.Ten_Tat</td>
+                                    <td>@Model[i].Ten_Tat</td>
                                     @if (a1)
                                     {
-                                        <td><input asp-for="@item.Tham_Gia" class="ml-0 form-check-input" /></td>
+                                        <td>
+                                            @Html.HiddenFor(m => m[i].Id)
+                                            @Html.HiddenFor(m => m[i].Ho)
+                                            @Html.HiddenFor(m => m[i].Ten)
+                                            @Html.HiddenFor(m => m[i].Ten_Tat)
+                                            @Html.HiddenFor(m => m[i].Ma_Cap)
+                                            @Html.HiddenFor(m => m[i].Gioi_Tinh)
+                                            @Html.HiddenFor(m => m[i].CLB)
+                                            @Html.HiddenFor(m => m[i].Khach_Moi)
+                                            @Html.HiddenFor(m => m[i].Picture)
+                                            @Html.HiddenFor(m => m[i].File_Anh)
+                                            @Html.HiddenFor(m => m[i].Tel)
+                                            @Html.HiddenFor(m => m[i].Email)
+                                            @Html.HiddenFor(m => m[i].Status)
+                                            @Html.HiddenFor(m => m[i].Diem)
+                                            @Html.HiddenFor(m => m[i].Diem_Cu)
+                                            @Html.HiddenFor(m => m[i].Chuc_Vu)
+                                            @Html.HiddenFor(m => m[i].Cong_Ty)
+                                            @Html.CheckBoxFor(m => m[i].Tham_Gia, new { @class = "ml-3" })
+                                        </td>
                                     }
-                                    <td>@item.CLB</td>
-                                    <td>@item.Diem_Cu</td>
-                                    <td>@item.Diem</td>
+                                    <td>@Model[i].CLB</td>
+                                    <td>@Model[i].Diem_Cu</td>
+                                    <td>@Model[i].Diem</td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
-                @if (a1)
-                {
-                    <div class="form-group">
-                        <input type="submit" value="Lưu thay đổi" class="btn btn-primary" formmethod="post" />
-                    </div>
-                }
-            </form>
+            </div>
         </div>
     </div>
-        
-</div>
+    @if (a1)
+    {
+        <div class="form-group">
+            <input type="hidden" name="idGiai" value="@ViewBag.ID_Giai"/>
+            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" formmethod="post" />
+        </div>
+    }
+</form>

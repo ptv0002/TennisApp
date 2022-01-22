@@ -111,10 +111,11 @@ namespace Tennis_Web.Controllers
             return RedirectToAction(nameof(TournamentInfo), vm);
 
         }
-        public IActionResult EndTournament(int id)
+        public IActionResult EndTournament(string id)
         {
+            var intId = Convert.ToInt32(id);
             // Find the current Tournament and set IsCurrent to false
-            var item = _context.DS_Giais.Find(id);
+            var item = _context.DS_Giais.Find(intId);
             item.Giai_Moi = false;
             _context.Update(item);
             // Reset Participation status to all false and Pair code to null
@@ -145,9 +146,10 @@ namespace Tennis_Web.Controllers
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
-        public IActionResult DeleteLevel(int id)
+        public IActionResult DeleteLevel(string id)
         {
-            var item = _context.DS_Trinhs.Find(id);
+            var intId = Convert.ToInt32(id);
+            var item = _context.DS_Trinhs.Find(intId);
             _context.Remove(item);
             _context.SaveChanges();
             // Assign value for view model
@@ -155,20 +157,33 @@ namespace Tennis_Web.Controllers
             {
                 ActiveTab = Tab.LevelList,
                 IsCurrent = true,
-                ID = item.ID_Giai
+                ID = item.ID_Giai,
+                Succeeded = true
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
-        public IActionResult SavePlayerState(List<DS_VDV> list)
+        [HttpPost]
+        [RequestFormLimits(ValueCountLimit = 8000)]
+        public IActionResult SavePlayerState(List<DS_VDV> list, int idGiai)
         {
-            _context.UpdateRange(list);
-            _context.SaveChanges();
+            bool result;
+            if (ModelState.IsValid)
+            {
+                _context.UpdateRange(list);
+                _context.SaveChanges();
+                result = true;
+            }
+            else
+            {
+                result = false;
+            }
             // Assign value for view model
             var vm = new TabViewModel
             {
                 ActiveTab = Tab.Player,
                 IsCurrent = true,
-                Succeeded = true
+                ID = idGiai,
+                Succeeded = result
             };
             return RedirectToAction(nameof(TournamentInfo), vm);
         }

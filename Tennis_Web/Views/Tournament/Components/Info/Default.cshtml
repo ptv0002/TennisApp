@@ -50,7 +50,7 @@
             Message = "kết thúc giải đấu",
             ActionName = "EndTournament",
             ControllerName = "Tournament",
-            RouteValues = new { id = Model.Id }
+            Id = Model.Id.ToString()
         };
         <div class="form-group">
             <input type="submit" value="Lưu thay đổi" class="btn btn-primary mr-2" formmethod="post" />
