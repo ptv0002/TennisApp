@@ -43,7 +43,7 @@ namespace Tennis_Web.Controllers
         public IActionResult ImportExcel()
         {
             bool? success = (bool?)TempData["Success"];
-            if (success == true)  _notyf.Success("Đã cập nhật các Sheet từ Excel thành công!"); 
+            if (success == true) _notyf.Success("Đã cập nhật các Sheet từ Excel thành công!"); 
             return View(GetEntityLists());
         }
         [HttpPost]
@@ -84,7 +84,7 @@ namespace Tennis_Web.Controllers
                         if (a4.Succeeded) { _context.AddRange(a4.List); } else { ModelState.AddModelError(string.Empty, a4.Message); lerror = true; }
                         break;
                     case "DS_Vong":
-                        var a5 = new ExcelMethod<DS_VDV>().ExcelToList(file, "DS_Vong");
+                        var a5 = new ExcelMethod<DS_Vong>().ExcelToList(file, "DS_Vong");
                         if (a5.Succeeded) { _context.AddRange(a5.List); } else { ModelState.AddModelError(string.Empty, a5.Message); lerror = true; }
                         break;
                     default:
@@ -126,7 +126,7 @@ namespace Tennis_Web.Controllers
             return View();
         }
         // Download empty Excel format
-        public FileResult DownloadExcel(int id)
+        public FileResult DownloadExcel()
         {
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))

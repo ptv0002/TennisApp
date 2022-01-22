@@ -45,7 +45,7 @@
                                         Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
                                         ActionName = "DeletePair",
                                         ControllerName = "Level",
-                                        RouteValues = new { id = item.Id }
+                                        Id = item.Id.ToString() 
                                     };
                                     <td>
                                         <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>

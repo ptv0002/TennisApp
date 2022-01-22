@@ -89,6 +89,11 @@ namespace Library
                 foreach (var ocol in listcols)  // Lấy tất cả các thuộc tính của T (Các cột của Table/Thuộc tính của Models.T)
                 {
                     var cellValue = worksheet.Cells[row, ocol.Key].Value;
+                    if (i == 1 && (cellValue == null || cellValue.ToString() == "0"))
+                    {
+                        emptyobject = true;
+                        break;
+                    }
                     var propType = ocol.Value.PropertyType;
                     if (Nullable.GetUnderlyingType(ocol.Value.PropertyType) != null)
                     {
@@ -101,7 +106,6 @@ namespace Library
                         return model;
                     }
                     ocol.Value.SetValue(obj, Convert.ChangeType(cellValue, propType));
-                    if (i==1 && (cellValue==null || cellValue.ToString() == "0")) emptyobject = true; 
                     i++;
                 }
                 if (emptyobject) break;

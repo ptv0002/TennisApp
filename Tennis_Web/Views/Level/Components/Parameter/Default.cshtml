@@ -135,7 +135,7 @@
             Message = "xóa trình đấu",
             ActionName = "DeleteLevel",
             ControllerName = "Tournament",
-            RouteValues = new { Id = Model.Id }
+            Id = Model.Id.ToString()
         };
         <div class="form-group">
             <input type="submit" value="Lưu thay đổi" class="btn btn-primary mr-2" formmethod="post" />
@@ -146,4 +146,4 @@
 </form>
 
 <!-- Modal placeholder -->
-<!--<div id="modal-placeholder"></div>-->
+<div id="modal-placeholder"></div>

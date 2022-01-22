@@ -42,16 +42,26 @@ namespace Tennis_Web.Controllers
                 return View(source);
             }
             // Handle picture attachment
-            string img = Path.GetExtension(source.Picture.FileName);
-            if(img == ".jpg" || img == ".jpeg")
+            string extension = Path.GetExtension(source.Picture.FileName);
+            if(extension == ".jpg" || extension == ".jpeg" || extension == ".png")
             {
-                var saveImg = Path.Combine(_webHost.WebRootPath, "PlayerImg", source.Picture.FileName);
-                var stream = new FileStream(saveImg, FileMode.Create);
-                await source.Picture.CopyToAsync(stream);
+                // Save image to wwwroot/PlayerImg
+                string wwwRootPath = _webHost.WebRootPath;
+                string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
+                source.File_Anh = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                string path = Path.Combine(wwwRootPath + "/PlayerImg/", fileName);
+                using var fileStream = new FileStream(path, FileMode.Create);
+                await source.Picture.CopyToAsync(fileStream);
 
-                source.File_Anh = source.Picture.FileName;
+                //var saveImg = Path.Combine(_webHost.WebRootPath, "PlayerImg", source.Picture.FileName);
+                //var stream = new FileStream(saveImg, FileMode.Create);
+                //await source.Picture.CopyToAsync(stream);
             }
-
+            else 
+            {
+                ModelState.AddModelError(string.Empty, "Dạng file " + extension + " không được hỗ trợ!");
+                return View(source);
+            }
             // Handle saving object
             var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat","Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu" };
             var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);

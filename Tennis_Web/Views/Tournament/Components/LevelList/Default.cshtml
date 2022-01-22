@@ -36,7 +36,7 @@
                                         Message = "xóa trình đấu " + item.Trinh,
                                         ActionName = "DeleteLevel",
                                         ControllerName = "Tournament",
-                                        RouteValues = new { id = item.Id }
+                                        Id = item.Id.ToString() 
                                     };
                                     <td><button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button></td>
                                 }

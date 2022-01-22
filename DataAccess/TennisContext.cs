@@ -25,7 +25,8 @@ namespace DataAccess
         public virtual DbSet<DS_Vong> DS_Vongs { get; set; }
         public virtual DbSet<Khu_Vuc> Khu_Vucs { get; set; }
         public virtual DbSet<DS_Bang> DS_Bangs { get; set; }
-
+        [NotMapped]
+        public virtual DbSet<AppUser> AppUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
