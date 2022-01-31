@@ -99,7 +99,7 @@ namespace Tennis_Web.Controllers
             {
                 ActiveTab = Tab.Pair,
                 IsCurrent = true,
-                ID = item.Id,
+                ID = temp.Id,
                 DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
             };
             return RedirectToAction(nameof(LevelInfo), vm);
@@ -116,7 +116,7 @@ namespace Tennis_Web.Controllers
             {
                 ActiveTab = Tab.Pair,
                 IsCurrent = true,
-                ID = item.Id,
+                ID = temp.Id,
                 DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
             };
             return RedirectToAction(nameof(LevelInfo), vm);

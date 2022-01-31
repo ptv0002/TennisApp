@@ -10,7 +10,7 @@
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <div class="table-responsive">
-                    <table class="table dataTable" id="myTable">
+                    <table class="table dataTable" id="noPaging">
                         <thead>
                             <tr>
                                 <th>Tên tắt</th>
@@ -31,24 +31,22 @@
                                     @if (a1)
                                     {
                                         <td>
-                                            @Html.HiddenFor(m => m[i].Id)
-                                            @Html.HiddenFor(m => m[i].Ho)
-                                            @Html.HiddenFor(m => m[i].Ten)
-                                            @Html.HiddenFor(m => m[i].Ten_Tat)
-                                            @Html.HiddenFor(m => m[i].Ma_Cap)
-                                            @Html.HiddenFor(m => m[i].Gioi_Tinh)
-                                            @Html.HiddenFor(m => m[i].CLB)
-                                            @Html.HiddenFor(m => m[i].Khach_Moi)
-                                            @Html.HiddenFor(m => m[i].Picture)
-                                            @Html.HiddenFor(m => m[i].File_Anh)
-                                            @Html.HiddenFor(m => m[i].Tel)
-                                            @Html.HiddenFor(m => m[i].Email)
-                                            @Html.HiddenFor(m => m[i].Status)
-                                            @Html.HiddenFor(m => m[i].Diem)
-                                            @Html.HiddenFor(m => m[i].Diem_Cu)
-                                            @Html.HiddenFor(m => m[i].Chuc_Vu)
-                                            @Html.HiddenFor(m => m[i].Cong_Ty)
-                                            @Html.CheckBoxFor(m => m[i].Tham_Gia, new { @class = "ml-3" })
+                                            <input type="hidden" asp-for="@Model[i].Id" />
+                                            <input type="hidden" asp-for="@Model[i].Ho" />
+                                            <input type="hidden" asp-for="@Model[i].Ten" />
+                                            <input type="hidden" asp-for="@Model[i].Ten_Tat" />
+                                            <input type="hidden" asp-for="@Model[i].Gioi_Tinh" />
+                                            <input type="hidden" asp-for="@Model[i].CLB" />
+                                            <input type="hidden" asp-for="@Model[i].Khach_Moi" />
+                                            <input type="hidden" asp-for="@Model[i].File_Anh" />
+                                            <input type="hidden" asp-for="@Model[i].Tel" />
+                                            <input type="hidden" asp-for="@Model[i].Email" />
+                                            <input type="hidden" asp-for="@Model[i].Status" />
+                                            <input type="hidden" asp-for="@Model[i].Diem" />
+                                            <input type="hidden" asp-for="@Model[i].Diem_Cu" />
+                                            <input type="hidden" asp-for="@Model[i].Chuc_Vu" />
+                                            <input type="hidden" asp-for="@Model[i].Cong_Ty" />
+                                            <input asp-for="@Model[i].Tham_Gia" class="form-check-input ml-3" />
                                         </td>
                                     }
                                     <td>@Model[i].CLB</td>
