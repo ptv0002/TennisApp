@@ -9,23 +9,23 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form asp-action="ConfirmModal">
-                    <input type="hidden" asp-for="BtnMsg" />
-                    <input type="hidden" asp-for="Message" />
-                    <input type="hidden" asp-for="ActionName" />
-                    <input type="hidden" asp-for="ControllerName" />
-                    <input type="hidden" asp-for="Id" />
-                </form>
                 Bạn có chắc chắn muốn
                 <label class="text-danger">
                     @Model.Message vĩnh viễn?
                 </label>
                 Hành động này không thể bị khôi phục.
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                <button class="btn btn-danger" type="button" data-save="modal">@Model.BtnMsg</button>
-            </div>
+            <form asp-action="ConfirmModal">
+                <input type="hidden" asp-for="BtnMsg" />
+                <input type="hidden" asp-for="Message" />
+                <input type="hidden" asp-for="ActionName" />
+                <input type="hidden" asp-for="ControllerName" />
+                <input type="hidden" asp-for="Id" />
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                    <input class="btn btn-danger" type="submit" value="@Model.BtnMsg"/>
+                </div>
+            </form>
         </div>
     </div>
 </div>    
