@@ -9,66 +9,21 @@
             </div>*@
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                <div id="dataTable_filter" class="dataTables_filter col-sm-12">
-                    <dl class="row">
-                        <dd>Search:</dd>
-                        <dd class="ml-2"><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></dd>
-                    </dl>
-                </div>
                 <div class="table-responsive">
-                    <table class="table dataTable">
+                    <table class="table dataTable" id="myTable">
                         <thead>
                             <tr>
-                                <th class="sorting" aria-controls="dataTable" aria-label="Tên tắt: activate to sort column ascending">
-                                    Tên tắt
-                                </th>
+                                <th>Tên tắt</th>
                                 @if (a1)
                                 {
                                     <th>Tham gia</th>
                                 }
-                                <th class="sorting" aria-controls="dataTable" aria-label="CLB: activate to sort column ascending">
-                                    CLB
-                                </th>
-                                <th class="sorting" aria-controls="dataTable" aria-label="Điểm cũ: activate to sort column ascending">
-                                    Điểm cũ
-                                </th>
-                                <th class="sorting" aria-controls="dataTable" aria-label="Điểm: activate to sort column ascending">
-                                    Điểm
-                                </th>
+                                <th>CLB</th>
+                                <th>Điểm cũ</th>
+                                <th>Điểm</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @*@foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>@item.Ten_Tat</td>
-                                        @if (a1)
-                                        {
-                                            <td>
-                                                <input asp-for="@item.Id" type="hidden" />
-                                                <input asp-for="@item.Ho" type="hidden" />
-                                                <input asp-for="@item.Ten" type="hidden" />
-                                                <input asp-for="@item.Ten_Tat" type="hidden" />
-                                                <input asp-for="@item.CLB" type="hidden" />
-                                                <input asp-for="@item.Diem" type="hidden" />
-                                                <input asp-for="@item.Diem_Cu" type="hidden" />
-                                                <input asp-for="@item.Chuc_Vu" type="hidden" />
-                                                <input asp-for="@item.Cong_Ty" type="hidden" />
-                                                <input asp-for="@item.Tel" type="hidden" />
-                                                <input asp-for="@item.Email" type="hidden" />
-                                                <input asp-for="@item.File_Anh" type="hidden" />
-                                                <input asp-for="@item.Gioi_Tinh" type="hidden" />
-                                                <input asp-for="@item.Khach_Moi" type="hidden" />
-                                                <input asp-for="@item.Status" type="hidden" />
-                                                <input asp-for="@item.Ma_Cap" type="hidden" />
-                                                <input asp-for="@item.Tham_Gia" class="ml-0 form-check-input" />
-                                            </td>
-                                        }
-                                        <td>@item.CLB</td>
-                                        <td>@item.Diem_Cu</td>
-                                        <td>@item.Diem</td>
-                                    </tr>
-                                }*@
                             @for (int i = 0; i < Model.Count(); i++)
                             {
                                 <tr>

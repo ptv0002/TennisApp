@@ -21,11 +21,7 @@ namespace Tennis_Web.Views.Shared.Components.LevelList
         {
             ViewBag.IsCurrent = vm.IsCurrent;
             ViewBag.ID_Giai = vm.ID;
-            if (vm.Succeeded == true) 
-            { 
-                _notyf.Success("Xóa trình thành công!"); 
-                _notyf.Warning("Refresh trang để hiện đúng thông tin!", 30); 
-            }
+            if (vm.Succeeded == true) _notyf.Success("Xóa trình thành công!"); 
             var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.ID_Giai == vm.ID).ToList();
             return View(model);
         }

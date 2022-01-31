@@ -9,29 +9,8 @@
         </div>*@
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            @*<div class="row mb-3">
-                    <div class="col-sm-6">
-                        <a asp-action="Update" class="btn btn-primary">Thêm mới</a>
-                    </div>
-                    <div class="col-sm-6">
-                        <div id="dataTable_filter" class="dataTables_filter mr-4" style="position: absolute; right: 0;">
-                            <dl class="row">
-                                <dd>
-                                    Search:
-                                </dd>
-                                <dd class="ml-2"><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>*@
-            <div id="dataTable_filter" class="dataTables_filter col-sm-12">
-                <dl class="row">
-                    <dd>Search:</dd>
-                    <dd class="ml-2"><input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></dd>
-                </dl>
-            </div>
             <div class="table-responsive">
-                <table class="table dataTable">
+                <table class="table dataTable" id="myTable">
                     <thead>
                         <tr>
                             <th>

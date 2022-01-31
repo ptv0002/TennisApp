@@ -3,6 +3,9 @@
 
 // Write your JavaScript code.
 $(function () {
+
+    $('#myTable').DataTable();
+
     // ---------------- Script for confirm modal popup ----------------
     // Show confirm modal popup
     var placeholderElement = $('#modal-placeholder');
@@ -13,18 +16,6 @@ $(function () {
         $.get(url).done(function (data) {
             placeholderElement.html(data);
             placeholderElement.find('.modal').modal('show');
-        })
-    })
-    // Send data to the given url if the confirm button is clicked
-    placeholderElement.on('click', '[data-save="modal"]', function (event) {
-        event.preventDefault();
-
-        var form = $(this).parents('.modal').find('form');
-        var actionUrl = form.attr('action');
-        var dataToSend = form.serialize();
-
-        $.post(actionUrl, dataToSend).done(function () {
-            placeholderElement.find('.modal').modal('hide');
         })
     })
 })
