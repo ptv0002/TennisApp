@@ -45,7 +45,7 @@
                                         Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
                                         ActionName = "DeletePair",
                                         ControllerName = "Level",
-                                        Id = item.Id.ToString() 
+                                        Id = item.Id.ToString()
                                     };
                                     <td>
                                         <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
@@ -57,15 +57,15 @@
                         }
                     </tbody>
                 </table>
-                @if (a1)
-                {
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#editModal" data-url="@Url.Action("ChangePair", "Level", new { idTrinh = ViewBag.ID_Trinh })">Thêm cặp</button>
-                    </div>
-                }
             </form>
         </div>
     </div>
 </div>
+@if (a1)
+{
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#editModal" data-url="@Url.Action("ChangePair", "Level", new { idTrinh = ViewBag.ID_Trinh })">Thêm cặp</button>
+    </div>
+}
 <!-- Modal placeholder -->
 <div id="modal-placeholder"></div>

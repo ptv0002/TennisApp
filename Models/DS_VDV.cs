@@ -28,10 +28,7 @@
         [StringLength(40)]
         [DisplayName("Tên Tắt")]
         public string Ten_Tat { get; set; }
-
-        [StringLength(10)]
-        [DisplayName("Mã Cặp")]
-        public string Ma_Cap { get; set; }
+        [DisplayName("Tham gia")]
         public bool Tham_Gia { get; set; }
         [DisplayName("Giới tính")]
         public bool Gioi_Tinh { get; set; }

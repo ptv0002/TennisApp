@@ -4,7 +4,17 @@
 // Write your JavaScript code.
 $(function () {
 
-    $('#myTable').DataTable();
+    $('#myTable').DataTable({
+        language: {
+            url: '/dataTables/vi.json'
+        }
+    });
+    $('#noPaging').DataTable({
+        paging: false,
+        language: {
+            url: '/dataTables/vi.json'
+        }
+    });
 
     // ---------------- Script for confirm modal popup ----------------
     // Show confirm modal popup

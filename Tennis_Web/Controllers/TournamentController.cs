@@ -120,11 +120,7 @@ namespace Tennis_Web.Controllers
             _context.Update(item);
             // Reset Participation status to all false and Pair code to null
             var list = _context.DS_VDVs.ToList();
-            list.ForEach(m =>
-                            {
-                                m.Tham_Gia = false;
-                                m.Ma_Cap = null;
-                            });
+            list.ForEach(m => { m.Tham_Gia = false; });
             _context.UpdateRange(list);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index), true);
@@ -173,10 +169,7 @@ namespace Tennis_Web.Controllers
                 _context.SaveChanges();
                 result = true;
             }
-            else
-            {
-                result = false;
-            }
+            else  result = false;
             // Assign value for view model
             var vm = new TabViewModel
             {
