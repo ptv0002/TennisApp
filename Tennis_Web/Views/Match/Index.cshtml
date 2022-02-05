@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Danh sách trận đấu " + ViewBag.DetailedTitle;
+}
+<hr />
+@model IEnumerable<Models.DS_Tran>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <table class="table table-bordered dataTable" id="normalTable">
+                <thead>
+                    <tr>
+                        <th>Mã trận</th>
+                        <th>Cặp 1</th>
+                        <th>Cặp 2</th>
+                        <th>Đã nhập KQ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.Ma_Tran
+                            </td>
+                            <td>
+                                @item.DS_Cap1.VDV1.Ten_Tat + @item.DS_Cap1.VDV2.Ten_Tat
+                            </td>
+                            <td>
+                                @item.DS_Cap2.VDV1.Ten_Tat + @item.DS_Cap2.VDV2.Ten_Tat
+                            </td>
+                            <td>
+                                @item.Da_Nhap
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#updateResult" data-url="@Url.Action("UpdateResult", "Match", new { id = item.Id })">Sửa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>
+

@@ -18,19 +18,20 @@ namespace Tennis_Web.Controllers
         {
             _context = context;
         }
-        public IActionResult LevelInfo(TabViewModel model, bool isCurrent, int  trinhID, string detailedTitle)
+        public IActionResult LevelInfo(TabViewModel model/*, bool isCurrent, int  trinhID, string detailedTitle*/)
         {
-            if (model.ID == 0)
-            {
-                // Assign default value for first time access
-                model = new TabViewModel
-                {
-                    ActiveTab = Tab.Parameter,
-                    IsCurrent = isCurrent,
-                    ID = trinhID,
-                    DetailedTitle = detailedTitle
-                };
-            }
+            //if (model.ID == 0)
+            //{
+
+            //    // Assign default value for first time access
+            //    model = new TabViewModel
+            //    {
+            //        ActiveTab = Tab.Parameter,
+            //        IsCurrent = isCurrent,
+            //        ID = trinhID,
+            //        DetailedTitle = detailedTitle
+            //    };
+            //}
             return View(model);
         }
 
@@ -58,23 +59,34 @@ namespace Tennis_Web.Controllers
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(LevelInfo), vm);
         }
-        public IActionResult ChangePair(int id, int idTrinh)
+        public List<DS_VDV> PopulateAutoComplete(int idTrinh)
+        {
+            var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == _context.DS_Trinhs.Find(idTrinh).ID_Giai).Select(m => m.Id);
+            // Get all pairs with Level Id from the level id list
+            var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
+            var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
+            // Get all players with from Player Id found in Player1 and Player2 lists
+            var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
+            return _context.DS_VDVs.Where(m => m.Tham_Gia == true).Except(players).ToList();
+        }
+        public IActionResult UpdatePair(int id, int idTrinh)
         {
             var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == id).FirstOrDefault();
             if (model == null)
             {
                 model = new DS_Cap { ID_Trinh = idTrinh };
             }
-            ViewBag.DS_VDV = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
+
+            ViewBag.DS_VDV = PopulateAutoComplete(idTrinh);
             return PartialView(model);
         }
         [HttpPost]
-        public IActionResult ChangePair(DS_Cap item)
+        public IActionResult UpdatePair(DS_Cap item)
         {
             var vdv1 = _context.DS_VDVs.Where(m => m.Ten_Tat == item.VDV1.Ten_Tat).FirstOrDefault();
             var vdv2 = _context.DS_VDVs.Where(m => m.Ten_Tat == item.VDV2.Ten_Tat).FirstOrDefault();
             DS_Cap obj;
-            if (vdv1 != null && vdv1 != null)
+            if (vdv1 != null && vdv2 != null)
             {
                 obj = new()
                 {
@@ -86,13 +98,19 @@ namespace Tennis_Web.Controllers
             }
             else
             {
-                ViewBag.DS_VDV = _context.DS_VDVs.Where(m => m.Tham_Gia == true).ToList();
-                ModelState.AddModelError(string.Empty, "Thông tin nhập không chính xác!");
+                ViewBag.DS_VDV = PopulateAutoComplete(item.ID_Trinh);
+                ModelState.AddModelError(string.Empty, "Tên tắt VĐV không chính xác!");
                 return PartialView(item);
             }
             var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Ma_Cap", "ID_Trinh" };
             var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, obj, columnsToSave);
-            _context.SaveChanges();
+            if (result.Succeeded) _context.SaveChanges();
+            else
+            {
+                ViewBag.DS_VDV = PopulateAutoComplete(item.ID_Trinh);
+                ModelState.AddModelError(string.Empty, result.Message);
+                return PartialView(item);
+            }
             var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == item.ID_Trinh).FirstOrDefault();
             // Assign value for view model
             var vm = new TabViewModel

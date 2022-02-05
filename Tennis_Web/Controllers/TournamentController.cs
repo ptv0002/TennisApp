@@ -162,12 +162,15 @@ namespace Tennis_Web.Controllers
         [RequestFormLimits(ValueCountLimit = 8000)]
         public IActionResult SavePlayerState(List<DS_VDV> list, int idGiai)
         {
-            bool result;
+            bool result = false;
             if (ModelState.IsValid)
             {
-                _context.UpdateRange(list);
-                _context.SaveChanges();
-                result = true;
+                foreach (var item in list)
+                {
+                    result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Tham_Gia" }).Succeeded;
+                    if (!result) break;
+                }
+                if (result) _context.SaveChanges();
             }
             else  result = false;
             // Assign value for view model

@@ -6,7 +6,7 @@
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
             <form asp-action="AddLevel" asp-controller="Tournament">
-                <table class="table table-bordered dataTable" @*id="myTable"*@>
+                <table class="table table-bordered dataTable" >
                     <thead>
                         <tr>
                             <th>
@@ -24,7 +24,7 @@
                             string title = "Giải " + item.DS_Giai.Ten + " - Trình " + @item.Trinh;
                             <tr>
                                 <td>
-                                    <a asp-action="LevelInfo" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-trinhID="@item.Id" asp-route-detailedTitle="@title" asp-route-model="null" asp-controller="Level">
+                                    <a asp-route-tabname="Parameter" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Tournament">
                                         @item.Trinh
                                     </a>
                                 </td>
@@ -36,7 +36,7 @@
                                         Message = "xóa trình đấu " + item.Trinh,
                                         ActionName = "DeleteLevel",
                                         ControllerName = "Tournament",
-                                        Id = item.Id.ToString() 
+                                        Id = item.Id.ToString()
                                     };
                                     <td><button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button></td>
                                 }
@@ -62,5 +62,34 @@
         </div>
     </div>
 </div>
+@if (a1 && Model.Count() > 0)
+{
+    <div class="form-group">
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#confirmModal">Tạo danh sách trận đấu</button>
+    </div>
+
+}
 <!-- Modal placeholder -->
 <div id="modal-placeholder"></div>
+<div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmLabel">Xác nhận</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn
+                <label class="text-warning">
+                    tạo danh sách trận đấu?
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                <a class="btn btn-warning" asp-action="AdditionalInfo" asp-controller="Match" asp-route-id="@ViewBag.ID_Giai.ToString()">Tiếp tục</a>
+            </div>    
+        </div>
+    </div>
+</div>

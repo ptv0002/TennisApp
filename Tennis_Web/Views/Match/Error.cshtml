@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Thông tin cần thiết trước khi tạo danh sách trận";
+}
+@model Tennis_Web.Models.MatchGeneratorErrorViewModel
+<hr />
+<div class="form-group">
+    @foreach (var item in ViewBag.DS_Trinh)
+    {
+        var title = "Giải " + ViewBag.TourName + " - Trình " + item.Trinh;
+        <div class="row ml-2">
+            <a asp-route-tabname="Pair" asp-route-isCurrent="true" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Tournament">
+                • Đi đến DS cặp - Trình @item.Trinh
+            </a>
+        </div>
+    }
+</div>
+
+@if (Model.NoCodePairs.Any())
+{
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h5 class="m-0 font-weight-bold text-primary">Danh sách cặp chưa có mã</h5>
+        </div>
+        <div class="card-body">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="table-responsive">
+                    <table class="table dataTable">
+                        <thead>
+                            <tr>
+                                <th>VĐV 1</th>
+                                <th>VĐV 2</th>
+                                <th>Trình</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.NoCodePairs)
+                            {
+                                var title = "Giải " + ViewBag.TourName + " - Trình " + item.DS_Trinh.Trinh;
+                                <tr>
+                                    <td>@item.VDV1.Ten_Tat</td>
+                                    <td>@item.VDV2.Ten_Tat</td>
+                                    <td>@item.DS_Trinh.Trinh</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.NoPairPlayers.Any())
+{
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h5 class="m-0 font-weight-bold text-primary">Danh sách VĐV chưa được xếp cặp</h5>
+        </div>
+        <div class="card-body">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="table-responsive">
+                    <table class="table dataTable">
+                        <thead>
+                            <tr>
+                                <th>Tên tắt</th>
+                                <th>CLB</th>
+                                <th>Điểm cũ</th>
+                                <th>Điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.NoPairPlayers)
+                            {
+                                <tr>
+                                    <td>@item.Ten_Tat</td>
+                                    <td>@item.CLB</td>
+                                    <td>@item.Diem_Cu</td>
+                                    <td>@item.Diem</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}

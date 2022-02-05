@@ -22,7 +22,7 @@ namespace Tennis_Web.Views.Shared.Components.LevelList
             ViewBag.IsCurrent = vm.IsCurrent;
             ViewBag.ID_Giai = vm.ID;
             if (vm.Succeeded == true) _notyf.Success("Xóa trình thành công!"); 
-            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.ID_Giai == vm.ID).ToList();
+            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.ID_Giai == vm.ID).OrderBy(m => m.Trinh).ToList();
             return View(model);
         }
     }

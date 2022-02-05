@@ -5,66 +5,52 @@
 <div class="card shadow mb-4">
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            <form asp-action="AddPair" asp-controller="Level">
-                <table class="table table-bordered dataTable" id="tblLevel">
-                    <thead>
+            <table class="table table-bordered dataTable" id="normalTable">
+                <thead>
+                    <tr>
+                        <th>VĐV 1</th>
+                        <th>VĐV 2</th>
+                        <th>Mã cặp</th>
+                        @if (a1)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
                         <tr>
-                            <th>
-                                VĐV 1
-                            </th>
-                            <th>
-                                VĐV 2
-                            </th>
-                            <th>
-                                Mã cặp
-                            </th>
+                            <td>@item.VDV1.Ten_Tat</td>
+                            <td>@item.VDV2.Ten_Tat</td>
+                            <td>@item.Ma_Cap</td>
                             @if (a1)
                             {
-                                <th></th>
+                                var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                                {
+                                    BtnMsg = "Xóa",
+                                    Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
+                                    ActionName = "DeletePair",
+                                    ControllerName = "Level",
+                                    Id = item.Id.ToString()
+                                };
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
+                                    <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { id = item.Id, idTrinh = ViewBag.ID_Trinh })">Sửa</button>
+                                </td>
+
                             }
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>
-                                    @item.VDV1.Ten_Tat
-                                </td>
-                                <td>
-                                    @item.VDV2.Ten_Tat
-                                </td>
-                                <td>
-                                    @item.Ma_Cap
-                                </td>
-                                @if (a1)
-                                {
-                                    var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-                                    {
-                                        BtnMsg = "Xóa",
-                                        Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
-                                        ActionName = "DeletePair",
-                                        ControllerName = "Level",
-                                        Id = item.Id.ToString()
-                                    };
-                                    <td>
-                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
-                                        <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#editModal" data-url="@Url.Action("ChangePair", "Level", new { id = item.Id, idTrinh = ViewBag.ID_Trinh })">Sửa</button>
-                                    </td>
-
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </form>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 @if (a1)
 {
     <div class="form-group">
-        <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#editModal" data-url="@Url.Action("ChangePair", "Level", new { idTrinh = ViewBag.ID_Trinh })">Thêm cặp</button>
+        <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { idTrinh = ViewBag.ID_Trinh })">Thêm cặp</button>
     </div>
 }
 <!-- Modal placeholder -->

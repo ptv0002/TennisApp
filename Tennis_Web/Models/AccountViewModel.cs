@@ -25,4 +25,15 @@ namespace Tennis_Web.Models
         [Display(Name = "Ghi chú")]
         public string Note { get; set; }
     }
+    public class LoginViewModel
+    {
+        [Required]
+        public string UsernameOrEmail { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Mật Khẩu")]
+        public string Password { get; set; }
+        [Display(Name = "Lưu Lại")]
+        public bool RememberMe { get; set; }
+    }
 }

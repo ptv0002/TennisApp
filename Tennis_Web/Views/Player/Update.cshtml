@@ -110,11 +110,11 @@
                 <label class="control-label">Hình ảnh</label>
             </dt>
             <dd class="col-sm-9">
-                <img src="@("~/PlayerImg/" + Model.File_Anh)" asp-append-version="true" width="30" alt="@Model.Ten_Tat"/>
+                <img src="@("~/PlayerImg/" + Model.File_Anh)" asp-append-version="true" width="200"/>
             </dd>
             <dt class="col-sm-3 font-weight-bold"></dt>
             <dd class="col-sm-9">
-                <a class="btn btn-danger" asp-action="DeleteImage" asp-route-id="@Model.Id">Remove Image</a>
+                <a class="btn btn-danger" asp-action="DeleteImage" asp-route-id="@Model.Id">Xóa ảnh</a>
             </dd>
         }
     </dl>

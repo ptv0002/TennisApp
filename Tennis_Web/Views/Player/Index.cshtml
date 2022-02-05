@@ -4,21 +4,12 @@
     ViewData["Title"] = "Danh sách VĐV";
 }
 <div class="card shadow mb-4">
-    @*<div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-        </div>*@
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
             <div class="table-responsive">
-                <table class="table dataTable" id="myTable">
+                <table class="table dataTable" id="normalTable">
                     <thead>
                         <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Ho)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Ten)
-                            </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Ten_Tat)
                             </th>
@@ -30,9 +21,6 @@
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.File_Anh)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Tel)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Diem)
@@ -54,12 +42,6 @@
                             else gender = "Nam";
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Ho)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Ten)
-                                </td>
-                                <td>
                                     @Html.DisplayFor(modelItem => item.Ten_Tat)
                                 </td>
                                 <td>
@@ -69,10 +51,7 @@
                                     @Html.DisplayFor(modelItem => item.Khach_Moi)
                                 </td>
                                 <td>
-                                    <img src="@("~/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="30" alt="@item.Ten_Tat" />
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Tel)
+                                    <img src="@("~/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70"/>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Diem)
@@ -90,6 +69,18 @@
 
                         }
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

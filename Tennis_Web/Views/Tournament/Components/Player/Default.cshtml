@@ -2,6 +2,14 @@
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model List<Models.DS_VDV>
+<p>
+    Hiện danh sách 
+    <select id="ctrl-show-selected" class="form-control">
+        <option value="all" selected>tất cả VĐV</option>
+        <option value="selected">VĐV tham gia</option>
+        <option value="not-selected">VĐV không tham gia</option>
+    </select>
+</p>
 <form asp-action="SavePlayerState" asp-controller="Tournament">
     <div class="card shadow mb-4">
         @*<div class="card-header py-3">
@@ -23,6 +31,18 @@
                                 <th>Điểm</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                @if (a1)
+                                {
+                                    <th></th>
+                                }
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                         <tbody>
                             @for (int i = 0; i < Model.Count(); i++)
                             {
@@ -32,21 +52,7 @@
                                     {
                                         <td>
                                             <input type="hidden" asp-for="@Model[i].Id" />
-                                            <input type="hidden" asp-for="@Model[i].Ho" />
-                                            <input type="hidden" asp-for="@Model[i].Ten" />
-                                            <input type="hidden" asp-for="@Model[i].Ten_Tat" />
-                                            <input type="hidden" asp-for="@Model[i].Gioi_Tinh" />
-                                            <input type="hidden" asp-for="@Model[i].CLB" />
-                                            <input type="hidden" asp-for="@Model[i].Khach_Moi" />
-                                            <input type="hidden" asp-for="@Model[i].File_Anh" />
-                                            <input type="hidden" asp-for="@Model[i].Tel" />
-                                            <input type="hidden" asp-for="@Model[i].Email" />
-                                            <input type="hidden" asp-for="@Model[i].Status" />
-                                            <input type="hidden" asp-for="@Model[i].Diem" />
-                                            <input type="hidden" asp-for="@Model[i].Diem_Cu" />
-                                            <input type="hidden" asp-for="@Model[i].Chuc_Vu" />
-                                            <input type="hidden" asp-for="@Model[i].Cong_Ty" />
-                                            <input asp-for="@Model[i].Tham_Gia" class="form-check-input ml-3" />
+                                            <input asp-for="@Model[i].Tham_Gia" type="checkbox" class="form-check-input ml-3" id="chk_@i" />
                                         </td>
                                     }
                                     <td>@Model[i].CLB</td>
