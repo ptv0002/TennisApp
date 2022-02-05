@@ -1,0 +1,48 @@
+﻿@model Models.DS_Tran
+<form asp-action="UpdateResult">
+    <div class="modal fade show" id="updateResult" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editLabel">Thông tin trận đấu</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label class="font-weight-bold">Mã trận</label>
+                        <label class="form-control">@Model.Ma_Tran</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10 mb-3 mb-sm-0">
+                            <label class="font-weight-bold">Cặp 1</label>
+                            <label class="form-control">@Model.DS_Cap1.VDV1.Ten_Tat + @Model.DS_Cap1.VDV2.Ten_Tat</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label asp-for="Kq_1" class="control-label font-weight-bold"></label>
+                            <input asp-for="Kq_1" class="form-control" />
+                            <span asp-validation-for="Kq_1" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10 mb-3 mb-sm-0">
+                            <label class="font-weight-bold">Cặp 2</label>
+                            <label class="form-control">@Model.DS_Cap2.VDV1.Ten_Tat + @Model.DS_Cap2.VDV2.Ten_Tat</label>
+                        </div>
+                        <div class="col-sm-2">
+                            <label asp-for="Kq_2" class="control-label font-weight-bold"></label>
+                            <input asp-for="Kq_2" class="form-control" />
+                            <span asp-validation-for="Kq_2" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                    <button class="btn btn-primary" type="submit">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

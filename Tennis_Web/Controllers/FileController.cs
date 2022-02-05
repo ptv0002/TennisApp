@@ -117,7 +117,7 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult ExportExcel()
         {
-            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenByDescending(m => m.Trinh).ToList();
+            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
             return View(model);
         }
         public IActionResult Export(int id)

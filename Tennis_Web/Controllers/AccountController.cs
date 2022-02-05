@@ -75,7 +75,7 @@ namespace Tennis_Web.Controllers
                     switch (a1)
                     {
                         case (true):
-                            return RedirectToAction("Index", "Home");
+                            return RedirectToAction("TournamentLevel", "Match");
                         default:
                             return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
                     }
