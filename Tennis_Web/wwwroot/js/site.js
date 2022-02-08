@@ -138,7 +138,15 @@ $(function () {
             $.fn.dataTable.ext.search.pop();
             $.fn.dataTable.ext.search.push(
                 function (settings, data, dataIndex) {
-                    return ($(table.row(dataIndex).node()).hasClass('selected')) ? true : false;
+                    //return ($(table.row(dataIndex).node()).hasClass('selected')) ? true : false;
+                    var row = table.row(dataIndex).node();
+                    var checked = $('#chk_' + dataIndex).prop('checked');
+                    var currentCheckChecked = $(row).find('input').prop('checked');
+                    if (currentCheckChecked) {
+                        return true;
+                    }
+
+                    return false;
                 }
             );
 
@@ -150,7 +158,14 @@ $(function () {
             $.fn.dataTable.ext.search.pop();
             $.fn.dataTable.ext.search.push(
                 function (settings, data, dataIndex) {
-                    return ($(table.row(dataIndex).node()).hasClass('selected')) ? false : true;
+                    //return ($(table.row(dataIndex).node()).hasClass('selected')) ? false : true;
+                    var row = table.row(dataIndex).node();
+                    var checked = $('#chk_' + dataIndex).prop('checked');
+                    var currentCheckChecked = $(row).find('input').prop('checked');
+                    if (currentCheckChecked) {
+                       return false;
+                    }
+                    return true;
                 }
             );
 
