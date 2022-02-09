@@ -97,81 +97,86 @@ $(function () {
            
         //}
     });
-    var table = $('#noPaging').DataTable({
-        'ajax': 'https://gyrocode.github.io/files/jquery-datatables/arrays_id.json',
-        'columnDefs': [
-            {
-                'targets': 0,
-                'checkboxes': {
-                    'selectRow': true,
-                    'selectCallback': function (nodes, selected) {
-                        // If "Show all" is not selected
-                        if ($('#ctrl-show-selected').val() !== 'all') {
-                            // Redraw table to include/exclude selected row
-                            table.draw(false);
-                        }
-                    }
-                },
-            }
-        ],
-        'select': 'multi',
-        /*'order': [[1, 'asc']],*/
+    $('#noPaging').DataTable({
         order: [],
-        paging: false,
         language: {
             url: '/dataTables/vi.json'
-        }
-    });
+        }});
+    //var table = $('#noPaging').DataTable({
+    //    'ajax': 'https://gyrocode.github.io/files/jquery-datatables/arrays_id.json',
+    //    'columnDefs': [
+    //        {
+    //            'targets': 0,
+    //            'checkboxes': {
+    //                'selectRow': true,
+    //                'selectCallback': function (nodes, selected) {
+    //                    // If "Show all" is not selected
+    //                    if ($('#ctrl-show-selected').val() !== 'all') {
+    //                        // Redraw table to include/exclude selected row
+    //                        table.draw(false);
+    //                    }
+    //                }
+    //            },
+    //        }
+    //    ],
+    //    'select': 'multi',
+    //    /*'order': [[1, 'asc']],*/
+    //    order: [],
+    //    paging: false,
+    //    language: {
+    //        url: '/dataTables/vi.json'
+    //    }
+    //});
 
-    // Handle change event for "Show selected records" control
-    $('#ctrl-show-selected').on('change', function () {
-        var val = $(this).val();
+    //// Handle change event for "Show selected records" control
+    //$('#ctrl-show-selected').on('change', function () {
+    //    var val = $(this).val();
 
-        // If all records should be displayed
-        if (val === 'all') {
-            $.fn.dataTable.ext.search.pop();
-            table.draw();
-        }
+    //    // If all records should be displayed
+    //    if (val === 'all') {
+    //        $.fn.dataTable.ext.search.pop();
+    //        table.draw();
+    //    }
 
-        // If selected records should be displayed
-        if (val === 'selected') {
-            $.fn.dataTable.ext.search.pop();
-            $.fn.dataTable.ext.search.push(
-                function (settings, data, dataIndex) {
-                    //return ($(table.row(dataIndex).node()).hasClass('selected')) ? true : false;
-                    var row = table.row(dataIndex).node();
-                    var checked = $('#chk_' + dataIndex).prop('checked');
-                    var currentCheckChecked = $(row).find('input').prop('checked');
-                    if (currentCheckChecked) {
-                        return true;
-                    }
+    //    // If selected records should be displayed
+    //    if (val === 'selected') {
+    //        $.fn.dataTable.ext.search.pop();
+    //        $.fn.dataTable.ext.search.push(
+    //            function (settings, data, dataIndex) {
+    //                //return ($(table.row(dataIndex).node()).hasClass('selected')) ? true : false;
+    //                var row = table.row(dataIndex).node();
+    //                var checked = $('#chk_' + dataIndex).prop('checked');
+    //                var currentCheckChecked = $(row).find('input').prop('checked');
+    //                if (currentCheckChecked) {
+    //                    return true;
+    //                }
 
-                    return false;
-                }
-            );
+    //                return false;
+    //            }
+    //        );
 
-            table.draw();
-        }
+    //        table.draw();
+    //    }
 
-        // If selected records should not be displayed
-        if (val === 'not-selected') {
-            $.fn.dataTable.ext.search.pop();
-            $.fn.dataTable.ext.search.push(
-                function (settings, data, dataIndex) {
-                    //return ($(table.row(dataIndex).node()).hasClass('selected')) ? false : true;
-                    var row = table.row(dataIndex).node();
-                    var checked = $('#chk_' + dataIndex).prop('checked');
-                    var currentCheckChecked = $(row).find('input').prop('checked');
-                    if (currentCheckChecked) {
-                       return false;
-                    }
-                    return true;
-                }
-            );
+    //    // If selected records should not be displayed
+    //    if (val === 'not-selected') {
+    //        $.fn.dataTable.ext.search.pop();
+    //        $.fn.dataTable.ext.search.push(
+    //            function (settings, data, dataIndex) {
+    //                //return ($(table.row(dataIndex).node()).hasClass('selected')) ? false : true;
+    //                var row = table.row(dataIndex).node();
+    //                var checked = $('#chk_' + dataIndex).prop('checked');
+    //                var currentCheckChecked = $(row).find('input').prop('checked');
+    //                if (currentCheckChecked) {
+    //                   return false;
+    //                }
+    //                return true;
+    //            }
+    //        );
 
-            table.draw();
-        }
-    });
+    //        table.draw();
+    //    }
+    //});
     //$('#noPaging').DataTable({
     //    order: [],
     //    paging: false,
