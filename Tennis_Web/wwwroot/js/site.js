@@ -226,7 +226,7 @@ $(function () {
 
     //        });
     //    }
-    });
+    /*});*/
     // ---------------- Script for confirm modal popup ----------------
     // Show confirm modal popup
     var placeholderElement = $('#modal-placeholder');
