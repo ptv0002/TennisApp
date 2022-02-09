@@ -29,5 +29,24 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             //_context.SaveChanges();
             return View();
         }
+        public IActionResult Member()
+        {
+            var model = _context.DS_VDVs.Where(m => !m.Khach_Moi).OrderByDescending(m => m.Diem).ToList();
+            return View(model);
+        }
+        public IActionResult Guest()
+        {
+            var model = _context.DS_VDVs.Where(m => m.Khach_Moi).OrderByDescending(m => m.Diem).ToList();
+            return View(model);
+        }
+        public IActionResult Result(int id)
+        {
+            return View();
+        }
+        public IActionResult Announcement()
+        {
+            return View();
+        }
+        
     }
 }

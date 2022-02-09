@@ -46,13 +46,21 @@ namespace Tennis_Web.Controllers
                 string extension = Path.GetExtension(source.Picture.FileName);
                 if(extension == ".jpg" || extension == ".jpeg" || extension == ".png")
                 {
-                    // Save image to wwwroot/PlayerImg
-                    string wwwRootPath = _webHost.WebRootPath;
-                    string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
-                    source.File_Anh = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                    string path = Path.Combine(wwwRootPath + "/PlayerImg/", fileName);
-                    using var fileStream = new FileStream(path, FileMode.Create);
-                    await source.Picture.CopyToAsync(fileStream);
+                    if (source.Picture.Length <= 250000)
+                    {
+                        // Save image to wwwroot/PlayerImg
+                        string wwwRootPath = _webHost.WebRootPath;
+                        string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
+                        source.File_Anh = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                        string path = Path.Combine(wwwRootPath + "/PlayerImg/", fileName);
+                        using var fileStream = new FileStream(path, FileMode.Create);
+                        await source.Picture.CopyToAsync(fileStream);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "File ảnh lớn hơn độ lớn cho phép! Upload ảnh nhỏ hơn 250 KB");
+                        return View(source);
+                    }
                 }
                 else 
                 {

@@ -14,8 +14,9 @@ p {
   font-family: "Source Sans Pro", sans-serif; }
 
 .btn, a {
-  -webkit-transition: color linear .4s, background-color linear .4s, border-color linear .4s;
-  transition: color linear .4s, background-color linear .4s, border-color linear .4s; }
+    -webkit-transition: color linear .4s, background-color linear .4s, border-color linear .4s !important;
+    transition: color linear .4s, background-color linear .4s, border-color linear .4s !important;
+}
   .btn:hover, a:hover {
     text-decoration: none;
     outline: none; }
@@ -297,7 +298,8 @@ p {
     margin: 0 0 35px; }
 
 .rounded {
-  border-radius: 40px; }
+    border-radius: 40px !important;
+}
 
 .main {
   padding: 47px 0; }
