@@ -20,7 +20,7 @@ namespace Tennis_Web.Views.Shared.Components.Pair
         {
             ViewBag.IsCurrent = vm.IsCurrent;
             ViewBag.ID_Trinh = vm.ID;
-            var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.ID_Trinh == vm.ID).ToList();
+            var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.ID_Trinh == vm.ID).ToList();
             return View(model);
         }
     }

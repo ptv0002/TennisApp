@@ -1,4 +1,122 @@
 ﻿@{
-    ViewData["Title"] = "Thêm thông tin chi tiết trước khi tạo DS trận";
+    ViewData["Title"] = "Thêm thông tin chi tiết trước khi tạo DS trận - Giải " + ViewBag.TourName;
 }
-<hr/>
+@model List<MatchGeneratorViewModel>
+<hr />
+<form asp-action="AdditionalInfo">
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="m-0 font-weight-bold text-primary">Trình @Model[i].Trinh</h5>
+            </div>
+            <div class="card-body">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="table-responsive">
+                        <table class="table dataTable" id="table_@i">
+                            <thead>
+                                <tr>
+                                    <th class="col-6">Bảng</th>
+                                    <th>Số cặp đi tiếp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int j = 0; j < Model[i].NumPerTable.Count; j++)
+                                {
+                                    <tr>
+                                        <td>@Model[i].NumPerTable[j].Item1</td>
+                                        <td><input class="form-control col-6 num_@i" asp-for="ElementAt(i).NumPerTable[j].Item2" /></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Tổng số cặp đã chọn</th>
+                                    <th><input class="form-control col-6" id="total_@i" disabled /></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <dl class="row">
+                    <dt class="col-6 font-weight-bold">
+                        Playoff 1 (Playoff cao nhất)
+                    </dt>
+                    <dd class="col-6">
+                        <input class="form-control col-6" asp-for="@Model[i].PlayOff1" />
+                        <span asp-validation-for="@Model[i].PlayOff1" class="text-danger"></span>
+                    </dd>
+                    <dt class="col-6 font-weight-bold">
+                        Playoff 2 (Loại trực tiếp)
+                    </dt>
+                    <dd class="col-6">
+                        <input class="form-control col-6" asp-for="@Model[i].PlayOff2" />
+                        <span asp-validation-for="@Model[i].PlayOff2" class="text-danger"></span>
+                    </dd>
+                    <dt class="col-6 font-weight-bold">
+                        Tổng số cặp đi tiếp
+                    </dt>
+                    <dd class="col-6">
+                        <input class="form-control col-6" disabled />
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        @if (ViewBag.Exist == true)
+        {
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Tạo danh sách trận đấu</button>
+            <div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmLabel">Xác nhận</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Đã có danh sách trận trong cơ sở dữ liệu! Bạn có chắc chắn muốn tạo danh sách trận đấu? Nếu tiếp tục sẽ
+                            <label class="text-danger">
+                                xóa danh sách trận cũ vĩnh viễn.
+                            </label>
+                            Hành động này không thể bị khôi phục.
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                            <input type="submit" value="Tiếp tục" class="btn btn-danger" formmethod="post" asp-route-exist="true" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <input type="submit" value="Tạo danh sách trận đấu" class="btn btn-danger" formmethod="post"/>
+        }
+    </div>
+</form>
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            var count = this.getElementsByClassName('table').length;
+            for (var i = 0; i < count; i++) {
+                var table = '#table_' + i.toString();
+                var col = '.num_' + i.toString();
+                $(table).on('input', col, function () {
+                    var calculated_total_sum = 0;
+                    $(table + ' ' + col).each(function () {
+                        var get_textbox_value = $(this).val();
+                        if ($.isNumeric(get_textbox_value)) {
+                            calculated_total_sum += parseInt(get_textbox_value);
+                        }
+                    });
+                    $("#total_" + i.toString()).html(calculated_total_sum);
+                });
+            }
+        });
+    </script>
+}
