@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 
 namespace Tennis_Web.Models
 {
-    public class MatchGeneratorErrorViewModel
-    {
-        public IEnumerable<DS_Cap> NoCodePairs { get; set; }
-        public IEnumerable<DS_VDV> NoPairPlayers { get; set; }
-    }
     public class EntityListViewModel
     {
         public bool IsSelected { get; set; }

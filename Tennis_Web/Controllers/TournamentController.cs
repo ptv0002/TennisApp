@@ -44,9 +44,6 @@ namespace Tennis_Web.Controllers
                 case "Pair":
                     vm.ActiveTab = Tab.Pair;
                     return RedirectToAction("LevelInfo", "Level", vm);
-                case "Division":
-                    vm.ActiveTab = Tab.Division;
-                    return RedirectToAction("LevelInfo", "Level", vm);
                 case "Info":
                     vm.ActiveTab = Tab.Info;
                     return RedirectToAction(nameof(TournamentInfo), vm);

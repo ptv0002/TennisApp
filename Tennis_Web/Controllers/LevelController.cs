@@ -18,20 +18,8 @@ namespace Tennis_Web.Controllers
         {
             _context = context;
         }
-        public IActionResult LevelInfo(TabViewModel model/*, bool isCurrent, int  trinhID, string detailedTitle*/)
+        public IActionResult LevelInfo(TabViewModel model)
         {
-            //if (model.ID == 0)
-            //{
-
-            //    // Assign default value for first time access
-            //    model = new TabViewModel
-            //    {
-            //        ActiveTab = Tab.Parameter,
-            //        IsCurrent = isCurrent,
-            //        ID = trinhID,
-            //        DetailedTitle = detailedTitle
-            //    };
-            //}
             return View(model);
         }
 

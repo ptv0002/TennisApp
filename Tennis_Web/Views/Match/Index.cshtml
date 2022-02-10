@@ -30,7 +30,7 @@
                                 @item.DS_Cap2.VDV1.Ten_Tat + @item.DS_Cap2.VDV2.Ten_Tat
                             </td>
                             <td>
-                                @item.Da_Nhap
+                                @if ((item.Kq_1 + item.Kq_2) > 0) true.ToString(); else false.ToString();
                             </td>
                             <td>
                                 <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#updateResult" data-url="@Url.Action("UpdateResult", "Match", new { id = item.Id })">Sửa</button>

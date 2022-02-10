@@ -2,14 +2,14 @@
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model List<Models.DS_VDV>
-<p>
+@*<p>
     Hiện danh sách 
     <select id="ctrl-show-selected" class="form-control">
         <option value="all" selected>tất cả VĐV</option>
         <option value="selected">VĐV tham gia</option>
         <option value="not-selected">VĐV không tham gia</option>
     </select>
-</p>
+</p>*@
 <form asp-action="SavePlayerState" asp-controller="Tournament">
     <div class="card shadow mb-4">
         @*<div class="card-header py-3">

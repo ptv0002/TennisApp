@@ -16,9 +16,6 @@
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Pair ? "active" : string.Empty)">
         <a asp-route-tabname="Pair" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Tournament">Danh sách cặp thi đấu</a>
     </li>
-    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Division ? "active" : string.Empty)">
-        <a asp-route-tabname="Division" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Tournament">Bốc thăm chia bảng</a>
-    </li>
 </ul>
 <div class="tab-content mt-3">
     @switch (Model.ActiveTab)
@@ -28,9 +25,6 @@
             break;
         case Tennis_Web.Models.Tab.Pair:
             @await Component.InvokeAsync("Pair", Model);
-            break;
-        case Tennis_Web.Models.Tab.Division:
-            @await Component.InvokeAsync("Division", Model);
             break;
         default:
             break;
@@ -59,9 +53,6 @@
             });
             $('#TL_TuKet').on('input', function () {
                 UpdateTL_Bang();
-            });
-            $('#txtVdv1').on('input', function () {
-                
             });
         });
     </script>

@@ -20,7 +20,6 @@ namespace Tennis_Web.Models
         Info,
         Parameter,
         Player,
-        Division,
         LevelList,
         Pair
     }

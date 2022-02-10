@@ -10,8 +10,6 @@
     {
         public int Id { get; set; }
 
-        [NotMapped]
-        public bool Da_Nhap { get; set; }
         [StringLength(15)]
         [DisplayName("Mã trận")]
         public string Ma_Tran { get; set; }
