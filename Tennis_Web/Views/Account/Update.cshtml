@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Thông tin tài khoản";
 }
-@model Tennis_Web.Models.AccountViewModel
+@model AccountViewModel
 <hr/>
 <form asp-action="Update">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -10,8 +10,16 @@
             @Html.DisplayNameFor(model => model.Username)
         </dt>
         <dd class="col-sm-9">
-            <input asp-for="Username" class="form-control" required />
-            <span asp-validation-for="Username" class="text-danger"></span>
+            @if (Model.Username == "Admin")
+            {
+                <input asp-for="Username" class="form-control" disabled />
+            }
+            else
+            {
+                <input asp-for="Username" class="form-control" required />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            }
+
         </dd>
         <dt class="col-sm-3 font-weight-bold">
             @Html.DisplayNameFor(model => model.Password)
@@ -65,9 +73,6 @@
     </dl>
     <div class="form-group">
         <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
-    </div>
-    <div>
-        <a asp-action="Index">Quay lại trang trước</a>
     </div>
 </form>
 

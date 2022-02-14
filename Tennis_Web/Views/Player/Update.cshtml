@@ -102,26 +102,33 @@
             <label asp-for="File_Anh" class="control-label"></label>
         </dt>
         <dd class="col-sm-9">
-            <input class="form-control" type="file" asp-for="Picture" multiple />
+            <input class="form-control" type="file" asp-for="Picture" />
         </dd>
-        @if (Model.File_Anh != null)
+        @if (Model != null && Model.File_Anh != null)
         {
+            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+            {
+                BtnMsg = "Xóa",
+                Message = "xóa ảnh",
+                ActionName = "DeleteImage",
+                ControllerName = "Player",
+                Id = Model.Id.ToString()
+            };
             <dt class="col-sm-3 font-weight-bold">
                 <label class="control-label">Hình ảnh</label>
             </dt>
             <dd class="col-sm-9">
-                <img src="@("~/PlayerImg/" + Model.File_Anh)" asp-append-version="true" width="200"/>
+                <img src="@("~/Files/PlayerImg/" + Model.File_Anh)" asp-append-version="true" width="200" />
             </dd>
             <dt class="col-sm-3 font-weight-bold"></dt>
             <dd class="col-sm-9">
-                <a class="btn btn-danger" asp-action="DeleteImage" asp-route-id="@Model.Id">Xóa ảnh</a>
+                <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa ảnh</button>
             </dd>
         }
     </dl>
     <div class="form-group">
         <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
     </div>
-    <div>
-        <a asp-action="Index">Quay lại trang trước</a>
-    </div>
 </form>
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>

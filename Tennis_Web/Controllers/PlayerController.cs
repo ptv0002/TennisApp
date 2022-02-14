@@ -1,4 +1,5 @@
-﻿using DataAccess;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using DataAccess;
 using Library;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,12 @@ namespace Tennis_Web.Controllers
     {
         private readonly TennisContext _context;
         private readonly IWebHostEnvironment _webHost;
-        public PlayerController(TennisContext context, IWebHostEnvironment webHost)
+        public readonly INotyfService _notyf;
+        public PlayerController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
         {
             _context = context;
             _webHost = webHost;
+            _notyf = notyf;
         }
         public IActionResult Index()
         {
@@ -29,6 +32,7 @@ namespace Tennis_Web.Controllers
         public IActionResult Update(int id)
         {
             var destination = _context.DS_VDVs.Find(id);
+            if (destination != null && destination.File_Anh != null) _notyf.Warning("Upload ảnh mới sẽ xóa ảnh cũ!", 100);
             return View(destination);
         }
         [HttpPost]
@@ -48,13 +52,19 @@ namespace Tennis_Web.Controllers
                 {
                     if (source.Picture.Length <= 250000)
                     {
+                        // Delete image if already exists
+                        var temp = _context.DS_VDVs.Find(id);
+                        string wwwRootPath = _webHost.WebRootPath + "/Files/PlayerImg/";
+                        string existPath = Path.Combine(wwwRootPath, source.File_Anh);
+                        if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
+
                         // Save image to wwwroot/PlayerImg
-                        string wwwRootPath = _webHost.WebRootPath;
                         string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
                         source.File_Anh = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                        string path = Path.Combine(wwwRootPath + "/PlayerImg/", fileName);
-                        using var fileStream = new FileStream(path, FileMode.Create);
+                        string path = Path.Combine(wwwRootPath, fileName);
+                        using var fileStream = System.IO.File.Create(path);
                         await source.Picture.CopyToAsync(fileStream);
+                        await fileStream.DisposeAsync();
                     }
                     else
                     {
@@ -73,24 +83,24 @@ namespace Tennis_Web.Controllers
             var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu" };
             var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
             if (result.Succeeded) 
-            { 
-                _context.SaveChanges();
+            {
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index)); 
             }
             ModelState.AddModelError(string.Empty, result.Message);
             return View(source);
         }
-        public IActionResult DeleteImage(int id)
+        public IActionResult DeleteImage(string id)
         {
-            var source = _context.DS_VDVs.Find(id);
+            var source = _context.DS_VDVs.Find(Convert.ToInt32(id));
             string wwwRootPath = _webHost.WebRootPath;
-            string path = Path.Combine(wwwRootPath + "/PlayerImg/", source.File_Anh);
+            string path = Path.Combine(wwwRootPath + "/Files/PlayerImg/", source.File_Anh);
             if (System.IO.File.Exists(path))
             {
                 System.IO.File.Delete(path);
                 source.File_Anh = null;
                 var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, new List<string> { "File_Anh" });
-                if (result.Succeeded) _context.SaveChanges();
+                if (result.Succeeded) _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Update), id);
         }

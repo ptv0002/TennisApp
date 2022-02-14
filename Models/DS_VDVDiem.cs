@@ -8,9 +8,8 @@
 
     public class DS_VDVDiem
     {
-    [Key]
+        [Key]
         public int Id { get; set; }
-
         public int ID_Giai { get; set; }
         [DisplayName("Ngày")]
         public DateTime Ngay { get; set; }

@@ -34,8 +34,8 @@
   <ItemGroup>
     <Folder Include="Areas\NoRole\Data\" />
     <Folder Include="Areas\NoRole\Models\" />
-    <Folder Include="wwwroot\Files\" />
-    <Folder Include="wwwroot\PlayerImg\" />
+    <Folder Include="wwwroot\Files\Json\" />
+    <Folder Include="wwwroot\Files\PlayerImg\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties wwwroot_4datatables_4vi_1json__JsonSchema="https://cdn.datatables.net/plug-ins/1.11.4/i18n/vi.json" /></VisualStudio></ProjectExtensions>

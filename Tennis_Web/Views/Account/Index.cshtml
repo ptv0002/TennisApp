@@ -47,11 +47,28 @@
                                 </td>
                                 <td>
                                     <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-info">Sửa</a>
-                                    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
+                                    @if (item.UserName != "Admin")
+                                    { 
+                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
+                                    }
                                 </td>
                             </tr>
                         }
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                Username
+                            </th>
+                            <th>
+                                Tên tài khoản
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>

@@ -44,11 +44,23 @@
                                     <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
                                     <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { id = item.Id, idTrinh = item.ID_Trinh })">Sửa</button>
                                 </td>
-
                             }
                         </tr>
                     }
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Mã cặp</th>
+                        <th>VĐV 1</th>
+                        <th>VĐV 2</th>
+                        <th>Tổng điểm</th>
+                        <th>Hiệu số</th>
+                        @if (a1)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>

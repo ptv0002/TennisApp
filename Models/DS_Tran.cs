@@ -18,7 +18,7 @@
         [DisplayName("KQ 2")]
         public int Kq_2 { get; set; }
         [DisplayName("ID Cặp 1")]
-        public int ID_Cap1 { get; set; }
+        public int? ID_Cap1 { get; set; }
         [ForeignKey("ID_Cap1")]
         public virtual DS_Cap DS_Cap1 { get; set; }
         [DisplayName("ID Cặp 2")]

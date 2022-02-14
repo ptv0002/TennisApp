@@ -6,7 +6,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public partial class DS_Bang
+    public class DS_Bang
     {
         public DS_Bang()
         {

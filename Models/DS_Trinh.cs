@@ -13,8 +13,6 @@
             DS_Cap = new HashSet<DS_Cap>();
             DS_Bang = new HashSet<DS_Bang>();
         }
-
-        
         [Key]
         public int Id { get; set; }
         [DisplayName("Trình")]

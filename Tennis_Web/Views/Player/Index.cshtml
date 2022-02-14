@@ -51,7 +51,7 @@
                                     @Html.DisplayFor(modelItem => item.Khach_Moi)
                                 </td>
                                 <td>
-                                    <img src="@("~/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70"/>
+                                    <img src="@("~/Files/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70"/>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Diem)
@@ -71,13 +71,27 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Ten_Tat)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CLB)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Khach_Moi)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.File_Anh)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Diem)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Diem_Cu)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Gioi_Tinh)
+                            </th>
                             <th></th>
                         </tr>
                     </tfoot>
