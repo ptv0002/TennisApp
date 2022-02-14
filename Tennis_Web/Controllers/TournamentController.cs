@@ -92,7 +92,7 @@ namespace Tennis_Web.Controllers
             // Find and update Tournament Info
             var columnsToSave = new List<string> { "Ten", "Ghi_Chu", "Ngay" };
             var result = new DatabaseMethod<DS_Giai>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
             // Assign value for view model
             var vm = new TabViewModel
             {
@@ -119,7 +119,7 @@ namespace Tennis_Web.Controllers
             var list = _context.DS_VDVs.ToList();
             list.ForEach(m => { m.Tham_Gia = false; });
             _context.UpdateRange(list);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index), true);
         }
         public IActionResult AddLevel(string newLevel, string idGiai)
@@ -129,7 +129,7 @@ namespace Tennis_Web.Controllers
                 Trinh = Convert.ToInt32(newLevel),
                 ID_Giai = Convert.ToInt32(idGiai)
             });
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
             // Assign value for view model
             var vm = new TabViewModel
             {
@@ -167,7 +167,7 @@ namespace Tennis_Web.Controllers
                     result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Tham_Gia" }).Succeeded;
                     if (!result) break;
                 }
-                if (result) _context.SaveChanges();
+                if (result) _context.SaveChangesAsync();
             }
             else  result = false;
             // Assign value for view model

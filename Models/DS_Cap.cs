@@ -10,13 +10,10 @@
     {
         public DS_Cap()
         {
-            //DS_Diem = new HashSet<DS_Diem>();
             DS_Trans = new HashSet<DS_Tran>();
-
         }
         [Key]
         public int Id { get; set; }
-
         [StringLength(10)]
         [DisplayName("Mã Cặp")]
         public string Ma_Cap { get; set; }
@@ -26,7 +23,6 @@
         [ForeignKey("ID_Trinh")]
         [DisplayName("ID Trình")]
         public virtual DS_Trinh DS_Trinh { get; set; }
-
         public int? ID_Bang { get; set; }
         [ForeignKey("ID_Bang")]
         [DisplayName("ID Bảng")]

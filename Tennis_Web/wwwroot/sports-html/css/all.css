@@ -87,7 +87,8 @@ p {
     font-weight: bold;
     font-size: 1.6rem;
     line-height: 22px;
-    letter-spacing: 0; }
+    letter-spacing: 0;
+  }
 
 #nav {
   overflow: hidden;

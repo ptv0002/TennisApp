@@ -6,6 +6,8 @@
 <form asp-action="AdditionalInfo">
     @for (int i = 0; i < Model.Count; i++)
     {
+        <input type="hidden" asp-for="@Model[i].ID_Trinh" />
+        <input type="hidden" asp-for="@Model[i].Trinh" />
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h5 class="m-0 font-weight-bold text-primary">Trình @Model[i].Trinh</h5>
@@ -24,8 +26,11 @@
                                 @for (int j = 0; j < Model[i].NumPerTable.Count; j++)
                                 {
                                     <tr>
-                                        <td>@Model[i].NumPerTable[j].Item1</td>
-                                        <td><input class="form-control col-6 num_@i" asp-for="ElementAt(i).NumPerTable[j].Item2" /></td>
+                                        <td>
+                                            <input type="hidden" asp-for="@Model[i].NumPerTable[j].Table" />
+                                            @Model[i].NumPerTable[j].Table
+                                        </td>
+                                        <td><input class="form-control col-6 num_@i" asp-for="@Model[i].NumPerTable[j].Num" /></td>
                                     </tr>
                                 }
                             </tbody>
@@ -95,7 +100,7 @@
         }
         else
         {
-            <input type="submit" value="Tạo danh sách trận đấu" class="btn btn-danger" formmethod="post"/>
+            <input type="submit" value="Tạo danh sách trận đấu" class="btn btn-danger" formmethod="post" />
         }
     </div>
 </form>

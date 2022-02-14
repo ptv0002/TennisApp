@@ -1,11 +1,14 @@
 ﻿using DataAccess;
 using Library;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
@@ -14,14 +17,16 @@ namespace Tennis_Web.Controllers
     public class MatchController : Controller
     {
         private readonly TennisContext _context;
-        public MatchController(TennisContext context)
+        private readonly IWebHostEnvironment _webHost;
+        public MatchController(TennisContext context, IWebHostEnvironment webHost)
         {
             _context = context;
+            _webHost = webHost;
         }
         public IActionResult Index(int id)
         {
             var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == id).Select(m => m.Id);
-            var model = _context.DS_Trans.Where(m => pairs.Contains(m.ID_Cap1)).ToList();
+            var model = _context.DS_Trans.Where(m => pairs.Contains((int)m.ID_Cap1) || pairs.Contains((int)m.ID_Cap2)).ToList();
             if (model != null)
             {
                 for (int i = 0; i < model.Count; i++)
@@ -59,7 +64,7 @@ namespace Tennis_Web.Controllers
             return PartialView(model);
         }
         [HttpPost]
-        public IActionResult UpdateResult(DS_Tran item)
+        public async Task<IActionResult> UpdateResultAsync(DS_Tran item)
         {
             ResultModel<DS_Tran> result;
             if (item.Id != 0)
@@ -67,7 +72,7 @@ namespace Tennis_Web.Controllers
                 result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Kq_1", "Kq_2" });
                 if (result.Succeeded)
                 {
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     var temp = _context.DS_Caps.Find(item.ID_Cap1);
                     return RedirectToAction(nameof(Index), temp.ID_Trinh);
                 }
@@ -109,9 +114,10 @@ namespace Tennis_Web.Controllers
                     NoPairPlayers = noPairPlayers
                 });
             }
+            // ---------------- If all conditions met ----------------
             var pair_Ids = pairs.Select(m => m.Id);
             // If any match found, return error message before proceeding
-            if (_context.DS_Trans.Any(m => pair_Ids.Contains(m.ID_Cap1) || pair_Ids.Contains((int)m.ID_Cap2)))
+            if (_context.DS_Trans.Any(m => pair_Ids.Contains((int)m.ID_Cap1) || pair_Ids.Contains((int)m.ID_Cap2)))
             {
                 ViewBag.Exist = true;
                 ModelState.AddModelError(string.Empty, "Đã có danh sách trận trong cơ sở dữ liệu! Nếu tiếp tục sẽ xóa danh sách trận cũ.");
@@ -120,13 +126,13 @@ namespace Tennis_Web.Controllers
             var model = new List<MatchGeneratorViewModel>();
             foreach (var level in levels)
             {
-                var dict = new List<Tuple<char, int>>();
+                var dict = new List<NumPerTable>();
                 // Get name of all (distinct) tables from the given Ma_Cap (Pair Code)
-                var tables = pairs.Where(m => m.ID_Trinh == level).Select(m => m.Ma_Cap.ElementAt(0)).Distinct();
+                var tables = pairs.Where(m => m.ID_Trinh == level).Select(m => char.ToUpper(m.Ma_Cap.ElementAt(0))).Distinct();
                 foreach (var table in tables)
                 {
                     // Add table and default value (0) to list
-                    dict.Add(new Tuple<char, int>(table, 0));
+                    dict.Add(new NumPerTable { Table = table, Num = 0 });
                 }
                 // Assign default values per Level
                 var temp = new MatchGeneratorViewModel
@@ -141,7 +147,7 @@ namespace Tennis_Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult AdditionalInfo(List<MatchGeneratorViewModel> model, bool exist)
+        public async Task<IActionResult> AdditionalInfoAsync(List<MatchGeneratorViewModel> model, bool exist)
         {
             ViewBag.TourName = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == model.FirstOrDefault().ID_Trinh).FirstOrDefault().DS_Giai.Ten;
             if (exist)
@@ -149,32 +155,109 @@ namespace Tennis_Web.Controllers
                 ViewBag.Exist = true;
                 ModelState.AddModelError(string.Empty, "Đã có danh sách trận trong cơ sở dữ liệu! Nếu tiếp tục sẽ xóa danh sách trận cũ.");
             }
+
             foreach (var level in model)
             {
-                var tuple = PowerOfTwo(level.NumPerTable.Sum(m => m.Item2) + level.PlayOff1 + level.PlayOff2);
+                var tuple = PowerOfTwo(level.NumPerTable.Sum(m => m.Num) + level.PlayOff1 + level.PlayOff2);
                 if (tuple.Item1 < 0)
                 {
-                    ModelState.AddModelError(string.Empty, "Tổng số cặp đi tiếp quá lớn hoặc quá nhỏ so với cho phép!");
+                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " có tổng số cặp đi tiếp quá lớn hoặc quá nhỏ so với cho phép!");
                     return View(model);
                 }
                 else if (tuple.Item1 > 0)
                 {
-                    ModelState.AddModelError(string.Empty, "Thêm hoặc bớt cặp để tổng số cặp đi tiếp là " + tuple.Item1 + " hoặc " + tuple.Item2);
+                    ModelState.AddModelError(string.Empty, "Thêm hoặc bớt cặp trình " + level.Trinh + " để tổng số cặp đi tiếp là " + tuple.Item1 + " hoặc " + tuple.Item2);
                     return View(model);
                 }
-                else
+            }
+            if (model != null)
+            {
+                // ---------------- Save these paramters to Json file ----------------
+
+                // Get path for the Json file
+                string path = _webHost.WebRootPath + "/Files/Json/MatchGenParam.json";
+                FileStream fileStream;
+                // Delete file if Json file is already exist
+                if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+
+                fileStream = System.IO.File.Create(path);
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                await JsonSerializer.SerializeAsync(fileStream, model, options);
+                await fileStream.DisposeAsync();
+
+                // ---------------- Delete old matches ----------------
+                if (exist)
                 {
-                    if (exist)
-                    {
-                        // Delete old matches
-                    }
-                    // Generate list of matches here
-                    // ---------------- In Progress ----------------
+                    // Get level ids
+                    var levels = model.Select(m => m.ID_Trinh).ToList();
+                    // Get all pairs with Level Id from the level id list
+                    var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.Id).ToList();
+                    // Get old matches
+                    var oldMatches = _context.DS_Trans.Where(m => pairs.Contains((int)m.ID_Cap1) || pairs.Contains((int)m.ID_Cap2));
+                    _context.RemoveRange(oldMatches);
                 }
+                // ---------------- Generate list of matches here ----------------
+                var rounds = _context.DS_Vongs.ToDictionary(x => x.Ma_Vong, y => y.Id);
+
+                foreach (var level in model)
+                {
+                    int count = 1;
+                    // Add Table Rounds
+                    foreach (var table in level.NumPerTable.Select(m => m.Table))
+                    {
+                        var pairByTable = _context.DS_Caps.Where(m => char.ToUpper(m.Ma_Cap.ElementAt(0)) == table && m.ID_Trinh == level.ID_Trinh).ToList();
+                        for (int i = 0; i < pairByTable.Count; i++)
+                        {
+                            var match = new DS_Tran
+                            {
+                                Ma_Tran = level.Trinh + "9" + table + count,
+                                ID_Cap1 = pairByTable[i].Id,
+                                ID_Vong = rounds[9]
+                            };
+                            // Match each pair with the next one
+                            if (i == pairByTable.Count - 1) match.ID_Cap2 = pairByTable[0].Id;
+                            // Unless it's the last pair, then pair with the first one
+                            else match.ID_Cap2 = pairByTable[i + 1].Id;
+                            _context.Add(match);
+                            count++;
+                        }
+                    }
+                    // Add playoff rounds (if any)
+                    for (int i = 0; i < level.PlayOff2; i++)
+                    {
+                        var match = new DS_Tran
+                        {
+                            Ma_Tran = level.Trinh + "8" + count,
+                            ID_Vong = rounds[8]
+                        };
+                        _context.Add(match);
+                        count++;
+                    }
+                    // Add Special Rounds
+                    var specMatches = (int)Math.Log2(level.NumPerTable.Sum(m => m.Num) + level.PlayOff1 + level.PlayOff2);
+                    for (int i = specMatches; i > 0; i--)
+                    {
+                        var match = new DS_Tran
+                        {
+                            Ma_Tran = level.Trinh + i.ToString() + count,
+                            ID_Vong = rounds[i]
+                        };
+                        _context.Add(match);
+                        count++;
+                    }
+                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(TournamentLevel));
             }
             ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
             return View(model);
         }
+
+        // Get info from Json file
+        // List<MatchGeneratorViewModel> model = JsonSerializer.Deserialize<List<MatchGeneratorViewModel>>(System.IO.File.ReadAllText(wwwRootPath + "/Files/Json/MatchGenParam.json"));
+
+
+
         public Tuple<int, int> PowerOfTwo(int number)
         {
             var powerOfTwo = new List<int> { 2, 4, 8, 16, 32, 64, 128 };

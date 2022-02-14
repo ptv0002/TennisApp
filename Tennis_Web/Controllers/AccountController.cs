@@ -112,6 +112,24 @@ namespace Tennis_Web.Controllers
                     var result3 = await _roleManager.FindByNameAsync("Referee"); // Check for "Referee" role in DB
                     bool upfail = false ;
 
+                    if (!_context.DS_Vongs.Any())
+                    {
+                        await _context.AddRangeAsync(new List<DS_Vong>
+                        {
+                            new DS_Vong { Ten = "Vô Địch", Ma_Vong = 0 },
+                            new DS_Vong { Ten = "Vòng Chung Kết", Ma_Vong = 1 },
+                            new DS_Vong { Ten = "Vòng Bán Kết", Ma_Vong = 2 },
+                            new DS_Vong { Ten = "Vòng Tứ Kết", Ma_Vong = 3 },
+                            new DS_Vong { Ten = "Vòng 4", Ma_Vong = 4 },
+                            new DS_Vong { Ten = "Vòng 3", Ma_Vong = 5 },
+                            new DS_Vong { Ten = "Vòng 2", Ma_Vong = 6 },
+                            new DS_Vong { Ten = "Vòng 1", Ma_Vong = 7 },
+                            new DS_Vong { Ten = "Vòng Playoff", Ma_Vong = 8 },
+                            new DS_Vong { Ten = "Vòng Bảng", Ma_Vong = 9 }
+                        });
+                        await _context.SaveChangesAsync();
+                    }
+
                     if (result1 == null)  // No "Admin" role found
                     {
                         // Create new role
@@ -234,7 +252,7 @@ namespace Tennis_Web.Controllers
             //await _userManager.DeleteAsync(user);
             var user = _context.AppUsers.Find(id);
             _context.Remove(user);
-            _context.SaveChanges();
+            _context.SaveChangesAsync();
             return RedirectToAction("Index", "Account");
         }
     }

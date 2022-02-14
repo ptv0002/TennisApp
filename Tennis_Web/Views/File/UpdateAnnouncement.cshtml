@@ -1,0 +1,79 @@
+﻿@model Models.Thong_Bao
+@{
+    ViewData["Title"] = "Thông tin thông báo";
+}
+<hr />
+<form asp-action="Update" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <dl class="row">
+        <dt class="col-sm-2 font-weight-bold">
+            <label asp-for="Ten" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-10">
+            <input asp-for="Ten" class="form-control" required />
+            <span asp-validation-for="Ten" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-2 font-weight-bold">
+            <label asp-for="Ngay" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-10">
+            <input asp-for="Ngay" class="form-control" required />
+            <span asp-validation-for="Ngay" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-2 font-weight-bold">
+            <label asp-for="Hien_Thi" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-10">
+            <input asp-for="Hien_Thi" class="ml-0 form-check-input" />
+        </dd>
+        <dt class="col-sm-2 font-weight-bold">
+            <label>File thông báo (nếu có)</label>
+        </dt>
+        <dd class="col-sm-10">
+            <input class="form-control" type="file" asp-for="File" />
+        </dd>
+        @if (Model != null && Model.File_Path != null)
+        {
+            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+            {
+                BtnMsg = "Xóa",
+                Message = "xóa file",
+                ActionName = "DeleteFile",
+                ControllerName = "File",
+                Id = Model.Id.ToString()
+            };
+            <dt class="col-sm-3 font-weight-bold">
+                <label class="control-label">File thông báo</label>
+            </dt>
+            <dd class="col-sm-9">
+                @if (System.IO.Path.GetExtension(Model.File_Path) == ".pdf")
+                {
+                    <embed type="application/pdf" src="@("~/Files/PlayerImg/" + Model.File_Path)" width="500" />
+                }
+                else
+                {
+                    <img src="@("~/Files/PlayerImg/" + Model.File_Path)" asp-append-version="true" width="500" />
+                }
+            </dd>
+            <dt class="col-sm-3 font-weight-bold"></dt>
+            <dd class="col-sm-9">
+                <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa file</button>
+            </dd>
+        }
+        <dt class="col-sm-2 font-weight-bold">
+            <label asp-for="File_Text" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-10">
+            <textarea asp-for="File_Text" class="form-control"></textarea>
+            <span asp-validation-for="File_Text" class="text-danger"></span>
+        </dd>
+    </dl>
+    <div class="form-group">
+        <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+    </div>
+</form>
+@section Scripts
+{
+    @await Html.PartialAsync("_Summernote", new { height = 200, selector = "#File_Text" })
+}

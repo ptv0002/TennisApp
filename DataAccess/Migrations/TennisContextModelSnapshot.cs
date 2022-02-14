@@ -342,7 +342,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ID_Cap1")
+                    b.Property<int?>("ID_Cap1")
                         .HasColumnType("int");
 
                     b.Property<int?>("ID_Cap2")
@@ -519,9 +519,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Ma_Vong")
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
+                    b.Property<int>("Ma_Vong")
+                        .HasColumnType("int");
 
                     b.Property<string>("Ten")
                         .HasMaxLength(20)
@@ -557,7 +556,10 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("File_TB")
+                    b.Property<string>("File_Path")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("File_Text")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Hien_Thi")
@@ -691,9 +693,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Models.DS_Cap", "DS_Cap1")
                         .WithMany()
-                        .HasForeignKey("ID_Cap1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ID_Cap1");
 
                     b.HasOne("Models.DS_Cap", "DS_Cap2")
                         .WithMany("DS_Trans")

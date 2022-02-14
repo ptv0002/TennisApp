@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using DataAccess;
 using Library;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,12 @@ namespace Tennis_Web.Controllers
     public class FileController : Controller
     {
         private readonly TennisContext _context;
+        private readonly IWebHostEnvironment _webHost;
         private readonly INotyfService _notyf;
-        public FileController(TennisContext context, INotyfService notyf)
+        public FileController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
         {
             _context = context;
+            _webHost = webHost;
             _notyf = notyf;
         }
         public IActionResult AnnouncementIndex()
@@ -33,13 +36,50 @@ namespace Tennis_Web.Controllers
         public IActionResult UpdateAnnouncement(int id)
         {
             var destination = _context.Thong_Baos.Find(id);
+            if (destination != null && destination.File_Path != null) _notyf.Warning("Upload file thông báo mới sẽ xóa file cũ!", 100);
             return View(destination);
         }
-        //public IActionResult UpdateAnnouncement(int id, Thong_Bao source)
-        //{
-        //    var model;
-        //    return View(model);
-        //}
+        [HttpPost]
+        public async Task<IActionResult> UpdateAnnouncementAsync(int id, Thong_Bao source)
+        {
+            if (source.File != null)
+            {
+                // Handle file attachment
+                string extension = Path.GetExtension(source.File.FileName);
+                if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".pdf")
+                {
+                    // Delete image if already exists
+                    var temp = _context.DS_VDVs.Find(id);
+                    string wwwRootPath = _webHost.WebRootPath + "/Files/PlayerImg/";
+                    string existPath = Path.Combine(wwwRootPath, source.File_Path);
+                    if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
+
+                    // Save image to wwwroot/PlayerImg
+                    string fileName = Path.GetFileNameWithoutExtension(source.File.FileName);
+                    source.File_Path = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    string path = Path.Combine(wwwRootPath, fileName);
+                    using var fileStream = System.IO.File.Create(path);
+                    await source.File.CopyToAsync(fileStream);
+                    await fileStream.DisposeAsync();
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Dạng file " + extension + " không được hỗ trợ!");
+                    return View(source);
+                }
+            }
+
+            // Handle saving object
+            var columnsToSave = new List<string> { "Ten", "Ngay", "Hien_Thi", "File_Path", "File_Text"};
+            var result = new DatabaseMethod<Thong_Bao>(_context).SaveObjectToDB(id, source, columnsToSave);
+            if (result.Succeeded)
+            {
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ModelState.AddModelError(string.Empty, result.Message);
+            return View(source);
+        }
         public IActionResult ImportExcel()
         {
             bool? success = (bool?)TempData["Success"];
@@ -95,7 +135,7 @@ namespace Tennis_Web.Controllers
             }
             if (! lerror) 
             { 
-                _context.SaveChanges();
+                _context.SaveChangesAsync();
                 TempData["Success"] = true;
                 return RedirectToAction(nameof(ImportExcel));
             }

@@ -12,18 +12,14 @@ namespace Models
         {
         //    DS_Diem = new HashSet<DS_Diem>();
         //    DS_Tran = new HashSet<DS_Tran>();
-
         }
-
         [Key]
         public int Id { get; set; }
-
         [StringLength(20)]
         [DisplayName("Tên")]
         public string Ten { get; set; }
-        [StringLength(1)]
         [DisplayName("Mã vòng")]
-        public string Ma_Vong { get; set; }
+        public int Ma_Vong { get; set; }
         //public virtual ICollection<DS_Diem> DS_Diem { get; set; }
         //public virtual ICollection<DS_Tran> DS_Tran { get; set; }
     }
