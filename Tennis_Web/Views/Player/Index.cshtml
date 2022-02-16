@@ -7,10 +7,10 @@
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
             <div class="table-responsive">
-                <table class="table dataTable" id="normalTable">
+                <table class="table dataTable" id="normalTable"  style="text-align:center">
                     <thead>
                         <tr>
-                            <th>
+                            <th  style="text-align:left">
                                 @Html.DisplayNameFor(model => model.Ten_Tat)
                             </th>
                             <th>
@@ -41,7 +41,7 @@
                             if (item.Gioi_Tinh) gender = "Nữ";
                             else gender = "Nam";
                             <tr>
-                                <td>
+                                <td style="text-align:left">
                                     @Html.DisplayFor(modelItem => item.Ten_Tat)
                                 </td>
                                 <td>
@@ -71,7 +71,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>
+                            <th style="text-align:left">
                                 @Html.DisplayNameFor(model => model.Ten_Tat)
                             </th>
                             <th>

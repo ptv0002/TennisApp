@@ -30,7 +30,7 @@ namespace Tennis_Web.Controllers
             item.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet;
             var columnsToSave = new List<string> { "Trinh", "Diem_Tru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
             var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             var temp = _context.DS_Giais.Find(item.ID_Giai);
             // Assign value for view model
             var vm = new TabViewModel
@@ -92,7 +92,7 @@ namespace Tennis_Web.Controllers
             }
             var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Ma_Cap", "ID_Trinh" };
             var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, obj, columnsToSave);
-            if (result.Succeeded) _context.SaveChangesAsync();
+            if (result.Succeeded) _context.SaveChanges();
             else
             {
                 ViewBag.DS_VDV = PopulateAutoComplete(item.ID_Trinh);
@@ -101,13 +101,13 @@ namespace Tennis_Web.Controllers
             }
             return TabVMGenerator(Tab.Pair, item.ID_Trinh);
         }
-        public async Task<IActionResult> DeletePairAsync(string id)
+        public IActionResult DeletePair(string id)
         {
             var pair = _context.DS_Caps.Find(Convert.ToInt32(id));
             var matches = _context.DS_Trans.Where(m => m.ID_Cap1 == pair.Id || m.ID_Cap2 == pair.Id);
             _context.RemoveRange(matches);
             _context.Remove(pair);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return TabVMGenerator(Tab.Pair, pair.ID_Trinh);
         }
         public IActionResult TabVMGenerator (Tab tabName, int idTrinh)

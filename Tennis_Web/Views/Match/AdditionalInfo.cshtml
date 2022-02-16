@@ -15,11 +15,13 @@
             <div class="card-body">
                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                     <div class="table-responsive">
-                        <table class="table dataTable" id="table_@i">
+                        <table class="table dataTable autoSum" id="table_@i" style="text-align:center">
                             <thead>
                                 <tr>
                                     <th class="col-6">Bảng</th>
                                     <th>Số cặp đi tiếp</th>
+                                    <th>Bảng thi Playoff 1</th>
+                                    <th>Bảng thi Playoff 2</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -30,14 +32,16 @@
                                             <input type="hidden" asp-for="@Model[i].NumPerTable[j].Table" />
                                             @Model[i].NumPerTable[j].Table
                                         </td>
-                                        <td><input class="form-control col-6 num_@i" asp-for="@Model[i].NumPerTable[j].Num" /></td>
+                                        <td><input class="form-control col-6 num" asp-for="@Model[i].NumPerTable[j].Num" /></td>
+                                        <td><input class="form-check" type="checkbox" asp-for="@Model[i].NumPerTable[j].P1" /></td>
+                                        <td><input class="form-check" type="checkbox" asp-for="@Model[i].NumPerTable[j].P2" /></td>
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>Tổng số cặp đã chọn</th>
-                                    <th><input class="form-control col-6" id="total_@i" disabled /></th>
+                                    <th><input class="form-control col-6 total" id="total_@i" disabled /></th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -47,14 +51,14 @@
             <div class="card-footer">
                 <dl class="row">
                     <dt class="col-6 font-weight-bold">
-                        Playoff 1 (Playoff cao nhất)
+                        Tổng cặp thi Playoff 1 (Playoff cao nhất)
                     </dt>
                     <dd class="col-6">
                         <input class="form-control col-6" asp-for="@Model[i].PlayOff1" />
                         <span asp-validation-for="@Model[i].PlayOff1" class="text-danger"></span>
                     </dd>
                     <dt class="col-6 font-weight-bold">
-                        Playoff 2 (Loại trực tiếp)
+                        Tổng cặp thi Playoff 2 (Loại trực tiếp)
                     </dt>
                     <dd class="col-6">
                         <input class="form-control col-6" asp-for="@Model[i].PlayOff2" />
@@ -107,21 +111,30 @@
 @section Scripts {
     <script type="text/javascript">
         $(function () {
-            var count = this.getElementsByClassName('table').length;
-            for (var i = 0; i < count; i++) {
-                var table = '#table_' + i.toString();
-                var col = '.num_' + i.toString();
-                $(table).on('input', col, function () {
-                    var calculated_total_sum = 0;
-                    $(table + ' ' + col).each(function () {
-                        var get_textbox_value = $(this).val();
-                        if ($.isNumeric(get_textbox_value)) {
-                            calculated_total_sum += parseInt(get_textbox_value);
-                        }
-                    });
-                    $("#total_" + i.toString()).html(calculated_total_sum);
+            //$('#table .num').each(function () {
+            //    var get_textbox_value = $(this).val();
+            //    if ($.isNumeric(get_textbox_value)) {
+            //        calculated_total_sum += parseInt(get_textbox_value);
+            //    }
+            //});
+            /*  $('#total').html(calculated_total_sum); */
+            $('table').on('input', '.num').each(function () {
+                var sum = 0; // since you want a seperate total for each table, you should zero total for each, right ? ;)
+                $(this).('tbody tr td:nth-child(2)').each(function () {
+                    var get_textbox_value = $(this).val();
+                    if ($.isNumeric(get_textbox_value)) {
+                        sum += parseInt(get_textbox_value);
+                    }
                 });
-            }
+                $(this).parent().find(".total").val(sum);
+            });
+            //function calc_total() {
+            //    var sum = 0;
+            //    $('.num').each(function () {
+                    
+            //    });
+            //    $('#total').html(sum);
+            //}
         });
     </script>
 }

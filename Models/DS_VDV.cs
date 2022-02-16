@@ -17,15 +17,11 @@
         [Key]
         public int Id { get; set; }
 
-        [StringLength(20)]
-        [DisplayName("Họ")]
-        public string Ho { get; set; }
+        [StringLength(25)]
+        [DisplayName("Họ và tên")]
+        public string Ho_Ten { get; set; }
 
-        [StringLength(7)]
-        [DisplayName("Tên")]
-        public string Ten { get; set; }
-
-        [StringLength(40)]
+        [StringLength(30)]
         [DisplayName("Tên Tắt")]
         public string Ten_Tat { get; set; }
         [DisplayName("Tham gia")]
