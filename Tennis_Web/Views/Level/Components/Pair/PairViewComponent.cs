@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
-namespace Tennis_Web.Views.Shared.Components.Pair
+namespace Tennis_Web.Views.Level.Components.Pair
 {
     public class PairViewComponent : ViewComponent
     {
@@ -20,7 +20,7 @@ namespace Tennis_Web.Views.Shared.Components.Pair
         {
             ViewBag.IsCurrent = vm.IsCurrent;
             ViewBag.ID_Trinh = vm.ID;
-            var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.ID_Trinh == vm.ID).ToList();
+            var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.ID_Trinh == vm.ID).OrderBy(m => m.Ma_Cap).ToList();
             return View(model);
         }
     }

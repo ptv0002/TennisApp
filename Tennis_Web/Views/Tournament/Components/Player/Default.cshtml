@@ -11,10 +11,14 @@
     </select>
 </p>*@
 <form asp-action="SavePlayerState" asp-controller="Tournament">
+    @if (a1)
+    {
+        <div class="form-group" style="text-align:right">
+            <input type="hidden" name="idGiai" value="@ViewBag.ID_Giai" />
+            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" formmethod="post" />
+        </div>
+    }
     <div class="card shadow mb-4">
-        @*<div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-            </div>*@
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <div class="table-responsive">
@@ -24,7 +28,7 @@
                                 <th style="text-align:left">Tên tắt</th>
                                 @if (a1)
                                 {
-                                    <th >Tham gia</th>
+                                    <th>Tham gia</th>
                                 }
                                 <th>CLB</th>
                                 <th>Điểm cũ</th>
@@ -66,11 +70,4 @@
             </div>
         </div>
     </div>
-    @if (a1)
-    {
-        <div class="form-group">
-            <input type="hidden" name="idGiai" value="@ViewBag.ID_Giai"/>
-            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" formmethod="post" />
-        </div>
-    }
 </form>

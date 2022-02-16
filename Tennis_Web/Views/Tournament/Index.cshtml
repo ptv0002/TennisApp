@@ -20,7 +20,7 @@
         {
             <div class="row ml-2">
                 <a asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-giaiID="@item.Id">
-                    • @item.Ngay.Date/@item.Ngay.Month/@item.Ngay.Year - Giải @item.Ten
+                    • @item.Ngay.Day/@item.Ngay.Month/@item.Ngay.Year - Giải @item.Ten
                 </a>
             </div>
         }
