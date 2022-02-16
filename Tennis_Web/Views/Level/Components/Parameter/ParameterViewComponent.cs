@@ -6,7 +6,7 @@ using Models;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
-namespace Tennis_Web.Views.Shared.Components.Parameter
+namespace Tennis_Web.Views.Level.Components.Parameter
 {
     public class ParameterViewComponent : ViewComponent 
     {

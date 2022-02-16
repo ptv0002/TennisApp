@@ -8,7 +8,7 @@
 }
 @model Tennis_Web.Models.TabViewModel
 <hr />
-<a asp-action="TournamentInfo" asp-controller="Tournament" asp-route-isCurrent="@Model.IsCurrent" class="btn btn-primary" asp-route-trinhID="@Model.ID">Xem thông tin giải đấu</a>
+<a asp-action="TournamentInfo" asp-controller="Tournament" asp-route-isCurrent="@Model.IsCurrent" asp-route-trinhID="@Model.ID">🡸 Trở về thông tin giải đấu</a>
 <ul class="nav nav-tabs mt-3">
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Parameter ? "active" : string.Empty)">
         <a asp-route-tabname="Parameter" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Tournament">Tham số trình đấu</a>

@@ -101,7 +101,10 @@ $(function () {
         order: [],
         language: {
             url: '/dataTables/vi.json'
-        }});
+        },
+        paging: false,
+        searching: false
+    });
     //var table = $('#noPaging').DataTable({
     //    'ajax': 'https://gyrocode.github.io/files/jquery-datatables/arrays_id.json',
     //    'columnDefs': [

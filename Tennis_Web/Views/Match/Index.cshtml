@@ -1,56 +1,71 @@
 ﻿@{
     ViewData["Title"] = "Danh sách trận đấu " + ViewBag.DetailedTitle;
+    int titleCount = 0, insertCount = 0, reflectCount = 0;
 }
 <hr />
-@model IEnumerable<Models.DS_Tran>
-<div class="card shadow mb-4">
-    <div class="card-body">
-        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            <table class="table table-bordered dataTable" id="normalTable">
-                <thead>
-                    <tr>
-                        <th>Mã trận</th>
-                        <th>Cặp 1</th>
-                        <th>Cặp 2</th>
-                        <th>Đã nhập KQ</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @item.Ma_Tran
-                            </td>
-                            <td>
-                                @item.DS_Cap1.VDV1.Ten_Tat + @item.DS_Cap1.VDV2.Ten_Tat
-                            </td>
-                            <td>
-                                @item.DS_Cap2.VDV1.Ten_Tat + @item.DS_Cap2.VDV2.Ten_Tat
-                            </td>
-                            <td>
-                                @if ((item.Kq_1 + item.Kq_2) > 0) true.ToString(); else false.ToString();
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#updateResult" data-url="@Url.Action("UpdateResult", "Match", new { id = item.Id })">Sửa</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </tfoot>
-            </table>
+@model List<Models.DS_Tran>
+<form asp-action="Index">
+    @for (int i = 0; i < ViewBag.ListTable.Count; i++)
+    {
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 class="font-weight-bold text-primary" style="text-align:center">Bảng @ViewBag.ListTable[i].Table</h5>
+            </div>
+            <div class="card-body">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="table-responsive">
+                        <table class="table dataTable autoSum" style="text-align:center">
+                            <thead>
+                                <tr>
+                                    <th style="background-color:#4e73df"></th>
+                                    @for (int j = 0; j < ViewBag.ListTable[i].Num; j++)
+                                    {
+                                        <th>@Model[titleCount].DS_Cap1.VDV1.Ten_Tat + @Model[titleCount].DS_Cap1.VDV2.Ten_Tat</th>
+                                        titleCount++;
+                                    }
+                                    @{ insertCount = reflectCount = titleCount -= ViewBag.ListTable[i].Num; }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int j = 0; j < ViewBag.ListTable[i].Num; j++)
+                                {
+                                    <tr>
+                                        <th>@Model[titleCount].DS_Cap1.VDV1.Ten_Tat + @Model[titleCount].DS_Cap1.VDV2.Ten_Tat</th>
+                                        @for (int k = 0; k < ViewBag.ListTable[i].Num; k++)
+                                        {
+                                            if (k == j)
+                                            {
+                                                <td style="background-color:#4e73df"></td>
+                                            }
+                                            else if (j > k)
+                                            {  // Insert result side
+                                                <td>
+                                                    <input class="form-control col-5" asp-for="@Model[insertCount].Kq_1" /> - <input class="form-control col-5" asp-for="@Model[insertCount].Kq_2" />
+                                                    <input type="hidden" asp-for="@Model[insertCount].Id"/>
+                                                    <input type="hidden" asp-for="@Model[insertCount].ID_Vong" />
+                                                </td>
+                                                insertCount++;
+                                            }
+                                            else
+                                            {  // Reflection side
+                                                <td>
+                                                    @Model[reflectCount].Kq_2 - @Model[reflectCount].Kq_1
+                                                </td>
+                                                reflectCount++;
+                                            }
+                                        }
+                                        @{ titleCount++; }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
+    }
+    <div class="form-group">
+        <input type="submit" value="Tạo danh sách trận đấu" class="btn btn-danger" formmethod="post" />
     </div>
-</div>
-<!-- Modal placeholder -->
-<div id="modal-placeholder"></div>
 
+</form>
