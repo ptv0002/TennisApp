@@ -1,4 +1,4 @@
-namespace Models
+﻿namespace Models
 {
     using Microsoft.AspNetCore.Http;
     using System;
@@ -13,14 +13,16 @@ namespace Models
         public int Id { get; set; }
 
         [StringLength(80)]
-        [DisplayName("T�n")]
+        [DisplayName("Tên")]
         public string Ten { get; set; }
-        [DisplayName("Ng�y")]
+        [DisplayName("Ngày")]
         public DateTime Ngay { get; set; }
         [NotMapped]
         public IFormFile File { get; set; }
         public string File_Path { get; set; }
+        [DisplayName("Soạn thảo thông báo")]
         public string File_Text { get; set; }
+        [DisplayName("Hiển thị")]
         public bool Hien_Thi { get; set; }
     }
 }

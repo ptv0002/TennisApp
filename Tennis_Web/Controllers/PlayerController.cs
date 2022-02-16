@@ -36,7 +36,7 @@ namespace Tennis_Web.Controllers
             return View(destination);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateAsync(int id, DS_VDV source)
+        public IActionResult Update(int id, DS_VDV source)
         {
             bool a = _context.DS_VDVs.Any(m => m.Ten_Tat == source.Ten_Tat && (m.Id != id || id == 0));
             if (a)
@@ -53,7 +53,6 @@ namespace Tennis_Web.Controllers
                     if (source.Picture.Length <= 250000)
                     {
                         // Delete image if already exists
-                        var temp = _context.DS_VDVs.Find(id);
                         string wwwRootPath = _webHost.WebRootPath + "/Files/PlayerImg/";
                         string existPath = Path.Combine(wwwRootPath, source.File_Anh);
                         if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
@@ -63,8 +62,8 @@ namespace Tennis_Web.Controllers
                         source.File_Anh = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
                         string path = Path.Combine(wwwRootPath, fileName);
                         using var fileStream = System.IO.File.Create(path);
-                        await source.Picture.CopyToAsync(fileStream);
-                        await fileStream.DisposeAsync();
+                        source.Picture.CopyTo(fileStream);
+                        fileStream.DisposeAsync();
                     }
                     else
                     {
@@ -84,7 +83,7 @@ namespace Tennis_Web.Controllers
             var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
             if (result.Succeeded) 
             {
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index)); 
             }
             ModelState.AddModelError(string.Empty, result.Message);
@@ -100,7 +99,7 @@ namespace Tennis_Web.Controllers
                 System.IO.File.Delete(path);
                 source.File_Anh = null;
                 var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, new List<string> { "File_Anh" });
-                if (result.Succeeded) _context.SaveChangesAsync();
+                if (result.Succeeded) _context.SaveChanges();
             }
             return RedirectToAction(nameof(Update), id);
         }

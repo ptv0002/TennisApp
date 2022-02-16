@@ -18,13 +18,13 @@
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <div class="table-responsive">
-                    <table class="table dataTable" id="noPaging">
+                    <table class="table dataTable" id="noPaging" style="text-align:center">
                         <thead>
                             <tr>
-                                <th>Tên tắt</th>
+                                <th style="text-align:left">Tên tắt</th>
                                 @if (a1)
                                 {
-                                    <th>Tham gia</th>
+                                    <th >Tham gia</th>
                                 }
                                 <th>CLB</th>
                                 <th>Điểm cũ</th>
@@ -33,26 +33,26 @@
                         </thead>
                         <tfoot>
                             <tr>
-                                <th></th>
+                                <th style="text-align:left">Tên tắt</th>
                                 @if (a1)
                                 {
-                                    <th></th>
+                                    <th>Tham gia</th>
                                 }
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th>CLB</th>
+                                <th>Điểm cũ</th>
+                                <th>Điểm</th>
                             </tr>
                         </tfoot>
                         <tbody>
                             @for (int i = 0; i < Model.Count(); i++)
                             {
                                 <tr>
-                                    <td>@Model[i].Ten_Tat</td>
+                                    <td style="text-align:left">@Model[i].Ten_Tat</td>
                                     @if (a1)
                                     {
                                         <td>
                                             <input type="hidden" asp-for="@Model[i].Id" />
-                                            <input asp-for="@Model[i].Tham_Gia" type="checkbox" class="form-check-input ml-3" id="chk_@i" />
+                                            <input asp-for="@Model[i].Tham_Gia" type="checkbox" class="form-check-input" id="chk_@i" />
                                         </td>
                                     }
                                     <td>@Model[i].CLB</td>

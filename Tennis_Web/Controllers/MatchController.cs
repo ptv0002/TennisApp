@@ -172,6 +172,27 @@ namespace Tennis_Web.Controllers
             }
             if (model != null)
             {
+                // Get level ids
+                var levels = model.Select(m => m.ID_Trinh).ToList();
+                // Get all pairs with Level Id from the level id list
+                var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).ToList();
+                // ---------------- Update Table Id to pairs (Create new table if needed) ----------------
+                foreach (var pair in pairs)
+                {
+                    var table = _context.DS_Bangs.Where(m => m.Ten == char.ToUpper(pair.Ma_Cap.ElementAt(0)) && m.ID_Trinh == pair.ID_Trinh).FirstOrDefault();
+                    if (table == null)
+                    {
+                        _context.Add(new DS_Bang
+                        {
+                            Ten = char.ToUpper(pair.Ma_Cap.ElementAt(0)),
+                            ID_Trinh = pair.ID_Trinh
+                        });
+                        table = _context.DS_Bangs.OrderBy(m => m.Id).Last();
+                    }
+                    pair.ID_Bang = table.Id;
+                    var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "ID_Bang" });
+                    if (!result.Succeeded) goto error;
+                }
                 // ---------------- Save these paramters to Json file ----------------
 
                 // Get path for the Json file
@@ -183,17 +204,13 @@ namespace Tennis_Web.Controllers
                 fileStream = System.IO.File.Create(path);
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 await JsonSerializer.SerializeAsync(fileStream, model, options);
-                await fileStream.DisposeAsync();
+                fileStream.Dispose();
 
                 // ---------------- Delete old matches ----------------
                 if (exist)
                 {
-                    // Get level ids
-                    var levels = model.Select(m => m.ID_Trinh).ToList();
-                    // Get all pairs with Level Id from the level id list
-                    var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.Id).ToList();
                     // Get old matches
-                    var oldMatches = _context.DS_Trans.Where(m => pairs.Contains((int)m.ID_Cap1) || pairs.Contains((int)m.ID_Cap2));
+                    var oldMatches = _context.DS_Trans.Where(m => pairs.Select(m => m.Id).Contains((int)m.ID_Cap1) || pairs.Select(m => m.Id).Contains((int)m.ID_Cap2));
                     _context.RemoveRange(oldMatches);
                 }
                 // ---------------- Generate list of matches here ----------------
@@ -246,17 +263,16 @@ namespace Tennis_Web.Controllers
                         count++;
                     }
                 }
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return RedirectToAction(nameof(TournamentLevel));
             }
+            error:
             ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
             return View(model);
         }
 
         // Get info from Json file
         // List<MatchGeneratorViewModel> model = JsonSerializer.Deserialize<List<MatchGeneratorViewModel>>(System.IO.File.ReadAllText(wwwRootPath + "/Files/Json/MatchGenParam.json"));
-
-
 
         public Tuple<int, int> PowerOfTwo(int number)
         {
@@ -271,36 +287,6 @@ namespace Tennis_Web.Controllers
             }
             // if number is out of powerOfTwo range, return -1
             return new Tuple<int, int>(-1, -1);
-        }
-        public List<Tuple<DS_Cap, int, int>> Ranking(List<DS_Cap> list)
-        {
-            // Get pair Ids
-            var idCap = list.Select(m => m.Id).ToList();
-            var rankedList = new List<Tuple<DS_Cap, int, int>>(); // T1: Pair, T2: Score, T3: Difference
-            
-            foreach (var pair in list)
-            {
-                int count = 0, indif = 0, dif = 0;
-
-                // Get matches that the pair participate
-                var matches = _context.DS_Trans.Where(m => m.ID_Cap1 == pair.Id || m.ID_Cap2 == pair.Id);
-                foreach (var match in matches)
-                {
-                    if (match.ID_Cap1 == pair.Id) indif = match.Kq_1 - match.Kq_2;
-                    else indif = match.Kq_2 - match.Kq_1;
-                    if (indif > 0)
-                    {
-                        // If the pair wins, increment win count 
-                        count++;
-                    }
-                    // Calculate the point difference
-                    dif += indif;
-                }
-                var tuple = new Tuple<DS_Cap, int, int>(pair, count, dif);
-                rankedList.Add(tuple);
-            }
-            // Order by the win score, then the point difference
-            return rankedList.OrderByDescending(m => m.Item2).ThenByDescending(m => m.Item3).ToList();
         }
     }
 }

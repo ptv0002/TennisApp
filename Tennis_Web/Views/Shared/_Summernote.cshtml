@@ -1,7 +1,6 @@
 ﻿@model dynamic
 @{
     int height = Model.height ?? 200;
-    string selector = Model.selector;
 }
 
 <link href="~/summernote/summernote-bs4.min.css" rel="stylesheet">
@@ -9,7 +8,7 @@
 <script src="~/summernote/lang/summernote-vi-VN.js"></script>
 <script>
     $(document).ready(function () {
-            $('@selector').summernote({
+            $('.summernote').summernote({
                 height: @height,
                 toolbar: [
                     // [groupName, [list of button]]

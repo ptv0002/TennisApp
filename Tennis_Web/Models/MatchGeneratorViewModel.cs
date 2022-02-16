@@ -18,6 +18,8 @@ namespace Tennis_Web.Models
     {
         public char Table { get; set; }
         public int Num { get; set; }
+        public bool P1 { get; set; }
+        public bool P2 { get; set; }
     }
     public class MatchGeneratorErrorViewModel
     {
