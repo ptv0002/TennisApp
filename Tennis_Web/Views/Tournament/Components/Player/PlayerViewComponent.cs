@@ -21,13 +21,13 @@ namespace Tennis_Web.Views.Shared.Components.Player
         }
         public IViewComponentResult Invoke(TabViewModel vm)
         {
-            var players = new List<DS_VDV>();
+            List<DS_VDV> players = new();
+            if (vm.CurrentModel != null) players = vm.CurrentModel.Cast<DS_VDV>().ToList();
             if (vm.IsCurrent == true)
             {
                 if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công!");
-                if (vm.Succeeded == false) _notyf.Error("Lỗi hệ thống!");
-                // Display for current tournament
-                players = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
+                else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
+                else players = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
                 ViewBag.ID_Giai = vm.ID;
             }
             else

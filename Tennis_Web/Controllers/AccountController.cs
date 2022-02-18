@@ -74,8 +74,8 @@ namespace Tennis_Web.Controllers
                     a1 = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Manager") || await _userManager.IsInRoleAsync(user, "Referee");
                     switch (a1)
                     {
-                        case (true):
-                            return RedirectToAction("TournamentLevel", "Match");
+                        case true:
+                            return RedirectToAction("Index", "Match");
                         default:
                             return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
                     }

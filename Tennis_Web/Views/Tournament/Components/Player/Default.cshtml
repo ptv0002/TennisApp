@@ -1,21 +1,24 @@
-﻿@{
+﻿@*
+    Tournament Player View Component
+*@
+@{
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model List<Models.DS_VDV>
 @*<p>
-    Hiện danh sách 
-    <select id="ctrl-show-selected" class="form-control">
-        <option value="all" selected>tất cả VĐV</option>
-        <option value="selected">VĐV tham gia</option>
-        <option value="not-selected">VĐV không tham gia</option>
-    </select>
-</p>*@
+        Hiện danh sách
+        <select id="ctrl-show-selected" class="form-control">
+            <option value="all" selected>tất cả VĐV</option>
+            <option value="selected">VĐV tham gia</option>
+            <option value="not-selected">VĐV không tham gia</option>
+        </select>
+    </p>*@
 <form asp-action="SavePlayerState" asp-controller="Tournament">
     @if (a1)
     {
         <div class="form-group" style="text-align:right">
             <input type="hidden" name="idGiai" value="@ViewBag.ID_Giai" />
-            <input type="submit" value="Lưu thay đổi" class="btn btn-primary" formmethod="post" />
+            <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
         </div>
     }
     <div class="card shadow mb-4">
@@ -56,6 +59,10 @@
                                     {
                                         <td>
                                             <input type="hidden" asp-for="@Model[i].Id" />
+                                            <input type="hidden" asp-for="@Model[i].Ten_Tat" />
+                                            <input type="hidden" asp-for="@Model[i].CLB" />
+                                            <input type="hidden" asp-for="@Model[i].Diem_Cu" />
+                                            <input type="hidden" asp-for="@Model[i].Diem" />
                                             <input asp-for="@Model[i].Tham_Gia" type="checkbox" class="form-check-input" id="chk_@i" />
                                         </td>
                                     }
