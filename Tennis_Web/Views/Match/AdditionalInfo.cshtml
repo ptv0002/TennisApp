@@ -20,8 +20,8 @@
                                 <tr>
                                     <th class="col-6">Bảng</th>
                                     <th>Số cặp đi tiếp</th>
-                                    <th>Bảng thi Playoff 1</th>
-                                    <th>Bảng thi Playoff 2</th>
+                                    <th>Chọn Playoff 1</th>
+                                    <th>Chọn Playoff 2</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,7 +41,10 @@
                             <tfoot>
                                 <tr>
                                     <th>Tổng số cặp đã chọn</th>
-                                    <th><input class="form-control col-6 total" id="total_@i" disabled /></th>
+                                    @*<th><input class="form-control col-6 total" id="total_@i" disabled /></th>*@
+                                    @*<td><input class="form-control col-6" asp-for="@Model[i].Select" disabled /></td>*@
+                                    @*<td><input type="hidden" asp-for="@Model[i].Select" /></td>*@
+                                    <td><input class="form-control col-6" disabled /></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -111,30 +114,35 @@
 @section Scripts {
     <script type="text/javascript">
         $(function () {
-            //$('#table .num').each(function () {
-            //    var get_textbox_value = $(this).val();
-            //    if ($.isNumeric(get_textbox_value)) {
-            //        calculated_total_sum += parseInt(get_textbox_value);
-            //    }
-            //});
-            /*  $('#total').html(calculated_total_sum); */
-            $('table').on('input', '.num').each(function () {
-                var sum = 0; // since you want a seperate total for each table, you should zero total for each, right ? ;)
-                $(this).('tbody tr td:nth-child(2)').each(function () {
-                    var get_textbox_value = $(this).val();
-                    if ($.isNumeric(get_textbox_value)) {
-                        sum += parseInt(get_textbox_value);
+            function UpdateSum() {
+                //debugger;
+                var bang = document.getElementsByClassName("card shadow mb-4");
+                for (let i = 0; i < bang.length ; i++)
+                {
+                    var mSelect=0;
+                    var mPlayOff1 = 0;
+                    var mPlayOff2 = 0;
+                    var mSum = 0;
+                    var hang = bang[i].getElementsByTagName("tr");
+                    for (let j = 1; j < hang.length-1; j++)
+                    {
+                        var cot = hang[j].getElementsByTagName("input");
+                        mSelect = mSelect + Number(cot[1].value);
+                        if (cot[2].value=="true") mPlayOff1++ ;
+                        if (cot[3].value=="true") mPlayOff2++;
                     }
-                });
-                $(this).parent().find(".total").val(sum);
-            });
-            //function calc_total() {
-            //    var sum = 0;
-            //    $('.num').each(function () {
-                    
-            //    });
-            //    $('#total').html(sum);
-            //}
+                    hang[hang.length - 1].getElementsByTagName("input")[0].value = mSelect.toString(); // Cộng chọn
+                    var mFooter = bang[i].getElementsByClassName("card-footer")[0].getElementsByTagName("input");
+                    var sPlayoff1 = Number(mFooter[0].value) ;  // Tổng Playoff1
+                    var sPlayoff2 = Number(mFooter[1].value) ;  // Tổng Playoff2
+                    var kiemtra = mPlayOff2 - sPlayoff1 - sPlayoff2 * 2;
+                    //if (kiemtra != 0) Alert("Số đội Playoff 2 không hợp lệ");
+                    mSum = mSelect + sPlayoff1 + sPlayoff2;
+                    mFooter[2].value = mSum.toString()  // Tổng cộng
+                }
+            };
+            $("dd").on('input', function () {UpdateSum();});
+            $("td").on('input', function () {UpdateSum();});
         });
     </script>
 }
