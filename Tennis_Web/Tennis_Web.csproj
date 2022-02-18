@@ -34,7 +34,6 @@
   <ItemGroup>
     <Folder Include="Areas\NoRole\Data\" />
     <Folder Include="Areas\NoRole\Models\" />
-    <Folder Include="Views\Match\Components\Table\" />
     <Folder Include="wwwroot\Files\Json\" />
     <Folder Include="wwwroot\Files\Announcement\" />
     <Folder Include="wwwroot\Files\PlayerImg\" />

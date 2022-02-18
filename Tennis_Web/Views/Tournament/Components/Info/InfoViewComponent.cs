@@ -3,6 +3,7 @@ using DataAccess;
 using Library;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.Linq;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
@@ -19,7 +20,8 @@ namespace Tennis_Web.Views.Shared.Components.Info
         }
         public IViewComponentResult Invoke(TabViewModel vm)
         {
-            var item = (DS_Giai)vm.CurrentModel;
+            DS_Giai item = new();
+            if (vm.CurrentModel != null) item = (DS_Giai)vm.CurrentModel.FirstOrDefault();
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công!");
             else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
 

@@ -1,71 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Danh sách trận đấu " + ViewBag.DetailedTitle;
-    int titleCount = 0, insertCount = 0, reflectCount = 0;
+    ViewBag.MActive = "active";
+    ViewData["Title"] = "Chọn trình đấu để nhập/xem kết quả";
 }
+@model IEnumerable<Models.DS_Trinh>
 <hr />
-@model List<Models.DS_Tran>
-<form asp-action="Index">
-    @for (int i = 0; i < ViewBag.ListTable.Count; i++)
-    {
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h5 class="font-weight-bold text-primary" style="text-align:center">Bảng @ViewBag.ListTable[i].Table</h5>
-            </div>
-            <div class="card-body">
-                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                    <div class="table-responsive">
-                        <table class="table dataTable autoSum" style="text-align:center">
-                            <thead>
-                                <tr>
-                                    <th style="background-color:#4e73df"></th>
-                                    @for (int j = 0; j < ViewBag.ListTable[i].Num; j++)
-                                    {
-                                        <th>@Model[titleCount].DS_Cap1.VDV1.Ten_Tat + @Model[titleCount].DS_Cap1.VDV2.Ten_Tat</th>
-                                        titleCount++;
-                                    }
-                                    @{ insertCount = reflectCount = titleCount -= ViewBag.ListTable[i].Num; }
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for (int j = 0; j < ViewBag.ListTable[i].Num; j++)
-                                {
-                                    <tr>
-                                        <th>@Model[titleCount].DS_Cap1.VDV1.Ten_Tat + @Model[titleCount].DS_Cap1.VDV2.Ten_Tat</th>
-                                        @for (int k = 0; k < ViewBag.ListTable[i].Num; k++)
-                                        {
-                                            if (k == j)
-                                            {
-                                                <td style="background-color:#4e73df"></td>
-                                            }
-                                            else if (j > k)
-                                            {  // Insert result side
-                                                <td>
-                                                    <input class="form-control col-5" asp-for="@Model[insertCount].Kq_1" /> - <input class="form-control col-5" asp-for="@Model[insertCount].Kq_2" />
-                                                    <input type="hidden" asp-for="@Model[insertCount].Id"/>
-                                                    <input type="hidden" asp-for="@Model[insertCount].ID_Vong" />
-                                                </td>
-                                                insertCount++;
-                                            }
-                                            else
-                                            {  // Reflection side
-                                                <td>
-                                                    @Model[reflectCount].Kq_2 - @Model[reflectCount].Kq_1
-                                                </td>
-                                                reflectCount++;
-                                            }
-                                        }
-                                        @{ titleCount++; }
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    <div class="form-group">
-        <input type="submit" value="Tạo danh sách trận đấu" class="btn btn-danger" formmethod="post" />
+@foreach (var item in Model)
+{
+    string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
+    <div class="row ml-2">
+        <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Method">
+            • @title
+        </a>
     </div>
-
-</form>
+}

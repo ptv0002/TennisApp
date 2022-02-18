@@ -27,7 +27,6 @@ namespace Tennis_Web.Controllers
         public IActionResult UpdateParameter(DS_Trinh item)
         {
             // Find and update Parameters from DS_Trinh
-            item.TL_Bang = 100 - item.TL_VoDich - item.TL_ChungKet - item.TL_BanKet - item.TL_TuKet;
             var columnsToSave = new List<string> { "Trinh", "Diem_Tru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
             var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();
@@ -43,7 +42,7 @@ namespace Tennis_Web.Controllers
             };
 
             // If save unsuccessfully, view error and display View with "item" 
-            if (!result.Succeeded) vm.CurrentModel = item;
+            if (!result.Succeeded) vm.CurrentModel.Add(item);
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(LevelInfo), vm);
         }
@@ -55,7 +54,7 @@ namespace Tennis_Web.Controllers
             var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
             // Get all players with from Player Id found in Player1 and Player2 lists
             var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
-            return _context.DS_VDVs.Where(m => m.Tham_Gia == true).Except(players).ToList();
+            return _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
         }
         public IActionResult UpdatePair(int id, int idTrinh)
         {

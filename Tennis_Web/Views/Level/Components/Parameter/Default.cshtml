@@ -1,4 +1,7 @@
-﻿@{
+﻿@*
+    Level Parameter View Component
+*@
+@{
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model Models.DS_Trinh
@@ -25,7 +28,7 @@
         <dd class="col-sm-10 row ">
             @if (a1)
             {
-                <input asp-for="TL_VoDich" class="form-control col-sm-3" id="TL_VoDich" />
+                <input asp-for="TL_VoDich" class="form-control col-sm-3 change" />
                 <label class="text-lg"> %</label>
                 <span asp-validation-for="TL_VoDich" class="text-danger"></span>
             }
@@ -41,7 +44,7 @@
         <dd class="col-sm-10 row">
             @if (a1)
             {
-                <input asp-for="TL_ChungKet" class=" form-control col-sm-3" id="TL_ChungKet" />
+                <input asp-for="TL_ChungKet" class=" form-control col-sm-3 change" />
                 <label class="text-lg"> %</label>
                 <span asp-validation-for="TL_ChungKet" class="text-danger"></span>
             }
@@ -57,7 +60,7 @@
         <dd class="col-sm-10 row">
             @if (a1)
             {
-                <input asp-for="TL_BanKet" class=" form-control col-sm-3" id="TL_BanKet" />
+                <input asp-for="TL_BanKet" class=" form-control col-sm-3 change" />
                 <label class="text-lg"> %</label>
                 <span asp-validation-for="TL_BanKet" class="text-danger"></span>
             }
@@ -73,7 +76,7 @@
         <dd class="col-sm-10 row">
             @if (a1)
             {
-                <input asp-for="TL_TuKet" class=" form-control col-sm-3" id="TL_TuKet" />
+                <input asp-for="TL_TuKet" class=" form-control col-sm-3 change" />
                 <label class="text-lg"> %</label>
                 <span asp-validation-for="TL_TuKet" class="text-danger"></span>
             }
@@ -84,11 +87,27 @@
             }
         </dd>
         <dt class="col-sm-2 font-weight-bold" style="text-align:right">
+            Tỉ lệ thưởng Bảng
+        </dt>
+        <dd class="col-sm-10 row">
+            <input class=" form-control col-sm-3" id="TL_Thuong" disabled />
+            <label class="text-lg"> %</label>
+        </dd>
+        <dt class="col-sm-2 font-weight-bold" style="text-align:right">
             @Html.DisplayNameFor(m => m.TL_Bang)
         </dt>
         <dd class="col-sm-10 row">
-            <input asp-for="TL_Bang" class=" form-control col-sm-3" id="TL_Bang" disabled />
-            <label class="text-lg"> %</label>
+            @if (a1)
+            {
+                <input asp-for="TL_Bang" class=" form-control col-sm-3" />
+                <label class="text-lg"> %</label>
+                <span asp-validation-for="TL_Bang" class="text-danger"></span>
+            }
+            else
+            {
+                <input asp-for="TL_Bang" class=" form-control col-sm-3" disabled />
+                <label class="text-lg"> %</label>
+            }
         </dd>
         <dt class="col-sm-2 font-weight-bold" style="text-align:right">
             @Html.DisplayNameFor(m => m.Tong_Diem)
@@ -138,7 +157,7 @@
             Id = Model.Id.ToString()
         };
         <div class="form-group">
-            <input type="submit" value="Lưu thay đổi" class="btn btn-primary mr-2" formmethod="post" />
+            <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" formmethod="post" />
             <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa trình đấu</button>
         </div>
     }

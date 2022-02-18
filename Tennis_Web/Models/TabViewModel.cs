@@ -12,7 +12,7 @@ namespace Tennis_Web.Models
         public bool IsCurrent { get; set; }
         public int ID { get; set; }
         public string DetailedTitle { get; set; }
-        public object CurrentModel { get; set; }
+        public List<object> CurrentModel { get; set; }
         public bool? Succeeded { get; set; }
     }
     public enum Tab
@@ -21,6 +21,8 @@ namespace Tennis_Web.Models
         Parameter,
         Player,
         LevelList,
-        Pair
+        Pair,
+        Table,
+        Special
     }
 }

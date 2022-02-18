@@ -1,8 +1,21 @@
-﻿@{
+﻿@*
+    Level Pair View Component
+*@
+@{
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model IEnumerable<Models.DS_Cap>
+
+@if (a1)
+{
+    <div class="form-group" style="text-align:right">
+        <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { idTrinh = ViewBag.ID_Trinh })">Thêm cặp</button>
+    </div>
+}
 <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h5 class="font-weight-bold text-success" style="text-align:center">Danh sách cặp</h5>
+    </div>
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
             <table class="table table-bordered dataTable" id="normalTable" style="text-align:center">
@@ -19,6 +32,19 @@
                         }
                     </tr>
                 </thead>
+                <tfoot>
+                    <tr>
+                        <th>Mã cặp</th>
+                        <th>VĐV 1</th>
+                        <th>VĐV 2</th>
+                        <th>Tổng điểm</th>
+                        <th>Lệch trình</th>
+                        @if (a1)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </tfoot>
                 <tbody>
                     @foreach (var item in Model)
                     {
@@ -42,33 +68,50 @@
                                 };
                                 <td>
                                     <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
-                                    <button type="button" class="btn btn-info" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { id = item.Id, idTrinh = item.ID_Trinh })">Sửa</button>
+                                    <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { id = item.Id, idTrinh = item.ID_Trinh })">Sửa</button>
                                 </td>
                             }
                         </tr>
                     }
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Mã cặp</th>
-                        <th>VĐV 1</th>
-                        <th>VĐV 2</th>
-                        <th>Tổng điểm</th>
-                        <th>Hiệu số</th>
-                        @if (a1)
-                        {
-                            <th></th>
-                        }
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
 </div>
-@if (a1)
+
+@if (ViewBag.NoPairPlayers.Any())
 {
-    <div class="form-group">
-        <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { idTrinh = ViewBag.ID_Trinh })">Thêm cặp</button>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h5 class="m-0 font-weight-bold text-success">Danh sách VĐV chưa được xếp cặp</h5>
+        </div>
+        <div class="card-body">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="table-responsive">
+                    <table class="table dataTable">
+                        <thead>
+                            <tr>
+                                <th>Tên tắt</th>
+                                <th>CLB</th>
+                                <th>Điểm cũ</th>
+                                <th>Điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.NoPairPlayers)
+                            {
+                                <tr>
+                                    <td>@item.Ten_Tat</td>
+                                    <td>@item.CLB</td>
+                                    <td>@item.Diem_Cu</td>
+                                    <td>@item.Diem</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 }
 <!-- Modal placeholder -->

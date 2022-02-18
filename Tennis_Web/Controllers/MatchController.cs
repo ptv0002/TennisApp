@@ -23,78 +23,56 @@ namespace Tennis_Web.Controllers
             _context = context;
             _webHost = webHost;
         }
-        public IActionResult Index(int id)
-        {
-            var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == id);
-            var model = _context.DS_Trans.Include(m => m.DS_Cap1).Include(m => m.DS_Vong)
-                .Where(m => pairs.Select(m => m.Id).Contains((int)m.ID_Cap1) || pairs.Select(m => m.Id).Contains((int)m.ID_Cap2))
-                .OrderByDescending(m => m.DS_Vong.Ma_Vong)
-                .ThenBy(m => m.DS_Cap1.Ma_Cap).ToList();
-            if (model != null)
-            {
-                for (int i = 0; i < model.Count; i++)
-                {
-                    var cap1 = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == model[i].ID_Cap1).FirstOrDefault();
-                    var cap2 = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == model[i].ID_Cap2).FirstOrDefault();
-                    // Assign Pair 1 and 2 info to list of matches
-                    model[i].DS_Cap1 = cap1;
-                    model[i].DS_Cap2 = cap2;
-                }
-            }
-            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == id).FirstOrDefault();
-            ViewBag.DetailedTitle = "giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh;
-            ViewBag.ListTable = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new {
-                Table = m.Key,
-                Num = m.Count()
-            }).OrderBy(m => m.Table).ToList();
-            return View(model);
-        }
-        public IActionResult TournamentLevel()
+        public IActionResult Index()
         {
             var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
             return View(model);
         }
-        public IActionResult UpdateResult(int id)
+        public IActionResult MatchInfo(TabViewModel model)
         {
-            var model = _context.DS_Trans.Include(m => m.DS_Cap1).Include(m => m.DS_Cap2).Where(m => m.Id == id).FirstOrDefault();
-            if (model == null)
-            {
-                ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
-            }
-            else
-            {
-                var cap1 = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == model.ID_Cap1).FirstOrDefault();
-                var cap2 = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == model.ID_Cap2).FirstOrDefault();
-                model.DS_Cap1 = cap1;
-                model.DS_Cap2 = cap2;
-            }
-            return PartialView(model);
+            return View(model);
         }
-        [HttpPost]
-        public async Task<IActionResult> UpdateResultAsync(DS_Tran item)
-        {
-            ResultModel<DS_Tran> result;
-            if (item.Id != 0)
-            {
-                result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Kq_1", "Kq_2" });
-                if (result.Succeeded)
-                {
-                    await _context.SaveChangesAsync();
-                    var temp = _context.DS_Caps.Find(item.ID_Cap1);
-                    return RedirectToAction(nameof(Index), temp.ID_Trinh);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, result.Message);
-                    return PartialView(item);
-                }
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
-                return PartialView(item);
-            }
-        }
+        //public IActionResult UpdateResult(int id)
+        //{
+        //    var model = _context.DS_Trans.Include(m => m.DS_Cap1).Include(m => m.DS_Cap2).Where(m => m.Id == id).FirstOrDefault();
+        //    if (model == null)
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
+        //    }
+        //    else
+        //    {
+        //        var cap1 = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == model.ID_Cap1).FirstOrDefault();
+        //        var cap2 = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == model.ID_Cap2).FirstOrDefault();
+        //        model.DS_Cap1 = cap1;
+        //        model.DS_Cap2 = cap2;
+        //    }
+        //    return PartialView(model);
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> UpdateResultAsync(DS_Tran item)
+        //{
+        //    ResultModel<DS_Tran> result;
+        //    if (item.Id != 0)
+        //    {
+        //        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Kq_1", "Kq_2" });
+        //        if (result.Succeeded)
+        //        {
+        //            await _context.SaveChangesAsync();
+        //            var temp = _context.DS_Caps.Find(item.ID_Cap1);
+        //            return RedirectToAction(nameof(Index), temp.ID_Trinh);
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError(string.Empty, result.Message);
+        //            return PartialView(item);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
+        //        return PartialView(item);
+        //    }
+        //}
         public IActionResult AdditionalInfo(int id)
         {
             ViewBag.TourName = _context.DS_Giais.Find(id).Ten;
@@ -107,9 +85,8 @@ namespace Tennis_Web.Controllers
             var vdv2_Ids = pairs.Select(m => m.ID_Vdv2);
             // Get all players with from Player Id found in Player1 and Player2 lists
             var playersFromPair = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
-            var playersFromDB = _context.DS_VDVs.Where(m => m.Tham_Gia);
             // Get all players that haven't been put to any pair, or all pairs that haven't got a code
-            var noPairPlayers = playersFromDB.Except(playersFromPair).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu);
+            var noPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(playersFromPair).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu);
             var noCodePairs = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh).Where(m => levels.Contains(m.ID_Trinh) && m.Ma_Cap == null).OrderBy(m => m.DS_Trinh.Trinh);
             // If there's any players who haven't been put in pairs, or pairs that haven't got a code, return error
             if (noCodePairs.Any() || noPairPlayers.Any())
@@ -151,7 +128,7 @@ namespace Tennis_Web.Controllers
                 // Add all levels to model (Tournament)
                 model.Add(temp);
             }
-            return View(model);
+            return View(model.OrderBy(m => m.Trinh));
         }
         [HttpPost]
         public async Task<IActionResult> AdditionalInfoAsync(List<MatchGeneratorViewModel> model, bool exist)
@@ -271,7 +248,7 @@ namespace Tennis_Web.Controllers
                     }
                 }
                 _context.SaveChanges();
-                return RedirectToAction(nameof(TournamentLevel));
+                return RedirectToAction(nameof(Index));
             }
             error:
             ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");

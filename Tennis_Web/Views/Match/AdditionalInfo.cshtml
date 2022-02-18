@@ -10,7 +10,7 @@
         <input type="hidden" asp-for="@Model[i].Trinh" />
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class="font-weight-bold text-primary" style="text-align:center">Trình @Model[i].Trinh</h5>
+                <h5 class="font-weight-bold text-success" style="text-align:center">Trình @Model[i].Trinh</h5>
             </div>
             <div class="card-body">
                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -20,8 +20,8 @@
                                 <tr>
                                     <th class="col-6">Bảng</th>
                                     <th>Số cặp đi tiếp</th>
-                                    <th>Chọn Playoff 1</th>
-                                    <th>Chọn Playoff 2</th>
+                                    <th>Playoff 1</th>
+                                    <th>Playoff 2</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,10 +41,7 @@
                             <tfoot>
                                 <tr>
                                     <th>Tổng số cặp đã chọn</th>
-                                    @*<th><input class="form-control col-6 total" id="total_@i" disabled /></th>*@
-                                    @*<td><input class="form-control col-6" asp-for="@Model[i].Select" disabled /></td>*@
-                                    @*<td><input type="hidden" asp-for="@Model[i].Select" /></td>*@
-                                    <td><input class="form-control col-6" disabled /></td>
+                                    <th><input class="form-control col-6 total" id="total_@i" disabled /></th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -53,21 +50,21 @@
             </div>
             <div class="card-footer">
                 <dl class="row">
-                    <dt class="col-6 font-weight-bold">
-                        Tổng cặp thi Playoff 1 (Playoff cao nhất)
+                    <dt class="col-6 font-weight-bold" style="text-align:right">
+                        Tổng cặp Playoff 1 (Playoff cao nhất)
                     </dt>
                     <dd class="col-6">
                         <input class="form-control col-6" asp-for="@Model[i].PlayOff1" />
                         <span asp-validation-for="@Model[i].PlayOff1" class="text-danger"></span>
                     </dd>
-                    <dt class="col-6 font-weight-bold">
-                        Tổng cặp thi Playoff 2 (Loại trực tiếp)
+                    <dt class="col-6 font-weight-bold" style="text-align:right">
+                        Tổng cặp Playoff 2 (Loại trực tiếp)
                     </dt>
                     <dd class="col-6">
                         <input class="form-control col-6" asp-for="@Model[i].PlayOff2" />
                         <span asp-validation-for="@Model[i].PlayOff2" class="text-danger"></span>
                     </dd>
-                    <dt class="col-6 font-weight-bold">
+                    <dt class="col-6 font-weight-bold" style="text-align:right">
                         Tổng số cặp đi tiếp
                     </dt>
                     <dd class="col-6">

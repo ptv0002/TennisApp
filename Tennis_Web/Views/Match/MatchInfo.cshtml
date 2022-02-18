@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Danh sách trận đấu - " + ViewBag.DetailedTitle;
+}
+@model Tennis_Web.Models.TabViewModel
+<ul class="nav nav-tabs mt-3">
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Info ? "active" : string.Empty)">
+        <a asp-route-tabname="Table" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="Method">Vòng bảng và playoff</a>
+    </li>
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.LevelList ? "active" : string.Empty)">
+        <a asp-route-tabname="Special" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="Method">Vòng đặc biệt</a>
+    </li>
+</ul>
+<div class="tab-content mt-3">
+    @switch (Model.ActiveTab)
+    {
+        case Tennis_Web.Models.Tab.Info:
+            @await Component.InvokeAsync("Table", Model);
+            break;
+        case Tennis_Web.Models.Tab.LevelList:
+            @await Component.InvokeAsync("Special", Model);
+            break;
+        default:
+            break;
+    }
+</div>

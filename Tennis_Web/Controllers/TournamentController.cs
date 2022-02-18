@@ -28,36 +28,6 @@ namespace Tennis_Web.Controllers
             ViewBag.isCurrent = isCurrent;
             return View(model);
         }
-        public IActionResult SwitchToTabs(string tabname, bool isCurrent, int id, string detailedTitle)
-        {
-            var vm = new TabViewModel()
-            {
-                IsCurrent = isCurrent,
-                ID = id,
-                DetailedTitle = detailedTitle
-            };
-            switch (tabname)
-            {
-                case "Parameter":
-                    vm.ActiveTab = Tab.Parameter;
-                    return RedirectToAction("LevelInfo", "Level", vm);
-                case "Pair":
-                    vm.ActiveTab = Tab.Pair;
-                    return RedirectToAction("LevelInfo", "Level", vm);
-                case "Info":
-                    vm.ActiveTab = Tab.Info;
-                    return RedirectToAction(nameof(TournamentInfo), vm);
-                case "LevelList":
-                    vm.ActiveTab = Tab.LevelList;
-                    return RedirectToAction(nameof(TournamentInfo), vm);
-                case "Player":
-                    vm.ActiveTab = Tab.Player;
-                    return RedirectToAction(nameof(TournamentInfo), vm);
-                default:
-                    vm.ActiveTab = Tab.Info;
-                    return RedirectToAction(nameof(TournamentInfo), vm);
-            }
-        }
         public IActionResult TournamentInfo(TabViewModel model, bool isCurrent, int giaiID, int trinhID)
         {
             bool a1 = giaiID == 0;
@@ -103,7 +73,7 @@ namespace Tennis_Web.Controllers
             };
 
             // If save unsuccessfully, view error and display View with "item" 
-            if (!result.Succeeded) vm.CurrentModel = item;
+            if (!result.Succeeded) vm.CurrentModel.Add(item);
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(TournamentInfo), vm);
 
@@ -178,6 +148,8 @@ namespace Tennis_Web.Controllers
                 ID = idGiai,
                 Succeeded = result
             };
+            // If save unsuccessfully, view error and display View with list 
+            if (!result) vm.CurrentModel = list.Cast<object>().ToList();
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
     }

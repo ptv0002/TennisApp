@@ -1,4 +1,7 @@
-﻿@{
+﻿@*
+    Tournament Level List View Component
+*@
+@{
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model IEnumerable<Models.DS_Trinh>
@@ -6,7 +9,7 @@
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
             <form asp-action="AddLevel" asp-controller="Tournament">
-                <table class="table table-bordered dataTable" >
+                <table class="table table-bordered dataTable">
                     <thead>
                         <tr>
                             <th>
@@ -24,7 +27,7 @@
                             string title = "Giải " + item.DS_Giai.Ten + " - Trình " + @item.Trinh;
                             <tr>
                                 <td>
-                                    <a asp-route-tabname="Parameter" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Tournament">
+                                    <a asp-route-tabname="Parameter" asp-route-isCurrent="@ViewBag.IsCurrent" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Method">
                                         @item.Trinh
                                     </a>
                                 </td>
@@ -52,7 +55,7 @@
                                     <input type="hidden" value="@ViewBag.ID_Giai" name="idGiai" />
                                 </td>
                                 <td>
-                                    <input type="submit" value="Thêm" class="btn btn-primary" />
+                                    <input type="submit" value="Thêm" class="btn btn-success" />
                                 </td>
                             </tr>
                         </tfoot>
@@ -89,7 +92,7 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
                 <a class="btn btn-warning" asp-action="AdditionalInfo" asp-controller="Match" asp-route-id="@ViewBag.ID_Giai.ToString()">Tiếp tục</a>
-            </div>    
+            </div>
         </div>
     </div>
 </div>
