@@ -13,6 +13,7 @@ namespace Tennis_Web.Models
         public int ID { get; set; }
         public string DetailedTitle { get; set; }
         public bool? Succeeded { get; set; }
+        public string CurrentModel { get; set; }
     }
     public enum Tab
     {

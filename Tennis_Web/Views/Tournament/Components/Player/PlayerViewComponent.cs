@@ -23,12 +23,14 @@ namespace Tennis_Web.Views.Shared.Components.Player
         public IViewComponentResult Invoke(TabViewModel vm)
         {
             List<DS_VDV> players = new();
-            if ((string)TempData["PlayerList"] != null) players = JsonSerializer.Deserialize<List<DS_VDV>>((string)TempData["PlayerList"]);
+            //if ((string)TempData["PlayerList"] != null) players = JsonSerializer.Deserialize<List<DS_VDV>>((string)TempData["PlayerList"]);
+            //if (vm.CurrentModel != null) players = JsonSerializer.Deserialize<List<DS_VDV>>(vm.CurrentModel);
             if (vm.IsCurrent == true)
             {
                 if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công!");
                 else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
-                else players = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
+
+                if (vm.Succeeded != false) players = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
                 ViewBag.ID_Giai = vm.ID;
             }
             else
