@@ -23,7 +23,7 @@ namespace Tennis_Web.Views.Match.Components.Table
         public IViewComponentResult Invoke(TabViewModel vm)
         {
             List<DS_Tran> model = new();
-            if (vm.CurrentModel != null) model = vm.CurrentModel.Cast<DS_Tran>().ToList();
+            //if (vm.CurrentModel != null) model = vm.CurrentModel.Cast<DS_Tran>().ToList();
             
             var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công");

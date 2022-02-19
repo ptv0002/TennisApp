@@ -21,9 +21,4 @@ namespace Tennis_Web.Models
         public bool P1 { get; set; }
         public bool P2 { get; set; }
     }
-    public class MatchGeneratorErrorViewModel
-    {
-        public IEnumerable<DS_Cap> NoCodePairs { get; set; }
-        public IEnumerable<DS_VDV> NoPairPlayers { get; set; }
-    }
 }
