@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
@@ -22,7 +23,7 @@ namespace Tennis_Web.Views.Shared.Components.Player
         public IViewComponentResult Invoke(TabViewModel vm)
         {
             List<DS_VDV> players = new();
-            if (vm.CurrentModel != null) players = vm.CurrentModel.Cast<DS_VDV>().ToList();
+            if ((string)TempData["PlayerList"] != null) players = JsonSerializer.Deserialize<List<DS_VDV>>((string)TempData["PlayerList"]);
             if (vm.IsCurrent == true)
             {
                 if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công!");
@@ -39,7 +40,7 @@ namespace Tennis_Web.Views.Shared.Components.Player
                 var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
                 var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
                 // Get all players with from Player Id found in Player1 and Player2 lists
-                players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id)).OrderByDescending(m => m.Diem).ToList();
+                players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id)).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu).ToList();
 
             }
             ViewBag.IsCurrent = vm.IsCurrent;

@@ -6,6 +6,7 @@ using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
@@ -40,9 +41,7 @@ namespace Tennis_Web.Controllers
                 DetailedTitle = "Giải " + temp.Ten + " - Trình " + item.Trinh,
                 Succeeded = result.Succeeded
             };
-
-            // If save unsuccessfully, view error and display View with "item" 
-            if (!result.Succeeded) vm.CurrentModel.Add(item);
+            TempData["ParameterInfo"] = JsonSerializer.Serialize(item);
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(LevelInfo), vm);
         }

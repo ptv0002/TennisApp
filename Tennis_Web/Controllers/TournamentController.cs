@@ -12,6 +12,7 @@ using OfficeOpenXml;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Library;
+using System.Text.Json;
 
 namespace Tennis_Web.Controllers
 {
@@ -71,9 +72,7 @@ namespace Tennis_Web.Controllers
                 ID = item.Id,
                 Succeeded = result.Succeeded
             };
-
-            // If save unsuccessfully, view error and display View with "item" 
-            if (!result.Succeeded) vm.CurrentModel.Add(item);
+            TempData["TournamentInfo"] = JsonSerializer.Serialize(item);
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(TournamentInfo), vm);
 
@@ -127,6 +126,7 @@ namespace Tennis_Web.Controllers
         }
         [HttpPost]
         [RequestFormLimits(ValueCountLimit = 8000)]
+        //[RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         public IActionResult SavePlayerState(List<DS_VDV> list, int idGiai)
         {
             bool result = false;
@@ -148,8 +148,7 @@ namespace Tennis_Web.Controllers
                 ID = idGiai,
                 Succeeded = result
             };
-            // If save unsuccessfully, view error and display View with list 
-            if (!result) vm.CurrentModel = list.Cast<object>().ToList();
+            TempData["PlayerList"] = JsonSerializer.Serialize(list);
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
     }

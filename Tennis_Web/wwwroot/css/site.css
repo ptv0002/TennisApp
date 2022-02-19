@@ -13,6 +13,15 @@ a:hover {
         color: #13855c;
         text-decoration: underline;
 }
+.btn-link {
+    font-weight: 400;
+    color: #1cb079;
+    text-decoration: none;
+}
+    .btn-link:hover {
+        color: #13855c;
+        text-decoration: underline;
+    }
 .login-image {
     background-image: url('../images/DefaultImg/LG.jpg');
     background-position: center;
@@ -62,7 +71,6 @@ a:hover {
     background-color: #fff;
     border: 1px solid #dddfeb;
 }
-
     .page-link:hover {
         z-index: 2;
         color: #13855c;

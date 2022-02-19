@@ -86,17 +86,13 @@ namespace Tennis_Web.Controllers
             // Get all players with from Player Id found in Player1 and Player2 lists
             var playersFromPair = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
             // Get all players that haven't been put to any pair, or all pairs that haven't got a code
-            var noPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(playersFromPair).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu);
-            var noCodePairs = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh).Where(m => levels.Contains(m.ID_Trinh) && m.Ma_Cap == null).OrderBy(m => m.DS_Trinh.Trinh);
+            var noPairPlayers = ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(playersFromPair).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu).ToList();
+            var noCodePairs = ViewBag.NoCodePairs = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh).Where(m => levels.Contains(m.ID_Trinh) && m.Ma_Cap == null).OrderBy(m => m.DS_Trinh.Trinh).ToList();
             // If there's any players who haven't been put in pairs, or pairs that haven't got a code, return error
-            if (noCodePairs.Any() || noPairPlayers.Any())
+            if (noCodePairs.Count > 0 || noPairPlayers.Count > 0)
             {
                 ViewBag.DS_Trinh = _context.DS_Trinhs.Where(m => m.ID_Giai == id).OrderBy(m => m.Trinh);
-                return View("Error", new MatchGeneratorErrorViewModel
-                {
-                    NoCodePairs = noCodePairs,
-                    NoPairPlayers = noPairPlayers
-                });
+                return View("Error"); 
             }
             // ---------------- If all conditions met ----------------
             var pair_Ids = pairs.Select(m => m.Id);
@@ -128,7 +124,7 @@ namespace Tennis_Web.Controllers
                 // Add all levels to model (Tournament)
                 model.Add(temp);
             }
-            return View(model.OrderBy(m => m.Trinh));
+            return View(model.OrderBy(m => m.Trinh).ToList());
         }
         [HttpPost]
         public async Task<IActionResult> AdditionalInfoAsync(List<MatchGeneratorViewModel> model, bool exist)

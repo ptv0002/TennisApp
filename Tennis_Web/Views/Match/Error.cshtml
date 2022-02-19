@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Thông tin cần thiết trước khi tạo danh sách trận - Giải " + ViewBag.TourName;
 }
-@model Tennis_Web.Models.MatchGeneratorErrorViewModel
 <hr />
 <div class="form-group">
     @foreach (var item in ViewBag.DS_Trinh)
@@ -9,13 +8,13 @@
         var title = "Giải " + ViewBag.TourName + " - Trình " + item.Trinh;
         <div class="row ml-2">
             <a asp-route-tabname="Pair" asp-route-isCurrent="true" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Tournament">
-                • Đi đến DS cặp - Trình @item.Trinh
+                Danh sách cặp - Trình @item.Trinh 🡺
             </a>
         </div>
     }
 </div>
 
-@if (Model.NoCodePairs.Any())
+@if (ViewBag.NoCodePairs.Count > 0)
 {
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -33,7 +32,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.NoCodePairs)
+                            @foreach (var item in ViewBag.NoCodePairs)
                             {
                                 var title = "Giải " + ViewBag.TourName + " - Trình " + item.DS_Trinh.Trinh;
                                 <tr>
@@ -50,7 +49,7 @@
     </div>
 }
 
-@if (Model.NoPairPlayers.Any())
+@if (ViewBag.NoPairPlayers.Count > 0)
 {
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -69,7 +68,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.NoPairPlayers)
+                            @foreach (var item in ViewBag.NoPairPlayers)
                             {
                                 <tr>
                                     <td>@item.Ten_Tat</td>
