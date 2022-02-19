@@ -71,8 +71,10 @@ namespace Tennis_Web.Controllers
                 IsCurrent = true,
                 ID = item.Id,
                 Succeeded = result.Succeeded
+                
             };
-            TempData["TournamentInfo"] = JsonSerializer.Serialize(item);
+            //TempData["TournamentInfo"] = JsonSerializer.Serialize(item);
+            // CurrentModel = JsonSerializer.Serialize(item)
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction(nameof(TournamentInfo), vm);
 
@@ -139,7 +141,7 @@ namespace Tennis_Web.Controllers
                 }
                 if (result) _context.SaveChanges();
             }
-            else  result = false;
+            else result = false;
             // Assign value for view model
             var vm = new TabViewModel
             {
@@ -148,7 +150,8 @@ namespace Tennis_Web.Controllers
                 ID = idGiai,
                 Succeeded = result
             };
-            TempData["PlayerList"] = JsonSerializer.Serialize(list);
+                //CurrentModel = JsonSerializer.Serialize(list)
+            //TempData["PlayerList"] = JsonSerializer.Serialize(list);
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
     }

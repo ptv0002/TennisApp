@@ -10,12 +10,12 @@
         <input type="hidden" asp-for="@Model[i].Trinh" />
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class="font-weight-bold text-success" style="text-align:center">Trình @Model[i].Trinh</h5>
+                <h5 class="font-weight-bold text-success">Trình @Model[i].Trinh</h5>
             </div>
             <div class="card-body">
                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                     <div class="table-responsive">
-                        <table class="table dataTable autoSum" id="table_@i" style="text-align:center">
+                        <table class="table dataTable">
                             <thead>
                                 <tr>
                                     <th class="col-6">Bảng</th>
@@ -32,16 +32,18 @@
                                             <input type="hidden" asp-for="@Model[i].NumPerTable[j].Table" />
                                             @Model[i].NumPerTable[j].Table
                                         </td>
-                                        <td><input class="form-control col-6 num" asp-for="@Model[i].NumPerTable[j].Num" /></td>
-                                        <td><input class="form-check" type="checkbox" asp-for="@Model[i].NumPerTable[j].P1" /></td>
-                                        <td><input class="form-check" type="checkbox" asp-for="@Model[i].NumPerTable[j].P2" /></td>
+                                        <td><input class="form-control col-6" asp-for="@Model[i].NumPerTable[j].Num" /></td>
+                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].NumPerTable[j].P1" /></td>
+                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].NumPerTable[j].P2" /></td>
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>Tổng số cặp đã chọn</th>
-                                    <th><input class="form-control col-6 total" id="total_@i" disabled /></th>
+                                    <td><input class="form-control col-6" disabled /></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </tfoot>
                         </table>

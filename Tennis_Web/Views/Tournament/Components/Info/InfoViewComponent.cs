@@ -22,10 +22,16 @@ namespace Tennis_Web.Views.Shared.Components.Info
         public IViewComponentResult Invoke(TabViewModel vm)
         {
             DS_Giai item = new();
-            if ((string)TempData["TournamentInfo"] != null) item = JsonSerializer.Deserialize<DS_Giai>((string)TempData["TournamentInfo"]);
+            //if ((string)TempData["TournamentInfo"] != null) item = JsonSerializer.Deserialize<DS_Giai>((string)TempData["TournamentInfo"]);
+            //if (vm.CurrentModel != null) item = JsonSerializer.Deserialize<DS_Giai>(vm.CurrentModel);
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công!");
             else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
-            else item =_context.DS_Giais.Find(vm.ID); 
+
+            if (vm.Succeeded != false)
+            {
+                item = _context.DS_Giais.Find(vm.ID);
+                if (item == null) ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
+            }
            
             ViewBag.IsCurrent = vm.IsCurrent;
             return View(item);
