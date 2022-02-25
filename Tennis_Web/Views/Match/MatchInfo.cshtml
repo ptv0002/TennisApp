@@ -3,23 +3,46 @@
 }
 @model Tennis_Web.Models.TabViewModel
 <ul class="nav nav-tabs mt-3">
-    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Info ? "active" : string.Empty)">
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Table ? "active" : string.Empty)">
         <a asp-route-tabname="Table" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="Method">Vòng bảng và playoff</a>
     </li>
-    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.LevelList ? "active" : string.Empty)">
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Special ? "active" : string.Empty)">
         <a asp-route-tabname="Special" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="Method">Vòng đặc biệt</a>
     </li>
 </ul>
 <div class="tab-content mt-3">
     @switch (Model.ActiveTab)
     {
-        case Tennis_Web.Models.Tab.Info:
-            @await Component.InvokeAsync("Table", Model);
+        case Tennis_Web.Models.Tab.Table:
+            @await Component.InvokeAsync(typeof(Tennis_Web.Views.Match.Components.Table.TableViewComponent), Model);
             break;
-        case Tennis_Web.Models.Tab.LevelList:
-            @await Component.InvokeAsync("Special", Model);
+        case Tennis_Web.Models.Tab.Special:
+            @await Component.InvokeAsync(typeof(Tennis_Web.Views.Match.Components.Special.SpecialViewComponent), Model);
             break;
         default:
             break;
     }
 </div>
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            // When the user scrolls the page, execute myFunction
+            window.onscroll = function () { myFunction() };
+
+            // Get the header
+            var header = document.getElementById("tournamentHeader");
+
+            // Get the offset position of the navbar
+            var sticky = header.offsetTop;
+
+            // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+            function myFunction() {
+                if (window.pageYOffset > sticky) {
+                    header.classList.add("sticky");
+                } else {
+                    header.classList.remove("sticky");
+                }
+            }
+        });
+    </script>
+}

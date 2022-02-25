@@ -117,15 +117,14 @@ namespace Tennis_Web.Controllers
                         await _context.AddRangeAsync(new List<DS_Vong>
                         {
                             new DS_Vong { Ten = "Vô Địch", Ma_Vong = 0 },
-                            new DS_Vong { Ten = "Vòng Chung Kết", Ma_Vong = 1 },
-                            new DS_Vong { Ten = "Vòng Bán Kết", Ma_Vong = 2 },
-                            new DS_Vong { Ten = "Vòng Tứ Kết", Ma_Vong = 3 },
-                            new DS_Vong { Ten = "Vòng 4", Ma_Vong = 4 },
-                            new DS_Vong { Ten = "Vòng 3", Ma_Vong = 5 },
-                            new DS_Vong { Ten = "Vòng 2", Ma_Vong = 6 },
-                            new DS_Vong { Ten = "Vòng 1", Ma_Vong = 7 },
-                            new DS_Vong { Ten = "Vòng Playoff", Ma_Vong = 8 },
-                            new DS_Vong { Ten = "Vòng Bảng", Ma_Vong = 9 }
+                            new DS_Vong { Ten = "Chung Kết", Ma_Vong = 1 },
+                            new DS_Vong { Ten = "Bán Kết", Ma_Vong = 2 },
+                            new DS_Vong { Ten = "Tứ Kết", Ma_Vong = 3 },
+                            new DS_Vong { Ten = "Vòng 3", Ma_Vong = 4 },
+                            new DS_Vong { Ten = "Vòng 2", Ma_Vong = 5 },
+                            new DS_Vong { Ten = "Vòng 1", Ma_Vong = 6 },
+                            new DS_Vong { Ten = "Playoff", Ma_Vong = 7 },
+                            new DS_Vong { Ten = "Vòng Bảng", Ma_Vong = 8 }
                         });
                         await _context.SaveChangesAsync();
                     }

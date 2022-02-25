@@ -1,0 +1,187 @@
+﻿/*body {
+	 font-family: sans-serif;
+	 margin: 0;
+	 height: 100%;
+}
+*/
+/*.tournament-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+}*/
+.tournament-headers {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex: none;
+    background-color: white;
+    height: 60px;
+    z-index: 1;
+}
+
+    .tournament-headers h3 {
+        width: 25%;
+        text-align: center;
+        font-weight: bold;
+        margin: 0;
+        padding: 1rem;
+        font-size: 24px;
+        color: black
+    }
+
+.tournament-brackets {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    margin-bottom: 50px;
+}
+
+.bracket {
+    padding-left: 0;
+    display: flex;
+    margin: 0;
+    padding: 10px 0;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-around;
+    list-style-type: none;
+    flex: 1;
+}
+
+.team-item {
+    background-color: #ffffff;
+    display: block;
+    position: relative;
+    vertical-align: middle;
+    text-align: left;
+    font-size: 14px;
+    border: 1px solid black;
+    margin: .5rem 9px;
+}
+
+    .team-item:after {
+        content: '';
+        border-color: black;
+        border-width: 2px;
+        position: absolute;
+        display: block;
+        width: 10px;
+        right: -11px;
+    }
+
+    .team-item:nth-of-type(odd):after {
+        border-right-style: solid;
+        border-top-style: solid;
+        height: 100%;
+        top: 50%;
+    }
+
+    .team-item:nth-of-type(even):after {
+        border-right-style: solid;
+        border-bottom-style: solid;
+        height: 100%;
+        top: -50%;
+    }
+
+    .team-item:before {
+        content: '';
+        border-top: 2px solid black;
+        position: absolute;
+        height: 2px;
+        width: 10px;
+        left: -10px;
+        top: 50%;
+    }
+    .team-item .child {
+        margin: 0;
+        display: flex;
+        padding: 3px 10px;
+        justify-content: space-between;
+        align-items: stretch
+    }
+    .team-item .top-border {
+        border-top: 1px solid black;
+    }
+    .team-item .result {
+        display: flex;
+        align-items: center;
+        text-align: right
+    }
+        .team-item .result input {
+            width: 1.75rem
+        }
+.bracket-2 .team-item:nth-of-type(odd):after {
+    height: 200%;
+    top: 50%;
+}
+
+.bracket-2 .team-item:nth-of-type(even):after {
+    height: 200%;
+    top: -150%;
+}
+
+.bracket-3 .team-item:nth-of-type(odd):after {
+    height: 350%;
+    top: 50%;
+}
+
+.bracket-3 .team-item:nth-of-type(even):after {
+    height: 350%;
+    top: -300%;
+}
+
+.bracket-4 .team-item:nth-of-type(odd):after {
+    height: 700%;
+    top: 50%;
+}
+
+.bracket-4 .team-item:nth-of-type(even):after {
+    height: 700%;
+    top: -650%;
+}
+.bracket-5 .team-item:nth-of-type(odd):after {
+    height: 1400%;
+    top: 50%;
+}
+
+.bracket-5 .team-item:nth-of-type(even):after {
+    height: 1400%;
+    top: -1350%;
+}
+.bracket-6 .team-item:nth-of-type(odd):after {
+    height: 2800%;
+    top: 50%;
+}
+
+.bracket-6 .team-item:nth-of-type(even):after {
+    height: 2800%;
+    top: -2750%;
+}
+.bracket:first-of-type .team-item:before {
+    display: none;
+}
+
+.bracket:last-of-type .team-item:after {
+    display: none;
+}
+
+.team-item time {
+    display: inline-block;
+    background-color: #dbdbdb;
+    font-size: 0.8rem;
+    padding: 0 0.6rem;
+}
+/* The sticky class is added to the header with JS when it reaches its scroll position */
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%
+}
+
+    /* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
+    .sticky + .tournament-brackets {
+        padding-top: 102px;
+    }

@@ -1,0 +1,66 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Kết quả";
+    Layout = "/Areas/_Layout.cshtml";
+    ViewBag.RActive = "active visible-sm visible-xs";
+}
+@model Tennis_Web.Areas.NoRole.Models.ResultViewModel
+<section class="main still-background">
+    <div class="visual container">
+        <div class="text-block">
+            <div class="heading-holder">
+                <h1>Giải @Model.Tournament</h1>
+            </div>
+            <p class="tagline">Trình @Model.Level</p>
+        </div>
+    </div>
+    <div class="container" style="min-width: 95%">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Table ? "active" : string.Empty)">
+                <a asp-route-tabname="Table" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs">Vòng bảng và playoff</a>
+            </li>
+            <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Special ? "active" : string.Empty)">
+                <a asp-route-tabname="Special" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs">Vòng đặc biệt</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            @switch (Model.ActiveTab)
+            {
+                case Tennis_Web.Models.Tab.Table:
+                    @await Component.InvokeAsync(typeof(Tennis_Web.Areas.NoRole.Views.NoRole.Components.Table.TableViewComponent), Model);
+                    break;
+                case Tennis_Web.Models.Tab.Special:
+                    @await Component.InvokeAsync(typeof(Tennis_Web.Areas.NoRole.Views.NoRole.Components.Special.SpecialViewComponent), Model);
+                    break;
+                default:
+                    break;
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            // When the user scrolls the page, execute myFunction
+            window.onscroll = function () { myFunction() };
+
+            // Get the header
+            var header = document.getElementById("tournamentHeader");
+
+            // Get the offset position of the navbar
+            var sticky = header.offsetTop;
+
+            // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+            function myFunction() {
+                if (window.pageYOffset > sticky) {
+                    header.classList.add("sticky");
+                } else {
+                    header.classList.remove("sticky");
+                }
+            }
+        });
+    </script>
+}

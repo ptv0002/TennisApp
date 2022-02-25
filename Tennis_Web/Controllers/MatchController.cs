@@ -106,20 +106,24 @@ namespace Tennis_Web.Controllers
             var model = new List<MatchGeneratorViewModel>();
             foreach (var level in levels)
             {
-                var dict = new List<NumPerTable>();
+                var dict = new List<ChosenPerTable>();
                 // Get name of all (distinct) tables from the given Ma_Cap (Pair Code)
-                var tables = pairs.Where(m => m.ID_Trinh == level).Select(m => char.ToUpper(m.Ma_Cap.ElementAt(0))).Distinct();
+                var tables = pairs.Where(m => m.ID_Trinh == level).GroupBy(m => char.ToUpper(m.Ma_Cap.ElementAt(0))).Select(m => new
+                {
+                    Table = m.Key,
+                    Num = m.Count()
+                }).OrderBy(m => m.Table).ToList();
                 foreach (var table in tables)
                 {
                     // Add table and default value (0) to list
-                    dict.Add(new NumPerTable { Table = table, Num = 0 });
+                    dict.Add(new ChosenPerTable { Table = table.Table, PairsNum = table.Num, Chosen = 0 });
                 }
                 // Assign default values per Level
                 var temp = new MatchGeneratorViewModel
                 {
                     ID_Trinh = level,
                     Trinh = _context.DS_Trinhs.Find(level).Trinh,
-                    NumPerTable = dict
+                    ChosenPerTable = dict
                 };
                 // Add all levels to model (Tournament)
                 model.Add(temp);
@@ -135,21 +139,33 @@ namespace Tennis_Web.Controllers
                 ViewBag.Exist = true;
                 ModelState.AddModelError(string.Empty, "Đã có danh sách trận trong cơ sở dữ liệu! Nếu tiếp tục sẽ xóa danh sách trận cũ.");
             }
-
+            bool error = false;
+            // Check for any errors before proceeding
             foreach (var level in model)
             {
-                var tuple = PowerOfTwo(level.NumPerTable.Sum(m => m.Num) + level.PlayOff1 + level.PlayOff2);
-                if (tuple.Item1 < 0)
+                var tuple = PowerOfTwo(level.ChosenPerTable.Sum(m => m.Chosen) + level.PlayOff1 + level.PlayOff2);
+                if (tuple.Item1 != 0)
                 {
-                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " có tổng số cặp đi tiếp quá lớn hoặc quá nhỏ so với cho phép!");
-                    return View(model);
+                    error = true;
+                    if (tuple.Item1 < 0) ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " có tổng số cặp đi tiếp quá lớn hoặc quá nhỏ so với cho phép!");
+                    else if (tuple.Item1 > 0) ModelState.AddModelError(string.Empty, "Thêm hoặc bớt cặp trình " + level.Trinh + " để tổng số cặp đi tiếp là " + tuple.Item1 + " hoặc " + tuple.Item2);
                 }
-                else if (tuple.Item1 > 0)
+                if (level.PlayOff1 != 0 && !level.ChosenPerTable.Any(m => m.P1))
                 {
-                    ModelState.AddModelError(string.Empty, "Thêm hoặc bớt cặp trình " + level.Trinh + " để tổng số cặp đi tiếp là " + tuple.Item1 + " hoặc " + tuple.Item2);
-                    return View(model);
+                    error = true;
+                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " chưa chọn bảng cho Playoff 1!");
+                }
+                if (level.PlayOff2 != 0 && !level.ChosenPerTable.Any(m => m.P2))
+                {
+                    error = true;
+                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " chưa chọn bảng cho Playoff 2!"); 
                 }
             }
+            if (error) return View(model);
+
+            // Get rounds' Ids
+            var rounds = _context.DS_Vongs.ToDictionary(x => x.Ma_Vong, y => y.Id);
+
             if (model != null)
             {
                 // Get level ids
@@ -167,11 +183,12 @@ namespace Tennis_Web.Controllers
                             Ten = char.ToUpper(pair.Ma_Cap.ElementAt(0)),
                             ID_Trinh = pair.ID_Trinh
                         });
+                        _context.SaveChanges();
                         table = _context.DS_Bangs.OrderBy(m => m.Id).Last();
                     }
                     pair.ID_Bang = table.Id;
                     var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "ID_Bang" });
-                    if (!result.Succeeded) goto error;
+                    if (!result.Succeeded) goto exit;
                 }
                 // ---------------- Save these paramters to Json file ----------------
 
@@ -190,26 +207,31 @@ namespace Tennis_Web.Controllers
                 if (exist)
                 {
                     // Get old matches
-                    var oldMatches = _context.DS_Trans.Where(m => pairs.Select(m => m.Id).Contains((int)m.ID_Cap1) || pairs.Select(m => m.Id).Contains((int)m.ID_Cap2));
+                    var oldMatches = _context.DS_Trans.Where(m => pairs.Select(m => m.Id).Contains((int)m.ID_Cap1) || pairs.Select(m => m.Id).Contains((int)m.ID_Cap2)).ToList();
+                    var emptyMatched = _context.DS_Trans.Where(m => m.ID_Cap1 == null || m.ID_Cap2 == null).ToList();
+                    oldMatches.AddRange(emptyMatched);
                     _context.RemoveRange(oldMatches);
                 }
                 // ---------------- Generate list of matches here ----------------
-                var rounds = _context.DS_Vongs.ToDictionary(x => x.Ma_Vong, y => y.Id);
 
                 foreach (var level in model)
                 {
                     int count = 1;
+                    string order = "";
                     // Add Table Rounds
-                    foreach (var table in level.NumPerTable.Select(m => m.Table))
+                    foreach (var table in level.ChosenPerTable.Select(m => m.Table))
                     {
-                        var pairByTable = _context.DS_Caps.Where(m => char.ToUpper(m.Ma_Cap.ElementAt(0)) == table && m.ID_Trinh == level.ID_Trinh).ToList();
+                        var pairByTable = pairs.Where(m => char.ToUpper(m.Ma_Cap.ElementAt(0)) == table && m.ID_Trinh == level.ID_Trinh).ToList();
                         for (int i = 0; i < pairByTable.Count; i++)
                         {
+                            if (count < 10) order = "00" + count;
+                            else if (count < 100) order = "0" + count;
+                            else if (count < 1000) order = count.ToString();
                             var match = new DS_Tran
                             {
-                                Ma_Tran = level.Trinh + "9" + table + count,
+                                Ma_Tran = level.Trinh + "8" + table + order,
                                 ID_Cap1 = pairByTable[i].Id,
-                                ID_Vong = rounds[9]
+                                ID_Vong = rounds[8]
                             };
                             // Match each pair with the next one
                             if (i == pairByTable.Count - 1) match.ID_Cap2 = pairByTable[0].Id;
@@ -222,31 +244,43 @@ namespace Tennis_Web.Controllers
                     // Add playoff rounds (if any)
                     for (int i = 0; i < level.PlayOff2; i++)
                     {
+                        if (count < 10) order = "00" + count;
+                        else if (count < 100) order = "0" + count;
+                        else if (count < 1000) order = count.ToString();
                         var match = new DS_Tran
                         {
-                            Ma_Tran = level.Trinh + "8" + count,
-                            ID_Vong = rounds[8]
+                            Ma_Tran = level.Trinh + "7" + order,
+                            ID_Vong = rounds[7]
                         };
                         _context.Add(match);
                         count++;
                     }
                     // Add Special Rounds
-                    var specMatches = (int)Math.Log2(level.NumPerTable.Sum(m => m.Num) + level.PlayOff1 + level.PlayOff2);
-                    for (int i = specMatches; i > 0; i--)
+                    var totalPairs = level.ChosenPerTable.Sum(m => m.Chosen) + level.PlayOff1 + level.PlayOff2;
+                    var ma_vong = (int)Math.Log2(totalPairs);
+                    while (ma_vong > 0)
                     {
-                        var match = new DS_Tran
+                        for (int i = totalPairs / 2; i > 0; i--)
                         {
-                            Ma_Tran = level.Trinh + i.ToString() + count,
-                            ID_Vong = rounds[i]
-                        };
-                        _context.Add(match);
-                        count++;
+                            if (count < 10) order = "00" + count;
+                            else if (count < 100) order = "0" + count;
+                            else if (count < 1000) order = count.ToString();
+                            var match = new DS_Tran
+                            {
+                                Ma_Tran = level.Trinh + ma_vong.ToString() + order,
+                                ID_Vong = rounds[ma_vong]
+                            };
+                            _context.Add(match);
+                            count++;
+                        }
+                        ma_vong--;
+                        totalPairs /= 2;
                     }
                 }
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            error:
+            exit:
             ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
             return View(model);
         }
@@ -256,7 +290,7 @@ namespace Tennis_Web.Controllers
 
         public Tuple<int, int> PowerOfTwo(int number)
         {
-            var powerOfTwo = new List<int> { 2, 4, 8, 16, 32, 64, 128 };
+            var powerOfTwo = new List<int> { 2, 4, 8, 16, 32, 64};
             // If number is a power of 2, return 0
             if (powerOfTwo.Contains(number)) return new Tuple<int, int>(0, 0);
             for (int i = 0; i < powerOfTwo.Count - 1; i++)

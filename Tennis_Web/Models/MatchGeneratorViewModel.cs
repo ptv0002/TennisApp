@@ -12,12 +12,13 @@ namespace Tennis_Web.Models
         public int Trinh { get; set; }
         public int PlayOff1 { get; set; }
         public int PlayOff2 { get; set; }
-        public List<NumPerTable> NumPerTable { get; set; }
+        public List<ChosenPerTable> ChosenPerTable { get; set; }
     }
-    public class NumPerTable
+    public class ChosenPerTable
     {
         public char Table { get; set; }
-        public int Num { get; set; }
+        public int PairsNum { get; set; }
+        public int Chosen { get; set; }
         public bool P1 { get; set; }
         public bool P2 { get; set; }
     }

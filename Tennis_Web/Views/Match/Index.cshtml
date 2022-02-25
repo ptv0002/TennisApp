@@ -4,12 +4,198 @@
 }
 @model IEnumerable<Models.DS_Trinh>
 <hr />
-@foreach (var item in Model)
-{
-    string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
-    <div class="row ml-2">
-        <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Method">
-            • @title
-        </a>
+    @foreach (var item in Model)
+    {
+        string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
+        <div class="row ml-2 mb-1">
+            <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Method">
+                • @title
+            </a>
+        </div>
+    }
+
+<div class="tournament-container">
+    <div class="tournament-headers" id="tournamentHeader">
+        <h3>Vòng 1</h3>
+        <h3>Vòng 2</h3>
+        <h3>Vòng 3</h3>
+        <h3>Tứ Kết</h3>
+        <h3>Bán Kết</h3>
+        <h3>Chung Kết</h3>
     </div>
+    <div class="tournament-brackets">
+        <ul class="bracket bracket-1">
+            @for (int i = 65; i < (65 + 32); i++)
+            {
+                var name = (char)i;
+                <li class="team-item row">
+                    <div class="child">
+                        <div class="row">
+                            <div class="col-12">@name 1</div>
+                            <div class="col-12">@name 2</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="child top-border">
+                        <div class="row">
+                            <div class="col-12">@name 3</div>
+                            <div class="col-12">@name 4</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <ul class="bracket bracket-2">
+            @for (int i = 65; i < (65 + 16); i++)
+            {
+                var name = (char)i;
+                <li class="team-item row">
+                    <div class="child">
+                        <div class="row">
+                            <div class="col-12">@name 1</div>
+                            <div class="col-12">@name 2</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="child top-border">
+                        <div class="row">
+                            <div class="col-12">@name 3</div>
+                            <div class="col-12">@name 4</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <ul class="bracket bracket-3">
+            @for (int i = 65; i < (65 + 8); i++)
+            {
+                var name = (char)i;
+                <li class="team-item row">
+                    <div class="child">
+                        <div class="row">
+                            <div class="col-12">@name 1</div>
+                            <div class="col-12">@name 2</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="child top-border">
+                        <div class="row">
+                            <div class="col-12">@name 3</div>
+                            <div class="col-12">@name 4</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <ul class="bracket bracket-4">
+            @for (int i = 0; i < 4; i++)
+            {
+                <li class="team-item row">
+                    <div class="child">
+                        <div class="row">
+                            <div class="col-12">QF_@i</div>
+                            <div class="col-12">QF_@i</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="child top-border">
+                        <div class="row">
+                            <div class="col-12">QF_@i</div>
+                            <div class="col-12">QF_@i</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <ul class="bracket bracket-5">
+            @for (int i = 0; i < 2; i++)
+            {
+                <li class="team-item row">
+                    <div class="child">
+                        <div class="row">
+                            <div class="col-12">SF_@i</div>
+                            <div class="col-12">SF_@i</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                    <div class="child top-border">
+                        <div class="row">
+                            <div class="col-12">SF_@i</div>
+                            <div class="col-12">SF_@i</div>
+                        </div>
+                        <div class="result">
+                            <input class="form-control form-control-sm">
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+        <ul class="bracket bracket-6">
+            <li class="team-item row">
+                <div class="child">
+                    <div class="row">
+                        <div class="col-12">F_1</div>
+                        <div class="col-12">F_2</div>
+                    </div>
+                    <div class="result">
+                        <input class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="child top-border">
+                    <div class="row">
+                        <div class="col-12">F_3</div>
+                        <div class="col-12">F_4</div>
+                    </div>
+                    <div class="result">
+                        <input class="form-control form-control-sm">
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            // When the user scrolls the page, execute myFunction
+            window.onscroll = function () { myFunction() };
+
+            // Get the header
+            var header = document.getElementById("tournamentHeader");
+
+            // Get the offset position of the navbar
+            var sticky = header.offsetTop;
+
+            // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+            function myFunction() {
+                if (window.pageYOffset > sticky) {
+                    header.classList.add("sticky");
+                } else {
+                    header.classList.remove("sticky");
+                }
+            }
+        });
+    </script>
 }

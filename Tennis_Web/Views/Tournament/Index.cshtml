@@ -18,7 +18,7 @@
     {
         foreach (var item in Model)
         {
-            <div class="row ml-2">
+            <div class="row ml-2 mb-1">
                 <a asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-giaiID="@item.Id">
                     • @item.Ngay.Day/@item.Ngay.Month/@item.Ngay.Year - Giải @item.Ten
                 </a>
