@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
-namespace Tennis_Web.Views.Shared.Components.Player
+namespace Tennis_Web.Views.Tournament.Components.Player
 {
     public class PlayerViewComponent : ViewComponent
     {

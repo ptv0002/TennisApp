@@ -2,4 +2,35 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewData["Title"] = "Kết quả";
+    Layout = "/Areas/_Layout.cshtml";
+    ViewBag.RActive = "active visible-sm visible-xs";
 }
+@model List<Models.DS_Trinh>
+<section class="main still-background">
+    <div class="visual container">
+        <div class="text-block">
+            <div class="heading-holder">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5 style="font-weight:bold">Chọn trình để xem kết quả</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var item in Model)
+                {
+                    string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
+                    <div>
+                        <a asp-route-tabname="Special" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs">
+                            • @title
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

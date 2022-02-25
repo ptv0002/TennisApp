@@ -5,7 +5,7 @@
     bool a1 = ViewBag.IsCurrent == true;
 }
 @model IEnumerable<Models.DS_Trinh>
-<div class="card shadow mb-4">
+<div class="card shadow mb-4" style="width:40%; min-width: 200px">
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
             <form asp-action="AddLevel" asp-controller="Tournament">
@@ -50,8 +50,8 @@
                     {
                         <tfoot>
                             <tr>
-                                <td>
-                                    <input type="text" name="newLevel" class="form-control col-3" />
+                                <td class="align-center">
+                                    <input type="text" name="newLevel" class="form-control col-6" />
                                     <input type="hidden" value="@ViewBag.ID_Giai" name="idGiai" />
                                 </td>
                                 <td>
@@ -85,9 +85,9 @@
             </div>
             <div class="modal-body">
                 Bạn có chắc chắn muốn
-                <label class="text-warning">
+                <span class="text-warning">
                     tạo danh sách trận đấu?
-                </label>
+                </span>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>

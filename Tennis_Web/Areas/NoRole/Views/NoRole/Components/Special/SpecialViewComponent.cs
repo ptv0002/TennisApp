@@ -2,27 +2,28 @@
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
-namespace Tennis_Web.Views.Tournament.Components.LevelList
+namespace Tennis_Web.Areas.NoRole.Views.NoRole.Components.Special
 {
-    public class LevelListViewComponent : ViewComponent
+    public class SpecialViewComponent : ViewComponent
     {
         private readonly TennisContext _context;
         public readonly INotyfService _notyf;
-        public LevelListViewComponent(TennisContext context, INotyfService notyf)
+        public SpecialViewComponent(TennisContext context, INotyfService notyf)
         {
             _context = context;
             _notyf = notyf;
         }
         public IViewComponentResult Invoke(TabViewModel vm)
         {
-            ViewBag.IsCurrent = vm.IsCurrent;
-            ViewBag.ID_Giai = vm.ID;
-            if (vm.Succeeded == true) _notyf.Success("Xóa trình thành công!"); 
-            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.ID_Giai == vm.ID).OrderBy(m => m.Trinh).ToList();
+            List<DS_Tran> model = new();
+
             return View(model);
         }
     }

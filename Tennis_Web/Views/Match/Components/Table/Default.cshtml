@@ -3,14 +3,15 @@
 *@
 @{
     int titleCount = 0, insertCount = 0, reflectCount = 0;
+    var ListTable = (IEnumerable<MyCategory>)
 }
 @model List<Models.DS_Tran>
 <form asp-action="TableResult">
-    @for (int i = 0; i < ViewBag.ListTable.Count; i++)
+    @for (int i = 0; i < Enumerable.Count(ViewBag.ListTable); i++)
     {
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5 class="font-weight-bold text-success">Bảng @ViewBag.ListTable[i].Table</h5>
+                <h5 class="font-weight-bold text-success">Bảng @Enumerable.ElementAt(ViewBag.ListTable.ElementAt, i).Table</h5>
             </div>
             <div class="card-body">
                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -19,16 +20,16 @@
                             <thead>
                                 <tr>
                                     <th style="background-color:teal"></th>
-                                    @for (int j = 0; j < ViewBag.ListTable[i].Num; j++)
+                                    @for (int j = 0; j < Enumerable.ElementAt(ViewBag.ListTable.ElementAt, i).Num; j++)
                                     {
                                         <th>@Model[titleCount].DS_Cap1.VDV1.Ten_Tat + @Model[titleCount].DS_Cap1.VDV2.Ten_Tat</th>
                                         titleCount++;
                                     }
-                                    @{ insertCount = reflectCount = titleCount -= ViewBag.ListTable[i].Num; }
+                                    @{ insertCount = reflectCount = titleCount -= Enumerable.ElementAt(ViewBag.ListTable.ElementAt, i).Num; }
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (int j = 0; j < ViewBag.ListTable[i].Num; j++)
+                                @for (int j = 0; j < Enumerable.ElementAt(ViewBag.ListTable.ElementAt, i).Num; j++)
                                 {
                                     <tr>
                                         <th>
@@ -36,7 +37,7 @@
                                             <input type="hidden" asp-for="@Model[titleCount].DS_Cap1.VDV1.Ten_Tat" />
                                             <input type="hidden" asp-for="@Model[titleCount].DS_Cap1.VDV2.Ten_Tat" />
                                         </th>
-                                        @for (int k = 0; k < ViewBag.ListTable[i].Num; k++)
+                                        @for (int k = 0; k < Enumerable.ElementAt(ViewBag.ListTable.ElementAt, i).Num; k++)
                                         {
                                             if (k == j)
                                             {
@@ -86,7 +87,7 @@
                         </thead>
                         <tbody>
                             @for (int i = titleCount; i < Model.Count; i++)
-                            {      
+                            {
                                 <tr>
                                     <td>
                                         @Model[i].DS_Cap1.VDV1.Ten_Tat + @Model[i].DS_Cap1.VDV2.Ten_Tat
@@ -96,7 +97,7 @@
                                         <input type="hidden" asp-for="@Model[i].ID_Vong" />
                                         @Model[i].
                                     </td>
-                                    @if (ViewBag.Show == true) 
+                                    @if (ViewBag.Show == true)
                                     {
                                         <td>
                                             <input class="form-control col-5" asp-for="@Model[i].Kq_1" /> - <input class="form-control col-5" asp-for="@Model[i].Kq_2" />
@@ -125,4 +126,4 @@
         <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
     </div>
 
-</form>   
+</form>

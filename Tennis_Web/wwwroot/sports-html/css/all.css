@@ -170,13 +170,13 @@ p {
   transform: rotate(-45deg); }
 
 .visual {
-  min-height: 800px;
+  min-height: /*800px*/ 40vh;
   position: relative;
   overflow: hidden;
   text-align: center;
   color: #ffce1b;
   font-size: 0;
-  letter-spacing: -4px;
+ /* letter-spacing: -4px;*/
   padding: 104px 0 0;
   background: transparent; }
   .visual .bg-stretch {
@@ -299,7 +299,7 @@ p {
     margin: 0 0 35px; }
 
 .rounded {
-    border-radius: 40px !important;
+    border-radius: 40px;
 }
 
 .main {

@@ -28,11 +28,12 @@ namespace Tennis_Web.Views.Match.Components.Table
             var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công");
             else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
-            else
+            
+            if (vm.Succeeded != false)
             {
                 model = _context.DS_Trans.Include(m => m.DS_Cap1).Include(m => m.DS_Vong)
                     .Where(m => (pairs.Select(m => m.Id).Contains((int)m.ID_Cap1) || pairs.Select(m => m.Id).Contains((int)m.ID_Cap2))
-                    && m.DS_Vong.Ma_Vong > 7) // Ma_Vong > 7 are Table and Playoff rounds, 
+                    && m.DS_Vong.Ma_Vong > 6) // Ma_Vong > 6 are Table and Playoff rounds
                     .OrderByDescending(m => m.DS_Vong.Ma_Vong)
                     .ThenBy(m => m.DS_Cap1.Ma_Cap).ToList();
                 if (model != null)
@@ -53,8 +54,13 @@ namespace Tennis_Web.Views.Match.Components.Table
                 Table = m.Key,
                 Num = m.Count()
             }).OrderBy(m => m.Table).ToList();
-            var rounds = _context.DS_Vongs.ToDictionary(x => x.Ma_Vong, y => y.Id);
-            ViewBag.Show = model.Where(m => m.ID_Vong == rounds[8]).All(m => (m.Kq_1 + m.Kq_2) > 0);
+            ViewBag.ListTable = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
+            {
+                Table = m.Key,
+                Num = m.Count()
+            }).OrderBy(m => m.Table).ToList();
+            // Check to see if all Table rounds are filled
+            ViewBag.Show = model.Where(m => m.DS_Vong.Ma_Vong == 8).All(m => (m.Kq_1 + m.Kq_2) > 0);
             return View(model);
         }
     }

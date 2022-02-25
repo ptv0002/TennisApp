@@ -4,17 +4,15 @@
     ViewBag.MActive = "active visible-sm visible-xs";
 }
 @model IEnumerable<Models.DS_VDV>
-<section class="visual" style="min-height:600px">
-    <div class="container">
-        <div class="text-block" style="text-align: right">
+
+<section class="main still-background">
+    <div class="visual container ">
+        <div class="text-block">
             <div class="heading-holder">
                 <h1>@ViewData["Title"]</h1>
             </div>
         </div>
     </div>
-    <img src="~/images/img-dark.jpg" alt="" class="bg-stretch">
-</section>
-<section class="main default-background">
     <div class="container">
         <div class="card shadow mb-4">
             <div class="card-body">
@@ -28,9 +26,6 @@
                                     </th>
                                     <th>
                                         @Html.DisplayNameFor(model => model.CLB)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.Khach_Moi)
                                     </th>
                                     <th>
                                         @Html.DisplayNameFor(model => model.File_Anh)
@@ -58,9 +53,6 @@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.CLB)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Khach_Moi)
                                         </td>
                                         <td>
                                             <img src="@("~/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />

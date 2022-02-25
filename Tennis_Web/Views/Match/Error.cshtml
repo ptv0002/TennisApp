@@ -6,7 +6,7 @@
     @foreach (var item in ViewBag.DS_Trinh)
     {
         var title = "Giải " + ViewBag.TourName + " - Trình " + item.Trinh;
-        <div class="row ml-2">
+        <div class="row ml-2 mb-1">
             <a asp-route-tabname="Pair" asp-route-isCurrent="true" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Tournament">
                 Danh sách cặp - Trình @item.Trinh 🡺
             </a>
@@ -14,7 +14,7 @@
     }
 </div>
 
-@if (ViewBag.NoCodePairs.Count > 0)
+@if (Enumerable.Any(ViewBag.NoCodePairs))
 {
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -49,7 +49,7 @@
     </div>
 }
 
-@if (ViewBag.NoPairPlayers.Count > 0)
+@if (Enumerable.Any(ViewBag.NoPairPlayers))
 {
     <div class="card shadow mb-4">
         <div class="card-header py-3">

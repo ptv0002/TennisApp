@@ -69,13 +69,16 @@
     <link rel="stylesheet" type="text/css" href="~/datatables/css/dataTables.bootstrap4.min.css" />
 
     <link rel="stylesheet" href="~/sports-html/css/bootstrap.css">
-    <link rel="stylesheet" href="~/sports-html/fonts/font-awesome-4.3.0/css/font-awesome.min.css">
+    @*<link rel="stylesheet" href="~/sports-html/fonts/font-awesome-4.3.0/css/font-awesome.min.css">*@
+    <link rel="stylesheet" type="text/css" href="~/sbadmin/css/sb-admin-2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/sbadmin/vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="~/sports-html/css/all.css">
     <link rel="stylesheet" type="text/css" href="~/css/default.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/tournament.css" />
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
 </head>
-<body>
+<body id="page-top">
     <div id="wrapper">
         <header id="header">
             <div class="container">
@@ -84,7 +87,7 @@
                     <div class="opener-holder">
                         <a href="#" class="nav-opener"><span></span></a>
                     </div>
-                    <a asp-action="Login" asp-area="" asp-controller="Account" class="btn btn-primary rounded">Đăng nhập</a>
+                    <a asp-action="Login" asp-area="" asp-controller="Account" class="btn btn-primary rounded-pill">Đăng nhập</a>
                     <div class="nav-drop">
                         <ul>
                             <li class="@ViewBag.IActive"><a asp-action="Index">Trang chủ</a></li>
@@ -107,44 +110,48 @@
         </header>
         @RenderBody()
 
-        <footer id="footer">
-            <div class="container">
-                <div class="footer-holder">
-                    <div class="row  text-center">
-                        <div class="col-md-12">
-                            <a href="#"><img src="~/images/KAICT-removebg.png" alt="BIT Khánh Hòa"></a>
-                        </div>
-
+        <footer id="footer" class="sticky-footer">
+            <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        Copyright © Tennis Web 2021
                     </div>
-                    @*<div class="row">
-                        <div id="cta" class="cta-footer">
-                            <a href="javascript:" class="btn btn-primary rounded">Start Training Now</a>
-                            <p>Every day is a challenge, change your life now.</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h3>We live your galaxy</h3>
+                    @*<div class="row  text-center">
+        <div class="col-md-12">
+            <a href="#"><img src="~/images/KAICT-removebg.png" alt="BIT Khánh Hòa"></a>
+        </div>
 
-                            <p>
-                                15 New Street, Badass Suite, Greyland, Wetworld.
-                            </p>
-                        </div>
-
-                        <div class="col-md-6 text-right">
-                                <ul class="social">
-                                    <li><a href="javascript:"><i class="fa fa-facebook-f"></i></a></li>
-                                    <li><a href="javascript:"><i class="fa fa-twitter"></i></a></li>
-                                    <li><a href="javascript:"><i class="fa fa-dribbble"></i></a></li>
-                                    <li><a href="javascript:"><i class="fa fa-pinterest"></i></a></li>
-                                </ul>
-                            </div>
-                    </div>*@
-                </div>
+        </div>
+        <div class="row">
+            <div id="cta" class="cta-footer">
+                <a href="javascript:" class="btn btn-primary rounded">Start Training Now</a>
+                <p>Every day is a challenge, change your life now.</p>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>We live your galaxy</h3>
+
+                <p>
+                    15 New Street, Badass Suite, Greyland, Wetworld.
+                </p>
+            </div>
+
+            <div class="col-md-6 text-right">
+                <ul class="social">
+                    <li><a href="javascript:"><i class="fa fa-facebook-f"></i></a></li>
+                    <li><a href="javascript:"><i class="fa fa-twitter"></i></a></li>
+                    <li><a href="javascript:"><i class="fa fa-dribbble"></i></a></li>
+                    <li><a href="javascript:"><i class="fa fa-pinterest"></i></a></li>
+                </ul>
+            </div>
+        </div>*@
+                </div>
         </footer>
     </div>
-
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded-lg" href="#page-top" style=" width: 4.5rem; height: 4.5rem;">
+        <i class="fas fa-angle-up"></i>
+    </a>
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
 

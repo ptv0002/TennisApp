@@ -4,6 +4,7 @@
 @model List<MatchGeneratorViewModel>
 <hr />
 <form asp-action="AdditionalInfo">
+    <div asp-validation-summary="All" class="text-danger"></div>
     @for (int i = 0; i < Model.Count; i++)
     {
         <input type="hidden" asp-for="@Model[i].ID_Trinh" />
@@ -18,30 +19,35 @@
                         <table class="table dataTable">
                             <thead>
                                 <tr>
-                                    <th class="col-6">Bảng</th>
-                                    <th>Số cặp đi tiếp</th>
-                                    <th>Playoff 1</th>
-                                    <th>Playoff 2</th>
+                                    <th>Bảng</th>
+                                    <th>Số cặp trong bảng</th>
+                                    <th>Chọn số cặp đi tiếp</th>
+                                    <th>Chọn Playoff 1</th>
+                                    <th>Chọn Playoff 2</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (int j = 0; j < Model[i].NumPerTable.Count; j++)
+                                @for (int j = 0; j < Model[i].ChosenPerTable.Count; j++)
                                 {
                                     <tr>
                                         <td>
-                                            <input type="hidden" asp-for="@Model[i].NumPerTable[j].Table" />
-                                            @Model[i].NumPerTable[j].Table
+                                            <input type="hidden" asp-for="@Model[i].ChosenPerTable[j].Table" />
+                                            @Model[i].ChosenPerTable[j].Table
                                         </td>
-                                        <td><input class="form-control col-6" asp-for="@Model[i].NumPerTable[j].Num" /></td>
-                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].NumPerTable[j].P1" /></td>
-                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].NumPerTable[j].P2" /></td>
+                                        <td>
+                                            <input type="hidden" asp-for="@Model[i].ChosenPerTable[j].PairsNum" />
+                                            @Model[i].ChosenPerTable[j].PairsNum
+                                        </td>
+                                        <td class="align-center"><input class="form-control col-6" asp-for="@Model[i].ChosenPerTable[j].Chosen" /></td>
+                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].ChosenPerTable[j].P1" /></td>
+                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].ChosenPerTable[j].P2" /></td>
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>Tổng số cặp đã chọn</th>
-                                    <td><input class="form-control col-6" disabled /></td>
+                                    <th colspan="2" style="text-align:right">Tổng số cặp đã chọn</th>
+                                    <td class="align-center"><input class="form-control col-6" disabled /></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -91,9 +97,9 @@
                         </div>
                         <div class="modal-body">
                             Đã có danh sách trận trong cơ sở dữ liệu! Bạn có chắc chắn muốn tạo danh sách trận đấu? Nếu tiếp tục sẽ
-                            <label class="text-danger">
+                            <span class="text-danger">
                                 xóa danh sách trận cũ vĩnh viễn.
-                            </label>
+                            </span>
                             Hành động này không thể bị khôi phục.
                         </div>
                         <div class="modal-footer">
@@ -126,9 +132,9 @@
                     for (let j = 1; j < hang.length-1; j++)
                     {
                         var cot = hang[j].getElementsByTagName("input");
-                        mSelect = mSelect + Number(cot[1].value);
-                        if (cot[2].value=="true") mPlayOff1++ ;
-                        if (cot[3].value=="true") mPlayOff2++;
+                        mSelect = mSelect + Number(cot[2].value);
+                        if (cot[3].value=="true") mPlayOff1++ ;
+                        if (cot[4].value=="true") mPlayOff2++;
                     }
                     hang[hang.length - 1].getElementsByTagName("input")[0].value = mSelect.toString(); // Cộng chọn
                     var mFooter = bang[i].getElementsByClassName("card-footer")[0].getElementsByTagName("input");

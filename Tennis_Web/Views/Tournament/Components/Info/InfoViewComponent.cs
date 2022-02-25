@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
-namespace Tennis_Web.Views.Shared.Components.Info
+namespace Tennis_Web.Views.Tournament.Components.Info
 {
     public class InfoViewComponent : ViewComponent
     {

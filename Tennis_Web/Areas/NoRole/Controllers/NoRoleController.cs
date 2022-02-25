@@ -9,6 +9,9 @@ using System.Windows;
 using System.IO;
 using Library;
 using Models;
+using Tennis_Web.Models;
+using Tennis_Web.Areas.NoRole.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -39,9 +42,39 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             var model = _context.DS_VDVs.Where(m => m.Khach_Moi).OrderByDescending(m => m.Diem).ToList();
             return View(model);
         }
-        public IActionResult Result(int id)
+
+        public IActionResult Result()
         {
-            return View();
+            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi).ToList();
+            if (model.Count == 0) model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            return View(model);
+        }
+        public IActionResult ResultInfo(ResultViewModel model)
+        {
+            return View(model);
+        }
+        public IActionResult SwitchToTabs(string tabname, bool isCurrent, int id)
+        {
+            var level = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == id).FirstOrDefault();
+            var vm = new ResultViewModel()
+            {
+                IsCurrent = isCurrent,
+                ID = id,
+                Level = level.Trinh.ToString(),
+                Tournament = level.DS_Giai.Ten
+            };
+            switch (tabname)
+            {
+                case "Table":
+                    vm.ActiveTab = Tab.Table;
+                    return RedirectToAction("ResultInfo", vm);
+                case "Special":
+                    vm.ActiveTab = Tab.Special;
+                    return RedirectToAction("ResultInfo", vm);
+                default:
+                    vm.ActiveTab = Tab.Table;
+                    return RedirectToAction("ResultInfo", vm);
+            }
         }
         public IActionResult Announcement()
         {
