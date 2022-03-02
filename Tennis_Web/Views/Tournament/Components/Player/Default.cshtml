@@ -26,6 +26,7 @@
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <div class="table-responsive">
                     <table class="table dataTable" id="noPaging">
+                    @*<table class="table dataTable" id="normalTable">*@
                         <thead>
                             <tr>
                                 <th style="text-align:left">Tên tắt</th>
@@ -63,7 +64,7 @@
                                             <input type="hidden" asp-for="@Model[i].CLB" />
                                             <input type="hidden" asp-for="@Model[i].Diem_Cu" />
                                             <input type="hidden" asp-for="@Model[i].Diem" />
-                                            <input asp-for="@Model[i].Tham_Gia" type="checkbox" class="checkbox"/>
+                                            <input asp-for="@Model[i].Tham_Gia" type="checkbox" class="checkbox" />
                                         </td>
                                     }
                                     <td>@Model[i].CLB</td>
@@ -78,3 +79,8 @@
         </div>
     </div>
 </form>
+@*<script>
+    $(document).ready(function () {
+        $('#normalTable').DataTable();
+    });
+</script>*@ 
