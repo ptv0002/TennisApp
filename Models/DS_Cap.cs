@@ -19,6 +19,12 @@
         public string Ma_Cap { get; set; }
         [DisplayName("Điểm")]
         public decimal Diem { get; set; } // Total point to split
+        [DisplayName("Số trận thắng")]
+        public int Tran_Thang { get; set; }
+        [DisplayName("Bốc thăm")]
+        public int Boc_Tham { get; set; }
+        [DisplayName("Xếp hạng")]
+        public int Xep_Hang { get; set; }
         public int ID_Trinh { get; set; }
         [ForeignKey("ID_Trinh")]
         [DisplayName("ID Trình")]

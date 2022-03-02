@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tennis_Web.Areas.NoRole.Models;
 using Tennis_Web.Models;
 
 namespace Tennis_Web.Views.Match.Components.Special
@@ -20,8 +21,17 @@ namespace Tennis_Web.Views.Match.Components.Special
             _context = context;
             _notyf = notyf;
         }
-        public IViewComponentResult Invoke(TabViewModel vm)
+        public IViewComponentResult Invoke(TabViewModel vm, ResultViewModel alt)
         {
+            if (vm == null)
+            {
+                vm = new()
+                {
+                    ActiveTab = alt.ActiveTab,
+                    IsCurrent = alt.IsCurrent,
+                    ID = alt.ID
+                };
+            }
             List<DS_Tran> model = new();
             //if (vm.CurrentModel != null) model = vm.CurrentModel.Cast<DS_Tran>().ToList();
 

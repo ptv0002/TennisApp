@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(TennisContext))]
-    partial class TennisContextModelSnapshot : ModelSnapshot
+    [Migration("20220226044911_up_ds_tran")]
+    partial class up_ds_tran
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,9 +256,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Boc_Tham")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Diem")
                         .HasColumnType("decimal(6,3)");
 
@@ -275,12 +274,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("Ma_Cap")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("Tran_Thang")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Xep_Hang")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -370,6 +363,12 @@ namespace DataAccess.Migrations
                     b.Property<string>("Ma_Tran")
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
+
+                    b.Property<int>("Tran_Thang")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Xep_Hang")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

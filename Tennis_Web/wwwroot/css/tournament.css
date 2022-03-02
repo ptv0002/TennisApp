@@ -113,6 +113,16 @@
         .team-item .result input {
             width: 1.75rem
         }
+.left-padding {
+    width: 2.75rem;
+    padding-left: 5px;
+    display: initial;
+}
+.right-padding {
+    width: 2.75rem;
+    padding-right: 5px;
+    display: initial;
+}
 .bracket-2 .team-item:nth-of-type(odd):after {
     height: 200%;
     top: 50%;
