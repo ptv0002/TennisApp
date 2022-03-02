@@ -1,58 +1,4 @@
 ﻿<!DOCTYPE html>
-@*<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Tennis Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BIT Khánh Hòa</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Giải đấu</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Lịch sử</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">VĐV</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Thông tin CLB</a>
-                        </li>
-                    </ul>
-                </div>
-                <a class="btn btn-primary rounded" style="justify-content:left" asp-action="Login" asp-area="" asp-controller="Account">Đăng nhập</a>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - Tennis Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
-</body>
-</html>*@
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -91,8 +37,7 @@
                     <div class="nav-drop">
                         <ul>
                             <li class="@ViewBag.IActive"><a asp-action="Index">Trang chủ</a></li>
-                            <li class="@ViewBag.MActive"><a asp-action="Member">Hội viên</a></li>
-                            <li class="@ViewBag.GActive"><a asp-action="Guest">Khách mời</a></li>
+                            <li class="@ViewBag.PActive"><a asp-action="Player">Vận động viên</a></li>
                             <li class="@ViewBag.RActive"><a asp-action="Result">Kết quả thi đấu</a></li>
                             <li class="@ViewBag.AActive"><a asp-action="Announcement">Thông báo</a></li>
                         </ul>
@@ -112,40 +57,40 @@
 
         <footer id="footer" class="sticky-footer">
             <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        Copyright © Tennis Web 2021
-                    </div>
-                    @*<div class="row  text-center">
-        <div class="col-md-12">
-            <a href="#"><img src="~/images/KAICT-removebg.png" alt="BIT Khánh Hòa"></a>
-        </div>
-
-        </div>
-        <div class="row">
-            <div id="cta" class="cta-footer">
-                <a href="javascript:" class="btn btn-primary rounded">Start Training Now</a>
-                <p>Every day is a challenge, change your life now.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <h3>We live your galaxy</h3>
-
-                <p>
-                    15 New Street, Badass Suite, Greyland, Wetworld.
-                </p>
-            </div>
-
-            <div class="col-md-6 text-right">
-                <ul class="social">
-                    <li><a href="javascript:"><i class="fa fa-facebook-f"></i></a></li>
-                    <li><a href="javascript:"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="javascript:"><i class="fa fa-dribbble"></i></a></li>
-                    <li><a href="javascript:"><i class="fa fa-pinterest"></i></a></li>
-                </ul>
-            </div>
-        </div>*@
+                <div class="copyright text-center my-auto">
+                    Copyright © Tennis Web 2021
                 </div>
+                @*<div class="row  text-center">
+                    <div class="col-md-12">
+                        <a href="#"><img src="~/images/KAICT-removebg.png" alt="BIT Khánh Hòa"></a>
+                    </div>
+
+                    </div>
+                    <div class="row">
+                        <div id="cta" class="cta-footer">
+                            <a href="javascript:" class="btn btn-primary rounded">Start Training Now</a>
+                            <p>Every day is a challenge, change your life now.</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>We live your galaxy</h3>
+
+                            <p>
+                                15 New Street, Badass Suite, Greyland, Wetworld.
+                            </p>
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <ul class="social">
+                                <li><a href="javascript:"><i class="fa fa-facebook-f"></i></a></li>
+                                <li><a href="javascript:"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="javascript:"><i class="fa fa-dribbble"></i></a></li>
+                                <li><a href="javascript:"><i class="fa fa-pinterest"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>*@
+            </div>
         </footer>
     </div>
     <!-- Scroll to Top Button-->
@@ -166,12 +111,13 @@
     <script src="~/sbadmin/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="~/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
 
     <script src="~/sports-html/js/jquery-1.11.2.min.js"></script>
     <script src="~/sports-html/js/bootstrap.js"></script>
     <script src="~/sports-html/js/jquery.main.js"></script>
+
+    <script src="~/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

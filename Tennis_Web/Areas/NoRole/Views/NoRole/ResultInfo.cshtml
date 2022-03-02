@@ -5,7 +5,7 @@
     ViewData["Title"] = "Kết quả";
     Layout = "/Areas/_Layout.cshtml";
     ViewBag.RActive = "active visible-sm visible-xs";
-}
+}@*Tennis_Web.Models.TabViewModel*@
 @model Tennis_Web.Areas.NoRole.Models.ResultViewModel
 <section class="main still-background">
     <div class="visual container">
@@ -29,10 +29,10 @@
             @switch (Model.ActiveTab)
             {
                 case Tennis_Web.Models.Tab.Table:
-                    @await Component.InvokeAsync(typeof(Tennis_Web.Areas.NoRole.Views.NoRole.Components.Table.TableViewComponent), Model);
+                    @await Component.InvokeAsync("Table", new { alt = Model });
                     break;
                 case Tennis_Web.Models.Tab.Special:
-                    @await Component.InvokeAsync(typeof(Tennis_Web.Areas.NoRole.Views.NoRole.Components.Special.SpecialViewComponent), Model);
+                    @await Component.InvokeAsync("Special", new { alt = Model });
                     break;
                 default:
                     break;

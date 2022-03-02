@@ -31,14 +31,9 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             //temp.ImportWorkSheet("D:/Giai_Dau.xlsx", "DS_Giai");
             return View();
         }
-        public IActionResult Member()
+        public IActionResult Player()
         {
-            var model = _context.DS_VDVs.Where(m => !m.Khach_Moi).OrderByDescending(m => m.Diem).ToList();
-            return View(model);
-        }
-        public IActionResult Guest()
-        {
-            var model = _context.DS_VDVs.Where(m => m.Khach_Moi).OrderByDescending(m => m.Diem).ToList();
+            var model = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
             return View(model);
         }
 

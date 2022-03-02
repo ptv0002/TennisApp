@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Danh sách trận đấu - " + ViewBag.DetailedTitle;
+    ViewData["Title"] = "Danh sách trận đấu - " + Model.DetailedTitle;
 }
 @model Tennis_Web.Models.TabViewModel
 <ul class="nav nav-tabs mt-3">
@@ -14,10 +14,10 @@
     @switch (Model.ActiveTab)
     {
         case Tennis_Web.Models.Tab.Table:
-            @await Component.InvokeAsync(typeof(Tennis_Web.Views.Match.Components.Table.TableViewComponent), Model);
+            @await Component.InvokeAsync("Table", new { vm = Model });
             break;
         case Tennis_Web.Models.Tab.Special:
-            @await Component.InvokeAsync(typeof(Tennis_Web.Views.Match.Components.Special.SpecialViewComponent), Model);
+            @await Component.InvokeAsync("Special", new { vm = Model });
             break;
         default:
             break;
