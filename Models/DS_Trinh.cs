@@ -12,6 +12,7 @@
         {
             DS_Cap = new HashSet<DS_Cap>();
             DS_Bang = new HashSet<DS_Bang>();
+            DS_Tran = new HashSet<DS_Tran>();
         }
         [Key]
         public int Id { get; set; }
@@ -41,6 +42,6 @@
         public virtual DS_Giai DS_Giai { get; set; }
         public virtual ICollection<DS_Cap> DS_Cap { get; set; }
         public virtual ICollection<DS_Bang> DS_Bang { get; set; }
-
+        public virtual ICollection<DS_Tran> DS_Tran { get; set; }
     }
 }

@@ -59,7 +59,8 @@ namespace Tennis_Web.Views.Match.Components.Table
             var model = new TableTabViewModel
             {
                 DS_Tran = matches,
-                DS_Cap = pairs.Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Id).ToList()
+                //DS_Cap = pairs.Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Id).ToList()
+                DS_Cap = pairs.Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()
             };
             return View(model);
         }
