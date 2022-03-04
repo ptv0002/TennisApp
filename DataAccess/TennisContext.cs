@@ -22,7 +22,6 @@ namespace DataAccess
         public virtual DbSet<DS_Tran> DS_Trans { get; set; }
         public virtual DbSet<DS_Trinh> DS_Trinhs { get; set; }
         public virtual DbSet<DS_VDV> DS_VDVs { get; set; }
-        public virtual DbSet<DS_Vong> DS_Vongs { get; set; }
         public virtual DbSet<Khu_Vuc> Khu_Vucs { get; set; }
         public virtual DbSet<DS_Bang> DS_Bangs { get; set; }
         [NotMapped]

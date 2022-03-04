@@ -17,7 +17,6 @@
         public int Kq_1 { get; set; }
         [DisplayName("KQ 2")]
         public int Kq_2 { get; set; }
-        [DisplayName("ID Cặp 1")]
         public int? ID_Cap1 { get; set; }
         [ForeignKey("ID_Cap1")]
         public virtual DS_Cap DS_Cap1 { get; set; }
@@ -26,10 +25,9 @@
         [ForeignKey("ID_Cap2")]
         [InverseProperty("DS_Trans")]
         public virtual DS_Cap DS_Cap2 { get; set; }
-        public int ID_Vong { get; set; }
-        [DisplayName("ID Vòng")]
-        [ForeignKey("ID_Vong")]
-        public virtual DS_Vong DS_Vong { get; set; }
-
+        public int Ma_Vong { get; set; }
+        public int ID_Trinh { get; set; }
+        [ForeignKey("ID_Trinh")]
+        public virtual DS_Trinh DS_Trinh { get; set; }
     }
 }

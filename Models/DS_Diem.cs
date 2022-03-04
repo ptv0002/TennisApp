@@ -18,8 +18,8 @@
         public virtual DS_Cap DS_Cap { get; set; }
         [DisplayName("ID Vòng")]
         public int ID_Vong { get; set; }
-        [ForeignKey("ID_Vong")]
-        public virtual DS_Vong DS_Vong { get; set; }
+        //[ForeignKey("ID_Vong")]
+        //public virtual DS_Vong DS_Vong { get; set; }
         //public int ID_Trinh { get; set; }
         //[ForeignKey("ID_Trinh")]
         //[DisplayName("ID Trình")]

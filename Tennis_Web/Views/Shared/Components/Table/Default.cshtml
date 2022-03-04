@@ -3,10 +3,10 @@
 *@
 @{
     int insertCount = 0, titleCount = 0;
-    bool hasRole = User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Referee");
+    bool hasRole = ViewBag.Admin;
 }
 @model TableTabViewModel
-<form asp-action="TableResult">
+<form asp-action="UpdateTable" asp-controller="Result">
     @for (int i = 0; i < ViewBag.ListTable.Count; i++)
     {
         var reflectCount = new List<int>();
@@ -31,7 +31,7 @@
                                     <th style="background-color:teal"></th>
                                     @for (int j = 1; j < ViewBag.ListNum[i] + 1; j++)
                                     {
-                                        <th>@ViewBag.ListTable[i]<span>@j</span></th>
+                                        <th style="width:6rem">@ViewBag.ListTable[i]<span>@j</span></th>
                                     }
                                     <th>Số trận thắng</th>
                                     <th>Hiệu số</th>
@@ -61,7 +61,8 @@
                                                         -
                                                         <input class="form-control form-control-sm left-padding" asp-for="@Model.DS_Tran[insertCount].Kq_2" />
                                                         <input type="hidden" asp-for="@Model.DS_Tran[insertCount].Id" />
-                                                        <input type="hidden" asp-for="@Model.DS_Tran[insertCount].ID_Vong" />
+                                                        <input type="hidden" asp-for="@Model.DS_Tran[insertCount].ID_Trinh" />
+                                                        <input type="hidden" asp-for="@Model.DS_Tran[insertCount].Ma_Vong"/>
                                                     </td>
                                                 }
                                                 else
@@ -84,7 +85,7 @@
                                         {
                                             if (hasRole)
                                             {
-                                                <td><input class="form-control form-control-sm" style="width:2.75rem" asp-for="@Model.DS_Cap[titleCount].Boc_Tham" /></td>
+                                                <td><input class="form-control form-control-sm" style="width:2.75rem; display:initial" asp-for="@Model.DS_Cap[titleCount].Boc_Tham" /></td>
                                             }
                                             else
                                             { // For No Role View
@@ -133,7 +134,6 @@
                                             var pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[i].ID_Cap1);
                                             <td>
                                                 <input type="hidden" asp-for="@Model.DS_Tran[i].Id" />
-                                                <input type="hidden" asp-for="@Model.DS_Tran[i].ID_Vong" />
                                                 @pair1.VDV1.Ten_Tat + @pair1.VDV2.Ten_Tat
                                             </td>
 
@@ -142,7 +142,7 @@
                                         {
                                             <td>
                                                 <input type="hidden" asp-for="@Model.DS_Tran[i].Id" />
-                                                <input type="hidden" asp-for="@Model.DS_Tran[i].ID_Vong" />
+                                                <input type="hidden" asp-for="@Model.DS_Tran[insertCount].Ma_Vong"/>
                                                 @Model.DS_Tran[i].Ma_Tran
                                             </td>
                                         }

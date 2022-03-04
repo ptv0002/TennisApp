@@ -25,7 +25,7 @@
                 {
                     string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
                     <div>
-                        <a asp-route-tabname="Special" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs">
+                        <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs">
                             • @title
                         </a>
                     </div>
