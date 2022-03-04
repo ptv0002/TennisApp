@@ -17,6 +17,10 @@
         public int Kq_1 { get; set; }
         [DisplayName("KQ 2")]
         public int Kq_2 { get; set; }
+        [DisplayName("Chọn cặp")]
+        [StringLength(15)]
+        public string Chon_Cap { get; set; }
+        [DisplayName("ID Cặp 1")]
         public int? ID_Cap1 { get; set; }
         [ForeignKey("ID_Cap1")]
         public virtual DS_Cap DS_Cap1 { get; set; }
