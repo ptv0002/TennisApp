@@ -132,10 +132,10 @@ namespace Tennis_Web.Controllers
                         var a4 = new ExcelMethod<DS_Cap>().ExcelToList(file, "DS_Cap");
                         if (a4.Succeeded) { _context.AddRange(a4.List); } else { ModelState.AddModelError(string.Empty, a4.Message); lerror = true; }
                         break;
-                    case "DS_Vong":
-                        var a5 = new ExcelMethod<DS_Vong>().ExcelToList(file, "DS_Vong");
-                        if (a5.Succeeded) { _context.AddRange(a5.List); } else { ModelState.AddModelError(string.Empty, a5.Message); lerror = true; }
-                        break;
+                    //case "DS_Vong":
+                    //    var a5 = new ExcelMethod<DS_Vong>().ExcelToList(file, "DS_Vong");
+                    //    if (a5.Succeeded) { _context.AddRange(a5.List); } else { ModelState.AddModelError(string.Empty, a5.Message); lerror = true; }
+                    //    break;
                     default:
                         ModelState.AddModelError(string.Empty, "Không được cập nhật từ Excel file này!");
                         lerror = true;
@@ -156,7 +156,7 @@ namespace Tennis_Web.Controllers
             {
                 new EntityListViewModel() { EntityName = "DS_Giai" },
                 new EntityListViewModel() { EntityName = "DS_VDV" },
-                new EntityListViewModel() { EntityName = "DS_Vong" },
+                //new EntityListViewModel() { EntityName = "DS_Vong" },
 
                 new EntityListViewModel() { EntityName = "DS_Trinh" },
                 new EntityListViewModel() { EntityName = "DS_Cap" }

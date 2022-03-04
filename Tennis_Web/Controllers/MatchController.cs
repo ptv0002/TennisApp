@@ -92,23 +92,26 @@ namespace Tennis_Web.Controllers
             if (noCodePairs.Count > 0 || noPairPlayers.Count > 0)
             {
                 ViewBag.DS_Trinh = _context.DS_Trinhs.Where(m => m.ID_Giai == id).OrderBy(m => m.Trinh);
-                return View("Error"); 
+                return View("Error");
             }
-            // ---------------- If all conditions met ----------------
-            var pair_Ids = pairs.Select(m => m.Id);
+
+
+            // -------------------------------- If all conditions met --------------------------------
+
             // If any match found, return error message before proceeding
-            if (_context.DS_Trans.Any(m => pair_Ids.Contains((int)m.ID_Cap1) || pair_Ids.Contains((int)m.ID_Cap2)))
+            if (_context.DS_Trans.Any(m => levels.Contains(m.ID_Trinh)))
             {
                 ViewBag.Exist = true;
                 ModelState.AddModelError(string.Empty, "Đã có danh sách trận trong cơ sở dữ liệu! Nếu tiếp tục sẽ xóa danh sách trận cũ.");
             }
-                
+
             var model = new List<MatchGeneratorViewModel>();
             foreach (var level in levels)
             {
+
                 var dict = new List<ChosenPerTable>();
                 // Get name of all (distinct) tables from the given Ma_Cap (Pair Code)
-                var tables = pairs.Where(m => m.ID_Trinh == level).GroupBy(m => char.ToUpper(m.Ma_Cap.ElementAt(0))).Select(m => new
+                var tables = pairs.Where(m => m.ID_Trinh == level).GroupBy(m => char.ToUpper(m.Ma_Cap[0])).Select(m => new
                 {
                     Table = m.Key,
                     Num = m.Count()
@@ -118,15 +121,13 @@ namespace Tennis_Web.Controllers
                     // Add table and default value (0) to list
                     dict.Add(new ChosenPerTable { Table = table.Table, PairsNum = table.Num, Chosen = 0 });
                 }
-                // Assign default values per Level
-                var temp = new MatchGeneratorViewModel
+                // Add all levels to model (Tournament)
+                model.Add(new MatchGeneratorViewModel
                 {
                     ID_Trinh = level,
                     Trinh = _context.DS_Trinhs.Find(level).Trinh,
                     ChosenPerTable = dict
-                };
-                // Add all levels to model (Tournament)
-                model.Add(temp);
+                });
             }
             return View(model.OrderBy(m => m.Trinh).ToList());
         }
@@ -158,13 +159,10 @@ namespace Tennis_Web.Controllers
                 if (level.PlayOff2 != 0 && !level.ChosenPerTable.Any(m => m.P2))
                 {
                     error = true;
-                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " chưa chọn bảng cho Playoff 2!"); 
+                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " chưa chọn bảng cho Playoff 2!");
                 }
             }
             if (error) return View(model);
-
-            // Get rounds' Ids
-            var rounds = _context.DS_Vongs.ToDictionary(x => x.Ma_Vong, y => y.Id);
 
             if (model != null)
             {
@@ -172,15 +170,16 @@ namespace Tennis_Web.Controllers
                 var levels = model.Select(m => m.ID_Trinh).ToList();
                 // Get all pairs with Level Id from the level id list
                 var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).ToList();
+
                 // ---------------- Update Table Id to pairs (Create new table if needed) ----------------
                 foreach (var pair in pairs)
                 {
-                    var table = _context.DS_Bangs.Where(m => m.Ten == char.ToUpper(pair.Ma_Cap.ElementAt(0)) && m.ID_Trinh == pair.ID_Trinh).FirstOrDefault();
+                    var table = _context.DS_Bangs.Where(m => m.Ten == char.ToUpper(pair.Ma_Cap[0]) && m.ID_Trinh == pair.ID_Trinh).FirstOrDefault();
                     if (table == null)
                     {
                         _context.Add(new DS_Bang
                         {
-                            Ten = char.ToUpper(pair.Ma_Cap.ElementAt(0)),
+                            Ten = char.ToUpper(pair.Ma_Cap[0]),
                             ID_Trinh = pair.ID_Trinh
                         });
                         _context.SaveChanges();
@@ -190,6 +189,7 @@ namespace Tennis_Web.Controllers
                     var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "ID_Bang" });
                     if (!result.Succeeded) goto exit;
                 }
+
                 // ---------------- Save these paramters to Json file ----------------
 
                 // Get path for the Json file
@@ -207,39 +207,38 @@ namespace Tennis_Web.Controllers
                 if (exist)
                 {
                     // Get old matches
-                    var oldMatches = _context.DS_Trans.Where(m => pairs.Select(m => m.Id).Contains((int)m.ID_Cap1) || pairs.Select(m => m.Id).Contains((int)m.ID_Cap2)).ToList();
-                    var emptyMatched = _context.DS_Trans.Where(m => m.ID_Cap1 == null || m.ID_Cap2 == null).ToList();
-                    oldMatches.AddRange(emptyMatched);
+                    var oldMatches = _context.DS_Trans.Where(m => levels.Contains(m.ID_Trinh)).ToList();
                     _context.RemoveRange(oldMatches);
                 }
                 // ---------------- Generate list of matches here ----------------
 
                 foreach (var level in model)
                 {
+                    // Level(4) * Round(1) * Table(1) * Order round(2) * Order overall(3)
                     int count = 1;
                     string order = "";
                     // Add Table Rounds
                     foreach (var table in level.ChosenPerTable.Select(m => m.Table))
                     {
-                        var pairByTable = pairs.Where(m => char.ToUpper(m.Ma_Cap.ElementAt(0)) == table && m.ID_Trinh == level.ID_Trinh).OrderBy(m => m.Ma_Cap).ToList();
-                        for (int i = 0; i < pairByTable.Count-1; i++)
+                        var pairByTable = pairs.Where(m => char.ToUpper(m.Ma_Cap[0]) == table && m.ID_Trinh == level.ID_Trinh).OrderBy(m => m.Ma_Cap).ToList();
+                        for (int i = 0; i < pairByTable.Count - 1; i++)
                         {
-                            for(int j = i + 1; j < pairByTable.Count; j++)
+                            for (int j = i + 1; j < pairByTable.Count; j++)
                             {
                                 if (count < 10) order = "*00" + count;
                                 else if (count < 100) order = "*0" + count;
                                 else if (count < 1000) order = "*" + count;
-                                var match = new DS_Tran
+                                _context.Add(new DS_Tran
                                 {
-                                    Ma_Tran = level.Trinh + "*8*" + table + order,
+                                    Ma_Tran = level.Trinh + "*8*" + table + "*00" + order,
                                     ID_Cap1 = pairByTable[i].Id,
                                     ID_Cap2 = pairByTable[j].Id,
-                                    ID_Vong = rounds[8]
-                                };
-                                _context.Add(match);
+                                    ID_Vong = 8,
+                                    ID_Trinh = level.ID_Trinh
+                                });
                                 count++;
                             }
-                            
+
                         }
                     }
                     // Add playoff rounds (if any)
@@ -248,12 +247,12 @@ namespace Tennis_Web.Controllers
                         if (count < 10) order = "*00" + count;
                         else if (count < 100) order = "*0" + count;
                         else if (count < 1000) order = "*" + count;
-                        var match = new DS_Tran
+                        _context.Add(new DS_Tran
                         {
-                            Ma_Tran = level.Trinh + "*7*" + order,
-                            ID_Vong = rounds[7]
-                        };
-                        _context.Add(match);
+                            Ma_Tran = level.Trinh + "*7*0*00" + order,
+                            ID_Vong = 7,
+                            ID_Trinh = level.ID_Trinh
+                        });
                         count++;
                     }
                     // Add Special Rounds
@@ -261,17 +260,22 @@ namespace Tennis_Web.Controllers
                     var ma_vong = (int)Math.Log2(totalPairs);
                     while (ma_vong > 0)
                     {
+                        int roundCount = 1;
+                        string roundOrder = "";
                         for (int i = totalPairs / 2; i > 0; i--)
                         {
                             if (count < 10) order = "*00" + count;
                             else if (count < 100) order = "*0" + count;
                             else if (count < 1000) order = "*" + count;
-                            var match = new DS_Tran
+                            if (count < 10) roundOrder = "*0" + roundCount;
+                            else if (count < 100) roundOrder = "*" + roundCount;
+                            _context.Add(new DS_Tran
                             {
-                                Ma_Tran = level.Trinh + "*" + ma_vong.ToString() + "*" + order,
-                                ID_Vong = rounds[ma_vong]
-                            };
-                            _context.Add(match);
+                                Ma_Tran = level.Trinh + "*" + ma_vong.ToString() + "*0" + roundOrder + order,
+                                ID_Vong = ma_vong,
+                                ID_Trinh = level.ID_Trinh
+                            });
+                            roundCount++;
                             count++;
                         }
                         ma_vong--;
@@ -287,7 +291,7 @@ namespace Tennis_Web.Controllers
         }
         public Tuple<int, int> PowerOfTwo(int number)
         {
-            var powerOfTwo = new List<int> { 2, 4, 8, 16, 32, 64};
+            var powerOfTwo = new List<int> { 2, 4, 8, 16, 32, 64 };
             // If number is a power of 2, return 0
             if (powerOfTwo.Contains(number)) return new Tuple<int, int>(0, 0);
             for (int i = 0; i < powerOfTwo.Count - 1; i++)

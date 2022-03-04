@@ -12,6 +12,8 @@ using Models;
 using Tennis_Web.Models;
 using Tennis_Web.Areas.NoRole.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using System.Text.Json;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -20,11 +22,13 @@ namespace Tennis_Web.Areas.NoRole.Controllers
     public class NoRoleController : Controller
     {
         private readonly TennisContext _context;
-        public NoRoleController(TennisContext context)
+        private readonly IWebHostEnvironment _webHost;
+        public NoRoleController(TennisContext context, IWebHostEnvironment webHost)
         {
             _context = context;
+            _webHost = webHost;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //var temp = new ExcelMethod<DS_Vong>();
             //ResultModel<DS_Vong> a = temp.ExcelToList("C:/TennisApp/Excel/Giai_Dau.xlsx", "DS_Vong");
@@ -40,8 +44,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
 
         public IActionResult Result()
         {
-            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi).ToList();
-            if (model.Count == 0) model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
             return View(model);
         }
         public IActionResult ResultInfo(ResultViewModel model)

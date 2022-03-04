@@ -64,8 +64,5 @@
         public virtual Khu_Vuc Khu_Vuc { get; set; }
         public virtual ICollection<DS_Cap> DS_Caps { get; set; }
         public virtual ICollection<DS_VDVDiem> DS_VDV_Diem { get; set; }
-        //  [JsonIgnore]
-        //   public virtual ICollection<DS_Cap> DS_Cap2 { get; set; }
-
     }
 }

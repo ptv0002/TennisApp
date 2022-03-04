@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
 
@@ -18,17 +21,19 @@ namespace Tennis_Web.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly TennisContext _context;
+        private readonly IWebHostEnvironment _webHost;
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-            RoleManager<IdentityRole> roleManager, TennisContext context)
+            RoleManager<IdentityRole> roleManager, TennisContext context, IWebHostEnvironment webHost)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _context = context;
+            _webHost = webHost;
         }
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
-            await _signInManager.SignOutAsync();
+            _signInManager.SignOutAsync();
 
             return RedirectToAction("Login", "Account");
         }
@@ -92,7 +97,7 @@ namespace Tennis_Web.Controllers
         [HttpPost, ActionName("Register")]
         public async Task<IActionResult> Register(AccountViewModel model)
         {
-            
+
             if (ModelState.IsValid)
             {
                 if (!_userManager.Users.Any())
@@ -110,31 +115,37 @@ namespace Tennis_Web.Controllers
                     var result1 = await _roleManager.FindByNameAsync("Admin"); // Check for "Admin" role in DB
                     var result2 = await _roleManager.FindByNameAsync("Manager"); // Check for "Manager" role in DB
                     var result3 = await _roleManager.FindByNameAsync("Referee"); // Check for "Referee" role in DB
-                    bool upfail = false ;
+                    bool upfail = false;
 
-                    if (!_context.DS_Vongs.Any())
-                    {
-                        await _context.AddRangeAsync(new List<DS_Vong>
+                    // Get path for the Json file
+                    string path = _webHost.WebRootPath + "/Files/Json/RoundInfo.json";
+                    var listRound = new List<Vong>
                         {
-                            new DS_Vong { Ten = "Vô Địch", Ma_Vong = 0 },
-                            new DS_Vong { Ten = "Chung Kết", Ma_Vong = 1 },
-                            new DS_Vong { Ten = "Bán Kết", Ma_Vong = 2 },
-                            new DS_Vong { Ten = "Tứ Kết", Ma_Vong = 3 },
-                            new DS_Vong { Ten = "Vòng 3", Ma_Vong = 4 },
-                            new DS_Vong { Ten = "Vòng 2", Ma_Vong = 5 },
-                            new DS_Vong { Ten = "Vòng 1", Ma_Vong = 6 },
-                            new DS_Vong { Ten = "Playoff", Ma_Vong = 7 },
-                            new DS_Vong { Ten = "Vòng Bảng", Ma_Vong = 8 }
-                        });
-                        await _context.SaveChangesAsync();
-                    }
+                            new Vong { Ten = "Vô Địch", Ma_Vong = 0 },
+                            new Vong { Ten = "Chung Kết", Ma_Vong = 1 },
+                            new Vong { Ten = "Bán Kết", Ma_Vong = 2 },
+                            new Vong { Ten = "Tứ Kết", Ma_Vong = 3 },
+                            new Vong { Ten = "Vòng 3", Ma_Vong = 4 },
+                            new Vong { Ten = "Vòng 2", Ma_Vong = 5 },
+                            new Vong { Ten = "Vòng 1", Ma_Vong = 6 },
+                            new Vong { Ten = "Playoff", Ma_Vong = 7 },
+                            new Vong { Ten = "Vòng Bảng", Ma_Vong = 8 }
+                        };
+                    FileStream fileStream;
+                    // Delete file if Json file is already exist
+                    if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+
+                    fileStream = System.IO.File.Create(path);
+                    var options = new JsonSerializerOptions { WriteIndented = true };
+                    await JsonSerializer.SerializeAsync(fileStream, listRound, options);
+                    fileStream.Dispose();
 
                     if (result1 == null)  // No "Admin" role found
                     {
                         // Create new role
                         var newRole = new IdentityRole("Admin");
                         var rsNewRole = await _roleManager.CreateAsync(newRole);
-                        upfail =  ! rsNewRole.Succeeded;
+                        upfail = !rsNewRole.Succeeded;
                     }
                     if (result2 == null)  // No "Manager" role found
                     {
@@ -209,7 +220,7 @@ namespace Tennis_Web.Controllers
                 selectedValue = roles[0];
             }
             ViewBag.RoleName = new SelectList(_roleManager.Roles, "Name", "Name", selectedValue);
-            ViewBag.Id = id;
+            ViewBag.Ma_Vong = id;
             return View(model);
         }
         [HttpPost]

@@ -2,23 +2,77 @@
     Match Special View Component
 *@
 @{
-    bool hasRole = User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Referee");
+    bool hasRole = ViewBag.Admin == true;
 }
-<div class="tournament-container">
-    <div class="tournament-headers" id="tournamentHeader">
-        <h3>Tứ Kết</h3>
-        <h3>Bán Kết</h3>
-        <h3>Chung Kết</h3>
-    </div>
-    <div class="tournament-brackets">
-        <ul class="bracket bracket-1">
-            @for (int i = 0; i < 4; i++)
-            {
+@model List<Models.DS_Tran>
+<form asp-action="UpdateSpecial" asp-controller="Result">
+    <div class="tournament-container">
+        <div class="tournament-headers" id="tournamentHeader">
+            <h3>Tứ Kết</h3>
+            <h3>Bán Kết</h3>
+            <h3>Chung Kết</h3>
+        </div>
+        <div class="tournament-brackets">
+            <ul class="bracket bracket-1">
+                @for (int i = 0; i < 4; i++)
+                {
+                    <li class="team-item row">
+                        <div class="child">
+                            <div class="row">
+                                <div class="col-12">QF_@i</div>
+                                <div class="col-12">QF_@i</div>
+                            </div>
+                            <div class="result">
+                                @if (hasRole)
+                                {<input class="form-control form-control-sm" style="width:1.75rem">}
+                            </div>
+                        </div>
+                        <div class="child top-border">
+                            <div class="row">
+                                <div class="col-12">QF_@i</div>
+                                <div class="col-12">QF_@i</div>
+                            </div>
+                            <div class="result">
+                                @if (hasRole)
+                                {<input class="form-control form-control-sm" style="width:1.75rem">}
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+            <ul class="bracket bracket-2">
+                @for (int i = 0; i < 2; i++)
+                {
+                    <li class="team-item row">
+                        <div class="child">
+                            <div class="row">
+                                <div class="col-12">SF_@i</div>
+                                <div class="col-12">SF_@i</div>
+                            </div>
+                            <div class="result">
+                                @if (hasRole)
+                                {<input class="form-control form-control-sm" style="width:1.75rem">}
+                            </div>
+                        </div>
+                        <div class="child top-border">
+                            <div class="row">
+                                <div class="col-12">SF_@i</div>
+                                <div class="col-12">SF_@i</div>
+                            </div>
+                            <div class="result">
+                                @if (hasRole)
+                                {<input class="form-control form-control-sm" style="width:1.75rem">}
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+            <ul class="bracket bracket-3">
                 <li class="team-item row">
                     <div class="child">
                         <div class="row">
-                            <div class="col-12">QF_@i</div>
-                            <div class="col-12">QF_@i</div>
+                            <div class="col-12">F_1</div>
+                            <div class="col-12">F_2</div>
                         </div>
                         <div class="result">
                             @if (hasRole)
@@ -27,8 +81,8 @@
                     </div>
                     <div class="child top-border">
                         <div class="row">
-                            <div class="col-12">QF_@i</div>
-                            <div class="col-12">QF_@i</div>
+                            <div class="col-12">F_3</div>
+                            <div class="col-12">F_4</div>
                         </div>
                         <div class="result">
                             @if (hasRole)
@@ -36,58 +90,7 @@
                         </div>
                     </div>
                 </li>
-            }
-        </ul>
-        <ul class="bracket bracket-2">
-            @for (int i = 0; i < 2; i++)
-            {
-                <li class="team-item row">
-                    <div class="child">
-                        <div class="row">
-                            <div class="col-12">SF_@i</div>
-                            <div class="col-12">SF_@i</div>
-                        </div>
-                        <div class="result">
-                            @if (hasRole)
-                            {<input class="form-control form-control-sm" style="width:1.75rem">}
-                        </div>
-                    </div>
-                    <div class="child top-border">
-                        <div class="row">
-                            <div class="col-12">SF_@i</div>
-                            <div class="col-12">SF_@i</div>
-                        </div>
-                        <div class="result">
-                            @if (hasRole)
-                            {<input class="form-control form-control-sm" style="width:1.75rem">}
-                        </div>
-                    </div>
-                </li>
-            }
-        </ul>
-        <ul class="bracket bracket-3">
-            <li class="team-item row">
-                <div class="child">
-                    <div class="row">
-                        <div class="col-12">F_1</div>
-                        <div class="col-12">F_2</div>
-                    </div>
-                    <div class="result">
-                        @if (hasRole)
-                        {<input class="form-control form-control-sm" style="width:1.75rem">}
-                    </div>
-                </div>
-                <div class="child top-border">
-                    <div class="row">
-                        <div class="col-12">F_3</div>
-                        <div class="col-12">F_4</div>
-                    </div>
-                    <div class="result">
-                        @if (hasRole)
-                        {<input class="form-control form-control-sm" style="width:1.75rem">}
-                    </div>
-                </div>
-            </li>
-        </ul>
+            </ul>
+        </div>
     </div>
-</div>
+</form>
