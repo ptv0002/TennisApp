@@ -15,7 +15,7 @@ namespace Tennis_Web.Models
         public bool? Succeeded { get; set; }
         public string CurrentModel { get; set; }
     }
-    public class TableTabViewModel
+    public class RoundTabViewModel
     {
         public List<DS_Tran> DS_Tran { get; set; }
         public List<DS_Cap> DS_Cap { get; set; }

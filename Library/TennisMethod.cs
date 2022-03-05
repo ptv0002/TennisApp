@@ -15,91 +15,19 @@ namespace Library
         {
             _context = context;
         }
-        public Dictionary<DS_Cap, int?> TableRanking(List<DS_Cap> list)
-        {
-            // Get pair Ids
-            var idCap = list.Select(m => m.Id).ToList();
-            var returnList = new Dictionary<DS_Cap, int?>(); // T1: Pair, T2: Rank
-
-            bool first = true;
-            while (true)
-            {
-                var pointsList = new Dictionary<DS_Cap, int>(); // T1: Pair, T2: Score (win rounds)
-                foreach (var pair in list)
-                {
-                    // Get matches that the pair participate
-                    var matchesPair1 = _context.Set<DS_Tran>().Where(m => m.ID_Cap1 == pair.Id).GroupBy(m => m.Kq_1 > m.Kq_2);
-                    var matchesPair2 = _context.Set<DS_Tran>().Where(m => m.ID_Cap2 == pair.Id).GroupBy(m => m.Kq_1 < m.Kq_2);
-                    // Get matches won
-                    int count = matchesPair1.Count(m => m.Key) + matchesPair2.Count(m => m.Key);
-                    pointsList.Add(pair, count);
-                }
-                // Rank point descending
-                pointsList = pointsList.OrderByDescending(m => m.Value).ToDictionary(x => x.Key, y => y.Value);
-
-                if (pointsList.All(m => m.Value == pointsList.ElementAt(0).Value))
-                {
-                    // If return list if null, transfer all obj from pointsList to return list
-                    if (returnList == null)
-                    {
-                        for (int i = 0; i < pointsList.Count; i++)
-                        {
-                            returnList.Add(pointsList.ElementAt(i).Key, null);
-                        }
-                        return returnList;
-                    }
-                    goto exit;
-                }
-                for (int i = 0; i < pointsList.Count; i++)
-                {
-                    // If first loop, add all obj to return list
-                    if (first)
-                    {
-                        int? rank = null;
-                        // If points achieved isn't repeated, add rank to return list and remove obj from list of Pairs to consider
-                        if (pointsList.Where(m => m.Value == pointsList.ElementAt(i).Value).Count() == 1)
-                        {
-                            rank = i + 1; // Rank start from 1
-                            list.Remove(pointsList.ElementAt(i).Key);
-                        }
-                        returnList.Add(pointsList.ElementAt(i).Key, rank);
-                        first = false;
-                    }
-                    // From the second loop, update existing obj
-                    else
-                    {
-                        if (pointsList.Where(m => m.Value == pointsList.ElementAt(i).Value).Count() == 1)
-                        {
-                            var obj = returnList.FirstOrDefault(m => m.Key.Id == pointsList.ElementAt(i).Key.Id);
-                            returnList[obj.Key] = NewId(returnList);
-                            list.Remove(pointsList.ElementAt(i).Key);
-                        }
-                    }
-                }
-                // If only one pair remain in the list, add the ranking.
-                if (list.Count == 1)
-                {
-                    var obj = returnList.FirstOrDefault(m => m.Key.Id == list[0].Id);
-                    returnList[obj.Key] = NewId(returnList);
-                    break;
-                }
-            }
-            exit:
-            return returnList.OrderBy(m => m.Value).ToDictionary(x => x.Key, y => y.Value);
-        }
         /// <summary>
         /// Xếp hạng theo điểm, đầu vào danh sách cặp, ds trận đấu để tính điểm
         /// Khi nào thi đấu xong mới gọi hàm xếp hạng này.
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public List<DS_Cap> Rank_Full(int idTrinh, string bang)
+        public List<DS_Cap> Rank_Full(int idTrinh, char bang)
         {
             // Lấy danh sách cặp đấu và ds trận đấu của bảng
-            var returnList  = _context.Set<DS_Cap>().Where(m => m.ID_Trinh == idTrinh).Where(m => m.Ma_Cap.Substring(0,1)==bang).ToList();
+            var returnList  = _context.Set<DS_Cap>().Where(m => m.ID_Trinh == idTrinh).Where(m => m.Ma_Cap[0] == bang).ToList();
             var ds_tran     = _context.Set<DS_Tran>().Where(m => m.ID_Trinh==idTrinh)
-                                .Where(m => m.Ma_Tran.Substring(5,1)=="8")
-                                .Where(m => m.Ma_Tran.Substring(7,1)==bang)
+                                .Where(m => m.Ma_Tran[5] == '8')
+                                .Where(m => m.Ma_Tran[7] == bang)
                                 .ToList();
 
             // ============= Xếp hạng theo điểm
@@ -126,7 +54,7 @@ namespace Library
                 returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
             }
             //=============== Xếp hạng theo bốc thăm (ở ngoài --> dùng nút xếp hạng sau cùng)
-            return (List<DS_Cap>)returnList.OrderBy(m => m.Xep_Hang);
+            return returnList.OrderBy(m => m.Xep_Hang).ToList();
         }
 
         public static List<DS_Cap> Rank_Point(List<DS_Cap> lcap, List<DS_Tran> ltran)
@@ -141,7 +69,7 @@ namespace Library
                 { id_Cap = lcap.First(m => m.Id == ltran[i].ID_Cap2).Id; }
                 lcap[lcap.FindIndex(m => m.Id == id_Cap)].Tran_Thang++;
             }
-            lcap = (List<DS_Cap>) lcap.OrderByDescending(m => m.Tran_Thang); // Xếp thứ tự sau khi tính điểm
+            lcap = lcap.OrderByDescending(m => m.Tran_Thang).ToList(); // Xếp thứ tự sau khi tính điểm
             // Bắt đầu Xếp hạng sau khi tính điểm
             int cur = 1;                                         // Lần đầu xếp hạng   
             if (lcap[0].Xep_Hang>0) { cur = lcap[0].Xep_Hang; }  // Khi xếp hạng theo điểm nhóm con
@@ -163,7 +91,7 @@ namespace Library
                 lcap[0].Xep_Hang = cur;
             }
 
-            return (List<DS_Cap>) lcap.OrderBy(m => m.Xep_Hang);
+            return lcap.OrderBy(m => m.Xep_Hang).ToList();
         }
         public static List<DS_Cap> Rank_Ratio(List<DS_Cap> lCap, List<DS_Tran> lTran)
         {
@@ -227,21 +155,6 @@ namespace Library
         {
             public List<DS_Tran> DS_Tran { get; set; }
             public List<DS_Cap> DS_Cap { get; set; }
-        }
-        private static int NewId(Dictionary<DS_Cap, int?> list)
-        {
-            // Get not null Value obj and order ascending
-            list = list.Where(m => m.Value != null).OrderBy(m => m.Value).ToDictionary(x => x.Key, y => y.Value);
-            for (int i = 1; i < list.Count; i++)
-            {
-                // If list[i] != list[i-1] + 1, return list[i-1] + 1 since list[i] is not consecutive
-                if (list.ElementAt(i).Value != (list.ElementAt(i-1).Value + 1))
-                {
-                    return (int)(list.ElementAt(i - 1).Value + 1);
-                }
-            }
-            // If the list contains all consecutive ranking, return new id next to last
-            return (int)(list.Last().Value + 1);
         }
     }
 }

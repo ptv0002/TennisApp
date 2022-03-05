@@ -233,7 +233,7 @@ namespace Tennis_Web.Controllers
                                     Ma_Tran = level.Trinh + "*8*" + table + "*00" + order,
                                     ID_Cap1 = pairByTable[i].Id,
                                     ID_Cap2 = pairByTable[j].Id,
-                                    ID_Vong = 8,
+                                    Ma_Vong = 8,
                                     ID_Trinh = level.ID_Trinh
                                 });
                                 count++;
@@ -250,7 +250,7 @@ namespace Tennis_Web.Controllers
                         _context.Add(new DS_Tran
                         {
                             Ma_Tran = level.Trinh + "*7*0*00" + order,
-                            ID_Vong = 7,
+                            Ma_Vong = 7,
                             ID_Trinh = level.ID_Trinh
                         });
                         count++;
@@ -262,7 +262,7 @@ namespace Tennis_Web.Controllers
                     {
                         int roundCount = 1;
                         string roundOrder = "";
-                        for (int i = totalPairs / 2; i > 0; i--)
+                        for (int i = 0; i < totalPairs / 2; i++)
                         {
                             if (count < 10) order = "*00" + count;
                             else if (count < 100) order = "*0" + count;
@@ -272,7 +272,7 @@ namespace Tennis_Web.Controllers
                             _context.Add(new DS_Tran
                             {
                                 Ma_Tran = level.Trinh + "*" + ma_vong.ToString() + "*0" + roundOrder + order,
-                                ID_Vong = ma_vong,
+                                Ma_Vong = ma_vong,
                                 ID_Trinh = level.ID_Trinh
                             });
                             roundCount++;

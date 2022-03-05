@@ -7,9 +7,6 @@
     text-align: left;
     height: 100%;
 }
-#footer{
-    display:flex;
-}
 a {
     color: black;
     text-decoration: none;
@@ -41,14 +38,18 @@ a {
     background-image: url("../images/overlay.png"), linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%);
 }
 .still-background {
-    background-image: url("../images/img-med.jpg");
+    background-image: url("../images/still-bg.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
+    min-height: 100vh;
 }
-.text-block {
+.text-block-sm {
     text-align: left;
+    padding: 5rem 0;
 }
-    footer.sticky-footer .copyright {
-        line-height: 1;
-        font-size: 12px;
-    }
+
+footer.sticky-footer .copyright {
+    line-height: 1;
+    font-size: 12px;
+    padding: 2rem 0;
+}

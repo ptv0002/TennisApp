@@ -32,14 +32,14 @@ namespace Tennis_Web.Views.Match.Components.Table
                     IsCurrent = alt.IsCurrent,
                     ID = alt.ID
                 };
+                ViewBag.Admin = false;
             }
             else ViewBag.Admin = true;
-            List<DS_Tran> matches = new();
-            //if (vm.CurrentModel != null) model = vm.CurrentModel.Cast<DS_Tran>().ToList();
             
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công");
             else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
 
+            List<DS_Tran> matches = new();
             var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
             if (vm.Succeeded != false)
             {
@@ -56,7 +56,8 @@ namespace Tennis_Web.Views.Match.Components.Table
             }).OrderBy(m => m.Table);
             ViewBag.ListTable = list.Select(m => m.Table).ToList();
             ViewBag.ListNum = list.Select(m => m.Num).ToList();
-            var model = new TableTabViewModel
+            ViewBag.IsCurrent = vm.IsCurrent;
+            var model = new RoundTabViewModel
             {
                 DS_Tran = matches,
                 DS_Cap = pairs.Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()

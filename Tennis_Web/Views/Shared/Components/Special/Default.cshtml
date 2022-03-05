@@ -1,96 +1,87 @@
 ﻿@*
-    Match Special View Component
+    Special View Component
 *@
 @{
     bool hasRole = ViewBag.Admin == true;
+    bool isCurrent = ViewBag.IsCurrent == true;
+    int bracket = 1;
+    int count = 0;
 }
-@model List<Models.DS_Tran>
-<form asp-action="UpdateSpecial" asp-controller="Result">
-    <div class="tournament-container">
-        <div class="tournament-headers" id="tournamentHeader">
-            <h3>Tứ Kết</h3>
-            <h3>Bán Kết</h3>
-            <h3>Chung Kết</h3>
-        </div>
-        <div class="tournament-brackets">
-            <ul class="bracket bracket-1">
-                @for (int i = 0; i < 4; i++)
+@model RoundTabViewModel
+@if (Model.DS_Tran.Any())
+{
+    <form asp-action="UpdateSpecial" asp-controller="Result">
+        <div class="tournament-container">
+            <div class="tournament-headers" id="tournamentHeader">
+                @for (int i = ViewBag.RoundNum; i > 0; i--)
                 {
-                    <li class="team-item row">
-                        <div class="child">
-                            <div class="row">
-                                <div class="col-12">QF_@i</div>
-                                <div class="col-12">QF_@i</div>
-                            </div>
-                            <div class="result">
-                                @if (hasRole)
-                                {<input class="form-control form-control-sm" style="width:1.75rem">}
-                            </div>
-                        </div>
-                        <div class="child top-border">
-                            <div class="row">
-                                <div class="col-12">QF_@i</div>
-                                <div class="col-12">QF_@i</div>
-                            </div>
-                            <div class="result">
-                                @if (hasRole)
-                                {<input class="form-control form-control-sm" style="width:1.75rem">}
-                            </div>
-                        </div>
-                    </li>
+                    <h3>@ViewBag.ListRound[i]</h3>
                 }
-            </ul>
-            <ul class="bracket bracket-2">
-                @for (int i = 0; i < 2; i++)
+            </div>
+            <div class="tournament-brackets">
+                @for (int i = ViewBag.RoundNum; i > 0; i--)
                 {
-                    <li class="team-item row">
-                        <div class="child">
-                            <div class="row">
-                                <div class="col-12">SF_@i</div>
-                                <div class="col-12">SF_@i</div>
-                            </div>
-                            <div class="result">
-                                @if (hasRole)
-                                {<input class="form-control form-control-sm" style="width:1.75rem">}
-                            </div>
-                        </div>
-                        <div class="child top-border">
-                            <div class="row">
-                                <div class="col-12">SF_@i</div>
-                                <div class="col-12">SF_@i</div>
-                            </div>
-                            <div class="result">
-                                @if (hasRole)
-                                {<input class="form-control form-control-sm" style="width:1.75rem">}
-                            </div>
-                        </div>
-                    </li>
+                    <ul class="bracket bracket-@bracket">
+                        @for (int j = 0; j < Math.Pow(2,i)/2; j++)
+                        {
+                            <li class="team-item row">
+                                <div class="child">
+                                    <div class="row">
+                                        @if (Model.DS_Tran[count].ID_Cap1 != null)
+                                        {
+                                            var pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[count].ID_Cap1);
+                                            <div class="col-12">@pair1.VDV1.Ten_Tat</div>
+                                            <div class="col-12">@pair1.VDV2.Ten_Tat</div>
+                                            <input type="hidden" asp-for="@Model.DS_Tran[count].Id" />
+                                            <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Vong" />
+                                        }
+                                        else
+                                        {
+                                            <div class="col-12">@Model.DS_Tran[count].Ma_Tran</div>
+                                            <input type="hidden" asp-for="@Model.DS_Tran[count].Id" />
+                                            <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Vong" />
+                                        }
+                                    </div>
+                                    <div class="result">
+                                        @if (hasRole)
+                                        {<input class="form-control form-control-sm" style="width:1.75rem">}
+                                    </div>
+                                </div>
+                                <div class="child top-border">
+                                    <div class="row">
+                                        @if (Model.DS_Tran[count].ID_Cap2 != null)
+                                        {
+                                            var pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[count].ID_Cap2);
+                                            <div class="col-12">@pair1.VDV1.Ten_Tat</div>
+                                            <div class="col-12">@pair1.VDV2.Ten_Tat</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-12">@Model.DS_Tran[count].Ma_Tran</div>
+                                        }
+                                    </div>
+                                    <div class="result">
+                                        @if (hasRole)
+                                        {<input class="form-control form-control-sm" style="width:1.75rem">}
+                                    </div>
+                                </div>
+                            </li>
+                            count++;
+                        }
+                    </ul>
+                    bracket++;
                 }
-            </ul>
-            <ul class="bracket bracket-3">
-                <li class="team-item row">
-                    <div class="child">
-                        <div class="row">
-                            <div class="col-12">F_1</div>
-                            <div class="col-12">F_2</div>
-                        </div>
-                        <div class="result">
-                            @if (hasRole)
-                            {<input class="form-control form-control-sm" style="width:1.75rem">}
-                        </div>
-                    </div>
-                    <div class="child top-border">
-                        <div class="row">
-                            <div class="col-12">F_3</div>
-                            <div class="col-12">F_4</div>
-                        </div>
-                        <div class="result">
-                            @if (hasRole)
-                            {<input class="form-control form-control-sm" style="width:1.75rem">}
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            </div>
         </div>
-    </div>
-</form>
+        @if (hasRole && isCurrent)
+        {
+            <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
+            </div>
+        }
+    </form>
+}
+else
+{
+    <h5 class="font-weight-bold text-danger">Chưa có danh sách trận đấu!</h5>
+}
