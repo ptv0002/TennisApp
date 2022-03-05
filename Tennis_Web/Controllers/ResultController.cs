@@ -30,7 +30,7 @@ namespace Tennis_Web.Controllers
         public async Task<IActionResult> UpdateTableAsync(RoundTabViewModel model)
         {
             var matches = model.DS_Tran;
-            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == matches.Find(m => m.ID_Trinh != 0).ID_Trinh).FirstOrDefault();
+            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).FirstOrDefault(m => m.Id == model.ID_Trinh);
             // Find and update result for Matches
             bool result = false;
             if (ModelState.IsValid)
@@ -66,21 +66,28 @@ namespace Tennis_Web.Controllers
                     if (result) _context.SaveChanges();
 
                 }
-                //if (!playoffEmpty)
-                //{
-                //    foreach (var match in matches.Where(m => m.Ma_Vong == 7).ToList())
-                //    {
-                //        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, columnsToSave).Succeeded;
-                //        if (!result) break;
-                //    }
-                //}
-                //foreach (var level in file)
-                //{
-                //    if (level.PlayOff1 > 0)
-                //    if (level.PlayOff2 > 0)
-                //    {
-                //        if (level.ChosenPerTable.se)
-                //        }
+                if (!playoffEmpty)
+                {
+                    foreach (var match in matches.Where(m => m.Ma_Vong == 7).ToList())
+                    {
+                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, columnsToSave).Succeeded;
+                        if (!result) break;
+                    }
+                }
+                else
+                {
+                    var levelParam = file.Find(m => m.ID_Trinh == temp.Id);
+
+                    if (levelParam.PlayOff1 > 0)
+                    {
+
+                    }
+                        //if (level.PlayOff2 > 0)
+                        //{
+                        //    if (level.ChosenPerTable.se)
+                        //} 
+                }
+                    
                 //}
                 //bool uniqueRanking =
                 //    // ========================= Get ranking and put in playoff =========================

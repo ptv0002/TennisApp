@@ -59,6 +59,7 @@ namespace Tennis_Web.Views.Match.Components.Table
             ViewBag.IsCurrent = vm.IsCurrent;
             var model = new RoundTabViewModel
             {
+                ID_Trinh = vm.ID,
                 DS_Tran = matches,
                 DS_Cap = pairs.Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()
             };
