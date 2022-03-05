@@ -30,7 +30,7 @@ namespace Tennis_Web.Controllers
         public async Task<IActionResult> UpdateTableAsync(RoundTabViewModel model)
         {
             var matches = model.DS_Tran;
-            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).FirstOrDefault(m => m.Id == matches.Find(m => m.ID_Trinh != 0).ID_Trinh);
+            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == matches.Find(m => m.ID_Trinh != 0).ID_Trinh).FirstOrDefault();
             // Find and update result for Matches
             bool result = false;
             if (ModelState.IsValid)
