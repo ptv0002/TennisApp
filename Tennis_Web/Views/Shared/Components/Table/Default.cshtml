@@ -10,8 +10,8 @@
 @model RoundTabViewModel
 @if (Model.DS_Tran.Any())
 {
-    <input type="hidden" asp-for="@Model.ID_Trinh" />
     <form asp-action="UpdateTable" asp-controller="Result">
+        <input type="hidden" asp-for="@Model.ID_Trinh" />
         @for (int i = 0; i < ViewBag.ListTable.Count; i++)
         {
             var reflectCount = new List<int>();

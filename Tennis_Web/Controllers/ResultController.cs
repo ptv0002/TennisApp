@@ -37,8 +37,8 @@ namespace Tennis_Web.Controllers
             {
                 var columnsToSave = new List<string> { "Kq_1", "Kq_2" };
                 bool tableFilled = matches.Where(m => m.Ma_Vong == 8).All(m => (m.Kq_1 + m.Kq_2) > 0);
-                bool tableChanges = !IsTheSame(matches.Where(m => m.Ma_Vong == 7).ToList(), temp.Id);
-                bool playoffEmpty = matches.Any(m => m.Ma_Vong == 7 && (m.ID_Cap1 == null || m.ID_Cap2 == null));
+                bool tableChanges = !IsTheSame(matches.Where(m => m.Ma_Vong == 8).ToList(), temp.Id);
+                //bool playoffEmpty = matches.Any(m => m.Ma_Vong == 7 && (m.ID_Cap1 == null || m.ID_Cap2 == null));
 
                 FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/MatchGenParam.json");
                 var file = await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream);
@@ -66,27 +66,27 @@ namespace Tennis_Web.Controllers
                     if (result) _context.SaveChanges();
 
                 }
-                if (!playoffEmpty)
-                {
-                    foreach (var match in matches.Where(m => m.Ma_Vong == 7).ToList())
-                    {
-                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, columnsToSave).Succeeded;
-                        if (!result) break;
-                    }
-                }
-                else
-                {
-                    var levelParam = file.Find(m => m.ID_Trinh == temp.Id);
+                //if (!playoffEmpty)
+                //{
+                //    foreach (var match in matches.Where(m => m.Ma_Vong == 7).ToList())
+                //    {
+                //        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, columnsToSave).Succeeded;
+                //        if (!result) break;
+                //    }
+                //}
+                //else
+                //{
+                //    var levelParam = file.Find(m => m.ID_Trinh == temp.Id);
 
-                    if (levelParam.PlayOff1 > 0)
-                    {
+                //    if (levelParam.PlayOff1 > 0)
+                //    {
 
-                    }
-                        //if (level.PlayOff2 > 0)
-                        //{
-                        //    if (level.ChosenPerTable.se)
-                        //} 
-                }
+                //    }
+                //        //if (level.PlayOff2 > 0)
+                //        //{
+                //        //    if (level.ChosenPerTable.se)
+                //        //} 
+                //}
                     
                 //}
                 //bool uniqueRanking =
