@@ -10,6 +10,7 @@
 @model RoundTabViewModel
 @if (Model.DS_Tran.Any())
 {
+    <input type="hidden" asp-for="@Model.ID_Trinh" />
     <form asp-action="UpdateTable" asp-controller="Result">
         @for (int i = 0; i < ViewBag.ListTable.Count; i++)
         {
@@ -39,7 +40,10 @@
                                         }
                                         <th>Số trận thắng</th>
                                         <th>Hiệu số</th>
-                                        @if (needDraws) { <th>Bốc thăm</th> } 
+                                        @if (needDraws)
+                                        {
+                                            <th>Bốc thăm</th>
+}
                                         <th>Xếp hạng</th>
                                     </tr>
                                 </thead>
@@ -65,7 +69,6 @@
                                                             -
                                                             <input class="form-control form-control-sm left-padding" asp-for="@Model.DS_Tran[insertCount].Kq_2" />
                                                             <input type="hidden" asp-for="@Model.DS_Tran[insertCount].Id" />
-                                                            <input type="hidden" asp-for="@Model.DS_Tran[insertCount].ID_Trinh" />
                                                             <input type="hidden" asp-for="@Model.DS_Tran[insertCount].Ma_Vong" />
                                                         </td>
                                                     }
@@ -140,11 +143,11 @@
                                             @if (Model.DS_Tran[i].ID_Cap1 != null)
                                             {
                                                 var pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[i].ID_Cap1);
-                                            <td>
-                                                <input type="hidden" asp-for="@Model.DS_Tran[i].Id" />
-                                                <input type="hidden" asp-for="@Model.DS_Tran[i].Ma_Vong" />
-                                                @pair1.VDV1.Ten_Tat + @pair1.VDV2.Ten_Tat
-                                            </td>
+                                                <td>
+                                                    <input type="hidden" asp-for="@Model.DS_Tran[i].Id" />
+                                                    <input type="hidden" asp-for="@Model.DS_Tran[i].Ma_Vong" />
+                                                    @pair1.VDV1.Ten_Tat + @pair1.VDV2.Ten_Tat
+                                                </td>
 
                                             }
                                             else

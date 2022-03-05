@@ -54,9 +54,11 @@ namespace Tennis_Web.Views.Match.Components.Special
             ViewBag.ListRound = (await JsonSerializer.DeserializeAsync<List<Vong>>(fileStream)).ToDictionary(x => x.Ma_Vong, y => y.Ten);
             fileStream.Dispose();
             ViewBag.IsCurrent = vm.IsCurrent;
-            ViewBag.RoundNum = matches.Max(m => m.Ma_Vong);
+            if (matches.Any()) ViewBag.RoundNum = matches.Max(m => m.Ma_Vong);
+            
             var model = new RoundTabViewModel
             {
+                ID_Trinh = vm.ID,
                 DS_Tran = matches,
                 DS_Cap = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID).Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()
             };
