@@ -11,7 +11,6 @@
         public DS_Trinh()
         {
             DS_Cap = new HashSet<DS_Cap>();
-            DS_Tran = new HashSet<DS_Tran>();
             DS_Bang = new HashSet<DS_Bang>();
         }
         [Key]
@@ -43,6 +42,5 @@
         public virtual ICollection<DS_Tran> DS_Tran { get; set; }
         public virtual ICollection<DS_Cap> DS_Cap { get; set; }
         public virtual ICollection<DS_Bang> DS_Bang { get; set; }
-
     }
 }
