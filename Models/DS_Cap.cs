@@ -47,7 +47,6 @@
         public virtual DS_VDV VDV2 { get; set; }
 
         public virtual ICollection<DS_Tran> DS_Trans { get; set; }
-        [NotMapped]
         public int Hieu_so { get; set; }
         [NotMapped]
         public int Tinh_toan { get; set; }
