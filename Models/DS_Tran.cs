@@ -13,13 +13,17 @@
         [StringLength(15)]
         [DisplayName("Mã trận")]
         public string Ma_Tran { get; set; }
+        //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0,5,7,10
         [DisplayName("KQ 1")]
         public int Kq_1 { get; set; }
         [DisplayName("KQ 2")]
         public int Kq_2 { get; set; }
-        [DisplayName("Chọn cặp")]
-        [StringLength(15)]
-        public string Chon_Cap { get; set; }
+        [DisplayName("Chọn cặp 1")]
+        [StringLength(3)]
+        public string Chon_Cap_1 { get; set; }
+        [DisplayName("Chọn cặp 2")]
+        [StringLength(16)]
+        public string Chon_Cap_2 { get; set; }
         [DisplayName("ID Cặp 1")]
         public int? ID_Cap1 { get; set; }
         [ForeignKey("ID_Cap1")]
