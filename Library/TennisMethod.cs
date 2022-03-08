@@ -24,11 +24,8 @@ namespace Library
         public List<DS_Cap> Rank_Full(int idTrinh, char bang)
         {
             // Lấy danh sách cặp đấu và ds trận đấu của bảng
-            var returnList  = _context.Set<DS_Cap>().Where(m => m.ID_Trinh == idTrinh).Where(m => m.Ma_Cap[0] == bang).ToList();
-            var ds_tran     = _context.Set<DS_Tran>().Where(m => m.ID_Trinh==idTrinh)
-                                .Where(m => m.Ma_Tran[5] == '8')
-                                .Where(m => m.Ma_Tran[7] == bang)
-                                .ToList();
+            var returnList  = _context.Set<DS_Cap>().ToList().Where(m => m.ID_Trinh == idTrinh && m.Ma_Cap[0] == bang).ToList();
+            var ds_tran = _context.Set<DS_Tran>().ToList().Where(m => m.ID_Trinh == idTrinh && m.Ma_Tran[5] == '8' && m.Ma_Tran[7] == bang).ToList();
 
             // ============= Xếp hạng theo điểm
             returnList = Rank_Point(returnList, ds_tran); // 

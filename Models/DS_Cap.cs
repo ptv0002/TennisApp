@@ -23,6 +23,8 @@
         public int Tran_Thang { get; set; }
         [DisplayName("Bốc thăm")]
         public int Boc_Tham { get; set; }
+        [DisplayName("Hiệu số")]
+        public int Hieu_So { get; set; }
         [DisplayName("Xếp hạng")]
         public int Xep_Hang { get; set; }
         public int ID_Trinh { get; set; }
