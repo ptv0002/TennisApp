@@ -27,27 +27,21 @@ namespace Library
             var returnList = _context.Set<DS_Cap>().ToList().Where(m => m.ID_Trinh == idTrinh && m.Ma_Cap[0] == bang).ToList();
             var ds_tran = _context.Set<DS_Tran>().ToList().Where(m => m.ID_Trinh == idTrinh && m.Ma_Tran[5] == '8'&& m.Ma_Tran[7] == bang).ToList();
             for (int i=0; i< returnList.Count;i++ ) { returnList[i].Xep_Hang = 0; returnList[i].Tran_Thang = 0; returnList[i].Hieu_so = 0; }
-                                .Where(m => m.Ma_Tran[7] == bang)
-            returnList = Rank_Point(returnList, ds_tran, true); 
-
-                                .Where(m => m.Ma_Tran[7] == bang)
-            List<DS_Cap> mini_dscap = new();
-
             // ============= Xếp hạng theo điểm
-            List<DS_Cap> mini_dscap = new();
+            returnList = Rank_Point(returnList, ds_tran, true); 
             //=============== Kiểm tra nếu xếp hạng bằng nhau --> Xếp hạng theo điểm nội bộ
             List<Rank_Data> data = Rank_Select(returnList, ds_tran);
+            List<DS_Cap> mini_dscap = new();
+            for (int i=0; i< data.Count; i++)
+            {
                 mini_dscap = Rank_Point(data[i].DS_Cap, data[i].DS_Tran, false);   //Xếp hạng các cặp đồng điểm bằng điểm nội bộ
                 //returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
                 returnList = returnList.OrderBy(m => m.Xep_Hang).ToList();
-                mini_dscap = Rank_Point(data[i].DS_Cap, data[i].DS_Tran, false);   //Xếp hạng các cặp đồng điểm bằng điểm nội bộ
-                //returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
-                mini_dscap = Rank_Ratio(data[i].DS_Cap, data[i].DS_Tran);   //Xếp hạng các cặp đồng điểm bằng điểm nội bộ
-                //returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
-                returnList = returnList.OrderBy(m => m.Xep_Hang).ToList();
+            }
             //=============== Nếu vẫn còn xếp hạng theo hiệu số nội bộ
-                var mini_dscap = Rank_Ratio(data[i].DS_Cap, data[i].DS_Tran);   //Xếp hạng các cặp đồng điểm bằng điểm nội bộ
-                returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
+            data = Rank_Select(returnList, ds_tran);
+            for (int i = 0; i < data.Count; i++)
+            {
                 mini_dscap = Rank_Ratio(data[i].DS_Cap, data[i].DS_Tran);   //Xếp hạng các cặp đồng điểm bằng điểm nội bộ
                 //returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
                 returnList = returnList.OrderBy(m => m.Xep_Hang).ToList();

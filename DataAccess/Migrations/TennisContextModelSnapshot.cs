@@ -260,9 +260,6 @@ namespace DataAccess.Migrations
                     b.Property<decimal>("Diem")
                         .HasColumnType("decimal(6,3)");
 
-                    b.Property<int>("Hieu_So")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ID_Bang")
                         .HasColumnType("int");
 
