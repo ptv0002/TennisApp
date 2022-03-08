@@ -123,6 +123,10 @@
     padding-right: 5px;
     display: initial;
 }
+.sm-no-padding {
+    width: 2.75rem;
+    display: initial;
+}
 .bracket-2 .team-item:nth-of-type(odd):after {
     height: 200%;
     top: 50%;

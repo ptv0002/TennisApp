@@ -5,7 +5,7 @@
     int insertCount = 0, titleCount = 0;
     bool hasRole = ViewBag.Admin;
     bool isCurrent = ViewBag.IsCurrent == true;
-    var needDraws = Model.DS_Cap.GroupBy(m => m.Xep_Hang).Any(m => m.Count() > 1);
+    bool showDraws = User.IsInRole("Manager") || User.IsInRole("Admin");
 }
 @model RoundTabViewModel
 @if (Model.DS_Tran.Any())
@@ -15,7 +15,7 @@
         @for (int i = 0; i < ViewBag.ListTable.Count; i++)
         {
             var reflectCount = new List<int>();
-            int id = 0;
+            int id = insertCount;
             // Make a list of reflection side ids for every column
             // [0, Count-1, (Count-1) + (Count-2), (Count-1) + (Count-2) + (Count-3),...]
             for (int x = 1; x < ViewBag.ListNum[i]; x++)
@@ -40,10 +40,10 @@
                                         }
                                         <th>Số trận thắng</th>
                                         <th>Hiệu số</th>
-                                        @if (needDraws)
+                                        @if (showDraws)
                                         {
                                             <th>Bốc thăm</th>
-}
+                                        }
                                         <th>Xếp hạng</th>
                                     </tr>
                                 </thead>
@@ -86,27 +86,13 @@
                                                     reflectCount[k]++;
                                                 }
                                             }
-                                            <td>@Model.DS_Cap[titleCount].Tran_Thang</td>
-                                            <td id="hieu_so_@titleCount"></td>
+                                            <td><input class="form-control form-control-sm sm-no-padding" asp-for="@Model.DS_Cap[titleCount].Tran_Thang" disabled/></td>
+                                            <td><input class="form-control form-control-sm sm-no-padding" asp-for="@Model.DS_Cap[titleCount].Hieu_So" disabled/></td>
 
-                                            @if (needDraws)
+                                            @if (showDraws)
                                             {
-                                                @if (Model.DS_Cap.Where(m => m.Xep_Hang == Model.DS_Cap[titleCount].Xep_Hang).Count() > 1)
-                                                {
-                                                    if (hasRole)
-                                                    {
-                                                        <td><input class="form-control form-control-sm" style="width:2.75rem; display:initial" asp-for="@Model.DS_Cap[titleCount].Boc_Tham" /></td>
-                                                    }
-                                                    else
-                                                    { // For No Role View
-                                                        <td>@Model.DS_Cap[titleCount].Boc_Tham</td>
-                                                    }
-
-                                                }
-                                                else
-                                                {
-                                                    <td></td>
-                                                }
+                                                <td><input class="form-control form-control-sm sm-no-padding" asp-for="@Model.DS_Cap[titleCount].Boc_Tham" /></td>
+                                                   
                                             }
                                             <td>@Model.DS_Cap[titleCount].Xep_Hang</td>
                                         </tr>
@@ -158,7 +144,7 @@
                                                     @Model.DS_Tran[i].Ma_Tran
                                                 </td>
                                             }
-                                            @if (ViewBag.Ready == true && hasRole)
+                                            @if (Model.DS_Tran[i].ID_Cap1 != null && Model.DS_Tran[i].ID_Cap2 != null && hasRole)
                                             {
                                                 <td>
                                                     <input class="form-control form-control-sm right-padding" asp-for="@Model.DS_Tran[i].Kq_1" />
@@ -194,7 +180,8 @@
         @if (hasRole && isCurrent)
         {
             <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
+                <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" formmethod="post" />
+                <input type="submit" value="Tính lại xếp hạng" class="btn btn-primary" formaction="/PerformRanking" />
             </div>
         }
     </form>

@@ -46,8 +46,6 @@ namespace Tennis_Web.Views.Match.Components.Table
                 matches = _context.DS_Trans
                     .Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong > 6) // Ma_Vong > 6 are Table and Playoff rounds
                     .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList();
-                if (matches.Any(m => m.Ma_Vong == 7)) // If there's playoff rounds
-                    ViewBag.Ready = matches.Where(m => m.Ma_Vong == 8).All(m => (m.Kq_1 + m.Kq_2) > 0); // Check to see if all Table rounds are filled
             }
             var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
             {

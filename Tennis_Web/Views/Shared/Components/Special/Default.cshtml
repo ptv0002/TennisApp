@@ -10,8 +10,8 @@
 @model RoundTabViewModel
 @if (Model.DS_Tran.Any())
 {
-    <input type="hidden" asp-for="@Model.ID_Trinh" />
     <form asp-action="UpdateSpecial" asp-controller="Result">
+        <input type="hidden" asp-for="@Model.ID_Trinh" />
         <div class="tournament-container">
             <div class="tournament-headers" id="tournamentHeader">
                 @for (int i = ViewBag.RoundNum; i > 0; i--)

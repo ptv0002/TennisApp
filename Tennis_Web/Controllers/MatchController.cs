@@ -151,15 +151,15 @@ namespace Tennis_Web.Controllers
                     if (tuple.Item1 < 0) ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " có tổng số cặp đi tiếp quá lớn hoặc quá nhỏ so với cho phép!");
                     else if (tuple.Item1 > 0) ModelState.AddModelError(string.Empty, "Thêm hoặc bớt cặp trình " + level.Trinh + " để tổng số cặp đi tiếp là " + tuple.Item1 + " hoặc " + tuple.Item2);
                 }
-                if (level.PlayOff1 != 0 && !level.ChosenPerTable.Any(m => m.P1))
+                if (level.PlayOff1 > 0 && level.PlayOff1 * 2 > level.ChosenPerTable.Count(m => m.P1))
                 {
                     error = true;
-                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " chưa chọn bảng cho Playoff 1!");
+                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " cần chọn ít nhất " + level.PlayOff1 * 2 + " cho Playoff 1!");
                 }
-                if (level.PlayOff2 != 0 && !level.ChosenPerTable.Any(m => m.P2))
+                if (level.PlayOff2 > 0 && (level.PlayOff1 + level.PlayOff2) * 2 > (level.ChosenPerTable.Count(m => m.P1) + level.ChosenPerTable.Count(m => m.P2)))
                 {
                     error = true;
-                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " chưa chọn bảng cho Playoff 2!");
+                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " cần chọn ít nhất " + (level.PlayOff1 + level.PlayOff2) * 2 + " cho Playoff 2!");
                 }
             }
             if (error) return View(model);
@@ -267,8 +267,8 @@ namespace Tennis_Web.Controllers
                             if (count < 10) order = "*00" + count;
                             else if (count < 100) order = "*0" + count;
                             else if (count < 1000) order = "*" + count;
-                            if (count < 10) roundOrder = "*0" + roundCount;
-                            else if (count < 100) roundOrder = "*" + roundCount;
+                            if (roundCount < 10) roundOrder = "*0" + roundCount;
+                            else if (roundCount < 100) roundOrder = "*" + roundCount;
                             _context.Add(new DS_Tran
                             {
                                 Ma_Tran = level.Trinh + "*" + ma_vong.ToString() + "*0" + roundOrder + order,
