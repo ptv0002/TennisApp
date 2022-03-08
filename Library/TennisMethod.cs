@@ -35,7 +35,6 @@ namespace Library
             for (int i=0; i< data.Count; i++)
             {
                 mini_dscap = Rank_Point(data[i].DS_Cap, data[i].DS_Tran, false);   //Xếp hạng các cặp đồng điểm bằng điểm nội bộ
-                //returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
                 returnList = returnList.OrderBy(m => m.Xep_Hang).ToList();
             }
             //=============== Nếu vẫn còn xếp hạng theo hiệu số nội bộ
@@ -43,7 +42,6 @@ namespace Library
             for (int i = 0; i < data.Count; i++)
             {
                 mini_dscap = Rank_Ratio(data[i].DS_Cap, data[i].DS_Tran);   //Xếp hạng các cặp đồng điểm bằng điểm nội bộ
-                //returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
                 returnList = returnList.OrderBy(m => m.Xep_Hang).ToList();
             }
             //=============== Nếu vẫn còn xếp hạng theo hiệu số toàn cục
@@ -51,7 +49,6 @@ namespace Library
             for (int i = 0; i < data.Count; i++)
             {
                 mini_dscap = Rank_Ratio(data[i].DS_Cap, ds_tran);   //Xếp hạng các cặp đồng điểm bằng điểm và hiệu số nội bộ 
-                //returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
                 returnList= returnList.OrderBy(m => m.Xep_Hang).ToList();
             }
             //=============== Xếp hạng theo bốc thăm (ở ngoài --> dùng nút xếp hạng sau cùng)
@@ -59,7 +56,6 @@ namespace Library
             for (int i = 0; i < data.Count; i++)
             {
                 mini_dscap = Rank_Lottery(data[i].DS_Cap);   //Xếp hạng các cặp đồng điểm bằng bốc thăm
-                //returnList = Rank_Replace(returnList, mini_dscap);  // Gán lại vào returnList
             }
             return returnList.OrderBy(m => m.Xep_Hang).ToList();
         }
@@ -177,14 +173,6 @@ namespace Library
             }
             return lCap.OrderBy(m => m.Xep_Hang).ToList();
         }
-        public static List<DS_Cap> Rank_Replace(List<DS_Cap> lFull, List<DS_Cap> lMini)
-        {
-            for (int i=0; i< lMini.Count; i++) 
-            {
-                lFull[lFull.FindIndex(m => m.Id == lMini[i].Id)].Xep_Hang  = lMini[i].Xep_Hang;
-            }
-            return lFull.OrderBy(m => m.Xep_Hang).ToList();
-        }
         public static List<Rank_Data> Rank_Select(List<DS_Cap> lCap, List<DS_Tran> lTran)
         {
             List<Rank_Data> lData = new();
@@ -245,8 +233,9 @@ namespace Library
         {
             //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0,5,7,9,12
             // Tìm trận tiếp theo
-            char vong = Convert.ToChar(Convert.ToInt32(tran.Ma_Tran[5])-1);
-            if (vong=='0' || (tran.Kq_1 +tran.Kq_2)==0) 
+            //char vong = Convert.ToChar(Convert.ToInt32(tran.Ma_Tran[5])-1);
+            //if (vong=='0' || (tran.Kq_1 +tran.Kq_2)==0)
+            if (tran.Ma_Vong <= 2 || (tran.Kq_1 + tran.Kq_2) == 0)
             {
                 return; // Trận chung kết --> Không chọn đội vào vòng trong
             }    
@@ -257,7 +246,8 @@ namespace Library
             nxt = nxt.Substring(nxt.Length - 2, 2);
             bool cap = ((n4 - 1) % 2 == 0) ? true : false;              // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
 
-            string ma_tran = tran.Ma_Tran.Substring(0, 6) + vong + "*" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
+            //string ma_tran = tran.Ma_Tran.Substring(0, 6) + vong + "*" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
+            string ma_tran = tran.Ma_Tran.Substring(0, 6) + tran.Ma_Vong + "*" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
             var trantiep = lTran.First(m => m.Ma_Tran.Substring(0, 12) == ma_tran);
             if (tran.Kq_1 > tran.Kq_2) 
             { 
@@ -277,7 +267,7 @@ namespace Library
         
         public static int? Champion_Select(DS_Tran tran)
         {
-            if ((tran.Ma_Tran[5]) != '1' || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
+            if (tran.Ma_Vong>1 || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
             if (tran.Kq_1 > tran.Kq_2)
             {
                 return tran.ID_Cap1; 
