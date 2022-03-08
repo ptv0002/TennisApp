@@ -54,7 +54,9 @@ namespace Library
             //=============== Xếp hạng theo bốc thăm (ở ngoài --> dùng nút xếp hạng sau cùng)
             data = Rank_Select(returnList, ds_tran);
             for (int i = 0; i < data.Count; i++)
-            mini_dscap = Rank_Lottery(data[i].DS_Cap);
+            {
+                mini_dscap = Rank_Lottery(data[i].DS_Cap);   //Xếp hạng các cặp đồng điểm bằng bốc thăm
+            }
             return returnList.OrderBy(m => m.Xep_Hang).ToList();
         }
 
@@ -206,10 +208,9 @@ namespace Library
         {
             //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0,5,7,9,12
             // Tìm trận tiếp theo
-            char vong = Convert.ToChar(Convert.ToInt32(tran.Ma_Tran[5]) - 1);
-            if (vong == '0' || (tran.Kq_1 + tran.Kq_2) == 0) return;    
-            int stt =   Convert.ToInt32(tran.Ma_Tran[^6..^5]/*.Substring(9,2)*/);   // Số thứ tự trận trong vòng hiện thời
-            int n4 = stt - (stt - 1) % 4 * 4;                                // Hiện là trận thứ mấy trong nhóm 4 trận
+            if (tran.Ma_Vong <= 2 || (tran.Kq_1 + tran.Kq_2) == 0) return; // Trận chung kết --> Không chọn đội vào vòng trong
+            int stt =   Convert.ToInt32(tran.Ma_Tran[^6..^5]);   // Số thứ tự trận trong vòng hiện thời
+            int n4 = stt - (stt-1)%4*4 ;                                // Hiện là trận thứ mấy trong nhóm 4 trận
 
             string nxt = "00" + (stt + 1) % 4;                            // số tt trận tiếp theo của vòng trong
             nxt = nxt[^2..]/*.Substring(nxt.Length - 2, 2)*/;
@@ -231,7 +232,7 @@ namespace Library
         
         public int? Champion_Select(DS_Tran tran)
         {
-            if (tran.Ma_Tran[5] != '1' || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
+            if (tran.Ma_Vong > 1 || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
             if (tran.Kq_1 > tran.Kq_2) return tran.ID_Cap1;  
             else return tran.ID_Cap2; 
         }
