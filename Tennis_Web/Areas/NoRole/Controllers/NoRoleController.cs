@@ -14,6 +14,7 @@ using Tennis_Web.Areas.NoRole.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using System.Text.Json;
+using Library.FileInitializer;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -30,10 +31,12 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            //var temp = new ExcelMethod<DS_Vong>();
-            //ResultModel<DS_Vong> a = temp.ExcelToList("C:/TennisApp/Excel/Giai_Dau.xlsx", "DS_Vong");
-            //_context.AddRange(a.List);
-            //_context.SaveChanges();
+            //new Initializer(_webHost).RoundGeneratorAsync();
+            //new Initializer(_webHost).Special1stRoundGenerator();
+
+
+            //FileStream outStream = System.IO.File.OpenRead(path);
+            //var roundFile = await JsonSerializer.DeserializeAsync<List<Special1stViewModel>>(outStream);
             return View();
         }
         public IActionResult Player()

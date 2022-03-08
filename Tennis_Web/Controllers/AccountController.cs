@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using Library.FileInitializer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -117,28 +118,8 @@ namespace Tennis_Web.Controllers
                     var result3 = await _roleManager.FindByNameAsync("Referee"); // Check for "Referee" role in DB
                     bool upfail = false;
 
-                    // Get path for the Json file
-                    string path = _webHost.WebRootPath + "/Files/Json/RoundInfo.json";
-                    var listRound = new List<Vong>
-                        {
-                            new Vong { Ten = "Vô Địch", Ma_Vong = 0 },
-                            new Vong { Ten = "Chung Kết", Ma_Vong = 1 },
-                            new Vong { Ten = "Bán Kết", Ma_Vong = 2 },
-                            new Vong { Ten = "Tứ Kết", Ma_Vong = 3 },
-                            new Vong { Ten = "Vòng 3", Ma_Vong = 4 },
-                            new Vong { Ten = "Vòng 2", Ma_Vong = 5 },
-                            new Vong { Ten = "Vòng 1", Ma_Vong = 6 },
-                            new Vong { Ten = "Playoff", Ma_Vong = 7 },
-                            new Vong { Ten = "Vòng Bảng", Ma_Vong = 8 }
-                        };
-                    FileStream fileStream;
-                    // Delete file if Json file is already exist
-                    if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
-
-                    fileStream = System.IO.File.Create(path);
-                    var options = new JsonSerializerOptions { WriteIndented = true };
-                    await JsonSerializer.SerializeAsync(fileStream, listRound, options);
-                    fileStream.Dispose();
+                    new Initializer(_webHost).RoundGeneratorAsync();
+                    new Initializer(_webHost).Special1stRoundGenerator();
 
                     if (result1 == null)  // No "Admin" role found
                     {

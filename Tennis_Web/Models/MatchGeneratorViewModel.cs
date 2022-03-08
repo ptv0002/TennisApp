@@ -19,7 +19,6 @@ namespace Tennis_Web.Models
         public char Table { get; set; }
         public int PairsNum { get; set; }
         public int Chosen { get; set; }
-        public bool P1 { get; set; }
-        public bool P2 { get; set; }
+        public bool Playoff { get; set; }
     }
 }

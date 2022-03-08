@@ -67,10 +67,6 @@ namespace Library
             int cap_1 = 0; int cap_2 = 0; int cap_0 = 0;
             for (int i=0; i< lTran.Count; i++ ) 
             {
-                //if ((lTran[i].Kq_1- lTran[i].Kq_2)>0 ) 
-                //{ id_Cap = lCap.First(m => m.Id == lTran[i].ID_Cap1).Id; } 
-                //else 
-                //{ id_Cap = lCap.First(m => m.Id == lTran[i].ID_Cap2).Id; }
                 cap_1 = lCap.FindIndex(m => m.Id == lTran[i].ID_Cap1);
                 cap_2 = lCap.FindIndex(m => m.Id == lTran[i].ID_Cap2);
                 if ((lTran[i].Kq_1 - lTran[i].Kq_2) > 0) 
