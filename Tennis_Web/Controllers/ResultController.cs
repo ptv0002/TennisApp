@@ -1,5 +1,6 @@
 ﻿using DataAccess;
 using Library;
+using Library.FileInitializer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace Tennis_Web.Controllers
                 FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/MatchGenParam.json");
                 var matchParam = (await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream)).Find(m => m.ID_Trinh == model.ID_Trinh);
                 fileStream.Dispose();
+
                 // ========================= Rank pairs =========================
 
                 var tables = _context.DS_Bangs.Where(m => m.ID_Trinh == model.ID_Trinh);
@@ -46,7 +48,7 @@ namespace Tennis_Web.Controllers
                     var rankedPairs = new TennisMethod(_context).Rank_Full(model.ID_Trinh, table.Ten);
                     foreach (var pair in rankedPairs)
                     {
-                        result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xep_Hang", "Tran_Thang", "Hieu_So" }).Succeeded;
+                        result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xep_Hang", "Tran_Thang", "Hieu_so" }).Succeeded;
                         if (!result) break;
                     }
                 }
@@ -56,36 +58,63 @@ namespace Tennis_Web.Controllers
                 // ========================= Get ranking and put in playoff =========================
                 //var uniqueRanking = _context.DS_Caps.Where(m => m.ID_Trinh == model.ID_Trinh).GroupBy(m => m.Xep_Hang).All(m => m.Count() == 1);
                 var playoff1 = new List<DS_Cap>();
-                var playoff2 = new List<DS_Cap>();
                 var straight2Special = matchParam.ChosenPerTable.ToDictionary(x => x.Table, y => y.Chosen);
-                var chosenP2 = new List<char>();
-                if (matchParam.PlayOff2 > 0) chosenP2 = matchParam.ChosenPerTable.Where(m => m.P2).Select(m => m.Table).ToList();
-                // If there's playoff 1 rounds then proceeds
-                if (matchParam.PlayOff1 > 0)
-                {
-                    var chosenP1 = matchParam.ChosenPerTable.Where(m => m.P1).Select(m => m.Table).ToList();
-                    playoff1 = RankPlayoff(straight2Special, chosenP1, chosenP2, model.ID_Trinh, matchParam.PlayOff1);
-                }
-                // If there's playoff 2 rounds then proceeds
-                if (matchParam.PlayOff2 > 0)
-                {
-                    playoff2 = RankPlayoff(straight2Special, chosenP2, null, model.ID_Trinh, matchParam.PlayOff2 * 2);
-                }
-                // ================== Add players to Playoff2 rounds ==================
+                var chosenPlayoff = matchParam.ChosenPerTable.Where(m => m.Playoff).Select(m => m.Table).ToList();
 
-                if (playoff2 != null)
+                // Check if tables have unique ranking
+                var considerList = new List<DS_Cap>();
+                var calculatePlayoff = true;
+                foreach (var table in chosenPlayoff)
                 {
-                    var match = matches.Where(m => m.Ma_Vong == 7).ToList();
-                    for (int i = 0; i < match.Count; i++)
+                    // Any pair has repeated ranking then returns null
+                    if (_context.DS_Caps.Where(m => m.ID_Trinh == model.ID_Trinh && m.DS_Bang.Ten == table).GroupBy(m => m.Xep_Hang).Any(m => m.Count() > 1))
                     {
-                        match[i].ID_Cap1 = playoff2[i].Id;
-                        match[i].ID_Cap2 = playoff2[match.Count / 2 + i].Id;
-                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match[i].Id, match[i], new List<string> { "ID_Cap1", "ID_Cap2" }).Succeeded;
-                        if (!result) break;
+                        calculatePlayoff = false;
+                        break; 
                     }
+                    var pair = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => m.ID_Trinh == model.ID_Trinh).FirstOrDefault(m => m.DS_Bang.Ten == table && m.Xep_Hang == (straight2Special[table] + 1));
+                    considerList.Add(pair);
                 }
-                // ================== Add players to Special rounds ==================
+                if (calculatePlayoff)
+                {
+                    considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ToList();
 
+                    // If there's playoff 1 rounds then proceeds
+                    if (matchParam.PlayOff1 > 0)
+                    {
+                        var returnList = new List<DS_Cap>();
+                        for (int i = 0; i < matchParam.PlayOff1; i++)
+                        {
+                            playoff1.Add(considerList[i]);
+                            considerList.Remove(considerList[i]);
+                        }
+                    }
+                    // If there's playoff 2 rounds then proceeds
+                    if (matchParam.PlayOff2 > 0)
+                    {
+                        var P2match = matches.Where(m => m.Ma_Vong == 7).OrderBy(m => m.Ma_Tran).ToList();
+                        considerList = considerList.OrderBy(m => m.DS_Bang.Ten).ToList();
+                        int count = -1;
+                        // ================== Add players to Playoff2 rounds ==================
+                        for (int i = 0; i < P2match.Count; i++)
+                        {
+                            P2match[i].ID_Cap1 = considerList[++count].Id;
+                            P2match[i].ID_Cap2 = considerList[++count].Id;
+                            P2match[i].Kq_1 = P2match[i].Kq_2 = 0;
+                            result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(P2match[i].Id, P2match[i], new List<string> { "ID_Cap1", "ID_Cap2" }).Succeeded;
+                            if (!result) break;
+                        }
+                    }
+
+                }
+                // ================== Add players to First Special ==================
+                var totalPair = matchParam.ChosenPerTable.Sum(m => m.Chosen) + matchParam.PlayOff1 + matchParam.PlayOff2;
+                fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/Special1stRound.json");
+                var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPair && m.TableNum == straight2Special.Count());
+                fileStream.Dispose();
+
+                // Arrange 1st special round
+                if (result) _context.SaveChanges();
             }
             return TabVMGenerator(model.ID_Trinh, result);
         }
@@ -101,12 +130,12 @@ namespace Tennis_Web.Controllers
             bool result = false;
             if (ModelState.IsValid)
             {
-                var columnsToSave = new List<string> { "Kq_1", "Kq_2", "Boc_Tham" };
-
                 // Save results to DB and calculate ranking
                 foreach (var match in matches.Where(m => m.Ma_Vong == 8).ToList())
                 {
-                    result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, columnsToSave).Succeeded;
+                    var result1 = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2" }).Succeeded;
+                    var result2 = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Boc_Tham" }).Succeeded;
+                    result = result1 && result2;
                     if (!result) break;
                 }
                 if (result) _context.SaveChanges();
@@ -148,7 +177,7 @@ namespace Tennis_Web.Controllers
                 var pair = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => m.ID_Trinh == idTrinh).FirstOrDefault(m => m.DS_Bang.Ten == table && m.Xep_Hang == (straight2Special[table] + 1));
                 considerList.Add(pair);
             }
-            considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_So).ToList();
+            considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ToList();
             var returnList = new List<DS_Cap>();
             for (int i = 0; i < PlayoffNum; i++)
             {

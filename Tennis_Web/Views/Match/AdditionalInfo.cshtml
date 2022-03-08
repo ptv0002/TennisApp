@@ -22,8 +22,7 @@
                                     <th>Bảng</th>
                                     <th>Số cặp trong bảng</th>
                                     <th>Chọn số cặp đi tiếp</th>
-                                    <th>Chọn Playoff 1</th>
-                                    <th>Chọn Playoff 2</th>
+                                    <th>Chọn bảng cho Playoff</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,8 +38,7 @@
                                             @Model[i].ChosenPerTable[j].PairsNum
                                         </td>
                                         <td class="align-center"><input class="form-control col-6" asp-for="@Model[i].ChosenPerTable[j].Chosen" /></td>
-                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].ChosenPerTable[j].P1" /></td>
-                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].ChosenPerTable[j].P2" /></td>
+                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].ChosenPerTable[j].Playoff" /></td>
                                     </tr>
                                 }
                             </tbody>

@@ -32,47 +32,7 @@ namespace Tennis_Web.Controllers
         {
             return View(model);
         }
-        //public IActionResult UpdateResult(int id)
-        //{
-        //    var model = _context.DS_Trans.Include(m => m.DS_Cap1).Include(m => m.DS_Cap2).Where(m => m.Id == id).FirstOrDefault();
-        //    if (model == null)
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
-        //    }
-        //    else
-        //    {
-        //        var cap1 = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == model.ID_Cap1).FirstOrDefault();
-        //        var cap2 = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.Id == model.ID_Cap2).FirstOrDefault();
-        //        model.DS_Cap1 = cap1;
-        //        model.DS_Cap2 = cap2;
-        //    }
-        //    return PartialView(model);
-        //}
-        //[HttpPost]
-        //public async Task<IActionResult> UpdateResultAsync(DS_Tran item)
-        //{
-        //    ResultModel<DS_Tran> result;
-        //    if (item.Id != 0)
-        //    {
-        //        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Kq_1", "Kq_2" });
-        //        if (result.Succeeded)
-        //        {
-        //            await _context.SaveChangesAsync();
-        //            var temp = _context.DS_Caps.Find(item.ID_Cap1);
-        //            return RedirectToAction(nameof(Index), temp.ID_Trinh);
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError(string.Empty, result.Message);
-        //            return PartialView(item);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
-        //        return PartialView(item);
-        //    }
-        //}
+
         public IActionResult AdditionalInfo(int id)
         {
             ViewBag.TourName = _context.DS_Giais.Find(id).Ten;
@@ -95,7 +55,6 @@ namespace Tennis_Web.Controllers
                 return View("Error");
             }
 
-
             // -------------------------------- If all conditions met --------------------------------
 
             // If any match found, return error message before proceeding
@@ -108,7 +67,6 @@ namespace Tennis_Web.Controllers
             var model = new List<MatchGeneratorViewModel>();
             foreach (var level in levels)
             {
-
                 var dict = new List<ChosenPerTable>();
                 // Get name of all (distinct) tables from the given Ma_Cap (Pair Code)
                 var tables = pairs.Where(m => m.ID_Trinh == level).GroupBy(m => char.ToUpper(m.Ma_Cap[0])).Select(m => new
@@ -151,15 +109,11 @@ namespace Tennis_Web.Controllers
                     if (tuple.Item1 < 0) ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " có tổng số cặp đi tiếp quá lớn hoặc quá nhỏ so với cho phép!");
                     else if (tuple.Item1 > 0) ModelState.AddModelError(string.Empty, "Thêm hoặc bớt cặp trình " + level.Trinh + " để tổng số cặp đi tiếp là " + tuple.Item1 + " hoặc " + tuple.Item2);
                 }
-                if (level.PlayOff1 > 0 && level.PlayOff1 * 2 > level.ChosenPerTable.Count(m => m.P1))
+                if ((level.PlayOff2 * 2 + level.PlayOff1) != level.ChosenPerTable.Count(m => m.Playoff))
                 {
                     error = true;
-                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " cần chọn ít nhất " + level.PlayOff1 * 2 + " cho Playoff 1!");
-                }
-                if (level.PlayOff2 > 0 && (level.PlayOff1 + level.PlayOff2) * 2 > (level.ChosenPerTable.Count(m => m.P1) + level.ChosenPerTable.Count(m => m.P2)))
-                {
-                    error = true;
-                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " cần chọn ít nhất " + (level.PlayOff1 + level.PlayOff2) * 2 + " cho Playoff 2!");
+                    var soBang = level.PlayOff2 * 2 + level.PlayOff1;
+                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " cần chọn " + soBang + " bảng cho Playoff!");
                 }
             }
             if (error) return View(model);

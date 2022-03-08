@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using DataAccess;
+using Library.FileInitializer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,7 @@ namespace Tennis_Web.Views.Match.Components.Special
                     .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList();
             }
             FileStream fileStream = File.OpenRead(_webHost.WebRootPath + "/Files/Json/RoundInfo.json");
-            ViewBag.ListRound = (await JsonSerializer.DeserializeAsync<List<Vong>>(fileStream)).ToDictionary(x => x.Ma_Vong, y => y.Ten);
+            ViewBag.ListRound = (await JsonSerializer.DeserializeAsync<List<Round>>(fileStream)).ToDictionary(x => x.Ma_Vong, y => y.Ten);
             fileStream.Dispose();
             ViewBag.IsCurrent = vm.IsCurrent;
             if (matches.Any()) ViewBag.RoundNum = matches.Max(m => m.Ma_Vong);

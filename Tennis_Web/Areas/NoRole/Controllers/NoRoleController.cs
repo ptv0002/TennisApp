@@ -14,6 +14,7 @@ using Tennis_Web.Areas.NoRole.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using System.Text.Json;
+using Library.FileInitializer;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -30,34 +31,12 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            //FileInfo file = new("D:/Giai_Dau.xlsx");
-            //var temp = new SetExcelMethod<DS_Giai>();
-            //temp.ImportWorkSheet("D:/Giai_Dau.xlsx", "DS_Giai");
-            // Get path for the Json file
-            //string path = _webHost.WebRootPath + "/Files/Json/RoundInfo.json";
-            //var listRound = new List<Vong>
-            //            {
-            //                new Vong { Ten = "Vô Địch", Ma_Vong = 0 },
-            //                new Vong { Ten = "Chung Kết", Ma_Vong = 1 },
-            //                new Vong { Ten = "Bán Kết", Ma_Vong = 2 },
-            //                new Vong { Ten = "Tứ Kết", Ma_Vong = 3 },
-            //                new Vong { Ten = "Vòng 3", Ma_Vong = 4 },
-            //                new Vong { Ten = "Vòng 2", Ma_Vong = 5 },
-            //                new Vong { Ten = "Vòng 1", Ma_Vong = 6 },
-            //                new Vong { Ten = "Playoff", Ma_Vong = 7 },
-            //                new Vong { Ten = "Vòng Bảng", Ma_Vong = 8 }
-            //            };
-            //FileStream fileStream;
-            //// Delete file if Json file is already exist
-            //if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+            //new Initializer(_webHost).RoundGeneratorAsync();
+            //new Initializer(_webHost).Special1stRoundGenerator();
 
-            //fileStream = System.IO.File.Create(path);
-            //var options = new JsonSerializerOptions { WriteIndented = true };
-            //await JsonSerializer.SerializeAsync(fileStream, listRound, options);
-            //fileStream.Dispose();
 
-            //FileStream roundStream = System.IO.File.OpenRead(path);
-            //var roundFile = (await JsonSerializer.DeserializeAsync<List<Vong>>(roundStream)).ToDictionary(x => x.Ma_Vong, y => y.Ten);
+            //FileStream outStream = System.IO.File.OpenRead(path);
+            //var roundFile = await JsonSerializer.DeserializeAsync<List<Special1stViewModel>>(outStream);
             return View();
         }
         public IActionResult Player()

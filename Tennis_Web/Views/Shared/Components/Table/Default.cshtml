@@ -87,7 +87,7 @@
                                                 }
                                             }
                                             <td><input class="form-control form-control-sm sm-no-padding" asp-for="@Model.DS_Cap[titleCount].Tran_Thang" disabled/></td>
-                                            <td><input class="form-control form-control-sm sm-no-padding" asp-for="@Model.DS_Cap[titleCount].Hieu_So" disabled/></td>
+                                            <td><input class="form-control form-control-sm sm-no-padding" asp-for="@Model.DS_Cap[titleCount].Hieu_so" disabled/></td>
 
                                             @if (showDraws)
                                             {
@@ -181,7 +181,7 @@
         {
             <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
                 <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" formmethod="post" />
-                <input type="submit" value="Tính lại xếp hạng" class="btn btn-primary" formaction="/PerformRanking" />
+                <input type="submit" value="Tính lại xếp hạng" class="btn btn-primary" formaction="/Result/PerformRanking" />
             </div>
         }
     </form>
