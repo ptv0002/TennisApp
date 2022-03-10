@@ -23,9 +23,10 @@ namespace Tennis_Web.Controllers
             _context = context;
             _webHost = webHost;
         }
-        public IActionResult Index()
+        public IActionResult Index(bool isCurrent)
         {
-            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi == isCurrent).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            ViewBag.isCurrent = isCurrent;
             return View(model);
         }
         public IActionResult MatchInfo(TabViewModel model)
@@ -179,9 +180,7 @@ namespace Tennis_Web.Controllers
                         {
                             for (int j = i + 1; j < pairByTable.Count; j++)
                             {
-                                if (count < 10) order = "*00" + count;
-                                else if (count < 100) order = "*0" + count;
-                                else if (count < 1000) order = "*" + count;
+                                order = "*" + ("000" + count)[^3..];
                                 _context.Add(new DS_Tran
                                 {
                                     Ma_Tran = level.Trinh + "*8*" + table + "*00" + order,
@@ -198,9 +197,7 @@ namespace Tennis_Web.Controllers
                     // Add playoff rounds (if any)
                     for (int i = 0; i < level.PlayOff2; i++)
                     {
-                        if (count < 10) order = "*00" + count;
-                        else if (count < 100) order = "*0" + count;
-                        else if (count < 1000) order = "*" + count;
+                        order = "*" + ("000" + count)[^3..];
                         _context.Add(new DS_Tran
                         {
                             Ma_Tran = level.Trinh + "*7*0*00" + order,
@@ -218,11 +215,8 @@ namespace Tennis_Web.Controllers
                         string roundOrder = "";
                         for (int i = 0; i < totalPairs / 2; i++)
                         {
-                            if (count < 10) order = "*00" + count;
-                            else if (count < 100) order = "*0" + count;
-                            else if (count < 1000) order = "*" + count;
-                            if (roundCount < 10) roundOrder = "*0" + roundCount;
-                            else if (roundCount < 100) roundOrder = "*" + roundCount;
+                            order = "*" + ("000" + count)[^3..];
+                            roundOrder = "*" + ("00" + roundCount)[^2..];
                             _context.Add(new DS_Tran
                             {
                                 Ma_Tran = level.Trinh + "*" + ma_vong.ToString() + "*0" + roundOrder + order,

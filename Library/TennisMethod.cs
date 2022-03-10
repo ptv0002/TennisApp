@@ -54,29 +54,21 @@ namespace Library
             //=============== Xếp hạng theo bốc thăm (ở ngoài --> dùng nút xếp hạng sau cùng)
             data = Rank_Select(returnList, ds_tran);
             for (int i = 0; i < data.Count; i++)
-            {
-                mini_dscap = Rank_Lottery(data[i].DS_Cap);   //Xếp hạng các cặp đồng điểm bằng bốc thăm
-            }
+            mini_dscap = Rank_Lottery(data[i].DS_Cap);
             return returnList.OrderBy(m => m.Xep_Hang).ToList();
         }
 
         public static List<DS_Cap> Rank_Point(List<DS_Cap> lCap, List<DS_Tran> lTran, bool PointCal)
         {
             // Tính điểm các cặp dựa trên danh sách trận
-            for (int i = 0; i < lCap.Count; i++) { lCap[i].Tinh_toan = 0; }
+            for (int i = 0; i < lCap.Count; i++) lCap[i].Tinh_toan = 0;
             int cap_1 = 0; int cap_2 = 0; int cap_0 = 0;
             for (int i=0; i< lTran.Count; i++ ) 
             {
                 cap_1 = lCap.FindIndex(m => m.Id == lTran[i].ID_Cap1);
                 cap_2 = lCap.FindIndex(m => m.Id == lTran[i].ID_Cap2);
-                if ((lTran[i].Kq_1 - lTran[i].Kq_2) > 0) 
-                {
-                    cap_0 = cap_1;
-                }
-                else
-                {
-                    cap_0 = cap_2;
-                }
+                if ((lTran[i].Kq_1 - lTran[i].Kq_2) > 0)  cap_0 = cap_1;
+                else cap_0 = cap_2;
                 if (PointCal) 
                 {
                     lCap[cap_1].Hieu_so += (lTran[i].Kq_1 - lTran[i].Kq_2);
@@ -88,22 +80,19 @@ namespace Library
             lCap = lCap.OrderByDescending(m => m.Tinh_toan).ToList(); // Xếp thứ tự sau khi tính điểm
             // Bắt đầu Xếp hạng sau khi tính điểm
             int cur = 1;                                         // Lần đầu xếp hạng   
-            if (lCap[0].Xep_Hang>0) { cur = lCap[0].Xep_Hang; }  // Khi xếp hạng theo điểm nhóm con
+            if (lCap[0].Xep_Hang>0) cur = lCap[0].Xep_Hang;  // Khi xếp hạng theo điểm nhóm con
             int next = 1;
             int diem = lCap[0].Tinh_toan;
             lCap[0].Xep_Hang = cur;
             for (int i = 1; i < lCap.Count; i++)
             {
-                if (lCap[i].Tinh_toan == diem) 
-                    {
-                        next++;
-                    }
+                if (lCap[i].Tinh_toan == diem) next++; 
                 else
-                    {
-                    cur += next ;
+                {
+                    cur += next;
                     next = 1;
                     diem = lCap[i].Tinh_toan;
-                    }
+                }
                 lCap[i].Xep_Hang = cur;
             }
             return lCap.OrderBy(m => m.Xep_Hang).ToList();
@@ -111,29 +100,26 @@ namespace Library
         public static List<DS_Cap> Rank_Ratio(List<DS_Cap> lCap, List<DS_Tran> lTran)
         {
             // Tính hiệu số thắng thua các cặp dựa trên danh sách trận
-            for (int i = 0; i < lCap.Count; i++) { lCap[i].Tinh_toan=0; }
+            for (int i = 0; i < lCap.Count; i++) lCap[i].Tinh_toan = 0;
             int j = 0;
             for (int i = 0; i < lTran.Count; i++)
             {
                 j = lCap.FindIndex(m => m.Id == lTran[i].ID_Cap1);
-                if (j>=0) { lCap[j].Tinh_toan += lTran[i].Kq_1 - lTran[i].Kq_2; }
+                if (j>=0) lCap[j].Tinh_toan += lTran[i].Kq_1 - lTran[i].Kq_2;
 
                 j = lCap.FindIndex(m => m.Id == lTran[i].ID_Cap2);
-                if (j >= 0) { lCap[j].Tinh_toan += lTran[i].Kq_2 - lTran[i].Kq_1; }
+                if (j >= 0) lCap[j].Tinh_toan += lTran[i].Kq_2 - lTran[i].Kq_1;
             }
             lCap = lCap.OrderByDescending(m => m.Tinh_toan).ToList(); // Xếp thứ tự sau khi tính hiệu số thắng thua
             // Bắt đầu Xếp hạng sau khi tính điểm
             int cur = 1;                                         // Lần đầu xếp hạng   
-            if (lCap[0].Xep_Hang > 0) { cur = lCap[0].Xep_Hang; }  // Khi xếp hạng theo điểm nhóm con
+            if (lCap[0].Xep_Hang > 0) cur = lCap[0].Xep_Hang;  // Khi xếp hạng theo điểm nhóm con
             int next = 1;
             int diem = lCap[0].Tinh_toan;
             lCap[0].Xep_Hang = cur;
             for (int i = 1; i < lCap.Count; i++)
             {
-                if (lCap[i].Tinh_toan == diem)
-                {
-                    next++;
-                }
+                if (lCap[i].Tinh_toan == diem) next++;
                 else
                 {
                     cur += next;
@@ -149,16 +135,13 @@ namespace Library
             lCap = lCap.OrderBy(m => m.Xep_Hang*10+ m.Boc_Tham).ToList(); // Xếp thứ tự sau khi tính hiệu số thắng thua
             // Bắt đầu Xếp hạng sau khi bốc thăm
             int cur = 1;                                         // Lần đầu xếp hạng   
-            if (lCap[0].Xep_Hang > 0) { cur = lCap[0].Xep_Hang; }  // Khi xếp hạng theo điểm nhóm con
+            if (lCap[0].Xep_Hang > 0) cur = lCap[0].Xep_Hang;  // Khi xếp hạng theo điểm nhóm con
             int next = 0;
             int diem = lCap[0].Boc_Tham;
             lCap[0].Xep_Hang = cur;
             for (int i = 1; i < lCap.Count; i++)
             {
-                if (lCap[i].Boc_Tham == diem)
-                {
-                    next++;
-                }
+                if (lCap[i].Boc_Tham == diem) next++;
                 else
                 {
                     cur += next;
@@ -199,18 +182,12 @@ namespace Library
                         for (int j = 0; j < lTran.Count; j++)
                         {
                             if (mini_dscap.Any(m => m.Id == lTran[j].ID_Cap1) && mini_dscap.Any(m => m.Id == lTran[j].ID_Cap2))
-                            {
-                                mini_dstran.Add(lTran[j]);
-                            }
+                            mini_dstran.Add(lTran[j]);
                         }
                         lData.Add(new Rank_Data {DS_Tran = mini_dstran, DS_Cap = mini_dscap});
                     }
                     else
-                    {
-                        //xephang = lCap[i].Xep_Hang;
-                        //i++;
-                        first = true;
-                    }
+                    first = true;
                 }
             }
             return lData;
@@ -230,46 +207,33 @@ namespace Library
             //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0,5,7,9,12
             // Tìm trận tiếp theo
             char vong = Convert.ToChar(Convert.ToInt32(tran.Ma_Tran[5])-1);
-            if (vong=='0' || (tran.Kq_1 +tran.Kq_2)==0) 
-            {
-                return; // Trận chung kết --> Không chọn đội vào vòng trong
-            }    
-            int stt =   Convert.ToInt32(tran.Ma_Tran.Substring(9,2));   // Số thứ tự trận trong vòng hiện thời
+            if (vong=='0' || (tran.Kq_1 +tran.Kq_2)==0) return;    
+            int stt =   Convert.ToInt32(tran.Ma_Tran[^6..^5]/*.Substring(9,2)*/);   // Số thứ tự trận trong vòng hiện thời
             int n4 = stt - (stt-1)%4*4 ;                                // Hiện là trận thứ mấy trong nhóm 4 trận
 
             string nxt = "00"+(stt + 1) % 4;                            // số tt trận tiếp theo của vòng trong
-            nxt = nxt.Substring(nxt.Length - 2, 2);
-            bool cap = ((n4 - 1) % 2 == 0) ? true : false;              // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
+            nxt = nxt[^2..]/*.Substring(nxt.Length - 2, 2)*/;
+            bool cap = (n4 - 1) % 2 == 0;              // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
 
-            string ma_tran = tran.Ma_Tran.Substring(0, 6) + vong + "*" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
-            var trantiep = lTran.First(m => m.Ma_Tran.Substring(0, 12) == ma_tran);
+            string ma_tran = tran.Ma_Tran[0..5] + vong + "*" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
+            var trantiep = lTran.First(m => m.Ma_Tran[0..11]/*.Substring(0, 12)*/ == ma_tran);
             if (tran.Kq_1 > tran.Kq_2) 
             { 
-                if (cap) 
-                { trantiep.ID_Cap1 = tran.ID_Cap1; } 
-                else 
-                { trantiep.ID_Cap2 = tran.ID_Cap1; }
+                if (cap) trantiep.ID_Cap1 = tran.ID_Cap1; 
+                else trantiep.ID_Cap2 = tran.ID_Cap1;
             } 
             else
             {
-                if (cap)
-                { trantiep.ID_Cap1 = tran.ID_Cap2; }
-                else
-                { trantiep.ID_Cap2 = tran.ID_Cap2; }
+                if (cap) trantiep.ID_Cap1 = tran.ID_Cap2;
+                else trantiep.ID_Cap2 = tran.ID_Cap2;
             }
         }
         
         public static int? Champion_Select(DS_Tran tran)
         {
-            if ((tran.Ma_Tran[5]) != '1' || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
-            if (tran.Kq_1 > tran.Kq_2)
-            {
-                return tran.ID_Cap1; 
-            }
-            else
-            {
-                return tran.ID_Cap2;
-            }
+            if (tran.Ma_Tran[5] != '1' || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
+            if (tran.Kq_1 > tran.Kq_2) return tran.ID_Cap1;  
+            else return tran.ID_Cap2; 
         }
     }
 }

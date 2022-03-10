@@ -35,7 +35,6 @@ namespace Tennis_Web.Controllers
             if (result)
             {
                 var matches = model.DS_Tran;
-
                 FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/MatchGenParam.json");
                 var matchParam = (await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream)).Find(m => m.ID_Trinh == model.ID_Trinh);
                 fileStream.Dispose();
@@ -54,9 +53,7 @@ namespace Tennis_Web.Controllers
                 }
                 if (result) _context.SaveChanges();
 
-
                 // ========================= Get ranking and put in playoff =========================
-                //var uniqueRanking = _context.DS_Caps.Where(m => m.ID_Trinh == model.ID_Trinh).GroupBy(m => m.Xep_Hang).All(m => m.Count() == 1);
                 var playoff1 = new List<DS_Cap>();
                 var straight2Special = matchParam.ChosenPerTable.ToDictionary(x => x.Table, y => y.Chosen);
                 var chosenPlayoff = matchParam.ChosenPerTable.Where(m => m.Playoff).Select(m => m.Table).ToList();
@@ -94,18 +91,17 @@ namespace Tennis_Web.Controllers
                     {
                         var P2match = matches.Where(m => m.Ma_Vong == 7).OrderBy(m => m.Ma_Tran).ToList();
                         considerList = considerList.OrderBy(m => m.DS_Bang.Ten).ToList();
-                        int count = -1;
+                        int count = 0;
                         // ================== Add players to Playoff2 rounds ==================
                         for (int i = 0; i < P2match.Count; i++)
                         {
-                            P2match[i].ID_Cap1 = considerList[++count].Id;
-                            P2match[i].ID_Cap2 = considerList[++count].Id;
+                            P2match[i].ID_Cap1 = considerList[count++].Id;
+                            P2match[i].ID_Cap2 = considerList[count++].Id;
                             P2match[i].Kq_1 = P2match[i].Kq_2 = 0;
                             result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(P2match[i].Id, P2match[i], new List<string> { "ID_Cap1", "ID_Cap2" }).Succeeded;
                             if (!result) break;
                         }
                     }
-
                 }
                 // ================== Add players to First Special ==================
                 var totalPair = matchParam.ChosenPerTable.Sum(m => m.Chosen) + matchParam.PlayOff1 + matchParam.PlayOff2;
@@ -113,7 +109,63 @@ namespace Tennis_Web.Controllers
                 var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPair && m.TableNum == straight2Special.Count());
                 fileStream.Dispose();
 
-                // Arrange 1st special round
+                if (placement != null)
+                {
+                    var ds_cap = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => m.ID_Trinh == model.ID_Trinh).ToList();
+                    var roundNum = _context.DS_Trans.Where(m => m.Ma_Vong <= 6).Max(m => m.Ma_Vong);
+                    // Get first special round
+                    var special1stRound = _context.DS_Trans.Where(m => m.Ma_Vong == roundNum).OrderBy(m => m.Ma_Tran).ToList();
+                    for (int i = 0; i < special1stRound.Count; i++)
+                    {
+                        // Assign pair to Pair 1 for the match
+                        var code = placement.P1_P2_Pair.ElementAt(i).Key;
+                        special1stRound[i].Chon_Cap_1 = code;
+                        var pair = ds_cap.Where(m => m.DS_Bang.Ten == code[1] && m.Xep_Hang == code[0]);
+                        // Ranking is unique => Assign pair to match
+                        // Ignore otherwise
+                        if (pair.Count() == 1) special1stRound[i].ID_Cap1 = pair.First().Id;
+
+                        // Assign pair to Pair 2 for the match
+                        code = placement.P1_P2_Pair.ElementAt(i).Value;
+                        special1stRound[i].Chon_Cap_2 = code;
+
+                        // If code.length > 2 => pair pulls from playoff
+                        if (code.Length > 2)
+                        {
+                            int j = 1;
+                            while (j < code.Length)
+                            {
+                                pair = ds_cap.Where(m => m.DS_Bang.Ten == code[j] && m.Xep_Hang == code[0]);
+                                // Founf pair with required Table_Ranking combo
+                                if (pair.Count() >= 1)
+                                {
+                                    // Ranking is unique => Assign pair to match
+                                    if (pair.Count() == 1) special1stRound[i].ID_Cap2 = pair.First().Id;
+                                    // Else ranking is not unique, but it's possible to assign pair from code[j] table after more Ranking
+                                    // => Ignore
+
+                                    chosenPlayoff.Remove(code[j]);
+                                    break;
+                                }
+                                // No pair found with required Table_Ranking combo
+                                // Increment to find next
+                                j++;
+                            }
+                        }
+                        // Else => unique pair from template
+                        else
+                        {
+                            pair = ds_cap.Where(m => m.DS_Bang.Ten == code[1] && m.Xep_Hang == code[0]);
+                            // Ranking is unique => Assign pair to match
+                            // Ignore otherwise
+                            if (pair.Count() == 1) special1stRound[i].ID_Cap2 = pair.First().Id;
+                        }
+                        var columns2Save = new List<string> { "ID_Cap1", "ID_Cap2", "Chon_Cap_1", "Chon_Cap_2" };
+                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(special1stRound[i].Id, special1stRound[i], columns2Save).Succeeded;
+                        if (!result) break;
+                    }
+                }
+                // Save all changes to DB
                 if (result) _context.SaveChanges();
             }
             return TabVMGenerator(model.ID_Trinh, result);
@@ -133,24 +185,26 @@ namespace Tennis_Web.Controllers
                 // Save results to DB and calculate ranking
                 foreach (var match in matches.Where(m => m.Ma_Vong == 8).ToList())
                 {
-                    var result1 = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2" }).Succeeded;
-                    var result2 = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Boc_Tham" }).Succeeded;
-                    result = result1 && result2;
+                    result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2" }).Succeeded;
                     if (!result) break;
                 }
-                if (result) _context.SaveChanges();
+                foreach (var pair in model.DS_Cap)
+                {
+                    result = result && new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Boc_Tham" }).Succeeded;
+                    if (!result) break;
+                }
                 // Playoff 2 has Pair ids then update, else ignore
                 if (matches.Where(m => m.Ma_Vong == 7).All(m => m.ID_Cap1 != null && m.ID_Cap2 != null))
                 {
                     foreach (var match in matches.Where(m => m.Ma_Vong == 7).ToList())
                     {
-                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2" }).Succeeded;
+                        result = result && new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2" }).Succeeded;
                         if (!result) break;
                     }
                 }
-
             }
             else result = false;
+            if (result) _context.SaveChanges();
             return result;
         }
         public IActionResult TabVMGenerator(int idTrinh, bool result)
@@ -167,38 +221,9 @@ namespace Tennis_Web.Controllers
             // If save successfully, view error and display View with model from DB 
             return RedirectToAction("MatchInfo", "Match", vm);
         }
-        public List<DS_Cap> RankPlayoff (Dictionary<char,int> straight2Special, List<char> chosenPlayoff, List<char> chosen2, int idTrinh, int PlayoffNum)
-        {
-            var considerList = new List<DS_Cap>();
-            foreach (var table in chosenPlayoff)
-            {
-                // Any pair has repeated ranking then returns null
-                if (_context.DS_Caps.Where(m => m.ID_Trinh == idTrinh && m.DS_Bang.Ten == table).GroupBy(m => m.Xep_Hang).Any(m => m.Count() > 1)) return null;
-                var pair = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => m.ID_Trinh == idTrinh).FirstOrDefault(m => m.DS_Bang.Ten == table && m.Xep_Hang == (straight2Special[table] + 1));
-                considerList.Add(pair);
-            }
-            considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ToList();
-            var returnList = new List<DS_Cap>();
-            for (int i = 0; i < PlayoffNum; i++)
-            {
-                returnList.Add(considerList[i]);
-                if (chosen2 != null) chosen2.Remove(considerList[i].DS_Bang.Ten);
-            }
-            return returnList;
-        }
         public IActionResult UpdateSpecial()
         {
             return View();
         }
-        //public bool IsTheSame(List<DS_Tran> source, int idTrinh)
-        //{
-        //    var oldMatches = _context.DS_Trans.Where(m => m.ID_Trinh == idTrinh).ToList();
-        //    foreach (var newMatch in source)
-        //    {
-        //        var oldMatch = oldMatches.Find(m => m.Id == newMatch.Id);
-        //        if (!(newMatch.Kq_1 == oldMatch.Kq_1 && newMatch.Kq_2 == oldMatch.Kq_2)) return false;
-        //    }
-        //    return true;
-        //}
     }
 }

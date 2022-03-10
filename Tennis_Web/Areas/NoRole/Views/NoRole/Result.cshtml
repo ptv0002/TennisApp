@@ -1,10 +1,8 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     ViewData["Title"] = "Kết quả";
     Layout = "/Areas/_Layout.cshtml";
-    ViewBag.RActive = "active visible-sm visible-xs";
+    if (ViewBag.IsCurrent) ViewBag.CRActive = "active visible-sm visible-xs";
+    else ViewBag.BRActive = "active visible-sm visible-xs";
 }
 @model List<Models.DS_Trinh>
 <section class="main still-background">
@@ -21,15 +19,27 @@
                 <h5 style="font-weight:bold">Chọn trình để xem kết quả</h5>
             </div>
             <div class="card-body">
-                @foreach (var item in Model)
-                {
-                    string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
-                    <div>
-                        <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs">
-                            • @title
+                <div class="form-group">
+                    @if (Model.Count() > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
+                            <div>
+                                <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs">
+                                    • @title
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <h5 class="font-weight-bold text-danger">Không có giải đấu nào đang diễn ra!</h5>
+                        <a class="align-center" style="color:black" asp-action="Result" asp-route-isCurrent="false">
+                            Đến danh sách kết quả các giải đấu cũ 🡺
                         </a>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
     </div>

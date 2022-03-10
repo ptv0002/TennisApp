@@ -7,6 +7,13 @@
     text-align: left;
     height: 100%;
 }
+h5 {
+    text-align: center;
+    color: #ffce1b;
+}
+.text-success {
+    color: #ffce1b !important;
+}
 a {
     color: black;
     text-decoration: none;
@@ -17,6 +24,7 @@ a {
         color: black;
         text-decoration: underline;
     }
+
 .nav-link{
     padding: 0;
 }
@@ -52,4 +60,10 @@ footer.sticky-footer .copyright {
     line-height: 1;
     font-size: 12px;
     padding: 2rem 0;
+}
+@media only screen and (max-width: 992px) {
+    .visual {
+        padding: 0;
+        min-height: 400px;
+    }
 }

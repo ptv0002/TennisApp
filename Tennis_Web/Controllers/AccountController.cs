@@ -81,7 +81,7 @@ namespace Tennis_Web.Controllers
                     switch (a1)
                     {
                         case true:
-                            return RedirectToAction("Index", "Match");
+                            return RedirectToAction("Index", "Match", new { isCurrent = true });
                         default:
                             return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
                     }
@@ -161,7 +161,7 @@ namespace Tennis_Web.Controllers
                                     model.Password, false, false);
                         if (rs.Succeeded)
                         {
-                            return RedirectToAction("Index", "Home");
+                            return RedirectToAction("Index", "Match", new { isCurrent = true });
                         }
                     }
                     foreach (var error in result.Errors)
