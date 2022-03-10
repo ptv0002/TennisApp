@@ -1,4 +1,5 @@
 ﻿@{
+    // Tournament Index View
     bool a1 = Model.Count() > 0;
     if (ViewBag.isCurrent == true)
     {
@@ -19,7 +20,7 @@
         foreach (var item in Model)
         {
             <div class="row ml-2 mb-1">
-                <a asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-giaiID="@item.Id">
+                <a asp-action="TournamentInfo" asp-route-isCurrent="@item.Giai_Moi" asp-route-giaiID="@item.Id">
                     • @item.Ngay.Day/@item.Ngay.Month/@item.Ngay.Year - Giải @item.Ten
                 </a>
             </div>
@@ -27,6 +28,6 @@
     }
     else
     {
-        <a class="btn btn-success" asp-action="TournamentInfo" asp-route-isCurrent="@ViewBag.isCurrent" asp-route-detailedTitle="giải mới">Thêm mới</a>
+        <a class="btn btn-success" asp-action="TournamentInfo" asp-route-isCurrent="true" asp-route-detailedTitle="giải mới">Thêm mới</a>
     }
 </div>

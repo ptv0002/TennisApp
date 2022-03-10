@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Library.FileInitializer;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Tennis_Web.Models
         public int ID_Trinh { get; set; }
         public List<DS_Tran> DS_Tran { get; set; }
         public List<DS_Cap> DS_Cap { get; set; }
+        public Special1stRound Template { get; set; }
     }
     public enum Tab
     {

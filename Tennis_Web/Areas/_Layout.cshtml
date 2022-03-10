@@ -16,8 +16,9 @@
     <link rel="stylesheet" type="text/css" href="~/sbadmin/css/sb-admin-2.min.css">
     <link rel="stylesheet" type="text/css" href="~/sbadmin/vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="~/sports-html/css/all.css">
-    <link rel="stylesheet" type="text/css" href="~/css/default.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/shared.css" />
     <link rel="stylesheet" type="text/css" href="~/css/tournament.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/default.css" />
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="~/datatables/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="~/sports-html/css/bootstrap.css">
@@ -39,7 +40,8 @@
                             <ul>
                                 <li class="@ViewBag.IActive"><a asp-action="Index">Trang chủ</a></li>
                                 <li class="@ViewBag.PActive"><a asp-action="Player">Vận động viên</a></li>
-                                <li class="@ViewBag.RActive"><a asp-action="Result">Kết quả thi đấu</a></li>
+                                <li class="@ViewBag.CRActive"><a asp-action="Result" asp-route-isCurrent="true">Giải hiện tại</a></li>
+                                <li class="@ViewBag.BRActive"><a asp-action="Result" asp-route-isCurrent="false">Giải cũ</a></li>
                                 <li class="@ViewBag.AActive"><a asp-action="Announcement">Thông báo</a></li>
                             </ul>
                             @*<div class="drop-holder visible-sm visible-xs">

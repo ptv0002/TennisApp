@@ -45,9 +45,10 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             return View(model);
         }
 
-        public IActionResult Result()
+        public IActionResult Result(bool isCurrent)
         {
-            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi == isCurrent).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            ViewBag.IsCurrent = isCurrent;
             return View(model);
         }
         public IActionResult ResultInfo(ResultViewModel model)

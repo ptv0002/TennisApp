@@ -10,6 +10,15 @@
     height: 100vh;
     position: relative;
 }*/
+.win {
+    font-weight: bolder;
+    color: black;
+}
+.fa-check {
+    color: limegreen;
+    padding-right: 5px;
+    font-size: smaller;
+}
 .tournament-headers {
     flex-grow: 1;
     display: flex;
@@ -37,6 +46,7 @@
     flex-direction: row;
     list-style-type: none;
     margin-bottom: 50px;
+    width: 100%;
 }
 
 .bracket {
@@ -98,7 +108,7 @@
     .team-item .child {
         margin: 0;
         display: flex;
-        padding: 3px 10px;
+        padding: 3px 7px;
         justify-content: space-between;
         align-items: stretch
     }
@@ -108,11 +118,15 @@
     .team-item .result {
         display: flex;
         align-items: center;
-        text-align: right
+        text-align: right;
+        justify-content: flex-end
     }
         .team-item .result input {
             width: 1.75rem
         }
+    .team-item select{
+        width: 85%;
+    }
 .left-padding {
     width: 2.75rem;
     padding-left: 5px;
@@ -181,6 +195,12 @@
 .bracket:last-of-type .team-item:after {
     display: none;
 }
+.bracket .template .team-item:after {
+    display: none;
+}
+.bracket .template .team-item .child input {
+    width: 5.5rem;
+}
 
 .team-item time {
     display: inline-block;
@@ -192,7 +212,7 @@
 .sticky {
     position: fixed;
     top: 0;
-    width: 100%
+    width: 90%
 }
 
     /* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */

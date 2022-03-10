@@ -3,8 +3,9 @@ for details on configuring this project to bundle and minify static web assets. 
 
 
 /* Provide sufficient contrast against white background */
-h5{
-    text-align:center;
+h5 {
+    text-align: center;
+    color: #1cc88a;
 }
 a {
     color: #1cb079;
@@ -24,25 +25,13 @@ a:hover {
         color: #13855c;
         text-decoration: underline;
     }
+
 body {
     line-height: 1;
 }
-.table th {
-    vertical-align: middle;
-    text-align: center;
-}
-.table td {
-    padding: 0.25rem;
-    vertical-align: middle;
-    text-align: center;
-    border-top: 1px solid #e3e6f0;
-}
+
 .modal-content{
     line-height: 1.5
-}
-.align-center{
-    display: flex;
-    justify-content: center;
 }
 .login-image {
     background-image: url('../images/DefaultImg/LG.jpg');

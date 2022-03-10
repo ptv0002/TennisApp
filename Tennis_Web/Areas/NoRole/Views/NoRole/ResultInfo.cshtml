@@ -4,7 +4,8 @@
 @{
     ViewData["Title"] = "Kết quả";
     Layout = "/Areas/_Layout.cshtml";
-    ViewBag.RActive = "active visible-sm visible-xs";
+    if (Model.IsCurrent) ViewBag.CRActive = "active visible-sm visible-xs";
+    else ViewBag.BRActive = "active visible-sm visible-xs";
 }@*Tennis_Web.Models.TabViewModel*@
 @model Tennis_Web.Areas.NoRole.Models.ResultViewModel
 <section class="main still-background">
