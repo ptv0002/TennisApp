@@ -2,8 +2,7 @@
     Special View Component
 *@
 @{
-    bool hasRole = ViewBag.Admin == true;
-    bool isCurrent = ViewBag.IsCurrent == true;
+    bool hasRole = ViewBag.Admin == true && ViewBag.IsCurrent == true;
     int bracket = 1;
     int count = 0;
 }
@@ -20,97 +19,97 @@
                     <h3>@ViewBag.ListRound[i]</h3>
                 }
             </div>
-            <div style="display: flex;">
-                <div>
-                    <ul class="bracket bracket-1 template">
-                        @for (int i = 0; i < Math.Pow(2, i) / 2; i++)
+            <div class="tournament-brackets">
+                @for (int i = ViewBag.RoundNum; i > 0; i--)
+                {
+                    <ul class="bracket bracket-@bracket">
+                        @for (int j = 0; j < Math.Pow(2, i) / 2; j++)
                         {
-                            <li class="team-item row">
-                                <div class="child">
-                                    <input class="form-control form-control-sm"/>
+                            Models.DS_Cap pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[count].ID_Cap1);
+                            Models.DS_Cap pair2 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[count].ID_Cap2);
 
+                            int difference = Model.DS_Tran[count].Kq_1 - Model.DS_Tran[count].Kq_2;
+                            string boldP1 = difference > 0 ? "win" : "";
+                            string boldP2 = difference < 0 ? "win" : "";
+                            bool first = i == ViewBag.RoundNum;
+                            <li class="team-item row">
+                                <div class="child @boldP1">
+                                    @if (first)
+                                    {
+                                        <div class="col">
+                                            @if (hasRole)
+                                            {<input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_1" /> }
+                                            else
+                                            {@Model.DS_Tran[j].Chon_Cap_1}
+                                        </div>
+                                    }
+                                    <div class="col middle">
+                                        <input type="hidden" asp-for="@Model.DS_Tran[count].Id" />
+                                        <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Vong" />
+                                        @if (pair1 != null)
+                                        {
+                                            <div style="padding-top: 1px;">@pair1.VDV1.Ten_Tat</div>
+                                            <div style="padding-top: 3px;">@pair1.VDV2.Ten_Tat</div>
+                                        }
+                                        else
+                                        {
+                                            if (first && hasRole)
+                                            { <select asp-for="@Model.DS_Tran[count].ID_Cap1" class="form-control form-control-sm" asp-items="ViewBag.PairIds"></select>}
+                                        }
+                                    </div>
+                                    <div class="result">
+                                        @if (hasRole)
+                                        {<input class="form-control form-control-sm" asp-for="@Model.DS_Tran[count].Kq_1" />}
+                                        else
+                                        {
+                                            if (difference > 0)
+                                            { <i class="fa fa-check"></i> }
+                                            @Model.DS_Tran[count].Kq_1
+                                        }
+                                    </div>
                                 </div>
-                                <div class="child top-border">
-                                    <input class="form-control form-control-sm"/>
+                                <div class="child top-border @boldP2">
+                                    @if (first)
+                                    {
+                                        <div class="col">
+                                            @if (hasRole)
+                                            {<input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_2" />}
+                                            else
+                                            {@Model.DS_Tran[j].Chon_Cap_2}
+                                        </div>
+                                    }
+                                    <div class="col middle">
+                                        @if (pair2 != null)
+                                        {
+                                            <div style="padding-top: 1px;">@pair2.VDV1.Ten_Tat</div>
+                                            <div style="padding-top: 3px;">@pair2.VDV2.Ten_Tat</div>
+                                        }
+                                        else
+                                        {
+                                            if (first && hasRole)
+                                            { <select asp-for="@Model.DS_Tran[count].ID_Cap2" class="form-control form-control-sm" asp-items="ViewBag.PairIds"></select>}
+                                        }
+                                    </div>
+                                    <div class="result">
+                                        @if (hasRole)
+                                        {<input class="form-control form-control-sm" asp-for="@Model.DS_Tran[count].Kq_2" />}
+                                        else
+                                        {
+                                            if (difference < 0)
+                                            { <i class="fa fa-check"></i>}
+                                            @Model.DS_Tran[count].Kq_2
+                                        }
+                                    </div>
                                 </div>
                             </li>
+                            count++;
                         }
                     </ul>
-                </div>
-                <div class="tournament-brackets">
-                    @for (int i = ViewBag.RoundNum; i > 0; i--)
-                    {
-                        <ul class="bracket bracket-@bracket">
-                            @for (int j = 0; j < Math.Pow(2, i) / 2; j++)
-                            {
-                                Models.DS_Cap pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[count].ID_Cap1);
-                                Models.DS_Cap pair2 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[count].ID_Cap2);
-
-                                bool P1win = Model.DS_Tran[count].Kq_1 >= Model.DS_Tran[count].Kq_2;
-                                string boldP1 = P1win ? "win" : "";
-                                string boldP2 = P1win ? "" : "win";
-                                bool first = i == ViewBag.RoundNum;
-                                <li class="team-item row">
-                                    <div class="child @boldP1">
-                                        <div class="row">
-                                            <input type="hidden" asp-for="@Model.DS_Tran[count].Id" />
-                                            <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Vong" />
-                                            @if (pair1 != null)
-                                            {
-                                                <div class="col-12">@pair1.VDV1.Ten_Tat</div>
-                                                <div class="col-12">@pair1.VDV2.Ten_Tat</div>
-                                            }
-                                            else
-                                            {
-                                                if (first)
-                                                { <select asp-for="@Model.DS_Tran[count].ID_Cap1" class="form-control form-control-sm" asp-items="ViewBag.PairIds"></select>}
-                                            }
-                                        </div>
-                                        <div class="result">
-                                            @if (hasRole)
-                                            {<input class="form-control form-control-sm" asp-for="@Model.DS_Tran[count].Kq_1"/>}
-                                            else
-                                            {
-                                                if (P1win)
-                                                { <i class="fa fa-check"></i> }
-                                                @Model.DS_Tran[count].Kq_1
-                                            }
-                                        </div>
-                                    </div>
-                                    <div class="child top-border @boldP2">
-                                        <div class="row" style="margin-left: 0;">
-                                            @if (pair2 != null)
-                                            {
-                                                <div class="col-12">@pair2.VDV1.Ten_Tat</div>
-                                                <div class="col-12">@pair2.VDV2.Ten_Tat</div>
-                                            }
-                                            else
-                                            {
-                                                if (first) 
-                                                { <select asp-for="@Model.DS_Tran[count].ID_Cap2" class="form-control form-control-sm" asp-items="ViewBag.PairIds"></select> }
-                                            }
-                                        </div>
-                                        <div class="result">
-                                            @if (hasRole)
-                                            {<input class="form-control form-control-sm" asp-for="@Model.DS_Tran[count].Kq_2"/>}
-                                            else
-                                            {
-                                                if (!P1win)
-                                                { <i class="fa fa-check"></i>}
-                                                @Model.DS_Tran[count].Kq_2
-                                            }
-                                        </div>
-                                    </div>
-                                </li>
-                                count++;
-                            }
-                        </ul>
-                        bracket++;
-                    }
-                </div>
+                    bracket++;
+                }
             </div>
         </div>
-        @if (hasRole && isCurrent)
+        @if (hasRole)
         {
             <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
                 <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />

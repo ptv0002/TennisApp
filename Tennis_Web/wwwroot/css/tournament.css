@@ -10,6 +10,17 @@
     height: 100vh;
     position: relative;
 }*/
+
+.sm-input {
+    width: 2.75rem;
+    display: initial;
+}
+.template {
+    width: 5.5rem;
+}
+.middle{
+    flex-grow:10
+}
 .win {
     font-weight: bolder;
     color: black;
@@ -45,8 +56,8 @@
     display: flex;
     flex-direction: row;
     list-style-type: none;
-    margin-bottom: 50px;
     width: 100%;
+    line-height: 1;
 }
 
 .bracket {
@@ -68,13 +79,13 @@
     vertical-align: middle;
     text-align: left;
     font-size: 14px;
-    border: 1px solid black;
+    border: 1px solid limegreen;
     margin: .5rem 9px;
 }
 
     .team-item:after {
         content: '';
-        border-color: black;
+        border-color: limegreen;
         border-width: 2px;
         position: absolute;
         display: block;
@@ -98,7 +109,7 @@
 
     .team-item:before {
         content: '';
-        border-top: 2px solid black;
+        border-top: 2px solid limegreen;
         position: absolute;
         height: 2px;
         width: 10px;
@@ -112,8 +123,12 @@
         justify-content: space-between;
         align-items: stretch
     }
+        .team-item .child .col {
+            padding: 2px 0; 
+            margin-right: 5px;
+        }
     .team-item .top-border {
-        border-top: 1px solid black;
+        border-top: 1px solid limegreen;
     }
     .team-item .result {
         display: flex;
@@ -125,21 +140,10 @@
             width: 1.75rem
         }
     .team-item select{
-        width: 85%;
+        width: 100%;
     }
-.left-padding {
-    width: 2.75rem;
-    padding-left: 5px;
-    display: initial;
-}
-.right-padding {
-    width: 2.75rem;
-    padding-right: 5px;
-    display: initial;
-}
-.sm-no-padding {
-    width: 2.75rem;
-    display: initial;
+.bracket-1{
+    flex-grow:1.75;
 }
 .bracket-2 .team-item:nth-of-type(odd):after {
     height: 200%;
@@ -188,20 +192,10 @@
     height: 2800%;
     top: -2750%;
 }
-.bracket:first-of-type .team-item:before {
-    display: none;
-}
 
-.bracket:last-of-type .team-item:after {
+.bracket:last-of-type .team-item:after, .bracket:first-of-type .team-item:before {
     display: none;
 }
-.bracket .template .team-item:after {
-    display: none;
-}
-.bracket .template .team-item .child input {
-    width: 5.5rem;
-}
-
 .team-item time {
     display: inline-block;
     background-color: #dbdbdb;

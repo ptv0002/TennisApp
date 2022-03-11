@@ -79,13 +79,13 @@
             </ul>
         </div>
         <div class="tournament-brackets">
-            <ul class="bracket bracket-1">
+            <ul class="bracket bracket-1" style="flex-grow: 2;">
                 @for (int i = 65; i < (65 + 32); i++)
                 {
                     var name = (char)i;
                     <li class="team-item row">
                         <div class="child win">
-                            <div class="row" style="margin-left: 0;">
+                            <div class="col">
                                 <select class="form-control form-control-sm" style="width: 85%;">
                                     <option>Binh Duong + Tuan TH</option>
                                 </select>
@@ -95,9 +95,9 @@
                             </div>
                         </div>
                         <div class="child top-border win">
-                            <div class="row">
-                                <div class="col-12">@name 3</div>
-                                <div class="col-12">@name 4</div>
+                            <div class="col">
+                                <div>@name 3</div>
+                                <div>@name 4</div>
                             </div>
                             <div class="result">
                                 <i class="fas fa-check"></i>
@@ -113,18 +113,18 @@
                     var name = (char)i;
                     <li class="team-item row">
                         <div class="child">
-                            <div class="row">
-                                <div class="col-12">@name 1</div>
-                                <div class="col-12">@name 2</div>
+                            <div class="col">
+                                <div>@name 1</div>
+                                <div>@name 2</div>
                             </div>
                             <div class="result">
                                 <input class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="child top-border">
-                            <div class="row">
-                                <div class="col-12">@name 3</div>
-                                <div class="col-12">@name 4</div>
+                            <div class="col">
+                                <div>@name 3</div>
+                                <div>@name 4</div>
                             </div>
                             <div class="result">
                                 <input class="form-control form-control-sm">
@@ -139,18 +139,18 @@
                     var name = (char)i;
                     <li class="team-item row">
                         <div class="child">
-                            <div class="row">
-                                <div class="col-12">@name 1</div>
-                                <div class="col-12">@name 2</div>
+                            <div class="col">
+                                <div>@name 1</div>
+                                <div>@name 2</div>
                             </div>
                             <div class="result">
                                 <input class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="child top-border">
-                            <div class="row">
-                                <div class="col-12">@name 3</div>
-                                <div class="col-12">@name 4</div>
+                            <div class="col">
+                                <div>@name 3</div>
+                                <div>@name 4</div>
                             </div>
                             <div class="result">
                                 <input class="form-control form-control-sm">
@@ -164,18 +164,18 @@
                 {
                     <li class="team-item row">
                         <div class="child">
-                            <div class="row">
-                                <div class="col-12">QF_@i</div>
-                                <div class="col-12">QF_@i</div>
+                            <div class="col">
+                                <div>QF_@i</div>
+                                <div>QF_@i</div>
                             </div>
                             <div class="result">
                                 <input class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="child top-border">
-                            <div class="row">
-                                <div class="col-12">QF_@i</div>
-                                <div class="col-12">QF_@i</div>
+                            <div class="col">
+                                <div>QF_@i</div>
+                                <div>QF_@i</div>
                             </div>
                             <div class="result">
                                 <input class="form-control form-control-sm">
@@ -189,18 +189,18 @@
                 {
                     <li class="team-item row">
                         <div class="child">
-                            <div class="row">
-                                <div class="col-12">SF_@i</div>
-                                <div class="col-12">SF_@i</div>
+                            <div class="col">
+                                <div>SF_@i</div>
+                                <div>SF_@i</div>
                             </div>
                             <div class="result">
                                 <input class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="child top-border">
-                            <div class="row">
-                                <div class="col-12">SF_@i</div>
-                                <div class="col-12">SF_@i</div>
+                            <div class="col">
+                                <div>SF_@i</div>
+                                <div>SF_@i</div>
                             </div>
                             <div class="result">
                                 <input class="form-control form-control-sm">
@@ -212,18 +212,18 @@
             <ul class="bracket bracket-6">
                 <li class="team-item row">
                     <div class="child">
-                        <div class="row">
-                            <div class="col-12">F_1</div>
-                            <div class="col-12">F_2</div>
+                        <div class="col">
+                            <div>F_1</div>
+                            <div>F_2</div>
                         </div>
                         <div class="result">
                             <input class="form-control form-control-sm">
                         </div>
                     </div>
                     <div class="child top-border">
-                        <div class="row">
-                            <div class="col-12">F_3</div>
-                            <div class="col-12">F_4</div>
+                        <div class="col">
+                            <div>F_3</div>
+                            <div>F_4</div>
                         </div>
                         <div class="result">
                             <input class="form-control form-control-sm">
