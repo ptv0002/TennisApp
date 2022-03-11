@@ -106,7 +106,7 @@ namespace Tennis_Web.Controllers
                 // ================== Add players to First Special ==================
                 var totalPair = matchParam.ChosenPerTable.Sum(m => m.Chosen) + matchParam.PlayOff1 + matchParam.PlayOff2;
                 fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/Special1stRound.json");
-                var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPair && m.TableNum == straight2Special.Count());
+                var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPair && m.TableNum == straight2Special.Count);
                 fileStream.Dispose();
 
                 if (placement != null)
@@ -137,7 +137,8 @@ namespace Tennis_Web.Controllers
                             {
                                 pair = ds_cap.Where(m => m.DS_Bang.Ten == code[j] && m.Xep_Hang == code[0]);
                                 // Founf pair with required Table_Ranking combo
-                                if (pair.Count() >= 1)
+                                //if (pair.Count() >= 1)
+                                if (pair.Any())
                                 {
                                     // Ranking is unique => Assign pair to match
                                     if (pair.Count() == 1) special1stRound[i].ID_Cap2 = pair.First().Id;
