@@ -9,14 +9,14 @@
     {
         <input type="hidden" asp-for="@Model[i].ID_Trinh" />
         <input type="hidden" asp-for="@Model[i].Trinh" />
-        <div class="card shadow mb-4">
+        <div class="card shadow mb-4" name="ntrinh">
             <div class="card-header py-3">
                 <h5 class="font-weight-bold text-success">Trình @Model[i].Trinh</h5>
             </div>
             <div class="card-body">
                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                     <div class="table-responsive">
-                        <table class="table dataTable">
+                        <table class="table dataTable" >
                             <thead>
                                 <tr>
                                     <th>Bảng</th>
@@ -37,15 +37,15 @@
                                             <input type="hidden" asp-for="@Model[i].ChosenPerTable[j].PairsNum" />
                                             @Model[i].ChosenPerTable[j].PairsNum
                                         </td>
-                                        <td class="align-center"><input class="form-control col-6" asp-for="@Model[i].ChosenPerTable[j].Chosen" /></td>
-                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].ChosenPerTable[j].Playoff" /></td>
+                                        <td class="align-center"><input class="form-control col-6" asp-for="@Model[i].ChosenPerTable[j].Chosen" name="chosen"/></td>
+                                        <td><input class="checkbox" type="checkbox" asp-for="@Model[i].ChosenPerTable[j].Playoff" name="playoff"/></td>
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th colspan="2" style="text-align:right">Tổng số cặp đã chọn</th>
-                                    <td class="align-center"><input class="form-control col-6" disabled /></td>
+                                    <td class="align-center"><input class="form-control col-6" disabled name="sselect" /></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -60,21 +60,21 @@
                         Tổng cặp Playoff 1 (Playoff cao nhất)
                     </dt>
                     <dd class="col-6">
-                        <input class="form-control col-6" asp-for="@Model[i].PlayOff1" />
+                        <input class="form-control col-6" asp-for="@Model[i].PlayOff1" name="sp1"/>
                         <span asp-validation-for="@Model[i].PlayOff1" class="text-danger"></span>
                     </dd>
                     <dt class="col-6 font-weight-bold" style="text-align:right">
                         Tổng cặp Playoff 2 (Loại trực tiếp)
                     </dt>
                     <dd class="col-6">
-                        <input class="form-control col-6" asp-for="@Model[i].PlayOff2" />
+                        <input class="form-control col-6" asp-for="@Model[i].PlayOff2" name="sp2"/>
                         <span asp-validation-for="@Model[i].PlayOff2" class="text-danger"></span>
                     </dd>
                     <dt class="col-6 font-weight-bold" style="text-align:right">
                         Tổng số cặp đi tiếp
                     </dt>
                     <dd class="col-6">
-                        <input class="form-control col-6" disabled />
+                        <input class="form-control col-6" disabled name="ssum"/>
                     </dd>
                 </dl>
             </div>
@@ -121,34 +121,43 @@
             //$(document).ready(function () { UpdateSum(); });
             UpdateSum();
             function UpdateSum() {
-                //debugger;
-                var bang = document.getElementsByClassName("card shadow mb-4");
-                for (let i = 0; i < bang.length ; i++)
-                {
-                    var mSelect=0;
-                    var mPlayOff1 = 0;
-                    var mPlayOff2 = 0;
-                    var mSum = 0;
-                    var hang = bang[i].getElementsByTagName("tr");
-                    for (let j = 1; j < hang.length-1; j++)
-                    {
-                        var cot = hang[j].getElementsByTagName("input");
-                        mSelect = mSelect + Number(cot[2].value);
-                        if (cot[3].value=="true") mPlayOff1++ ;
-                        if (cot[4].value=="true") mPlayOff2++;
+            //    debugger;
+                var bang = document.getElementsByTagName("tbody");         // Danh sách các bảng trong trình
+                var mSelect = document.getElementsByName("sselect");        // Tổng cặp chọn trực tiếp
+                var mPlayOff1   = document.getElementsByName("sp1");        // Tổng cặp P1
+                var mPlayOff2   = document.getElementsByName("sp2");        // Tổng cặp P2
+                var mSum        = document.getElementsByName("ssum");       // Tổng cặp vào vòng tiếp theo
+                var mchosen     = document.getElementsByName("chosen");     // Danh sách phần tử chọn
+                var mPlayOff    = document.getElementsByName("playoff");    // Danh sách phần tử playoff
+                var mnbangcur = 0;
+                var mnbangold = 0;
+
+                var nSelect;
+                var nPlayOff2 ;
+                var nSum;
+                for (let i = 0; i < bang.length; i++) {
+                    nSelect = 0;
+                    nPlayOff2 = 0;
+                    nSum = 0;
+                    mnbangcur = bang[i].getElementsByTagName("tr").length;
+
+                    for (let j = 0; j < mnbangcur; j++) {
+                        nSelect += Number(mchosen[j + mnbangold].value);
+                        if (mPlayOff[j + mnbangold].value == "true") nPlayOff2++;
                     }
-                    hang[hang.length - 1].getElementsByTagName("input")[0].value = mSelect.toString(); // Cộng chọn
-                    var mFooter = bang[i].getElementsByClassName("card-footer")[0].getElementsByTagName("input");
-                    var sPlayoff1 = Number(mFooter[0].value) ;  // Tổng Playoff1
-                    var sPlayoff2 = Number(mFooter[1].value) ;  // Tổng Playoff2
-                    var kiemtra = mPlayOff2 - sPlayoff1 - sPlayoff2 * 2;
-                    //if (kiemtra != 0) Alert("Số đội Playoff 2 không hợp lệ");
-                    mSum = mSelect + sPlayoff1 + sPlayoff2;
-                    mFooter[2].value = mSum.toString()  // Tổng cộng
+                    nPlayOff2 -= Number(mPlayOff1[i].value);
+                    nPlayOff2 = nPlayOff2 % 2;
+                    nSum = nSelect + nPlayOff2 + Number(mPlayOff1[i].value);
+                    mnbangold += mnbangcur;
+                    // Gán lạigiá trị thể hiện trên Web
+                    mSelect[i].value    = nSelect.toString();
+                    mPlayOff2[i].value  = nPlayOff2.toString();
+                    mSum[i].value       = nSum.toString();
                 }
             };
             $("dd").on('input', function () {UpdateSum();});
             $("td").on('input', function () {UpdateSum();});
         });
     </script>
+
 }

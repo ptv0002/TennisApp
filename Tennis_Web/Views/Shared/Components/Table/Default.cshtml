@@ -67,9 +67,9 @@
                                                     if (hasRole)
                                                     {
                                                         <td>
-                                                            <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" />
+                                                            <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" name="kq1"/>
                                                             -
-                                                            <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" />
+                                                            <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" name="kq2"/>
                                                             <input type="hidden" asp-for="@Model.DS_Tran[idTran].Id" />
                                                             <input type="hidden" asp-for="@Model.DS_Tran[idTran].Ma_Vong" />
                                                         </td>
@@ -82,15 +82,15 @@
                                                 }
                                                 else
                                                 {  // Reflection side
-                                                    <td>
+                                                    <td name="ketqua">
                                                         @Model.DS_Tran[reflectCount[k]].Kq_2 - @Model.DS_Tran[reflectCount[k]].Kq_1
                                                     </td>
                                                     reflectCount[k]++;
                                                 }
                                             }
                                             @if (hasRole) { 
-                                                <td><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Tran_Thang" disabled/></td>
-                                                <td><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Hieu_so" disabled/></td>
+                                                <td><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Tran_Thang"  name="tranthang" disabled/></td>
+                                                <td><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Hieu_so" name="hieuso" disabled/></td>
                                             }
                                             else { 
                                                 <td>@Model.DS_Cap[idCap].Tran_Thang</td>

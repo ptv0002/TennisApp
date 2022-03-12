@@ -26,23 +26,93 @@
 @section Scripts {
     <script type="text/javascript">
         $(function () {
-            // When the user scrolls the page, execute myFunction
-            window.onscroll = function () { myFunction() };
+            //// When the user scrolls the page, execute myFunction
+            //window.onscroll = function () { myFunction() };
 
-            // Get the header
-            var header = document.getElementById("tournamentHeader");
+            //// Get the header
+            //var header = document.getElementById("tournamentHeader");
 
-            // Get the offset position of the navbar
-            var sticky = header.offsetTop;
+            //// Get the offset position of the navbar
+            //var sticky = header.offsetTop;
 
-            // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
-            function myFunction() {
-                if (window.pageYOffset > sticky) {
-                    header.classList.add("sticky");
-                } else {
-                    header.classList.remove("sticky");
+            //// Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+            //function myFunction() {
+            //    if (window.pageYOffset > sticky) {
+            //        header.classList.add("sticky");
+            //    } else {
+            //        header.classList.remove("sticky");
+            //    }
+            //}
+
+            // Hàm lấy số thứ tự phần tử trong ds trận
+            // Dòng, Cột (bắt đầu từ dòng 1, cột 1)  ,số phần tử trong bảng
+            function tttran(dong, cot, npt) 
+            {
+                var ncot = 0;
+                var ndong = 0;
+                if (cot > dong)
+                {
+                    ncot = cot;
+                    ndong = dong;
+                }
+                else
+                {
+                    ncot = dong;
+                    ndong = cot;
+                }
+                sott = (ndong - 1) * (npt-1+npt-1-ndong)/2 + ncot - 1 -1 ;
+                return sott
+            }
+            // Cập nhật kết quả dưới + Trận thắng + Hiệu số
+            function upKetQua()
+            {
+                var bang = document.getElementsByTagName("tbody");             // Danh sách các bảng trong trình
+                var mkq1 = document.getElementsByName("kq1");                  // Danh sách kết quả 1 được nhập 
+                var mkq2 = document.getElementsByName("kq2");                  // Danh sách kết quả 2 được nhập
+                var mketqua = document.getElementsByName("ketqua");            // Danh sách kết quả suy diễn
+                var mhieuso = document.getElementsByName("hieuso");            // Danh sách hiệu số thắng thua
+                var mtranthang = document.getElementsByName("tranthang");      // Danh sách trận thắng
+                var mbangcur = 0;
+                var mbangold = 0;
+                var iketqua = 0;
+                var chisocu = 0;
+                for (let i = 0; i < bang.length; i++) {
+                    mbangcur = bang[i].getElementsByTagName("tr").length;            // Số dòng (số cặp) trong 1 bảng = n ==> số trận đấu = n*(n-1)/2
+                    for (let j = 1; j <= mbangcur; j++) {
+                        var nTranthang = 0;
+                        var nHieuso = 0;
+                        var tHieuso = 0;
+                        var chiso = 0;
+                        for (let k = 1; k <= mbangcur; k++)
+                        {
+                            chiso = tttran(j, k, mbangcur);
+                            //debugger
+                            if (j != k)
+                            {
+                                tHieuso = Number(mkq1[chisocu+chiso].value) - Number(mkq2[chisocu+chiso].value)
+                            }
+                            if (j > k)
+                            {
+                                if (tHieuso < 0) { nTranthang++; }
+                                nHieuso -= tHieuso;
+                                mketqua[iketqua].innerHTML = mkq2[chisocu + chiso].value + " - " + mkq1[chisocu + chiso].value;// Cập nhật lại kết quả suy diễn
+                                iketqua++;
+                            }
+                            else if (j < k)
+                            {
+                                if (tHieuso > 0) { nTranthang++; }
+                                nHieuso += tHieuso;
+                            }
+                        }
+                        // Cập nhật lại kết quả của dòng
+                        mhieuso[mbangold + j-1].value = nHieuso.toString();
+                        mtranthang[mbangold + j-1].value = nTranthang.toString();
+                    }
+                    mbangold += mbangcur;
+                    chisocu = mbangold * (mbangold-1)/2;
                 }
             }
+            $("td").on('input', function () { upKetQua(); });
         });
     </script>
 }
