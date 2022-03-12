@@ -69,15 +69,18 @@ namespace Library
             {
                 cap_1 = lCap.FindIndex(m => m.Id == lTran[i].ID_Cap1);
                 cap_2 = lCap.FindIndex(m => m.Id == lTran[i].ID_Cap2);
-                if ((lTran[i].Kq_1 - lTran[i].Kq_2) > 0)  cap_0 = cap_1;
-                else cap_0 = cap_2;
-                if (PointCal) 
+                if (lTran[i].Kq_1 + lTran[i].Kq_2 > 0)
                 {
-                    lCap[cap_1].Hieu_so += (lTran[i].Kq_1 - lTran[i].Kq_2);
-                    lCap[cap_2].Hieu_so += (lTran[i].Kq_2 - lTran[i].Kq_1);
-                    lCap[cap_0].Tran_Thang++;
+                    if ((lTran[i].Kq_1 - lTran[i].Kq_2) > 0) cap_0 = cap_1;
+                    else cap_0 = cap_2;
+                    if (PointCal)
+                    {
+                        lCap[cap_1].Hieu_so += (lTran[i].Kq_1 - lTran[i].Kq_2);
+                        lCap[cap_2].Hieu_so += (lTran[i].Kq_2 - lTran[i].Kq_1);
+                        lCap[cap_0].Tran_Thang++;
+                    }
+                    lCap[cap_0].Tinh_toan++;
                 }
-                lCap[cap_0].Tinh_toan++;
             }
             lCap = lCap.OrderByDescending(m => m.Tinh_toan).ToList(); // Xếp thứ tự sau khi tính điểm
             // Bắt đầu Xếp hạng sau khi tính điểm
@@ -138,7 +141,7 @@ namespace Library
             // Bắt đầu Xếp hạng sau khi bốc thăm
             int cur = 1;                                         // Lần đầu xếp hạng   
             if (lCap[0].Xep_Hang > 0) cur = lCap[0].Xep_Hang;  // Khi xếp hạng theo điểm nhóm con
-            int next = 0;
+            int next = 1;
             int diem = lCap[0].Boc_Tham;
             lCap[0].Xep_Hang = cur;
             for (int i = 1; i < lCap.Count; i++)
@@ -147,7 +150,7 @@ namespace Library
                 else
                 {
                     cur += next;
-                    next = 0;
+                    next = 1;
                     diem = lCap[i].Boc_Tham;
                 }
                 lCap[i].Xep_Hang = cur;
