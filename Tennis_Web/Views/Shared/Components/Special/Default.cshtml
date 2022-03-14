@@ -5,6 +5,8 @@
     bool hasRole = ViewBag.Admin == true && ViewBag.IsCurrent == true;
     int bracket = 1;
     int count = 0;
+
+    bool highRole = User.IsInRole("Manager") || User.IsInRole("Admin");
 }
 @model RoundTabViewModel
 @if (Model.DS_Tran.Any())
@@ -32,24 +34,38 @@
                             string boldP1 = difference > 0 ? "win" : "";
                             string boldP2 = difference < 0 ? "win" : "";
                             bool first = i == ViewBag.RoundNum;
+
                             <li class="team-item row">
+                                <input type="hidden" asp-for="@Model.DS_Tran[count].Id" />
+                                <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Vong" />
+                                <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Tran"/>
+                                <input type="hidden" asp-for="@Model.DS_Tran[count].ID_Cap1" />
+                                <input type="hidden" asp-for="@Model.DS_Tran[count].ID_Cap2"/>
                                 <div class="child @boldP1">
                                     @if (first)
                                     {
                                         <div class="col">
                                             @if (hasRole)
-                                            {<input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_1" /> }
+                                            {
+                                                if (highRole)
+                                                {
+                                                    // If role is Manager or Admin => full editing
+                                                    <input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_1" />
+                                                }
+                                                else
+                                                { <input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_1" disabled />}
+                                                
+                                            }
                                             else
                                             {@Model.DS_Tran[j].Chon_Cap_1}
                                         </div>
                                     }
                                     <div class="col middle">
-                                        <input type="hidden" asp-for="@Model.DS_Tran[count].Id" />
-                                        <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Vong" />
                                         @if (pair1 != null)
                                         {
-                                            <div style="padding-top: 1px;">@pair1.VDV1.Ten_Tat</div>
-                                            <div style="padding-top: 3px;">@pair1.VDV2.Ten_Tat</div>
+                                            @*<div style="padding-top: 1px;">@pair1.VDV1.Ten_Tat</div>
+                                                <div style="padding-top: 3px;">@pair1.VDV2.Ten_Tat</div>*@
+                                            <div>@pair1.VDV1.Ten_Tat + @pair1.VDV2.Ten_Tat</div>
                                         }
                                         else
                                         {
@@ -59,7 +75,16 @@
                                     </div>
                                     <div class="result">
                                         @if (hasRole)
-                                        {<input class="form-control form-control-sm" asp-for="@Model.DS_Tran[count].Kq_1" />}
+                                        {
+                                            if (highRole || (!highRole && Model.DS_Tran[count].Kq_1 <= 0))
+                                            {
+                                                // If role is Manager or Admin => full editing
+                                                // If role is Referee => Only edit 0 field
+                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[count].Kq_1" />
+                                            }
+                                            else
+                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[count].Kq_1" disabled />}
+                                        }
                                         else
                                         {
                                             if (difference > 0)
@@ -73,7 +98,15 @@
                                     {
                                         <div class="col">
                                             @if (hasRole)
-                                            {<input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_2" />}
+                                            {
+                                                if (highRole)
+                                                {
+                                                    // If role is Manager or Admin => full editing
+                                                    <input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_2" />
+                                                }
+                                                else
+                                                { <input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_2" disabled />}
+                                            }
                                             else
                                             {@Model.DS_Tran[j].Chon_Cap_2}
                                         </div>
@@ -81,8 +114,7 @@
                                     <div class="col middle">
                                         @if (pair2 != null)
                                         {
-                                            <div style="padding-top: 1px;">@pair2.VDV1.Ten_Tat</div>
-                                            <div style="padding-top: 3px;">@pair2.VDV2.Ten_Tat</div>
+                                            <div>@pair2.VDV1.Ten_Tat + @pair2.VDV2.Ten_Tat</div>
                                         }
                                         else
                                         {
@@ -92,7 +124,16 @@
                                     </div>
                                     <div class="result">
                                         @if (hasRole)
-                                        {<input class="form-control form-control-sm" asp-for="@Model.DS_Tran[count].Kq_2" />}
+                                        {
+                                            if (highRole || (!highRole && Model.DS_Tran[count].Kq_2 <= 0))
+                                            {
+                                                // If role is Manager or Admin => full editing
+                                                // If role is Referee => Only edit 0 field
+                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[count].Kq_2" />
+                                            }
+                                            else
+                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[count].Kq_2" disabled />}
+                                        }
                                         else
                                         {
                                             if (difference < 0)
@@ -111,8 +152,17 @@
         </div>
         @if (hasRole)
         {
+            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+            {
+                BtnMsg = "Xóa",
+                Message = "xóa kết quả toàn bộ vòng đặc biệt",
+                ActionName = "ResetSpecial",
+                ControllerName = "Result",
+                Id = Model.ID_Trinh.ToString()
+            };
             <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
+                <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" formmethod="post" />
+                @if (highRole) { <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa kết quả</button> } 
             </div>
         }
     </form>
@@ -121,3 +171,5 @@ else
 {
     <h5 class="font-weight-bold text-danger">Chưa có danh sách trận đấu!</h5>
 }
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>

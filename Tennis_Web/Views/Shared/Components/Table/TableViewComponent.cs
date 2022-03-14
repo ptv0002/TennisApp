@@ -35,18 +35,15 @@ namespace Tennis_Web.Views.Match.Components.Table
                 ViewBag.Admin = false;
             }
             else ViewBag.Admin = true;
-            
+
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công");
-            else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
+            else if (vm.Succeeded == false) _notyf.Error(vm.ErrorMsg ?? "Có lỗi xảy ra khi đang lưu thay đổi!", 30);
 
             List<DS_Tran> matches = new();
             var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
-            if (vm.Succeeded != false)
-            {
-                matches = _context.DS_Trans
+            matches = _context.DS_Trans
                     .Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong > 6) // Ma_Vong > 6 are Table and Playoff rounds
                     .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList();
-            }
             var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
             {
                 Table = m.Key,
