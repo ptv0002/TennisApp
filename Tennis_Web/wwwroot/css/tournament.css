@@ -18,8 +18,11 @@
 .template {
     width: 5.5rem;
 }
-.middle{
-    flex-grow:10
+.middle {
+    flex-grow: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .win {
     font-weight: bolder;

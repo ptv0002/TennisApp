@@ -205,7 +205,7 @@ namespace Library
         /// </summary>
         /// <param name="lTran"></param> : Danh sách tất cả các trận đấu
         /// <param name="tran"></param>  : Kết quả của 1 trận đấu 
-        public static void Special_Select(List<DS_Tran> lTran, DS_Tran tran)
+        public void Special_Select(List<DS_Tran> lTran, DS_Tran tran)
         {
             //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0,5,7,9,12
             if (tran.Ma_Tran[5]== '2' || (tran.Kq_1 + tran.Kq_2) == 0)
@@ -235,7 +235,7 @@ namespace Library
             }
         }
         
-        public static int? Champion_Select(DS_Tran tran)
+        public int? Champion_Select(DS_Tran tran)
         {
             if (tran.Ma_Vong>1 || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
             if (tran.Kq_1 > tran.Kq_2) return tran.ID_Cap1;

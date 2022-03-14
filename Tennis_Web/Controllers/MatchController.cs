@@ -127,6 +127,7 @@ namespace Tennis_Web.Controllers
                 var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).ToList();
 
                 // ---------------- Update Table Id to pairs (Create new table if needed) ----------------
+                // Reset old results from pairs
                 foreach (var pair in pairs)
                 {
                     var table = _context.DS_Bangs.Where(m => m.Ten == char.ToUpper(pair.Ma_Cap[0]) && m.ID_Trinh == pair.ID_Trinh).FirstOrDefault();
@@ -141,7 +142,9 @@ namespace Tennis_Web.Controllers
                         table = _context.DS_Bangs.OrderBy(m => m.Id).Last();
                     }
                     pair.ID_Bang = table.Id;
-                    var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "ID_Bang" });
+                    pair.Diem = pair.Boc_Tham = pair.Xep_Hang = pair.Tran_Thang = pair.Hieu_so = 0;
+                    var col2Save = new List<string> { "ID_Bang", "Diem", "Boc_Tham", "Xep_Hang", "Tran_Thang", "Hieu_so" };
+                    var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, col2Save);
                     if (!result.Succeeded) goto exit;
                 }
 
@@ -231,7 +234,7 @@ namespace Tennis_Web.Controllers
                     }
                 }
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { isCurrent = true });
             }
             exit:
             ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");

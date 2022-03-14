@@ -26,3 +26,6 @@ input[type=number] {
     text-align: center;
     border-top: 1px solid #e3e6f0;
 }
+.modal-title {
+    color: #5a5c69 !important;
+}
