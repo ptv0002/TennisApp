@@ -65,25 +65,25 @@
                                                 {  // Insert result side
                                                     if (hasRole)
                                                     {
-                                                        <td>
+                                                        <td name="ketqua">
                                                             @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0))
                                                             {
                                                                 // If role is Manager or Admin => full editing
                                                                 // If role is Referee => Only edit 0 field
-                                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" />
+                                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7"  />
                                                             }
                                                             else
-                                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled />}
+                                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1"disabled min="0" max="7"  />}
 
                                                             <span>-</span>
                                                             @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
                                                             {
                                                                 // If role is Manager or Admin => full editing
                                                                 // If role is Referee => Only edit 0 field
-                                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" />
+                                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
                                                             }
                                                             else
-                                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" disabled />}
+                                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" disabled />}
 
                                                             <input type="hidden" asp-for="@Model.DS_Tran[idTran].Id" />
                                                             <input type="hidden" asp-for="@Model.DS_Tran[idTran].Ma_Vong" />
@@ -97,7 +97,7 @@
                                                 }
                                                 else
                                                 {  // Reflection side
-                                                    <td>
+                                                    <td name="kqsuydien">
                                                         @Model.DS_Tran[reflectCount[k]].Kq_2 - @Model.DS_Tran[reflectCount[k]].Kq_1
                                                     </td>
                                                     reflectCount[k]++;
@@ -105,8 +105,8 @@
                                             }
                                             @if (hasRole)
                                             {
-                                                <td><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Tran_Thang" disabled /></td>
-                                                <td><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Hieu_so" disabled /></td>
+                                                <td name="tranthang"><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Tran_Thang" disabled /></td>
+                                                <td name="hieuso"><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Hieu_so" disabled /></td>
                                             }
                                             else
                                             {
@@ -187,19 +187,19 @@
                                                     {
                                                         // If role is Manager or Admin => full editing
                                                         // If role is Referee => Only edit 0 field
-                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" />
+                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1"  min="0" max="7" />
                                                     }
                                                     else
-                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled />}
+                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1"  min="0" max="7" disabled />}
                                                     <span>-</span>
                                                     @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
                                                     {
                                                         // If role is Manager or Admin => full editing
                                                         // If role is Referee => Only edit 0 field
-                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" />
+                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2"  min="0" max="7" />
                                                     }
                                                     else
-                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" disabled />}
+                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2"  min="0" max="7" disabled />}
                                                     <input type="hidden" asp-for="@Model.DS_Tran[i].ID_Cap1" />
                                                     <input type="hidden" asp-for="@Model.DS_Tran[i].ID_Cap2" />
                                                 </td>

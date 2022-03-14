@@ -15,8 +15,10 @@
         public string Ma_Tran { get; set; }
         //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0,5,7,10
         [DisplayName("KQ 1")]
+        [Range(0,7)]
         public int Kq_1 { get; set; }
         [DisplayName("KQ 2")]
+        [Range(0, 7)]
         public int Kq_2 { get; set; }
         [DisplayName("Chọn cặp 1")]
         [StringLength(3)]
