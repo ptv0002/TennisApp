@@ -72,10 +72,12 @@
             // Cập nhật kết quả dưới + Trận thắng + Hiệu số
             function upKetQua()
             {
+                //debugger
                 var bang = document.getElementsByTagName("tbody");             // Danh sách các bảng trong trình
-                var mkq1 = document.getElementsByName("kq1");                  // Danh sách kết quả 1 được nhập 
-                var mkq2 = document.getElementsByName("kq2");                  // Danh sách kết quả 2 được nhập
-                var mketqua = document.getElementsByName("ketqua");            // Danh sách kết quả suy diễn
+                //var mkq1 = document.getElementsByName("kq1");                // Danh sách kết quả 1 được nhập 
+                //var mkq2 = document.getElementsByName("kq2");                // Danh sách kết quả 2 được nhập
+                var mketqua = document.getElementsByName("ketqua");            // Danh sách kết quả 2 được nhập
+                var mkqsuydien = document.getElementsByName("kqsuydien");      // Danh sách kết quả suy diễn
                 var mhieuso = document.getElementsByName("hieuso");            // Danh sách hiệu số thắng thua
                 var mtranthang = document.getElementsByName("tranthang");      // Danh sách trận thắng
                 var mbangcur = 0;
@@ -92,16 +94,17 @@
                         for (let k = 1; k <= mbangcur; k++)
                         {
                             chiso = tttran(j, k, mbangcur);
-                            //debugger
                             if (j != k)
                             {
-                                tHieuso = Number(mkq1[chisocu+chiso].value) - Number(mkq2[chisocu+chiso].value)
+                            //    tHieuso = Number(mkq1[chisocu+chiso].value) - Number(mkq2[chisocu+chiso].value)
+                            //debugger
+                                tHieuso = Number(mketqua[chisocu + chiso].childNodes[1].value) - Number(mketqua[chisocu + chiso].childNodes[5].value)
                             }
                             if (j > k)
                             {
                                 if (tHieuso < 0) { nTranthang++; }
                                 nHieuso -= tHieuso;
-                                mketqua[iketqua].innerHTML = mkq2[chisocu + chiso].value + " - " + mkq1[chisocu + chiso].value;// Cập nhật lại kết quả suy diễn
+                                mkqsuydien[iketqua].innerHTML = mketqua[chisocu + chiso].childNodes[5].value + " - " + mketqua[chisocu + chiso].childNodes[1].value
                                 iketqua++;
                             }
                             else if (j < k)
@@ -111,11 +114,13 @@
                             }
                         }
                         // Cập nhật lại kết quả của dòng
-                        mhieuso[mbangold + j-1].value = nHieuso.toString();
-                        mtranthang[mbangold + j-1].value = nTranthang.toString();
+                        mhieuso[mbangold + j - 1].childNodes[0].value = nHieuso.toString();
+                        mtranthang[mbangold + j - 1].childNodes[0].value = nTranthang.toString();
                     }
                     mbangold += mbangcur;
-                    chisocu = mbangold * (mbangold-1)/2;
+                    chisocu += mbangcur * (mbangcur - 1)/2;
+                    //chisocu = mbangold * (mbangold - 1) / 2;
+                    //debugger;
                 }
             }
             $("td").on('input', function () { upKetQua(); });
