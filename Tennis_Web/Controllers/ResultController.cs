@@ -188,17 +188,22 @@ namespace Tennis_Web.Controllers
         {
             // Find and update result for Matches
             bool result = false;
-            var matches = model.DS_Tran.Where(m => m.Ma_Vong <= 6);
+            var matches = model.DS_Tran.Where(m => m.Ma_Vong <= 6).ToList() ;
             if (ModelState.IsValid)
             {
-                // Save results to DB and calculate ranking
+                for (int i=6; i>1 ;i--)
+                {
+                    var rankedPairs = new TennisMethod(_context).Special_Update(matches, i);
+                }
                 foreach (var match in matches)
                 {
-                    result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2" }).Succeeded;
+                    result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2", "ID_Cap1", "ID_Cap2"}).Succeeded;
                     if (!result) break;
                 }
             }
             else result = false;
+            // Save all changes to DB
+            if (result) _context.SaveChanges();
             //var rankedPairs = new TennisMethod(_context).Special_Select(matches, table.Ten);
             return TabVMGenerator(model.ID_Trinh, result, Tab.Special, "");
         }

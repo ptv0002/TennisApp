@@ -201,28 +201,45 @@ namespace Library
             public List<DS_Cap> DS_Cap { get; set; }
         }
         /// <summary>
+        /// Cập nhật dữ liệu vào vòng trong
+        /// </summary>
+        /// <param name="lTran"></param> Danh sách kết quả các trận đấu
+        /// <param name="vong"></param> vòng đấu hiện thời
+        public List<DS_Tran> Special_Update(List<DS_Tran> lTran, int vong) 
+        { 
+            if (vong <2 || vong>6) { return lTran; }  // Không nằm trong vòng đặc biệt
+            var kq_vong = lTran.Where(m => m.Ma_Vong == vong).ToList();
+            foreach (var kq in kq_vong) 
+            {
+                lTran = Special_Select(lTran, kq);
+            }
+            return lTran;
+        }
+
+        /// <summary>
         /// Chọn đội thắng vào vòng trong, chỉ trong vòng đặc biệt
         /// </summary>
         /// <param name="lTran"></param> : Danh sách tất cả các trận đấu
         /// <param name="tran"></param>  : Kết quả của 1 trận đấu 
-        public void Special_Select(List<DS_Tran> lTran, DS_Tran tran)
+        public List<DS_Tran> Special_Select(List<DS_Tran> lTran, DS_Tran tran)
         {
-            //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0,5,7,9,12
-            if (tran.Ma_Tran[5]== '2' || (tran.Kq_1 + tran.Kq_2) == 0)
+            //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0-3*5*7*9-10*12-14
+            if (tran.Ma_Vong > 6 || tran.Ma_Vong<2 || (tran.Kq_1 + tran.Kq_2) == 0)
             {
-                return; // Trận chung kết --> Không chọn đội vào vòng trong
+                return lTran; // Trận chung kết --> Không chọn đội vào vòng trong
             }
 
             // Tìm trận tiếp theo
-            int stt =   Convert.ToInt32(tran.Ma_Tran[9..10]);           // Số thứ tự trận trong vòng hiện thời
-            int n4 = stt - (stt-1)%4*4 ;                                // Hiện là trận thứ mấy trong nhóm 4 trận
+            int stt =   Convert.ToInt32(tran.Ma_Tran[9..11]);           // Số thứ tự trận trong vòng hiện thời
+            int n2 = (stt-1)/2 ;                                        // Hiện là trận thứ mấy trong nhóm 2 trận
+            n2 = stt - n2 * 2;
 
-            string nxt = "00"+(stt + 1) % 4;                            // số tt trận tiếp theo của vòng trong
+            string nxt = "00"+((stt-1)/ 2+1);                            // số tt trận tiếp theo của vòng trong
             nxt = nxt[^2..];                                              
-            bool cap = ((n4 - 1) % 2 == 0);                               // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
+            bool cap = ((n2 - 1) % 2 == 0);                               // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
 
-            string ma_tran = tran.Ma_Tran[0..4] + (tran.Ma_Vong-1) + "* *" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
-            var trantiep = lTran.First(m => m.Ma_Tran[0..11] == ma_tran);  /*.Substring(0, 12)*/
+            string ma_tran = tran.Ma_Tran[0..5] + (tran.Ma_Vong-1) + "*0*" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
+            var trantiep = lTran.First(m => m.Ma_Tran[0..12] == ma_tran);  /*.Substring(0, 12)*/
             if (tran.Kq_1 > tran.Kq_2) 
             { 
                 if (cap) trantiep.ID_Cap1 = tran.ID_Cap1; 
@@ -233,8 +250,8 @@ namespace Library
                 if (cap) trantiep.ID_Cap1 = tran.ID_Cap2;
                 else trantiep.ID_Cap2 = tran.ID_Cap2;
             }
+            return lTran;
         }
-        
         public int? Champion_Select(DS_Tran tran)
         {
             if (tran.Ma_Vong>1 || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
