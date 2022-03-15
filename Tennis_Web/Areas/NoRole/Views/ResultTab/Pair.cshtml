@@ -1,0 +1,103 @@
+﻿@{
+    var idCap = 0;
+    Layout = "/Areas/_Layout.cshtml";
+    ViewData["Title"] = "Danh sách cặp";
+    ViewBag.CActive = "active visible-sm visible-xs";
+}
+@model List<Models.DS_Cap> 
+<section class="main still-background">
+    <div class="visual container ">
+        <div class="text-block-sm">
+            <div class="heading-holder">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        @for (int i = 0; i < ViewBag.ListLevel.Count; i++)
+        {
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="font-weight-bold">Trình @ViewBag.ListLevel[i]</h5>
+                </div>
+                <div class="card-body">
+                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                        <table class="table dataTable" id="normalTable">
+                            <thead>
+                                <tr>
+                                    <th>Mã cặp</th>
+                                    <th>VĐV 1</th>
+                                    <th>VĐV 2</th>
+                                    <th>Tổng điểm</th>
+                                    <th>Lệch trình</th>
+                                    <th>Trích điểm</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Mã cặp</th>
+                                    <th>VĐV 1</th>
+                                    <th>VĐV 2</th>
+                                    <th>Tổng điểm</th>
+                                    <th>Lệch trình</th>
+                                    <th>Trích điểm</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @for (int j = 0; j < ViewBag.ListNum[i]; j++)
+                                {
+                                    int total = Model[idCap].VDV1.Diem + Model[idCap].VDV2.Diem;
+                                    int difference = total - Model[idCap].DS_Trinh.Trinh;
+                                    <tr>
+                                        <td>@Model[idCap].Ma_Cap</td>
+                                        <td>@Model[idCap].VDV1.Ten_Tat</td>
+                                        <td>@Model[idCap].VDV2.Ten_Tat</td>
+                                        <td>@total</td>
+                                        <td>@difference</td>
+                                        <td></td>
+                                    </tr>
+                                    idCap++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+            @if (ViewBag.NoPairPlayers.Count > 0)
+            {
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h5 class="m-0 font-weight-bold text-success">Danh sách VĐV chưa được xếp cặp</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                            <div class="table-responsive">
+                                <table class="table dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên tắt</th>
+                                            <th>CLB</th>
+                                            <th>Điểm cũ</th>
+                                            <th>Điểm</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.NoPairPlayers)
+                                        {
+                                            <tr>
+                                                <td>@item.Ten_Tat</td>
+                                                <td>@item.CLB</td>
+                                                <td>@item.Diem_Cu</td>
+                                                <td>@item.Diem</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+</section>

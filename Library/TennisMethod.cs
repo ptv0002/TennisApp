@@ -221,10 +221,10 @@ namespace Library
 
             string nxt = "00"+(stt + 1) % 4;                            // số tt trận tiếp theo của vòng trong
             nxt = nxt[^2..];                                              
-            bool cap = ((n4 - 1) % 2 == 0);                               // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
+            bool cap = (n4 - 1) % 2 == 0;                               // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
 
             string ma_tran = tran.Ma_Tran[0..4] + (tran.Ma_Vong-1) + "* *" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
-            var trantiep = lTran.First(m => m.Ma_Tran[0..11] == ma_tran);  /*.Substring(0, 12)*/
+            var trantiep = lTran.First(m => m.Ma_Tran[0..11] == ma_tran);
             if (tran.Kq_1 > tran.Kq_2) 
             { 
                 if (cap) trantiep.ID_Cap1 = tran.ID_Cap1; 

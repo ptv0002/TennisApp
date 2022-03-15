@@ -48,6 +48,9 @@ namespace Tennis_Web.Controllers
                 case "Special":
                     vm.ActiveTab = Tab.Special;
                     return RedirectToAction("MatchInfo", "Match", vm);
+                case "Point":
+                    vm.ActiveTab = Tab.Point;
+                    return RedirectToAction("MatchInfo", "Match", vm);
                 case "Parameter":
                     vm.ActiveTab = Tab.Parameter;
                     return RedirectToAction("LevelInfo", "Level", vm);

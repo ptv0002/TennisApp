@@ -9,6 +9,9 @@
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Special ? "active" : string.Empty)">
         <a asp-route-tabname="Special" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Method">Vòng đặc biệt</a>
     </li>
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Point ? "active" : string.Empty)">
+        <a asp-route-tabname="Point" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-route-detailedTitle="@Model.DetailedTitle" asp-action="SwitchToTabs" asp-controller="Method">Điểm thưởng</a>
+    </li>
 </ul>
 <div class="tab-content mt-3">
     @switch (Model.ActiveTab)
@@ -18,6 +21,9 @@
             break;
         case Tennis_Web.Models.Tab.Special:
             @await Component.InvokeAsync("Special", new { vm = Model });
+            break;
+        case Tennis_Web.Models.Tab.Point:
+            @await Component.InvokeAsync("Point", new { vm = Model });
             break;
         default:
             break;

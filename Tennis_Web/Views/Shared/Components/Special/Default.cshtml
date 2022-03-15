@@ -34,6 +34,18 @@
                             string boldP1 = difference > 0 ? "win" : "";
                             string boldP2 = difference < 0 ? "win" : "";
                             bool first = i == ViewBag.RoundNum;
+                            bool select = false;
+
+                            if (first)
+                            {
+                                // Check if next match is already filled
+                                var roundOrder = Convert.ToInt32(Model.DS_Tran[count].Ma_Tran[9..10]);
+                                bool p1 = roundOrder % 2 == 0;
+                                int nextOrder = roundOrder / 2;
+                                var nextMatch = Model.DS_Tran.Find(m => m.Ma_Tran[9..10] == nextOrder.ToString() && m.Ma_Tran[5] == Model.DS_Tran[count].Ma_Tran[5] - 1);
+                                // If current match is in P1 (P2) respective position and ID_Cap1 (ID_Cap2) is null => show dropdown (select = true)
+                                if ((p1 && nextMatch.ID_Cap1 == null) || (!p1 && nextMatch.ID_Cap2 == null)) select = true;
+                            }
 
                             <li class="team-item row">
                                 <input type="hidden" asp-for="@Model.DS_Tran[count].Id" />
@@ -61,17 +73,15 @@
                                         </div>
                                     }
                                     <div class="col middle">
-                                        @if (pair1 != null)
+                                        @if (hasRole && highRole && first && select)
                                         {
-                                            @*<div style="padding-top: 1px;">@pair1.VDV1.Ten_Tat</div>
-                                                <div style="padding-top: 3px;">@pair1.VDV2.Ten_Tat</div>*@
-                                            <div>@pair1.VDV1.Ten_Tat + @pair1.VDV2.Ten_Tat</div>
+                                            <select asp-for="@Model.DS_Tran[count].ID_Cap1" class="form-control form-control-sm" asp-items="ViewBag.PairIds">
+                                                @if (pair1 == null)
+                                                {<option selected></option>}
+                                            </select>
                                         }
-                                        else
-                                        {
-                                            if (first && hasRole)
-                                            { <select asp-for="@Model.DS_Tran[count].ID_Cap1" class="form-control form-control-sm" asp-items="ViewBag.PairIds"></select>}
-                                        }
+                                        else if (pair1 != null) // View for NoRole, Referee, next match already filled and 2nd to last special rounds
+                                        {<div>@pair1.VDV1.Ten_Tat + @pair1.VDV2.Ten_Tat</div>}
                                     </div>
                                     <div class="result">
                                         @if (hasRole)
@@ -112,15 +122,15 @@
                                         </div>
                                     }
                                     <div class="col middle">
-                                        @if (pair2 != null)
+                                        @if (hasRole && highRole && first && select)
                                         {
-                                            <div>@pair2.VDV1.Ten_Tat + @pair2.VDV2.Ten_Tat</div>
+                                            <select asp-for="@Model.DS_Tran[count].ID_Cap2" class="form-control form-control-sm" asp-items="ViewBag.PairIds">
+                                                @if (pair2 == null)
+                                                {<option selected></option>}
+                                            </select>
                                         }
-                                        else
-                                        {
-                                            if (first && hasRole)
-                                            { <select asp-for="@Model.DS_Tran[count].ID_Cap2" class="form-control form-control-sm" asp-items="ViewBag.PairIds"></select>}
-                                        }
+                                        else if (pair2 != null)// View for NoRole, Referee, next match already filled and 2nd to last special rounds
+                                        {<div>@pair2.VDV1.Ten_Tat + @pair2.VDV2.Ten_Tat</div>}
                                     </div>
                                     <div class="result">
                                         @if (hasRole)

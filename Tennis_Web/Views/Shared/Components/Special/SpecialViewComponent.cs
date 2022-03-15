@@ -3,6 +3,7 @@ using DataAccess;
 using Library.FileInitializer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 using Tennis_Web.Areas.NoRole.Models;
 using Tennis_Web.Models;
 
-namespace Tennis_Web.Views.Match.Components.Special
+namespace Tennis_Web.Views.Shared.Components.Special
 {
     public class SpecialViewComponent : ViewComponent
     {
@@ -42,20 +43,24 @@ namespace Tennis_Web.Views.Match.Components.Special
             else ViewBag.Admin = true;
 
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công");
-            else if (vm.Succeeded == false) _notyf.Error("Có lỗi xảy ra khi đang lưu thay đổi!");
+            else if (vm.Succeeded == false) _notyf.Error(vm.ErrorMsg ?? "Có lỗi xảy ra khi đang lưu thay đổi!", 30);
 
-            List<DS_Tran> matches = new();
-            if (vm.Succeeded != false)
-            {
-                matches = matches = _context.DS_Trans
-                    .Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong <= 6) // Ma_Vong <= 6 are special rounds
+            var matches = _context.DS_Trans.Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong <= 6) // Ma_Vong <= 6 are special rounds
                     .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList();
-            }
             FileStream fileStream = File.OpenRead(_webHost.WebRootPath + "/Files/Json/RoundInfo.json");
             ViewBag.ListRound = (await JsonSerializer.DeserializeAsync<List<Round>>(fileStream)).ToDictionary(x => x.Ma_Vong, y => y.Ten);
             fileStream.Dispose();
             ViewBag.IsCurrent = vm.IsCurrent;
-            if (matches.Any()) ViewBag.RoundNum = matches.Max(m => m.Ma_Vong);
+            if (matches.Any()) 
+            {
+                var pairIds = matches.SelectMany(m => new[] { m.ID_Cap1, m.ID_Cap2 });
+                var pairs = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Where(m => pairIds.Contains(m.Id)).Select(m => new { 
+                    m.Id,
+                    PairName = m.VDV1.Ten_Tat + " + " + m.VDV2.Ten_Tat
+                });
+                ViewBag.PairIds = new SelectList(pairs, "Id", "PairName");  
+                ViewBag.RoundNum = matches.Max(m => m.Ma_Vong);
+            }
             
             var model = new RoundTabViewModel
             {

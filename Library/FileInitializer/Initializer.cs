@@ -29,7 +29,7 @@ namespace Library.FileInitializer
                             new Round { Ten = "Vòng 3", Ma_Vong = 4 },
                             new Round { Ten = "Vòng 2", Ma_Vong = 5 },
                             new Round { Ten = "Vòng 1", Ma_Vong = 6 },
-                            new Round { Ten = "Playoff", Ma_Vong = 7 },
+                            new Round { Ten = "Vòng Playoff", Ma_Vong = 7 },
                             new Round { Ten = "Vòng Bảng", Ma_Vong = 8 }
                         };
             FileStream fileStream;

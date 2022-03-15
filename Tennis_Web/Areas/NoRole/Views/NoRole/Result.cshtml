@@ -26,7 +26,7 @@
                         {
                             string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
                             <div>
-                                <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs">
+                                <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs" asp-controller="ResultTab">
                                     • @title
                                 </a>
                             </div>
@@ -35,7 +35,7 @@
                     else
                     {
                         <h5 class="font-weight-bold text-danger">Không có giải đấu nào đang diễn ra!</h5>
-                        <a class="align-center" style="color:black" asp-action="Result" asp-route-isCurrent="false">
+                        <a class="align-center" style="color:black" asp-action="Result" asp-route-isCurrent="false" asp-controller="NoRole" >
                             Đến danh sách kết quả các giải đấu cũ 🡺
                         </a>
                     }
