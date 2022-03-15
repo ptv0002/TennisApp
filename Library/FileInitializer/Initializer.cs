@@ -30,7 +30,8 @@ namespace Library.FileInitializer
                             new Round { Ten = "Vòng 2", Ma_Vong = 5 },
                             new Round { Ten = "Vòng 1", Ma_Vong = 6 },
                             new Round { Ten = "Playoff", Ma_Vong = 7 },
-                            new Round { Ten = "Vòng Bảng", Ma_Vong = 8 }
+                            new Round { Ten = "Vòng Bảng", Ma_Vong = 8 },
+                            new Round { Ten = "Trích Điểm", Ma_Vong = 9 }
                         };
             FileStream fileStream;
             // Delete file if Json file is already exist

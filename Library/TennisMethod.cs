@@ -8,6 +8,53 @@ using System.Threading.Tasks;
 
 namespace Library
 {
+    public class TennisScore
+    {
+        private readonly DbContext _context;
+        public TennisScore(DbContext context)
+        {
+            _context = context;
+        }
+        /// <summary>
+        /// Trích điểm thưởng của tất cả các cặp VĐV tham gia giải
+        /// </summary>
+        /// <param name="Cap"></param>
+        public void Score_Deposite (List<DS_Cap> Ds_Cap, int ID_Trinh)
+        { }
+        /// <summary>
+        /// Cập nhật điểm thưởng, phạt của 2 cặp VĐV khi đối đầu trực tiếp
+        /// </summary>
+        /// <param name="Cap_1"></param>
+        /// <param name="Cap_2"></param>
+        /// <param name="ket_qua"></param>
+        public void Score_Direct(DS_Cap Cap_1, DS_Cap Cap_2, int ket_qua)
+        { }
+        /// <summary>
+        /// Tính điểm thưởng / Phạt vòng bảng
+        /// </summary>
+        public void Score_Table ()
+        { }
+        /// <summary>
+        /// Tính điểm thưởng hệ số dương vòng bảng
+        /// </summary>
+        public void Score_TableAward()
+        { }
+        /// <summary>
+        /// Tính điểm vòng đặc biệt, lưu bảng điểm này trong danh sách Trình + vòng 
+        /// </summary>
+        public void Score_Special(int id_Trinh)
+        { }
+        /// <summary>
+        /// Tham số điểm của các vòng
+        /// </summary>
+        public class Score_Round
+        {
+            public int Round { get; set; }
+            public int Table { get; set; }
+            public int Level { get; set; }
+            public int Score { get; set; }
+        }
+    }
     public class TennisMethod
     {
         private readonly DbContext _context;
