@@ -6,7 +6,7 @@
     Layout = "/Areas/_Layout.cshtml";
     if (Model.IsCurrent) ViewBag.CRActive = "active visible-sm visible-xs";
     else ViewBag.BRActive = "active visible-sm visible-xs";
-}@*Tennis_Web.Models.TabViewModel*@
+}
 @model Tennis_Web.Areas.NoRole.Models.ResultViewModel
 <section class="main still-background">
     <div class="visual container">
@@ -20,10 +20,13 @@
     <div class="container" style="min-width: 95%">
         <ul class="nav nav-tabs">
             <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Table ? "active" : string.Empty)">
-                <a asp-route-tabname="Table" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs">Vòng bảng và playoff</a>
+                <a asp-route-tabname="Table" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="ResultTab">Vòng bảng và playoff</a>
             </li>
             <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Special ? "active" : string.Empty)">
-                <a asp-route-tabname="Special" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs">Vòng đặc biệt</a>
+                <a asp-route-tabname="Special" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="ResultTab">Vòng đặc biệt</a>
+            </li>
+            <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Point ? "active" : string.Empty)">
+                <a asp-route-tabname="Point" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="ResultTab">Điểm thưởng</a>
             </li>
         </ul>
         <div class="tab-content">
@@ -34,6 +37,9 @@
                     break;
                 case Tennis_Web.Models.Tab.Special:
                     @await Component.InvokeAsync("Special", new { alt = Model });
+                    break;
+                case Tennis_Web.Models.Tab.Point:
+                    @await Component.InvokeAsync("Point", new { alt = Model });
                     break;
                 default:
                     break;

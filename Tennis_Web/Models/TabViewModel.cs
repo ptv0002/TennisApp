@@ -30,6 +30,7 @@ namespace Tennis_Web.Models
         LevelList,
         Pair,
         Table,
-        Special
+        Special,
+        Point
     }
 }

@@ -25,7 +25,7 @@
             }
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h5 class="font-weight-bold text-success">Bảng @ViewBag.ListTable[i]</h5>
+                    <h5 class="font-weight-bold">Bảng @ViewBag.ListTable[i]</h5>
                 </div>
                 <div class="card-body">
                     <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -236,26 +236,30 @@
                 </div>
             }
         }
-        <div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-black-50" id="confirmLabel">Xác nhận</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Bạn có chắc chắn muốn tính lại xếp hạng? Danh sách cặp vào vòng đặc biệt có thể sẽ thay đổi.
-                        Hành động này không thể bị khôi phục.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                        <input type="submit" value="Tiếp tục" class="btn btn-primary" formaction="/Result/PerformRanking" />
+        @if (highRole)
+        {
+            <div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-black-50" id="confirmLabel">Xác nhận</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Bạn có chắc chắn muốn tính lại xếp hạng? Danh sách cặp vào vòng đặc biệt có thể sẽ thay đổi.
+                            Hành động này không thể bị khôi phục.
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                            <input type="submit" value="Tiếp tục" class="btn btn-primary" formaction="/Result/PerformRanking" />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
+
     </form>
 }
 else

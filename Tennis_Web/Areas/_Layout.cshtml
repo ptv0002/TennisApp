@@ -9,10 +9,9 @@
     <meta name="author" content="Themesforce and Sarfraz Shaukat for Frittt">
     <link rel="icon" type="image/png" href="~/images/icon/KAICT_logo.PNG" sizes="16x16">
 
-    @*<link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap.css" />*@
-    @*<link rel="stylesheet" type="text/css" href="~/sbadmin/vendor/fontawesome-free/css/all.min.css">*@
-    @*<link rel="stylesheet" type="text/css" href="~/sbadmin/css/sb-admin-2.css" />*@
-    @*<link rel="stylesheet" href="~/sports-html/fonts/font-awesome-4.3.0/css/font-awesome.min.css">*@
+    <link rel="stylesheet" type="text/css" href="~/datatables/css/dataTables.bootstrap4.min.css" />
+
+    <link rel="stylesheet" href="~/sports-html/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="~/sbadmin/css/sb-admin-2.min.css">
     <link rel="stylesheet" type="text/css" href="~/sbadmin/vendor/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="~/sports-html/css/all.css">
@@ -20,8 +19,6 @@
     <link rel="stylesheet" type="text/css" href="~/css/tournament.css" />
     <link rel="stylesheet" type="text/css" href="~/css/default.css" />
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="~/datatables/css/dataTables.bootstrap4.min.css" />
-    <link rel="stylesheet" href="~/sports-html/css/bootstrap.css">
 
 </head>
 <body id="page-top">
@@ -36,22 +33,22 @@
                             <a href="#" class="nav-opener"><span></span></a>
                         </div>
                         <a asp-action="Logout" asp-area="" asp-controller="Account" class="btn btn-primary rounded-pill">Đăng nhập</a>
-                        <div class="nav-drop">
+                        <div class="nav-drop" style="float: none;">
                             <ul>
-                                <li class="@ViewBag.IActive"><a asp-action="Index">Trang chủ</a></li>
-                                <li class="@ViewBag.PActive"><a asp-action="Player">Vận động viên</a></li>
-                                <li class="@ViewBag.CRActive"><a asp-action="Result" asp-route-isCurrent="true">Giải hiện tại</a></li>
-                                <li class="@ViewBag.BRActive"><a asp-action="Result" asp-route-isCurrent="false">Giải cũ</a></li>
-                                <li class="@ViewBag.AActive"><a asp-action="Announcement">Thông báo</a></li>
+                                <li class="@ViewBag.IActive"><a asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
+                                <li class="@ViewBag.PActive"><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="false">Vận động viên</a></li>
+                                <li class="@ViewBag.CRActive">
+                                    <a class="dropdownBtn">Giải hiện tại</a>
+                                    <div class="dropdown">
+                                        <a asp-action="Announcement" asp-controller="ResultTab">Điều lệ</a>
+                                        <a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">VĐV tham gia</a>
+                                        <a asp-action="Pair" asp-controller="ResultTab" >Danh sách cặp</a>
+                                        <a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a>
+                                    </div>
+                                </li>
+                                <li class="@ViewBag.BRActive"><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="false">Giải cũ</a></li>
+                                <li class="@ViewBag.AActive"><a asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>
                             </ul>
-                            @*<div class="drop-holder visible-sm visible-xs">
-                                <span>Follow Us</span>
-                                <ul class="social-networks">
-                                    <li><a class="fa fa-github" href="#"></a></li>
-                                    <li><a class="fa fa-twitter" href="#"></a></li>
-                                    <li><a class="fa fa-facebook" href="#"></a></li>
-                                </ul>
-                            </div>*@
                         </div>
                     </nav>
                 </div>
@@ -63,36 +60,7 @@
                     <div class="copyright text-center my-auto">
                         Copyright © Tennis Web 2021
                     </div>
-                    @*<div class="row  text-center">
-                    <div class="col-md-12">
-                        <a href="#"><img src="~/images/KAICT-removebg.png" alt="BIT Khánh Hòa"></a>
-                    </div>
-
-                    </div>
-                    <div class="row">
-                        <div id="cta" class="cta-footer">
-                            <a href="javascript:" class="btn btn-primary rounded">Start Training Now</a>
-                            <p>Every day is a challenge, change your life now.</p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h3>We live your galaxy</h3>
-
-                            <p>
-                                15 New Street, Badass Suite, Greyland, Wetworld.
-                            </p>
-                        </div>
-
-                        <div class="col-md-6 text-right">
-                            <ul class="social">
-                                <li><a href="javascript:"><i class="fa fa-facebook-f"></i></a></li>
-                                <li><a href="javascript:"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="javascript:"><i class="fa fa-dribbble"></i></a></li>
-                                <li><a href="javascript:"><i class="fa fa-pinterest"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>*@
+                    
                 </div>
             </footer>
         </div>

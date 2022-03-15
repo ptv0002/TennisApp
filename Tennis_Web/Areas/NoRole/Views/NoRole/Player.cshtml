@@ -1,7 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Vận động viên";
     Layout = "/Areas/_Layout.cshtml";
-    ViewBag.PActive = "active visible-sm visible-xs";
+    if (ViewBag.IsCurrent)
+    {
+        ViewData["Title"] = "VĐV tham gia";
+        ViewBag.CActive = "active visible-sm visible-xs";
+    }
+    else
+    {
+        ViewData["Title"] = "Vận động viên";
+        ViewBag.PActive = "active visible-sm visible-xs";
+    }
 }
 @model IEnumerable<Models.DS_VDV>
 
