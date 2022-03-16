@@ -38,9 +38,9 @@
                                 <li class="@ViewBag.IActive"><a asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
                                 <li class="@ViewBag.PActive"><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="false">Vận động viên</a></li>
                                 <li class="@ViewBag.CRActive">
-                                    <a class="dropdownBtn">Giải hiện tại</a>
+                                    <a class="dropdownBtn" style="padding-bottom: 12px;">Giải hiện tại</a>
                                     <div class="dropdown">
-                                        <a asp-action="Announcement" asp-controller="ResultTab">Điều lệ</a>
+                                        <a asp-action="Guideline" asp-controller="ResultTab">Điều lệ</a>
                                         <a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">VĐV tham gia</a>
                                         <a asp-action="Pair" asp-controller="ResultTab" >Danh sách cặp</a>
                                         <a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a>

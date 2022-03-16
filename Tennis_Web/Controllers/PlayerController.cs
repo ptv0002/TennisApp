@@ -63,7 +63,7 @@ namespace Tennis_Web.Controllers
                         string path = Path.Combine(wwwRootPath, fileName);
                         using var fileStream = System.IO.File.Create(path);
                         source.Picture.CopyTo(fileStream);
-                        fileStream.DisposeAsync();
+                        fileStream.Dispose();
                     }
                     else
                     {
@@ -101,7 +101,7 @@ namespace Tennis_Web.Controllers
                 var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, new List<string> { "File_Anh" });
                 if (result.Succeeded) _context.SaveChanges();
             }
-            return RedirectToAction(nameof(Update), id);
+            return RedirectToAction(nameof(Update), Convert.ToInt32(id));
         }
     }
 }

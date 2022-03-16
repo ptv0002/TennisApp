@@ -1,5 +1,56 @@
 ﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    Point View Component
 *@
 @{
+    int idCap = 0;
+}
+@model List<Models.DS_Cap>
+@for (int i = 0; i < ViewBag.ListTable.Count; i++)
+{
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h5 class="font-weight-bold">Trình @ViewBag.ListTable[i]</h5>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Cặp</th>
+                        <th>Trích điểm</th>
+                        <th>Điểm VBảng</th>
+                        <th>Thưởng H/s dương</th>
+                        @if (ViewBag.Playoff)
+                        {
+                            <th>Điểm VPlayoff</th>
+                        }
+                        @for (int j = ViewBag.RoundNum; j >= 0; j--)
+                        {
+                            <th>Thưởng @ViewBag.ListRound[j]</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int j = 0; j < ViewBag.ListNum[i]; j++)
+                    {
+                        int total = Model[idCap].VDV1.Diem + Model[idCap].VDV2.Diem;
+                        <tr>
+                            <td>@Model[idCap].VDV1.Ten_Tat + @Model[idCap].VDV2.Ten_Tat</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            @if (ViewBag.Playoff)
+                            {
+                                <td></td>
+                            }
+                            @for (int k = ViewBag.RoundNum; k >= 0; k--)
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                        idCap++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }

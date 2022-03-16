@@ -4,6 +4,7 @@ using Library;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using OfficeOpenXml;
@@ -37,38 +38,43 @@ namespace Tennis_Web.Controllers
         {
             var destination = _context.Thong_Baos.Find(id);
             if (destination != null && destination.File_Path != null) _notyf.Warning("Upload file thông báo mới sẽ xóa file cũ!", 100);
+            ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
             return View(destination);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateAnnouncementAsync(int id, Thong_Bao source)
+        public IActionResult UpdateAnnouncement(int id, Thong_Bao source)
         {
             var column = "";
-            switch (source.File == null, source.File_Text == null)
+            ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
+            switch (source.File == null)
             {
-                case (true, true):
-                case (false, false):
-                    ModelState.AddModelError(string.Empty, "Chọn 1 trong 2 hình thức nhập thông báo: Soạn thảo hoặc upload file!");
-                    return View(source);
-                case (true, false):
-                    column = "File_Text";
-                    break;
-                case (false, true):
+                case true:
+                    if (source.File_Text == null && source.File_Path == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Soạn thảo hoặc upload file thông báo!");
+                        return View(source);
+                    }
+                    else break;
+                case false:
                     // Handle file attachment
                     string extension = Path.GetExtension(source.File.FileName);
                     if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".pdf")
                     {
                         // Delete image if already exists
                         string wwwRootPath = _webHost.WebRootPath + "/Files/Announcement/";
-                        string existPath = Path.Combine(wwwRootPath, source.File_Path);
-                        if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
+                        if (source.File_Path != null)
+                        {
+                            string existPath = Path.Combine(wwwRootPath, source.File_Path);
+                            if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
+                        }
 
                         // Save image to wwwroot/PlayerImg
                         string fileName = Path.GetFileNameWithoutExtension(source.File.FileName);
                         source.File_Path = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
                         string path = Path.Combine(wwwRootPath, fileName);
                         using var fileStream = System.IO.File.Create(path);
-                        await source.File.CopyToAsync(fileStream);
-                        await fileStream.DisposeAsync();
+                        source.File.CopyTo(fileStream);
+                        fileStream.Dispose();
                     }
                     else
                     {
@@ -79,15 +85,44 @@ namespace Tennis_Web.Controllers
                     break;
             }
             // Handle saving object
-            var columnsToSave = new List<string> { "Ten", "Ngay", "Hien_Thi", column};
+            var columnsToSave = new List<string> { "Ten", "Ngay", "Hien_Thi", "ID_Giai", "File_Text", column };
             var result = new DatabaseMethod<Thong_Bao>(_context).SaveObjectToDB(id, source, columnsToSave);
             if (result.Succeeded)
             {
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.SaveChanges();
+                return RedirectToAction(nameof(AnnouncementIndex));
             }
             ModelState.AddModelError(string.Empty, result.Message);
             return View(source);
+        }
+        public IActionResult DeleteAnnouncement(string id)
+        {
+            var source = _context.Thong_Baos.Find(Convert.ToInt32(id));
+            string wwwRootPath = _webHost.WebRootPath;
+            string path = Path.Combine(wwwRootPath + "/Files/Announcement/", source.File_Path);
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+                _context.Remove(source);
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(AnnouncementIndex));
+        }
+        public IActionResult DeleteFile(string id)
+        {
+            var source = _context.Thong_Baos.Find(Convert.ToInt32(id));
+            string wwwRootPath = _webHost.WebRootPath;
+            string path = Path.Combine(wwwRootPath + "/Files/Announcement/", source.File_Path);
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+                source.File_Path = null;
+                var result = new DatabaseMethod<Thong_Bao>(_context).SaveObjectToDB(id, source, new List<string> { "File_Path" });
+                if (result.Succeeded) _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(UpdateAnnouncement), Convert.ToInt32(id));
         }
         public IActionResult ImportExcel()
         {

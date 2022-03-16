@@ -19,6 +19,10 @@
             <div class="heading-holder">
                 <h1>@ViewData["Title"]</h1>
             </div>
+            @if (ViewBag.IsCurrent)
+            {
+                <p class="tagline">Giải @ViewBag.Tournament</p>
+            }
         </div>
     </div>
     <div class="container">

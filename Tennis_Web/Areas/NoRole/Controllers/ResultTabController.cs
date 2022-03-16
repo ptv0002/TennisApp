@@ -19,15 +19,18 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         {
             _context = context;
         }
-        public IActionResult CurrentAnnouncement()
+        public IActionResult Guideline()
         {
-            return View();
+            var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
+            var model = _context.Thong_Baos.Where(m => m.ID_Giai == current.Id).ToList();
+            ViewBag.Tournament = current.Ten;
+            return View(model);
         }
         public IActionResult Pair()
         {
-            var currentId = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi).Id;
+            var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
             var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2)
-                .Where(m => m.DS_Trinh.ID_Giai == currentId)
+                .Where(m => m.DS_Trinh.ID_Giai == current.Id)
                 .OrderBy(m => m.DS_Trinh.Trinh).ThenBy(m => m.Ma_Cap).ToList();
             var list = model.GroupBy(m => m.DS_Trinh.Trinh).Select(m => new
             {
@@ -37,13 +40,14 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             ViewBag.ListLevel = list.Select(m => m.Trinh).ToList();
             ViewBag.ListNum = list.Select(m => m.Num).ToList();
             // Generate List of all participated players with no pairs
-            var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == currentId).Select(m => m.Id);
+            var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == current.Id).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
             var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
             var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
             // Get all players with from Player Id found in Player1 and Player2 lists
             var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
             ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
+            ViewBag.Tournament = current.Ten;
             return View(model);
         }
         public IActionResult ResultInfo(ResultViewModel model)

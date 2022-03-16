@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "/Areas/_Layout.cshtml";
+    ViewData["Title"] = "Điều lệ";
+    ViewBag.CActive = "active visible-sm visible-xs";
+}
+@model List<Models.Thong_Bao>
+<section class="main still-background">
+    <div class="visual container ">
+        <div class="text-block-sm">
+            <div class="heading-holder">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <p class="tagline">@ViewBag.Tournament</p>
+        </div>
+    </div>
+    <div class="container">
+        @foreach (var item in Model)
+        {
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="font-weight-bold">@item.Ten</h5>
+                </div>
+                <div class="card-body" style="text-align:center">
+                    @if (System.IO.Path.GetExtension(item.File_Path) == ".pdf")
+                    {
+                        <embed type="application/pdf" src="@("/Files/Announcement/" + item.File_Path)" width="600" height="800" />
+                    }
+                    else
+                    {
+                        <img src="@("~/Files/Announcement/" + item.File_Path)" asp-append-version="true" width="600" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>

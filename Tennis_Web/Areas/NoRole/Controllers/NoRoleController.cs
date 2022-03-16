@@ -47,6 +47,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             {
                 model = _context.DS_VDVs.Where(m => m.Tham_Gia).OrderByDescending(m => m.Diem).ToList();
                 ViewBag.IsCurrent = true;
+                ViewBag.Tournament = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi).Ten;
             }
             else
             {
@@ -63,6 +64,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         {
             var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi == isCurrent).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
             ViewBag.IsCurrent = isCurrent;
+            if (isCurrent) ViewBag.Tournament = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi).Ten;
             return View(model);
         }
     }
