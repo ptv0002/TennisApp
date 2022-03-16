@@ -11,6 +11,7 @@
             <div class="heading-holder">
                 <h1>@ViewData["Title"]</h1>
             </div>
+            <p class="tagline">@ViewBag.Tournament</p>
         </div>
     </div>
     <div class="container">
@@ -64,40 +65,40 @@
                 </div>
             </div>
         }
-            @if (ViewBag.NoPairPlayers.Count > 0)
-            {
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h5 class="m-0 font-weight-bold text-success">Danh sách VĐV chưa được xếp cặp</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                            <div class="table-responsive">
-                                <table class="table dataTable">
-                                    <thead>
+        @if (ViewBag.NoPairPlayers.Count > 0)
+        {
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="m-0 font-weight-bold text-success">Danh sách VĐV chưa được xếp cặp</h5>
+                </div>
+                <div class="card-body">
+                    <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                        <div class="table-responsive">
+                            <table class="table dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Tên tắt</th>
+                                        <th>CLB</th>
+                                        <th>Điểm cũ</th>
+                                        <th>Điểm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.NoPairPlayers)
+                                    {
                                         <tr>
-                                            <th>Tên tắt</th>
-                                            <th>CLB</th>
-                                            <th>Điểm cũ</th>
-                                            <th>Điểm</th>
+                                            <td>@item.Ten_Tat</td>
+                                            <td>@item.CLB</td>
+                                            <td>@item.Diem_Cu</td>
+                                            <td>@item.Diem</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in ViewBag.NoPairPlayers)
-                                        {
-                                            <tr>
-                                                <td>@item.Ten_Tat</td>
-                                                <td>@item.CLB</td>
-                                                <td>@item.Diem_Cu</td>
-                                                <td>@item.Diem</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
+    </div>
 </section>

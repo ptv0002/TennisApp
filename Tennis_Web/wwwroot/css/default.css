@@ -7,6 +7,27 @@
     text-align: left;
     height: 100%;
 }
+/*.tournament-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.tournament-list-item {
+    display: flex;
+    flex-direction: column;
+}*/
+.visual h1 {
+    font-size: 7rem;
+    text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
+}
+.visual .tagline {
+    text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
+}
+.visual {
+    min-height: 30vh;
+    letter-spacing: 0;
+    padding: 35px 0 0;
+}
 .dropdown {
     display: none;
     position: absolute;
@@ -22,13 +43,14 @@ ul li .dropdown a {
     color: #fff;
     background: rgba(51, 51, 51, 0.8);
 }
-  
+
 h5 {
     text-align: center;
-    color: #ffce1b;
+    color: #bf9000;
+    margin:0;
 }
 .text-success {
-    color: #ffce1b !important;
+    color: #bf9000 !important;
 }
 a {
     color: black;
@@ -53,8 +75,10 @@ a {
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     border: none;
 }
-
-    .color-background {
+.nav-tabs > li > a {
+    margin: 0;
+}
+.color-background {
     background-color: #1d5414; /*Between color*/
     background-image: url("../images/overlay.png"), -moz-linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%); /*Bottom left corner then Dark top right corner*/
     background-image: url("../images/overlay.png"), -webkit-linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%);
@@ -68,7 +92,7 @@ a {
     min-height: 100vh;
 }
 .text-block-sm {
-    text-align: left;
+    text-align: center;
     padding: 5rem 0;
 }
 
@@ -82,4 +106,19 @@ footer.sticky-footer .copyright {
         padding: 0;
         min-height: 400px;
     }
+}
+
+.page-link {
+    color: #ffce1b;
+}
+
+    .page-link:hover {
+        color: #bf9000; /*Dark-yellow*/
+        background-color: #fff6da; /*Light-yellow*/
+    }
+
+
+.page-item.active .page-link {
+    background-color: #ffce1b;
+    border-color: #ffce1b;
 }

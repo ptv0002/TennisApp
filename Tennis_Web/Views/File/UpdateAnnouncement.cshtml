@@ -1,9 +1,10 @@
 ﻿@model Models.Thong_Bao
 @{
     ViewData["Title"] = "Thông tin thông báo";
+    ViewBag.AActive = "active";
 }
 <hr />
-<form asp-action="Update" enctype="multipart/form-data">
+<form asp-action="UpdateAnnouncement" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
     <dl class="row">
@@ -20,6 +21,15 @@
         <dd class="col-sm-10">
             <input asp-for="Ngay" class="form-control" required />
             <span asp-validation-for="Ngay" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-2 font-weight-bold">
+            <label class="control-label">Giải</label>
+        </dt>
+        <dd class="col-sm-10">
+            <select asp-for="@Model.ID_Giai" class="form-control form-control-sm" asp-items="ViewBag.GiaiList">
+                @if (Model == null || Model.ID_Giai == null)
+                {<option selected></option>}
+            </select>
         </dd>
         <dt class="col-sm-2 font-weight-bold">
             <label asp-for="Hien_Thi" class="control-label"></label>
@@ -43,21 +53,22 @@
                 ControllerName = "File",
                 Id = Model.Id.ToString()
             };
-            <dt class="col-sm-3 font-weight-bold">
+            <dt class="col-sm-2 font-weight-bold">
                 <label class="control-label">File thông báo</label>
             </dt>
-            <dd class="col-sm-9">
+            <dd class="col-sm-10">
+                <input type="hidden" asp-for="File_Path" />
                 @if (System.IO.Path.GetExtension(Model.File_Path) == ".pdf")
                 {
-                    <embed type="application/pdf" src="@("~/Files/Announcement/" + Model.File_Path)" width="500" />
+                    <embed type="application/pdf" src="@("/Files/Announcement/" + Model.File_Path)" width="600" height="300"/>
                 }
                 else
                 {
-                    <img src="@("~/Files/Announcement/" + Model.File_Path)" asp-append-version="true" width="500" />
+                    <img src="@("~/Files/Announcement/" + Model.File_Path)" asp-append-version="true" width="600" />
                 }
             </dd>
-            <dt class="col-sm-3 font-weight-bold"></dt>
-            <dd class="col-sm-9">
+            <dt class="col-sm-2 font-weight-bold"></dt>
+            <dd class="col-sm-10">
                 <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa file</button>
             </dd>
         }
