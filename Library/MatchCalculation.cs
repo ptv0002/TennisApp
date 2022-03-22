@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public class TennisMethod
+    public class MatchCalculation
     {
         private readonly DbContext _context;
-        public TennisMethod(DbContext context)
+        public MatchCalculation(DbContext context)
         {
             _context = context;
         }
         /// <summary>
-        /// Xếp hạng theo điểm, đầu vào danh sách cặp, ds trận đấu để tính điểm
-        /// Khi nào thi đấu xong mới gọi hàm xếp hạng này.
+        /// Rank by winning match, each match's score difference and draws if needed 
         /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
+        /// <param name="idTrinh">Level's id</param>
+        /// <param name="bang">Table's name</param>
+        /// <returns>List of ranked pairs, repeated order if all the test pass and need result from draws</returns>
         public List<DS_Cap> Rank_Full(int idTrinh, char bang)
         {
             // Lấy danh sách cặp đấu và ds trận đấu của bảng
@@ -59,7 +59,7 @@ namespace Library
             }
             return returnList.OrderBy(m => m.Xep_Hang).ToList();
         }
-
+        // Rank by winning match
         public static List<DS_Cap> Rank_Point(List<DS_Cap> lCap, List<DS_Tran> lTran, bool PointCal)
         {
             // Tính điểm các cặp dựa trên danh sách trận
@@ -75,8 +75,8 @@ namespace Library
                     else cap_0 = cap_2;
                     if (PointCal)
                     {
-                        lCap[cap_1].Hieu_so += (lTran[i].Kq_1 - lTran[i].Kq_2);
-                        lCap[cap_2].Hieu_so += (lTran[i].Kq_2 - lTran[i].Kq_1);
+                        lCap[cap_1].Hieu_so += lTran[i].Kq_1 - lTran[i].Kq_2;
+                        lCap[cap_2].Hieu_so += lTran[i].Kq_2 - lTran[i].Kq_1;
                         lCap[cap_0].Tran_Thang++;
                     }
                     lCap[cap_0].Tinh_toan++;
@@ -102,6 +102,7 @@ namespace Library
             }
             return lCap.OrderBy(m => m.Xep_Hang).ToList();
         }
+        // Rank by match's score difference
         public static List<DS_Cap> Rank_Ratio(List<DS_Cap> lCap, List<DS_Tran> lTran)
         {
             // Tính hiệu số thắng thua các cặp dựa trên danh sách trận
@@ -135,6 +136,7 @@ namespace Library
             }
             return lCap.OrderBy(m => m.Xep_Hang).ToList();
         }
+        // Rank by draws
         public static List<DS_Cap> Rank_Lottery(List<DS_Cap> lCap)
         {
             lCap = lCap.OrderBy(m => m.Xep_Hang*10+ m.Boc_Tham).ToList(); // Xếp thứ tự sau khi tính hiệu số thắng thua
@@ -203,10 +205,10 @@ namespace Library
             public List<DS_Cap> DS_Cap { get; set; }
         }
         /// <summary>
-        /// Cập nhật dữ liệu vào vòng trong
+        /// Update next round based on previous matches results
         /// </summary>
-        /// <param name="lTran"></param> Danh sách kết quả các trận đấu
-        /// <param name="vong"></param> vòng đấu hiện thời
+        /// <param name="lTran"></param> List of all matches
+        /// <param name="vong"></param> Id of current match
         public List<DS_Tran> Special_Update(List<DS_Tran> lTran, int vong) 
         { 
             if (vong <2 || vong>6) { return lTran; }  // Không nằm trong vòng đặc biệt
@@ -219,10 +221,10 @@ namespace Library
         }
 
         /// <summary>
-        /// Chọn đội thắng vào vòng trong, chỉ trong vòng đặc biệt
+        /// Pick the pairs for the next round, based on previous results
         /// </summary>
-        /// <param name="lTran"></param> : Danh sách tất cả các trận đấu
-        /// <param name="tran"></param>  : Kết quả của 1 trận đấu 
+        /// <param name="lTran"></param> : List of all matches
+        /// <param name="tran"></param>  : Current match 
         public List<DS_Tran> Special_Select(List<DS_Tran> lTran, DS_Tran tran)
         {
             //Trình(4)*Vòng(1)*Bang(1)*TT Vòng (2)* TT Trình (3)  - 0-3*5*7*9-10*12-14
@@ -238,7 +240,7 @@ namespace Library
 
             string nxt = "00"+((stt-1)/ 2+1);                            // số tt trận tiếp theo của vòng trong
             nxt = nxt[^2..];                                              
-            bool cap = ((n2 - 1) % 2 == 0);                               // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
+            bool cap = (n2 - 1) % 2 == 0;                               // vào vị trí cặp 1 hay cặp 2 của trận tiếp theo
 
             string ma_tran = tran.Ma_Tran[0..5] + (tran.Ma_Vong-1) + "*0*" + nxt + "*"; // Không cần lấy số thứ tự trận trong trình này
             var trantiep = lTran.First(m => m.Ma_Tran[0..12] == ma_tran);  /*.Substring(0, 12)*/

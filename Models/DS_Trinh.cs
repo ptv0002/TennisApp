@@ -26,16 +26,15 @@
         [DisplayName("Tỉ lệ Tứ Kết")]
         public decimal TL_TuKet { get; set; }
         [DisplayName("Tỉ lệ Bảng")]
-        public decimal TL_Bang { get; set; }
-        [DisplayName("Điểm phân bổ")]
-        public int Diem_PB { get; set; }  // Điểm trừ trước khi phân bổ
-        [DisplayName("Tổng Điểm")]
-        public int Tong_Diem { get; set; }
-        [DisplayName("Điểm Trừ")]
-        public int Diem_Tru { get; set; }
-        [DisplayName("Chênh Lệch")]
+        public decimal TL_Bang { get; set; } // T_%TP
+        [DisplayName("Hệ số phân bổ")]
+        public int Diem_PB { get; set; }  // T_PB
+        [DisplayName("Tổng điểm")]
+        public int Tong_Diem { get; set; } // T_DT
+        [DisplayName("Điểm trích cơ bản")]
+        public int Diem_Tru { get; set; } // T_TD
+        [DisplayName("Chênh lệch")]
         public int Chenh_Lech { get; set; }
-        [DisplayName("ID Giải")]
         public int ID_Giai { get; set; }
         [ForeignKey("ID_Giai")]
         public virtual DS_Giai DS_Giai { get; set; }

@@ -97,6 +97,7 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, result.Message);
                 return PartialView(item);
             }
+            new ScoreCalculation(_context).Point_Deposit(item.ID_Trinh);
             return TabVMGenerator(Tab.Pair, item.ID_Trinh);
         }
         public IActionResult DeletePair(string id)
@@ -106,6 +107,7 @@ namespace Tennis_Web.Controllers
             _context.RemoveRange(matches);
             _context.Remove(pair);
             _context.SaveChanges();
+            new ScoreCalculation(_context).Point_Deposit(pair.ID_Trinh);
             return TabVMGenerator(Tab.Pair, pair.ID_Trinh);
         }
         public IActionResult TabVMGenerator (Tab tabName, int idTrinh)

@@ -43,7 +43,7 @@ namespace Tennis_Web.Controllers
                 var tables = _context.DS_Bangs.Where(m => m.ID_Trinh == model.ID_Trinh);
                 foreach (var table in tables)
                 {
-                    var rankedPairs = new TennisMethod(_context).Rank_Full(model.ID_Trinh, table.Ten);
+                    var rankedPairs = new MatchCalculation(_context).Rank_Full(model.ID_Trinh, table.Ten);
                     foreach (var pair in rankedPairs)
                     {
                         result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xep_Hang", "Tran_Thang", "Hieu_so" }).Succeeded;
@@ -188,23 +188,34 @@ namespace Tennis_Web.Controllers
         {
             // Find and update result for Matches
             bool result = false;
-            var matches = model.DS_Tran.Where(m => m.Ma_Vong <= 6).ToList() ;
+            var matches = model.DS_Tran.Where(m => m.Ma_Vong <= 6).ToList();
+            var scoreList = new List<DS_Diem>();
             if (ModelState.IsValid)
             {
-                for (int i=6; i>1 ;i--)
+                for (int i = matches.Max(m => m.Ma_Vong); i > 1; i--)
                 {
-                    var rankedPairs = new TennisMethod(_context).Special_Update(matches, i);
+                    var rankedPairs = new MatchCalculation(_context).Special_Update(matches, i);
                 }
                 foreach (var match in matches)
                 {
+                    if (match.Kq_1 + match.Kq_2 > 0 && match.ID_Cap1 != null && match.ID_Cap2 != null)
+                    {
+                        // Calculate points for Round 1 to 3, if any
+                        if (4 <= match.Ma_Vong && match.Ma_Vong <= 6) scoreList.AddRange(new ScoreCalculation(_context).Head2Head_Point(match));
+                        else scoreList.AddRange(new ScoreCalculation(_context).Special_Point(match));
+                    }
                     result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2", "ID_Cap1", "ID_Cap2"}).Succeeded;
                     if (!result) break;
+                }
+                if (result)
+                {
+                    // Add or update score for special rounds
+                    UpdateScore(scoreList);
                 }
             }
             else result = false;
             // Save all changes to DB
             if (result) _context.SaveChanges();
-            //var rankedPairs = new TennisMethod(_context).Special_Select(matches, table.Ten);
             return TabVMGenerator(model.ID_Trinh, result, Tab.Special, "");
         }
         public IActionResult ResetSpecial(int id)
@@ -218,17 +229,23 @@ namespace Tennis_Web.Controllers
             bool result = false;
             string msg = "";
             var matches = model.DS_Tran.Where(m => m.Ma_Vong == 7);
+            var scoreList = new List<DS_Diem>();
             if (ModelState.IsValid)
             {
                 // Save results to DB and calculate ranking
                 foreach (var match in matches)
                 {
+                    scoreList.AddRange(new ScoreCalculation(_context).Head2Head_Point(match));
                     result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2" }).Succeeded;
                     if (!result) break;
                 }
+                if (result)
+                {
+                    // Add or update score for playoff round
+                    UpdateScore(scoreList);
+                }
             }
             else result = false;
-
             if (result && matches.All(m => m.Kq_1 + m.Kq_2 > 0) && (User.IsInRole("Manager") || User.IsInRole("Admin")))
             {
                 var roundNum = _context.DS_Trans.Where(m => m.Ma_Vong <= 6 && m.ID_Trinh == model.ID_Trinh).Max(m => m.Ma_Vong);
@@ -294,6 +311,14 @@ namespace Tennis_Web.Controllers
             }
             else result = false;
             if (result) _context.SaveChanges();
+            var scoreList = new List<DS_Diem>();
+            foreach (var table in _context.DS_Bangs.Where(m => m.ID_Trinh == model.ID_Trinh))
+            {
+                scoreList.AddRange(new ScoreCalculation(_context).TableAndPositive_Point(model.ID_Trinh, table.Ten));
+            }
+            // Add or update score for Table rounds
+            UpdateScore(scoreList);
+            _context.SaveChanges();
             return result;
         }
         public bool ResetResult_Special(int idTrinh)
@@ -301,6 +326,9 @@ namespace Tennis_Web.Controllers
             bool result = false;
             // Get first special round
             var special1stRound = _context.DS_Trans.Where(m => m.Ma_Vong <= 6 && m.ID_Trinh == idTrinh).ToList();
+            // Delete all scores if results are reset
+            var scores = _context.DS_Diems.Where(m => m.ID_Vong <= 6 && special1stRound.SelectMany(s => new[] { s.ID_Cap1, s.ID_Cap2 }).Contains(m.ID_Cap));
+            _context.RemoveRange(scores);
             foreach (var match in special1stRound)
             {
                 match.ID_Cap1 = match.ID_Cap2 = null;
@@ -309,6 +337,20 @@ namespace Tennis_Web.Controllers
             }
             if (result) _context.SaveChanges();
             return result;
+        }
+        public void UpdateScore(List<DS_Diem> scoreList)
+        {
+            foreach (var score in scoreList)
+            {
+                if (_context.DS_Diems.Any(m => m.ID_Cap == score.ID_Cap && m.ID_Vong == score.ID_Vong))
+                {
+                    var temp = _context.DS_Diems.FirstOrDefault(m => m.ID_Cap == score.ID_Cap && m.ID_Vong == score.ID_Vong);
+                    temp.Diem = score.Diem;
+                    _context.Update(temp);
+                }
+                // If not, add new instance
+                else _context.Add(score);
+            }
         }
         public IActionResult TabVMGenerator(int idTrinh, bool result, Tab tabName, string msg)
         {

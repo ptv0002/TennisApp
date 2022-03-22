@@ -4,7 +4,13 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     text-align:center;
 }
-
+h5 {
+    text-align: center;
+    margin: 0;
+}
+.card-body {
+    overflow-x: auto;
+}
 /* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
@@ -14,7 +20,9 @@ input[type=number] {
     display: flex;
     justify-content: center;
 }
-
+.table {
+    margin: 0;
+}
 .table th {
     vertical-align: middle !important;
     text-align: center;

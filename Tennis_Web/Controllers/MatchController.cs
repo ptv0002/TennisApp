@@ -130,7 +130,7 @@ namespace Tennis_Web.Controllers
                 // Reset old results from pairs
                 foreach (var pair in pairs)
                 {
-                    var table = _context.DS_Bangs.Where(m => m.Ten == char.ToUpper(pair.Ma_Cap[0]) && m.ID_Trinh == pair.ID_Trinh).FirstOrDefault();
+                    var table = _context.DS_Bangs.FirstOrDefault(m => m.Ten == char.ToUpper(pair.Ma_Cap[0]) && m.ID_Trinh == pair.ID_Trinh);
                     if (table == null)
                     {
                         _context.Add(new DS_Bang

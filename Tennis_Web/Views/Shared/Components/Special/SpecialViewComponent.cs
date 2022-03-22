@@ -61,14 +61,12 @@ namespace Tennis_Web.Views.Shared.Components.Special
                 ViewBag.PairIds = new SelectList(pairs, "Id", "PairName");  
                 ViewBag.RoundNum = matches.Max(m => m.Ma_Vong);
             }
-            
-            var model = new RoundTabViewModel
+            return View(new RoundTabViewModel
             {
                 ID_Trinh = vm.ID,
                 DS_Tran = matches,
                 DS_Cap = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID).Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()
-            };
-            return View(model);
+            });
         }
     }
 }
