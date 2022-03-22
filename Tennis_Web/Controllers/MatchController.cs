@@ -110,7 +110,7 @@ namespace Tennis_Web.Controllers
                     if (tuple.Item1 < 0) ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " có tổng số cặp đi tiếp quá lớn hoặc quá nhỏ so với cho phép!");
                     else if (tuple.Item1 > 0) ModelState.AddModelError(string.Empty, "Thêm hoặc bớt cặp trình " + level.Trinh + " để tổng số cặp đi tiếp là " + tuple.Item1 + " hoặc " + tuple.Item2);
                 }
-                if ((level.PlayOff2 * 2 + level.PlayOff1) != level.ChosenPerTable.Count(m => m.Playoff))
+                if ((level.PlayOff2>0) && ((level.PlayOff2 * 2 + level.PlayOff1) != level.ChosenPerTable.Count(m => m.Playoff)))
                 {
                     error = true;
                     var soBang = level.PlayOff2 * 2 + level.PlayOff1;
