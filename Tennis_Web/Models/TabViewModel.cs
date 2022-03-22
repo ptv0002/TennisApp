@@ -22,6 +22,11 @@ namespace Tennis_Web.Models
         public List<DS_Tran> DS_Tran { get; set; }
         public List<DS_Cap> DS_Cap { get; set; }
     }
+    public class PointTabViewModel
+    {
+        public List<DS_Diem> DS_Diem { get; set; }
+        public List<DS_Cap> DS_Cap { get; set; }
+    }
     public enum Tab
     {
         Info,

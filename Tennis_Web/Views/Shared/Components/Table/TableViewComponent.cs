@@ -51,13 +51,12 @@ namespace Tennis_Web.Views.Shared.Components.Table
             ViewBag.ListTable = list.Select(m => m.Table).ToList();
             ViewBag.ListNum = list.Select(m => m.Num).ToList();
             ViewBag.IsCurrent = vm.IsCurrent;
-            var model = new RoundTabViewModel
+            return View(new RoundTabViewModel
             {
                 ID_Trinh = vm.ID,
                 DS_Tran = matches,
                 DS_Cap = pairs.Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()
-            };
-            return View(model);
+            });
         }
     }
 }

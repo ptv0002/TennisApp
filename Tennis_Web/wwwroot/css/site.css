@@ -4,7 +4,6 @@ for details on configuring this project to bundle and minify static web assets. 
 
 /* Provide sufficient contrast against white background */
 h5 {
-    text-align: center;
     color: #1cc88a;
 }
 a {

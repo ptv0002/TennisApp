@@ -15,10 +15,10 @@
         <input type="hidden" asp-for="@Model.ID_Trinh" />
         <div class="tournament-container">
             <div class="tournament-headers" id="tournamentHeader">
-                <h3 style="width: calc(10rem + 36px);">Mẫu</h3>
                 @for (int i = ViewBag.RoundNum; i > 0; i--)
                 {
-                    <h3>@ViewBag.ListRound[i]</h3>
+                    var space = i == ViewBag.RoundNum ? "bracket-1" : "";
+                    <h3 class="@space">@ViewBag.ListRound[i]</h3>
                 }
             </div>
             <div class="tournament-brackets">

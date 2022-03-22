@@ -45,9 +45,8 @@ ul li .dropdown a {
 }
 
 h5 {
-    text-align: center;
     color: #bf9000;
-    margin:0;
+    font-size: 1.5rem;
 }
 .text-success {
     color: #bf9000 !important;

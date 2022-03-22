@@ -3,8 +3,9 @@
 *@
 @{
     int idCap = 0;
+    
 }
-@model List<Models.DS_Cap>
+@model PointTabViewModel
 @for (int i = 0; i < ViewBag.ListTable.Count; i++)
 {
     <div class="card shadow mb-4">
@@ -17,34 +18,35 @@
                     <tr>
                         <th>Cặp</th>
                         <th>Trích điểm</th>
-                        <th>Điểm VBảng</th>
-                        <th>Thưởng H/s dương</th>
-                        @if (ViewBag.Playoff)
+                        <th>Bảng</th>
+                        <th>Hiệu số dương</th>
+                        @if (Model.DS_Diem.Any(m => m.ID_Vong == 7))
                         {
-                            <th>Điểm VPlayoff</th>
+                            <th>Playoff</th>
                         }
                         @for (int j = ViewBag.RoundNum; j >= 0; j--)
                         {
-                            <th>Thưởng @ViewBag.ListRound[j]</th>
+                            <th>@ViewBag.ListRound[j]</th>
                         }
                     </tr>
                 </thead>
                 <tbody>
                     @for (int j = 0; j < ViewBag.ListNum[i]; j++)
                     {
-                        int total = Model[idCap].VDV1.Diem + Model[idCap].VDV2.Diem;
+                        int total = Model.DS_Cap[idCap].VDV1.Diem + Model.DS_Cap[idCap].VDV2.Diem;
                         <tr>
-                            <td>@Model[idCap].VDV1.Ten_Tat + @Model[idCap].VDV2.Ten_Tat</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            @if (ViewBag.Playoff)
+                            <td>@Model.DS_Cap[idCap].VDV1.Ten_Tat + @Model.DS_Cap[idCap].VDV2.Ten_Tat</td>
+                            <td>@Score(10,idCap)</td>
+                            <td>@Score(8, idCap)</td>
+                            <td>@Score(9, idCap)</td>
+                            @if (Model.DS_Diem.Any(m => m.ID_Vong == 7))
                             {
-                                <td></td>
+                                <td>@Score(7, idCap)</td>
                             }
                             @for (int k = ViewBag.RoundNum; k >= 0; k--)
                             {
-                                <td></td>
+                                // Display special rounds score
+                                <td>@Score(k, idCap)</td>
                             }
                         </tr>
                         idCap++;
@@ -53,4 +55,12 @@
             </table>
         </div>
     </div>
+}
+@functions{
+    public string Score(int round, int pairId)
+    {
+        var score = Model.DS_Diem.Find(m => m.ID_Vong == round && m.ID_Cap == pairId);
+        // ToString("0.00") return empty string at 0
+        return score != null ? (round == 10 ? score.Diem.ToString() : score.Diem.ToString("0.00")) : "";
+    }
 }
