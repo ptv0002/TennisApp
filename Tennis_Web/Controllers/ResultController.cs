@@ -28,7 +28,15 @@ namespace Tennis_Web.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> PerformRankingAsync (RoundTabViewModel model)
+        /// <summary>
+        /// 1. Xếp hạng các cặp trong các bảng
+        /// 2. Có đầy đủ kết quả vòng bảng  --> Cập nhật vòng Playoff
+        /// 3. Các cặp được chọn cập nhật vào vòng trong
+        /// 4. Có đầy đủ kết quả vòng bảng + Playoff --> Cập nhật lại vòng đặc biệt và khóa vòng bảng (Chỉ cho Admin cập nhật lại)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> PerformRankingAsync(RoundTabViewModel model)
         {
             bool result = UpdateResult_Table(model);
             // If update successfully, proceeds
@@ -38,7 +46,7 @@ namespace Tennis_Web.Controllers
                 var matchParam = (await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream)).Find(m => m.ID_Trinh == model.ID_Trinh);
                 fileStream.Dispose();
 
-                // ========================= Rank pairs =========================
+                // 1. ========================= Rank pairs =========================
 
                 var tables = _context.DS_Bangs.Where(m => m.ID_Trinh == model.ID_Trinh);
                 foreach (var table in tables)
@@ -52,7 +60,7 @@ namespace Tennis_Web.Controllers
                 }
                 if (result) _context.SaveChanges();
 
-                // ========================= Get ranking and put in playoff =========================
+                // 2. ========================= Get ranking and put in playoff =========================
                 var playoff1 = new List<DS_Cap>();
                 result = ToPlayoff(playoff1, matchParam, model);
 
@@ -61,9 +69,9 @@ namespace Tennis_Web.Controllers
                 // Save all changes to DB
                 if (result) _context.SaveChanges();
             }
-            return TabVMGenerator(model.ID_Trinh, result, Tab.Table,"");
+            return TabVMGenerator(model.ID_Trinh, result, Tab.Table, "");
         }
-        public IActionResult UpdateTable(RoundTabViewModel model)
+    public IActionResult UpdateTable(RoundTabViewModel model)
         {
             bool result = UpdateResult_Table(model);
             return TabVMGenerator(model.ID_Trinh, result, Tab.Table,"");
@@ -325,14 +333,16 @@ namespace Tennis_Web.Controllers
             }
             else result = false;
             if (result) _context.SaveChanges();
-            var scoreList = new List<DS_Diem>();
-            foreach (var table in _context.DS_Bangs.Where(m => m.ID_Trinh == model.ID_Trinh))
-            {
-                scoreList.AddRange(new ScoreCalculation(_context).TableAndPositive_Point(model.ID_Trinh, table.Ten));
-            }
-            // Add or update score for Table rounds
-            UpdateScore(scoreList);
-            _context.SaveChanges();
+
+            //var scoreList = new List<DS_Diem>();
+            //foreach (var table in _context.DS_Bangs.Where(m => m.ID_Trinh == model.ID_Trinh))
+            //{
+            //    scoreList.AddRange(new ScoreCalculation(_context).TableAndPositive_Point(model.ID_Trinh, table.Ten));
+            //}
+            //// Add or update score for Table rounds
+            //UpdateScore(scoreList);
+            //_context.SaveChanges();
+
             return result;
         }
         bool ResetResult_Special(int idTrinh)
@@ -341,8 +351,8 @@ namespace Tennis_Web.Controllers
             // Get first special round
             var special1stRound = _context.DS_Trans.Where(m => m.Ma_Vong <= 6 && m.ID_Trinh == idTrinh).ToList();
             // Delete all scores if results are reset
-            var scores = _context.DS_Diems.Where(m => m.ID_Vong <= 6 && special1stRound.SelectMany(s => new[] { s.ID_Cap1, s.ID_Cap2 }).Contains(m.ID_Cap));
-            _context.RemoveRange(scores);
+//            var scores = _context.DS_Diems.AsEnumerable().Where(m => m.ID_Vong <= 6 && special1stRound.SelectMany(s => new[] { s.ID_Cap1, s.ID_Cap2 }).Contains(m.ID_Cap));
+//            _context.RemoveRange(scores);
             foreach (var match in special1stRound)
             {
                 match.ID_Cap1 = match.ID_Cap2 = null;

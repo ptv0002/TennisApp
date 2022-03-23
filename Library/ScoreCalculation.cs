@@ -72,7 +72,7 @@ namespace Library
         /// <returns>List of pair Id and corresponding point</returns>
         public List<DS_Diem> TableAndPositive_Point(int idTrinh, char table)
         {
-            var matches = _context.Set<DS_Tran>().Where(m => m.ID_Trinh == idTrinh && m.Ma_Tran[7] == table).ToList();
+            var matches = _context.Set<DS_Tran>().AsEnumerable().Where(m => m.ID_Trinh == idTrinh && m.Ma_Tran[7] == table).ToList();
             var pairs = _context.Set<DS_Cap>().Include(m => m.DS_Bang).Where(m => m.DS_Bang.Ten == table).ToList();
             var level = _context.Set<DS_Trinh>().Find(idTrinh);
             // Total point deposit of the Table
