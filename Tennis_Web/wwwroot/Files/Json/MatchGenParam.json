@@ -35,19 +35,19 @@
         "Table": "A",
         "PairsNum": 4,
         "Chosen": 2,
-        "Playoff": false
+        "Playoff": true
       },
       {
         "Table": "B",
         "PairsNum": 4,
         "Chosen": 2,
-        "Playoff": false
+        "Playoff": true
       },
       {
         "Table": "C",
         "PairsNum": 4,
         "Chosen": 2,
-        "Playoff": false
+        "Playoff": true
       }
     ]
   }

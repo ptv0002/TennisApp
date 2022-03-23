@@ -18,7 +18,7 @@
     "TableNum": 3,
     "PairNum": 8,
     "P1_P2_Pair": {
-      "1A": "3BC",
+      "1A": "3CB",
       "1B": "2C",
       "1C": "3AB",
       "2A": "2B"
@@ -48,14 +48,14 @@
     "TableNum": 6,
     "PairNum": 16,
     "P1_P2_Pair": {
-      "1A": "3FEDCB",
-      "1B": "3EFDCA",
+      "1A": "3FEDBC",
+      "1B": "3EDFAC",
       "1C": "2D",
       "2F": "2B",
       "2A": "2E",
       "1D": "2C",
-      "1E": "3BACDF",
-      "1F": "3ABCDE"
+      "1E": "3BACFD",
+      "1F": "3ACBED"
     }
   },
   {
