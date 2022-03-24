@@ -112,10 +112,21 @@ namespace Library
             var p1 = _context.Set<DS_Cap>().Include(m => m.VDV1).Include(m => m.VDV2).FirstOrDefault(m => m.Id == match.ID_Cap1);
             var p2 = _context.Set<DS_Cap>().Include(m => m.VDV1).Include(m => m.VDV2).FirstOrDefault(m => m.Id == match.ID_Cap2);
             var level = _context.Set<DS_Trinh>().Find(match.ID_Trinh);
-            var C_D1_Thua = match.Kq_1 > match.Kq_2 ? p1.VDV1.Diem + p1.VDV2.Diem : p2.VDV1.Diem + p2.VDV2.Diem;
-            var C_D1_Thang = match.Kq_1 < match.Kq_2 ? p2.VDV1.Diem + p2.VDV2.Diem : p1.VDV1.Diem + p1.VDV2.Diem;
-            var ratio = match.Kq_1 > match.Kq_2 ? match.Kq_1 - match.Kq_2 : match.Kq_2 - match.Kq_1;
-            return (C_D1_Thua - level.Diem_PB * 2) * (level.Diem_Tru / 6) * (ratio / 6) / (C_D1_Thang - level.Diem_PB * 2);
+            int C_D1_Thua = 0;
+            int C_D1_Thang = 0;
+            var ratio = match.Kq_1 - match.Kq_2;
+            if (ratio>0) 
+            {
+                C_D1_Thang  = p1.VDV1.Diem + p1.VDV2.Diem ;
+                C_D1_Thua   = p2.VDV1.Diem + p2.VDV2.Diem;
+            }
+            else 
+            {
+                C_D1_Thang  = p2.VDV1.Diem + p2.VDV2.Diem;
+                C_D1_Thua   = p1.VDV1.Diem + p1.VDV2.Diem;
+            }
+            decimal diem =(decimal) ((C_D1_Thua - level.Diem_PB * 2) * ((decimal)level.Diem_Tru / 6) * ((decimal)ratio / 6)) / (C_D1_Thang - level.Diem_PB * 2);
+            return Math.Abs(diem);
         }
         /// <summary>
         /// Calculate points for pairs at Playoff or V1 to V3
@@ -130,12 +141,14 @@ namespace Library
             {
                 new DS_Diem
                 {
+                    ID_Trinh = match.ID_Trinh,
                     ID_Cap = (int)match.ID_Cap1,
                     Diem = match.Kq_1 > match.Kq_2 ? winPoint : -winPoint,
                     ID_Vong = match.Ma_Vong
                 },
                 new DS_Diem
                 {
+                    ID_Trinh = match.ID_Trinh,
                     ID_Cap = (int)match.ID_Cap2,
                     Diem = match.Kq_1 < match.Kq_2 ? winPoint : -winPoint,
                     ID_Vong = match.Ma_Vong

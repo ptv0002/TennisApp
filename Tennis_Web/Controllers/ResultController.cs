@@ -192,7 +192,7 @@ namespace Tennis_Web.Controllers
             var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPair && m.TableNum == straight2Special.Count);
             fileStream.Dispose();
             // Reset all special rounds' value before proceeding
-            result = result && ResetResult_Special(model.ID_Trinh);
+            result = ResetResult_Special(model.ID_Trinh);
 
             if (placement != null && result)
             {
@@ -269,7 +269,8 @@ namespace Tennis_Web.Controllers
             // Check if tables have unique ranking
             var considerList = new List<DS_Cap>();
             var calculatePlayoff = matchParam.PlayOff1 + matchParam.PlayOff2 > 0;
-            foreach (var table in matchParam.ChosenPerTable.Where(m => m.Playoff).Select(m => m.Table))
+            var tables = matchParam.ChosenPerTable.Where(m => m.Playoff).Select(m => m.Table);
+            foreach (var table in tables)
             {
                 // Any pair has repeated ranking then returns null
                 if (_context.DS_Caps.Where(m => m.ID_Trinh == model.ID_Trinh && m.DS_Bang.Ten == table).GroupBy(m => m.Xep_Hang).Any(m => m.Count() > 1))
@@ -282,7 +283,7 @@ namespace Tennis_Web.Controllers
             }
             if (calculatePlayoff)
             {
-                considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ToList();
+                considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ThenBy(m => m.Boc_Tham).ToList();
 
                 // If there's playoff 1 rounds then proceeds
                 if (matchParam.PlayOff1 > 0)
@@ -293,6 +294,7 @@ namespace Tennis_Web.Controllers
                         playoff1.Add(considerList[i]);
                     }
                     considerList.RemoveRange(0, matchParam.PlayOff1);
+                    result = true;
                 }
                 // If there's playoff 2 rounds then proceeds
                 if (matchParam.PlayOff2 > 0)
@@ -325,17 +327,27 @@ namespace Tennis_Web.Controllers
                     result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "Kq_1", "Kq_2" }).Succeeded;
                     if (!result) break;
                 }
-                foreach (var pair in model.DS_Cap)
-                {
-                    result = result && new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Boc_Tham" }).Succeeded;
-                    if (!result) break;
+                // Nếu đã cập nhật hết dữ liệu, tự động tính xếp hạng luông
+                var lketqua = _context.DS_Trans.Where(m => m.Ma_Vong == 8 && m.ID_Trinh == model.ID_Trinh && (m.Kq_1 + m.Kq_2) == 0);
+                if (lketqua.Any())
+                {// Chưa cập nhật đầy đủ kết quả
+                    foreach (var pair in model.DS_Cap)
+                    {
+                        result = result && new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Tran_Thang", "Hieu_so", "Boc_Tham" }).Succeeded;
+                        if (!result) break;
+                    }
                 }
+                else { 
+                    //PerformRankingAsync(model)
+                    ; }
             }
             else result = false;
             if (result) _context.SaveChanges();
 
             //var scoreList = new List<DS_Diem>();
             //foreach (var table in _context.DS_Bangs.Where(m => m.ID_Trinh == model.ID_Trinh))
+   
+            
             //{
             //    scoreList.AddRange(new ScoreCalculation(_context).TableAndPositive_Point(model.ID_Trinh, table.Ten));
             //}
