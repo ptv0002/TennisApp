@@ -45,13 +45,14 @@
                                 <th>Xếp hạng</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody name="bang" >
                             @for (int j = 0; j < ViewBag.ListNum[i]; j++)
                             {
                                 <tr>
                                     <th>
                                         @Model.DS_Cap[idCap].VDV1.Ten_Tat + @Model.DS_Cap[idCap].VDV2.Ten_Tat
                                         <input type="hidden" asp-for="@Model.DS_Cap[idCap].Id" />
+                                        <input type="hidden" asp-for="@Model.DS_Cap[idCap].ID_Trinh" />
                                     </th>
                                     @for (int k = 0; k < ViewBag.ListNum[i]; k++)
                                     {
@@ -63,29 +64,30 @@
                                         {  // Insert result side
                                             if (hasRole)
                                             {
-                                                <td name="ketqua">
-                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0))
-                                                    {
-                                                        // If role is Manager or Admin => full editing
-                                                        // If role is Referee => Only edit 0 field
-                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" />
-                                                    }
-                                                    else
-                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled min="0" max="7" />}
+                                <td name="ketqua">
+                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0))
+                                    {
+                                        // If role is Manager or Admin => full editing
+                                        // If role is Referee => Only edit 0 field
+                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" />
+                                    }
+                                    else
+                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled min="0" max="7" />}
 
-                                                    <span>-</span>
-                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
-                                                    {
-                                                        // If role is Manager or Admin => full editing
-                                                        // If role is Referee => Only edit 0 field
-                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
-                                                    }
-                                                    else
-                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" disabled />}
+                                    <span>-</span>
+                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
+                                    {
+                                        // If role is Manager or Admin => full editing
+                                        // If role is Referee => Only edit 0 field
+                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
+                                    }
+                                    else
+                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" disabled />}
 
-                                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Id" />
-                                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Ma_Vong" />
-                                                </td>
+                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Id" />
+                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].ID_Trinh" />
+                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Ma_Vong" />
+                                </td>
                                             }
                                             else
                                             { // For No Role View
@@ -157,23 +159,16 @@
                             @for (int i = idTran; i < Model.DS_Tran.Count; i++)
                             {
                                 <tr>
-                                    @if (Model.DS_Tran[i].ID_Cap1 != null)
-                                    {
-                                        var pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[i].ID_Cap1);
-                                        <td>
-                                            <input type="hidden" asp-for="@Model.DS_Tran[i].Id" />
-                                            <input type="hidden" asp-for="@Model.DS_Tran[i].Ma_Vong" />
-                                            @pair1.VDV1.Ten_Tat + @pair1.VDV2.Ten_Tat
-                                        </td>
-
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            <input type="hidden" asp-for="@Model.DS_Tran[i].Id" />
-                                            <input type="hidden" asp-for="@Model.DS_Tran[i].Ma_Vong" />
-                                        </td>
-                                    }
+                                    <td>
+                                        <input type="hidden" asp-for="@Model.DS_Tran[i].Id" />
+                                        <input type="hidden" asp-for="@Model.DS_Tran[i].Ma_Vong" />
+                                        <input type="hidden" asp-for="@Model.DS_Tran[i].ID_Trinh" />
+                                        @if (Model.DS_Tran[i].ID_Cap1 != null)
+                                        {
+                                            var pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[i].ID_Cap1);
+                                            @pair1.VDV1.Ten_Tat <span> + </span> @pair1.VDV2.Ten_Tat
+                                        }
+                                    </td>
                                     @if (Model.DS_Tran[i].ID_Cap1 != null && Model.DS_Tran[i].ID_Cap2 != null && hasRole)
                                     {
                                         <td>

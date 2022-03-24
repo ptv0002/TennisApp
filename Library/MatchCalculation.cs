@@ -255,7 +255,7 @@ namespace Library
             }
             return lTran;
         }
-        public int? Champion_Select(DS_Tran tran)
+        public static int? Champion_Select(DS_Tran tran)
         {
             if (tran.Ma_Vong>1 || (tran.Kq_1 + tran.Kq_2) == 0) { return null;}
             if (tran.Kq_1 > tran.Kq_2) return tran.ID_Cap1;
