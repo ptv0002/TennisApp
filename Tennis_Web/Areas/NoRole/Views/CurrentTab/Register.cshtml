@@ -1,0 +1,53 @@
+﻿@model Models.DS_VDV
+<form asp-action="Register">
+    <div class="modal fade show" id="register" tabindex="-1" role="dialog" aria-labelledby="label" aria-hidden="true" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="label">Nhập thông tin</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Tên tắt</label>
+                        <input type="search" asp-for="Ten_Tat" list="list" class="form-control" disabled />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Email</label>
+                        @if (Model.Email != null)
+                        {
+                            <input type="text" asp-for="Email" class="form-control" disabled />
+                        }
+                        else
+                        {
+                            <input type="text" asp-for="Email" class="form-control" />
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">SĐT</label>
+                        @if (Model.Tel != null)
+                        {
+                            <input type="text" asp-for="Tel" class="form-control" disabled />
+                        }
+                        else
+                        {
+                            <input type="text" asp-for="Tel" class="form-control" />
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Mật khẩu</label>
+                        <input type="text" asp-for="Password" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                    <button class="btn btn-primary" type="submit">Đăng ký tham gia</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

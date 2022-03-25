@@ -10,7 +10,7 @@
 @model RoundTabViewModel
 @if (Model.DS_Tran.Any())
 {
-    <form asp-action="UpdateTable" asp-controller="Result">
+    <form asp-action="Table_UpdateTable" asp-controller="Result">
         <input type="hidden" asp-for="@Model.ID_Trinh" />
         @for (int i = 0; i < ViewBag.ListTable.Count; i++)
         {
@@ -219,7 +219,7 @@
             @if (hasRole && Model.DS_Tran.All(m => m.ID_Cap1 != null && m.ID_Cap2 != null))
             {
                 <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
-                    <input type="submit" value="Lưu KQ playoff" class="btn btn-success" formaction="/Result/UpdatePlayoff" />
+                    <input type="submit" value="Lưu KQ playoff" class="btn btn-success" formaction="/Result/Table_UpdatePlayoff" />
                 </div>
             }
         }
@@ -240,7 +240,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                            <input type="submit" value="Tiếp tục" class="btn btn-primary" formaction="/Result/PerformRanking" />
+                            <input type="submit" value="Tiếp tục" class="btn btn-primary" formaction="/Result/Table_PerformRanking" />
                         </div>
                     </div>
                 </div>

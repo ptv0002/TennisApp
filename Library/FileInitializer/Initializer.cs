@@ -74,7 +74,7 @@ namespace Library.FileInitializer
                     PairNum = 8, // Tứ Kết, 8 pairs
                     P1_P2_Pair = new Dictionary<string, string>
                     {
-                        { "1A", "3BC"},
+                        { "1A", "3CB"},
                         { "1B", "2C" },
                         { "1C", "3AB"},
                         { "2A", "2B" }
@@ -110,14 +110,14 @@ namespace Library.FileInitializer
                     PairNum = 16, // Vòng 3, 16 pairs
                     P1_P2_Pair = new Dictionary<string, string>
                     {
-                        { "1A", "3FEDCB"},
-                        { "1B", "3EFDCA" },
+                        { "1A", "3FEDBC"},
+                        { "1B", "3FEDBC" },
                         { "1C", "2D"},
                         { "2F", "2B" },
                         { "2A", "2E"},
                         { "1D", "2C" },
-                        { "1E", "3BACDF"},
-                        { "1F", "3ABCDE" }
+                        { "1E", "3BACFD"},
+                        { "1F", "3ACBED" }
                     }
                 },
                 new Special1stRound

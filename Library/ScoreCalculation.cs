@@ -72,7 +72,7 @@ namespace Library
         /// <returns>List of pair Id and corresponding point</returns>
         public List<DS_Diem> TableAndPositive_Point(int idTrinh, char table)
         {
-            var matches = _context.Set<DS_Tran>().AsEnumerable().Where(m => m.ID_Trinh == idTrinh && m.Ma_Tran[7] == table).ToList();
+            var matches = _context.Set<DS_Tran>().Where(m => m.ID_Trinh == idTrinh && m.Ma_Tran[7] == table).ToList();
             var pairs = _context.Set<DS_Cap>().Include(m => m.DS_Bang).Where(m => m.DS_Bang.Ten == table).ToList();
             var level = _context.Set<DS_Trinh>().Find(idTrinh);
             // Total point deposit of the Table
@@ -125,7 +125,7 @@ namespace Library
                 C_D1_Thang  = p2.VDV1.Diem + p2.VDV2.Diem;
                 C_D1_Thua   = p1.VDV1.Diem + p1.VDV2.Diem;
             }
-            decimal diem =(decimal) ((C_D1_Thua - level.Diem_PB * 2) * ((decimal)level.Diem_Tru / 6) * ((decimal)ratio / 6)) / (C_D1_Thang - level.Diem_PB * 2);
+            decimal diem = (C_D1_Thua - level.Diem_PB * 2) * ((decimal)level.Diem_Tru / 6) * ((decimal)ratio / 6) / (C_D1_Thang - level.Diem_PB * 2);
             return Math.Abs(diem);
         }
         /// <summary>
@@ -141,14 +141,12 @@ namespace Library
             {
                 new DS_Diem
                 {
-                    ID_Trinh = match.ID_Trinh,
                     ID_Cap = (int)match.ID_Cap1,
                     Diem = match.Kq_1 > match.Kq_2 ? winPoint : -winPoint,
                     ID_Vong = match.Ma_Vong
                 },
                 new DS_Diem
                 {
-                    ID_Trinh = match.ID_Trinh,
                     ID_Cap = (int)match.ID_Cap2,
                     Diem = match.Kq_1 < match.Kq_2 ? winPoint : -winPoint,
                     ID_Vong = match.Ma_Vong

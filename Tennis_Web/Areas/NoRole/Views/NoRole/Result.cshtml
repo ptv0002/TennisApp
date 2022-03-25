@@ -24,13 +24,13 @@
             </div>
             <div class="card-body">
                 <div class="form-group">
-                    @if (Model.Count() > 0)
+                    @if (Model.Any())
                     {
                         foreach (var item in Model)
                         {
                             string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
                             <div>
-                                <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs" asp-controller="ResultTab">
+                                <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs" asp-controller="CurrentTab">
                                     • @title
                                 </a>
                             </div>

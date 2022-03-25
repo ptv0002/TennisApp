@@ -126,7 +126,7 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult ImportExcel()
         {
-            bool? success = (bool?)TempData["Success"];
+            bool? success = (bool?)TempData["SuccessfulImport"];
             if (success == true) _notyf.Success("Đã cập nhật các Sheet từ Excel thành công!"); 
             return View(GetEntityLists());
         }
@@ -180,7 +180,7 @@ namespace Tennis_Web.Controllers
             if (! lerror) 
             { 
                 _context.SaveChangesAsync();
-                TempData["Success"] = true;
+                TempData["SuccessfulImport"] = true;
                 return RedirectToAction(nameof(ImportExcel));
             }
             return View(list);

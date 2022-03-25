@@ -80,13 +80,13 @@
     vertical-align: middle;
     text-align: left;
     font-size: 14px;
-    border: 1px solid limegreen;
+    border: 1px solid black;
     margin: .5rem 9px;
 }
 
     .team-item:after {
         content: '';
-        border-color: limegreen;
+        border-color: black;
         border-width: 2px;
         position: absolute;
         display: block;
@@ -110,7 +110,7 @@
 
     .team-item:before {
         content: '';
-        border-top: 2px solid limegreen;
+        border-top: 2px solid black;
         position: absolute;
         height: 2px;
         width: 10px;
@@ -129,7 +129,7 @@
             margin-right: 5px;
         }
     .team-item .top-border {
-        border-top: 1px solid limegreen;
+        border-top: 1px solid black;
     }
     .team-item .result {
         display: flex;
@@ -145,7 +145,7 @@
         min-width: 14rem;
     }
 .bracket-1{
-    flex-grow:1.75;
+    flex-grow:1.75 !important;
 }
 .bracket-2 .team-item:nth-of-type(odd):after {
     height: 200%;
