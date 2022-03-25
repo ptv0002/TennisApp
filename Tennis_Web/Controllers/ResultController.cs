@@ -24,9 +24,35 @@ namespace Tennis_Web.Controllers
             _context = context;
             _webHost = webHost;
         }
-        public IActionResult Index()
+
+        void UpdateScore(List<DS_Diem> scoreList)
         {
-            return View();
+            foreach (var score in scoreList)
+            {
+                if (_context.DS_Diems.Any(m => m.ID_Cap == score.ID_Cap && m.ID_Vong == score.ID_Vong))
+                {
+                    var temp = _context.DS_Diems.FirstOrDefault(m => m.ID_Cap == score.ID_Cap && m.ID_Vong == score.ID_Vong);
+                    temp.Diem = score.Diem;
+                    _context.Update(temp);
+                }
+                // If not, add new instance
+                else _context.Add(score);
+            }
+        }
+        IActionResult TabVMGenerator(int idTrinh, bool result, Tab tabName, string msg)
+        {
+            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).FirstOrDefault(m => m.Id == idTrinh);
+            var vm = new TabViewModel
+            {
+                ActiveTab = tabName,
+                IsCurrent = true,
+                ID = temp.Id,
+                DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
+                Succeeded = result,
+                ErrorMsg = msg
+            };
+            // If save successfully, view error and display View with model from DB 
+            return RedirectToAction("MatchInfo", "Match", vm);
         }
         /// <summary>
         /// 1. Xếp hạng các cặp trong các bảng
@@ -36,9 +62,9 @@ namespace Tennis_Web.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<IActionResult> PerformRankingAsync(RoundTabViewModel model)
+        public async Task<IActionResult> Table_PerformRankingAsync(RoundTabViewModel model)
         {
-            bool result = UpdateResult_Table(model);
+            bool result = Table_UpdateResult(model);
             // If update successfully, proceeds
             if (result)
             {
@@ -62,21 +88,21 @@ namespace Tennis_Web.Controllers
 
                 // 2. ========================= Get ranking and put in playoff =========================
                 var playoff1 = new List<DS_Cap>();
-                result = ToPlayoff(playoff1, matchParam, model);
+                result = Table_ToPlayoff(playoff1, matchParam, model);
 
                 // ================== Add players to First Special ==================
-                result = result && await ToSpecialAsync(playoff1, matchParam, model);
+                result = result && await Table_ToSpecialAsync(playoff1, matchParam, model);
                 // Save all changes to DB
                 if (result) _context.SaveChanges();
             }
             return TabVMGenerator(model.ID_Trinh, result, Tab.Table, "");
         }
-    public IActionResult UpdateTable(RoundTabViewModel model)
+        public IActionResult Table_UpdateTable(RoundTabViewModel model)
         {
-            bool result = UpdateResult_Table(model);
+            bool result = Table_UpdateResult(model);
             return TabVMGenerator(model.ID_Trinh, result, Tab.Table,"");
         }
-        public IActionResult UpdateSpecial(RoundTabViewModel model)
+        public IActionResult Special_UpdateSpecial(RoundTabViewModel model)
         {
             // Find and update result for Matches
             bool result = false;
@@ -110,12 +136,12 @@ namespace Tennis_Web.Controllers
             if (result) _context.SaveChanges();
             return TabVMGenerator(model.ID_Trinh, result, Tab.Special, "");
         }
-        public IActionResult ResetSpecial(int id)
+        public IActionResult Special_ResetSpecial(int id)
         {
-            bool result = ResetResult_Special(id);
+            bool result = Special_ResetResult(id);
             return TabVMGenerator(id, result, Tab.Table, "");
         }
-        public IActionResult UpdatePlayoff(RoundTabViewModel model)
+        public IActionResult Table_UpdatePlayoff(RoundTabViewModel model)
         {
             // Find and update result for Matches
             bool result = false;
@@ -183,7 +209,7 @@ namespace Tennis_Web.Controllers
             if (result) _context.SaveChanges();
             return TabVMGenerator(model.ID_Trinh, result, Tab.Table, msg);
         }
-        async Task<bool> ToSpecialAsync(List<DS_Cap> playoff1, MatchGeneratorViewModel matchParam, RoundTabViewModel model)
+        async Task<bool> Table_ToSpecialAsync(List<DS_Cap> playoff1, MatchGeneratorViewModel matchParam, RoundTabViewModel model)
         {
             bool result = false;
             var totalPair = matchParam.ChosenPerTable.Sum(m => m.Chosen) + matchParam.PlayOff1 + matchParam.PlayOff2;
@@ -192,7 +218,7 @@ namespace Tennis_Web.Controllers
             var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPair && m.TableNum == straight2Special.Count);
             fileStream.Dispose();
             // Reset all special rounds' value before proceeding
-            result = ResetResult_Special(model.ID_Trinh);
+            result = Special_ResetResult(model.ID_Trinh);
 
             if (placement != null && result)
             {
@@ -262,7 +288,7 @@ namespace Tennis_Web.Controllers
             }
             return result;
         }
-        bool ToPlayoff(List<DS_Cap> playoff1, MatchGeneratorViewModel matchParam, RoundTabViewModel model)
+        bool Table_ToPlayoff(List<DS_Cap> playoff1, MatchGeneratorViewModel matchParam, RoundTabViewModel model)
         {
             bool result = false;
             var straight2Special = matchParam.ChosenPerTable.ToDictionary(x => x.Table, y => y.Chosen);
@@ -315,7 +341,7 @@ namespace Tennis_Web.Controllers
             return result;
         }
         
-        bool UpdateResult_Table(RoundTabViewModel model)
+        bool Table_UpdateResult(RoundTabViewModel model)
         {
             // Find and update result for Matches
             bool result = false;
@@ -357,7 +383,7 @@ namespace Tennis_Web.Controllers
 
             return result;
         }
-        bool ResetResult_Special(int idTrinh)
+        bool Special_ResetResult(int idTrinh)
         {
             bool result = false;
             // Get first special round
@@ -373,35 +399,6 @@ namespace Tennis_Web.Controllers
             }
             if (result) _context.SaveChanges();
             return result;
-        }
-        void UpdateScore(List<DS_Diem> scoreList)
-        {
-            foreach (var score in scoreList)
-            {
-                if (_context.DS_Diems.Any(m => m.ID_Cap == score.ID_Cap && m.ID_Vong == score.ID_Vong))
-                {
-                    var temp = _context.DS_Diems.FirstOrDefault(m => m.ID_Cap == score.ID_Cap && m.ID_Vong == score.ID_Vong);
-                    temp.Diem = score.Diem;
-                    _context.Update(temp);
-                }
-                // If not, add new instance
-                else _context.Add(score);
-            }
-        }
-        IActionResult TabVMGenerator(int idTrinh, bool result, Tab tabName, string msg)
-        {
-            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).FirstOrDefault(m => m.Id == idTrinh);
-            var vm = new TabViewModel
-            {
-                ActiveTab = tabName,
-                IsCurrent = true,
-                ID = temp.Id,
-                DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
-                Succeeded = result,
-                ErrorMsg = msg
-            };
-            // If save successfully, view error and display View with model from DB 
-            return RedirectToAction("MatchInfo", "Match", vm);
         }
     }
 }

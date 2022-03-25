@@ -61,7 +61,14 @@
                                     else gender = "Nam";
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Ten_Tat)
+                                            @if (ViewBag.Info)
+                                            {
+                                                <a asp-action="PlayerInfo" asp-route-id="@item.Id">@item.Ten_Tat</a>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="link" data-toggle="ajax-modal" data-target="#register" data-url="@Url.Action("Register", "CurrentTab", new { id = item.Id })">@item.Ten_Tat</button>
+                                            }
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.CLB)

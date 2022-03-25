@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tennis Website của Pa và Pi</title>
+    <title>BIT Khánh Hòa</title>
     <meta name="description" content="A free responsive website template made exclusively for Frittt by Themesforce and Sarfraz Shaukat">
     <meta name="keywords" content="website template, css3, one page, bootstrap, app template, web app, start-up">
     <meta name="author" content="Themesforce and Sarfraz Shaukat for Frittt">
-    <link rel="icon" type="image/png" href="~/images/icon/KAICT_logo.PNG" sizes="16x16">
+    <link rel="icon" type="image/png" href="~/images/icon/KAICT_logo.png" sizes="16x16">
 
     <link rel="stylesheet" type="text/css" href="~/datatables/css/dataTables.bootstrap4.min.css" />
 
@@ -27,7 +27,7 @@
 
             <header id="header">
                 <div class="container">
-                    <div class="logo"><a href="#"><img src="~/images/logo_long.png" width="400" alt="BIT Khánh Hòa"></a></div>
+                    <div class="logo"><a href="#"><img src="~/images/logo_long.png" width="300" alt="BIT Khánh Hòa"></a></div>
                     <nav id="nav">
                         <div class="opener-holder">
                             <a href="#" class="nav-opener"><span></span></a>
@@ -35,19 +35,34 @@
                         <a asp-action="Logout" asp-area="" asp-controller="Account" class="btn btn-primary rounded-pill">Đăng nhập</a>
                         <div class="nav-drop" style="float: none;">
                             <ul>
-                                <li class="@ViewBag.IActive"><a asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
-                                <li class="@ViewBag.PActive"><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="false">Vận động viên</a></li>
-                                <li class="@ViewBag.CRActive">
+                                <li @*class="@ViewBag.IActive"*@><a asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
+                                <li @*class="@ViewBag.CActive"*@>
+                                    <a class="dropdownBtn" style="padding-bottom: 12px;">Hoạt động xã hội</a>
+                                    <div class="dropdown">
+                                        <a >HĐ từ thiện</a>
+                                        <a >HĐ TDTT</a>
+                                        <a>HĐ khác</a>
+                                    </div>
+                                </li>
+                                <li @*class="@ViewBag.PActive"*@>
+                                    <a class="dropdownBtn" style="padding-bottom: 12px;">Hội viên</a>
+                                    <div class="dropdown">
+                                        <a asp-action="Player" asp-controller="NoRole">Chính thức</a>
+                                        <a asp-action="Player" asp-controller="NoRole"asp-route-isGuest="true">Khách mời</a>
+                                    </div>
+                                </li>
+                                <li @*class="@ViewBag.CRActive"*@>
                                     <a class="dropdownBtn" style="padding-bottom: 12px;">Giải hiện tại</a>
                                     <div class="dropdown">
-                                        <a asp-action="Guideline" asp-controller="ResultTab">Điều lệ</a>
-                                        <a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">VĐV tham gia</a>
-                                        <a asp-action="Pair" asp-controller="ResultTab" >Danh sách cặp</a>
+                                        <a asp-action="Guideline" asp-controller="CurrentTab">Điều lệ</a>
+                                        <a asp-action="Player" asp-controller="NoRole"asp-route-isCurrent="true">Đăng kí tham gia</a>
+                                        <a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a>
+                                        <a asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a>
                                         <a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a>
                                     </div>
                                 </li>
-                                <li class="@ViewBag.BRActive"><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="false">Giải cũ</a></li>
-                                <li class="@ViewBag.AActive"><a asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>
+                                <li @*class="@ViewBag.BRActive"*@><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="false">Giải cũ</a></li>
+                                <li @*class="@ViewBag.AActive"*@><a asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>
                             </ul>
                         </div>
                     </nav>
@@ -58,7 +73,7 @@
             <footer id="footer" class="sticky-footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        Copyright © Tennis Web 2021
+                        Copyright © Veronica Vu 2022
                     </div>
                     
                 </div>

@@ -10,7 +10,6 @@
     {
         [Key]
         public int Id { get; set; }
-        public int ID_Trinh { get; set; }
         [DisplayName("Điểm")]
         public decimal Diem { get; set; }
         [DisplayName("ID Cặp")]

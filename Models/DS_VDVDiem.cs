@@ -10,7 +10,7 @@
     {
         [Key]
         public int Id { get; set; }
-        public int ID_Trinh { get; set; }
+        public int? ID_Trinh { get; set; }
         [DisplayName("Ngày")]
         public DateTime Ngay { get; set; }
         [DisplayName("Điểm")]

@@ -23,7 +23,6 @@ namespace Tennis_Web.Controllers
         {
             return View(model);
         }
-
         [HttpPost]
         public IActionResult UpdateParameter(DS_Trinh item)
         {

@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace Tennis_Web.Areas.NoRole.Controllers
 {
     [Area("NoRole")]
     [Route("[Action]")]
-    public class ResultTabController : Controller
+    public class CurrentTabController : Controller
     {
         private readonly TennisContext _context;
-        public ResultTabController(TennisContext context)
+        public CurrentTabController(TennisContext context)
         {
             _context = context;
         }
@@ -50,6 +51,19 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             ViewBag.Tournament = current.Ten;
             return View(model);
         }
+        public IActionResult Register(int id)
+        {
+            var model = _context.DS_VDVs.Find(id);
+            return PartialView(model);
+        }
+        [HttpPost]
+        public IActionResult Register(DS_VDV model, int id)
+        {
+            var old = _context.DS_VDVs.Find(id);
+            //if (old.Email )
+            TempData["SuccessfulRegister"] = true;
+            return RedirectToAction("Player", "NoRole", new { isCurrent = true, participate = true });
+            }
         public IActionResult ResultInfo(ResultViewModel model)
         {
             return View(model);
