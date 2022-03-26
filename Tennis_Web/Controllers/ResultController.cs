@@ -136,7 +136,7 @@ namespace Tennis_Web.Controllers
             if (result) _context.SaveChanges();
             return TabVMGenerator(model.FirstOrDefault().ID_Trinh, result, Tab.Special, "");
         }
-        public IActionResult Special_ResetSpecial(int id)
+        public IActionResult Special_Reset(int id)
         {
             bool result = Special_ResetResult(id);
             return TabVMGenerator(id, result, Tab.Table, "");

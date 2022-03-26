@@ -14,7 +14,8 @@
 @model List<Models.DS_Tran>
 @if (Model.Any())
 {
-    <form asp-action="UpdateSpecial" asp-controller="Result">
+    <form asp-action="Special_Update" asp-controller="Result">
+        <input type="hidden" asp-for="@Model.ID_Trinh" />
         <div class="tournament-container">
             <div class="tournament-headers" id="tournamentHeader">
                 @for (int i = ViewBag.RoundNum; i > 0; i--)
@@ -171,7 +172,7 @@
             {
                 BtnMsg = "Xóa",
                 Message = "xóa kết quả toàn bộ vòng đặc biệt",
-                ActionName = "ResetSpecial",
+                ActionName = "Special_Reset",
                 ControllerName = "Result",
                 Id = idTrinh.ToString()
             };
