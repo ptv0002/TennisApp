@@ -1,15 +1,16 @@
 ﻿@{
     Layout = "/Areas/_Layout.cshtml";
-    if (ViewBag.IsCurrent)
-    {
-        ViewData["Title"] = "VĐV tham gia";
-        ViewBag.CActive = "active visible-sm visible-xs";
-    }
-    else
-    {
-        ViewData["Title"] = "Vận động viên";
-        ViewBag.PActive = "active visible-sm visible-xs";
-    }
+    //if (ViewBag.IsCurrent)
+    //{
+    //    ViewData["Title"] = ViewBag.Title;
+    //    ViewBag.CActive = "active visible-sm visible-xs";
+    //}
+    //else
+    //{
+    //    ViewData["Title"] = "Vận động viên";
+    //    ViewBag.PActive = "active visible-sm visible-xs";
+    //}
+    ViewData["Title"] = ViewBag.Title;
 }
 @model IEnumerable<Models.DS_VDV>
 
@@ -67,7 +68,10 @@
                                             }
                                             else
                                             {
-                                                <button type="button" class="link" data-toggle="ajax-modal" data-target="#register" data-url="@Url.Action("Register", "CurrentTab", new { id = item.Id })">@item.Ten_Tat</button>
+                                                if (item.Phe_Duyet != false)
+                                                { <button type="button" class="link" data-toggle="ajax-modal" data-target="#register" data-url="@Url.Action("Register", "CurrentTab", new { id = item.Id })">@item.Ten_Tat</button>}
+                                                else
+                                                { @item.Ten_Tat}
                                             }
                                         </td>
                                         <td>
@@ -96,3 +100,14 @@
         </div>
     </div>
 </section>
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>
+@*@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#register').on('show.bs.modal', function (e) {
+                $('#register').focus();
+            })
+        });
+    </script>
+    }*@

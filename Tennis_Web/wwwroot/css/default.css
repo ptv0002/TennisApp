@@ -62,10 +62,7 @@ h5 {
     color: #bf9000 !important;
 }
 a, .link {
-    border: 0;
     color: black;
-    text-decoration: none;
-    background-color: transparent;
 }
 
     a:hover, .nav-link a:hover, .link:hover {
@@ -81,6 +78,9 @@ a, .link {
 }
 .btn-primary:focus, .btn-primary.focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus{
     box-shadow: none;
+}
+.btn-secondary:focus{
+    border: none;
 }
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     border: none;
@@ -131,4 +131,23 @@ footer.sticky-footer .copyright {
 .page-item.active .page-link {
     background-color: #ffce1b;
     border-color: #ffce1b;
+}
+.modal-backdrop.in {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+.modal-dialog {
+    z-index:2010;
+}
+.modal-backdrop {
+    z-index: 2000;
+}
+.form-control{
+    font-size:1.25rem;
+}
+.modal-footer .btn + .btn {
+    margin: 0 0 0 5px;
+}
+.btn {
+    font-size: 1.25rem;
 }

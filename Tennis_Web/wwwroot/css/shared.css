@@ -4,6 +4,25 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     text-align:center;
 }
+
+a, .link {
+    border: 0;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+.btn-link {
+    font-weight: 400;
+    text-decoration: none;
+}
+
+    .btn-link:hover {
+        text-decoration: underline;
+    }
 h5 {
     text-align: center;
     margin: 0;

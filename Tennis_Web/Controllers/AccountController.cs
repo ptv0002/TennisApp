@@ -32,6 +32,7 @@ namespace Tennis_Web.Controllers
             _context = context;
             _webHost = webHost;
         }
+        [Route("Admin")]
         public IActionResult Logout()
         {
             _signInManager.SignOutAsync();

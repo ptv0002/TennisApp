@@ -8,21 +8,15 @@ h5 {
 }
 a {
     color: #1cb079;
-    text-decoration: none;
-    background-color: transparent;
 }
 a:hover {
         color: #13855c;
-        text-decoration: underline;
 }
 .btn-link {
-    font-weight: 400;
     color: #1cb079;
-    text-decoration: none;
 }
     .btn-link:hover {
         color: #13855c;
-        text-decoration: underline;
     }
 
 body {
