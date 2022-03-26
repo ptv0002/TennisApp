@@ -24,6 +24,8 @@
         [StringLength(30)]
         [DisplayName("Tên Tắt")]
         public string Ten_Tat { get; set; }
+        [DisplayName("Phê duyệt")]
+        public bool? Phe_Duyet { get; set; }
         [DisplayName("Tham gia")]
         public bool Tham_Gia { get; set; }
         [DisplayName("Giới tính")]
@@ -44,8 +46,14 @@
 
         [StringLength(40)]
         public string Email { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "Mật khẩu")]
         [StringLength(20)]
         public string Password { get; set; }
+        [NotMapped]
+        [DataType(DataType.Password)]
+        [Display(Name = "Xác nhận mật khẩu")]
+        public string ConfirmPassword { get; set; }
         public bool Status { get; set; }
 
         [DisplayName("Điểm")]

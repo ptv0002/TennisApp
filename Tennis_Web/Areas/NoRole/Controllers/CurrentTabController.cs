@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using Library;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
@@ -54,16 +55,39 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         public IActionResult Register(int id)
         {
             var model = _context.DS_VDVs.Find(id);
+            model.Password = null;
             return PartialView(model);
         }
         [HttpPost]
         public IActionResult Register(DS_VDV model, int id)
         {
             var old = _context.DS_VDVs.Find(id);
-            //if (old.Email )
-            TempData["SuccessfulRegister"] = true;
-            return RedirectToAction("Player", "NoRole", new { isCurrent = true, participate = true });
+            var col2Save = new List<string>();
+            if (old.Email == null)
+            {
+                if (model.ConfirmPassword != model.Password)
+                {
+                    ModelState.AddModelError(string.Empty, "Xác nhận lại mật khẩu");
+                    return PartialView(model);
+                }
+                col2Save.AddRange(new List<string> { "Email", "Tel", "Password", "Phe_Duyet" });
+                model.Phe_Duyet = true;
             }
+            else
+            {
+                if (old.Password != model.Password)
+                {
+                    ModelState.AddModelError(string.Empty, "Sai mật khẩu");
+                    return PartialView(model);
+                }
+                col2Save.AddRange(new List<string> { "Password", "Phe_Duyet" });
+                model.Phe_Duyet = true;
+            }
+
+            var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(model.Id, model, col2Save);
+            TempData["SuccessfulRegister"] = result;
+            return RedirectToAction("Player", "NoRole", new { isCurrent = true, participate = true });
+        }
         public IActionResult ResultInfo(ResultViewModel model)
         {
             return View(model);

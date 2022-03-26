@@ -13,15 +13,18 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Library;
 using System.Text.Json;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace Tennis_Web.Controllers
 {
     public class TournamentController : Controller
     {
         private readonly TennisContext _context;
-        public TournamentController(TennisContext context)
+        private readonly INotyfService _notyf;
+        public TournamentController(TennisContext context, INotyfService notyf)
         {
             _context = context;
+            _notyf = notyf;
         }
         public IActionResult Index(bool isCurrent)
         {
@@ -88,7 +91,7 @@ namespace Tennis_Web.Controllers
             _context.Update(item);
             // Reset Participation status to all false and Pair code to null
             var list = _context.DS_VDVs.ToList();
-            list.ForEach(m => { m.Tham_Gia = false; });
+            list.ForEach(m => { m.Tham_Gia = false; m.Phe_Duyet = null; });
             _context.UpdateRange(list);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index), true);
@@ -153,6 +156,39 @@ namespace Tennis_Web.Controllers
                 //CurrentModel = JsonSerializer.Serialize(list)
             //TempData["PlayerList"] = JsonSerializer.Serialize(list);
             return RedirectToAction(nameof(TournamentInfo), vm);
+        }
+        public IActionResult PlayerApproval()
+        {
+            var model = _context.DS_VDVs.Where(m => m.Phe_Duyet == true).ToList();
+            bool? success = (bool?)TempData["PlayerApproval"];
+            if (success == true) _notyf.Success("Đã lưu phê duyệt thành công!");
+            else if (success == false) _notyf.Error("Có lỗi xảy ra khi đang lưu!");
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult PlayerApproval(List<DS_VDV> list)
+        {
+            if (ModelState.IsValid)
+            {
+                bool result = false;
+                foreach (var item in list)
+                {
+                    if (item.Phe_Duyet == true) 
+                    { 
+                        item.Tham_Gia = true;
+                        item.Phe_Duyet = false;
+                    }
+                    result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet", "Tham_Gia" }).Succeeded;
+                    if (!result) break;
+                }
+                if (result) 
+                { 
+                    _context.SaveChanges();
+                    TempData["PlayerApproval"] = true;
+                }
+                else TempData["PlayerApproval"] = false;
+            }
+            return RedirectToAction(nameof(PlayerApproval));
         }
     }
 }

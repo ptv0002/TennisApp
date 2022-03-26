@@ -6,9 +6,9 @@
     }
     else ViewBag.BActive = "active";
 }
-@model Tennis_Web.Models.TabViewModel
-<hr/>
-<div asp-validation-summary="All" class="text-danger"></div>
+@model TabViewModel
+<hr />
+@if (Model.IsCurrent == true) { <a asp-action="PlayerApproval" asp-controller="Tournament">Đến danh sách phê duyệt VĐV 🡺</a>}
 <ul class="nav nav-tabs mt-3">
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Info ? "active" : string.Empty)">
         <a asp-route-tabname="Info" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="Method">Thông tin chung</a>
@@ -21,6 +21,7 @@
     </li>
 </ul>
 <div class="tab-content mt-3">
+    <div asp-validation-summary="All" class="text-danger"></div>
     @switch (Model.ActiveTab)
     {
         case Tennis_Web.Models.Tab.Info:
