@@ -102,7 +102,7 @@ namespace Tennis_Web.Controllers
             bool result = Table_UpdateResult(model);
             return TabVMGenerator(model.ID_Trinh, result, Tab.Table,"");
         }
-        public IActionResult Special_UpdateSpecial(RoundTabViewModel model)
+        public IActionResult Special_Update(RoundTabViewModel model)
         {
             // Find and update result for Matches
             bool result = false;
@@ -136,7 +136,7 @@ namespace Tennis_Web.Controllers
             if (result) _context.SaveChanges();
             return TabVMGenerator(model.ID_Trinh, result, Tab.Special, "");
         }
-        public IActionResult Special_ResetSpecial(int id)
+        public IActionResult Special_Reset(int id)
         {
             bool result = Special_ResetResult(id);
             return TabVMGenerator(id, result, Tab.Table, "");

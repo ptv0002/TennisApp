@@ -11,7 +11,7 @@
 @model RoundTabViewModel
 @if (Model.DS_Tran.Any())
 {
-    <form asp-action="UpdateSpecial" asp-controller="Result">
+    <form asp-action="Special_Update" asp-controller="Result">
         <input type="hidden" asp-for="@Model.ID_Trinh" />
         <div class="tournament-container">
             <div class="tournament-headers" id="tournamentHeader">
@@ -171,7 +171,7 @@
             {
                 BtnMsg = "Xóa",
                 Message = "xóa kết quả toàn bộ vòng đặc biệt",
-                ActionName = "ResetSpecial",
+                ActionName = "Special_Reset",
                 ControllerName = "Result",
                 Id = Model.ID_Trinh.ToString()
             };
