@@ -19,6 +19,9 @@ namespace Library
         /// Get point deposit from each pair in the level
         /// Use parameters from level to determine
         /// Round Id for this "round" is 9
+        /// - Trích điểm các cặp VDV
+        /// - Cập nhật tổng điểm vào tham số trình
+        /// - Cập nhật tổng điểm theo bảng
         /// </summary>
         /// <param name="idTrinh">Level id</param>
         /// <returns>List of score deposit before starting Table round</returns>
@@ -26,42 +29,73 @@ namespace Library
         {
             var pointList = new List<DS_Diem>();
             var level = _context.Set<DS_Trinh>().Find(idTrinh);
-            var pairs = _context.Set<DS_Cap>().Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.ID_Trinh == idTrinh);
+            var pairs = _context.Set<DS_Cap>().Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.ID_Trinh == idTrinh).OrderBy(m => m.ID_Bang).ToList() ;
+            var tables = _context.Set<DS_Bang>().Where(m => m.ID_Trinh == idTrinh).ToList();
             // Total deposit points from all pairs in level: B_DT
-            int T_DT = 0;
-            foreach (var pair in pairs)
-            {
-                // Total point of pair before starting : C_D1
-                var C_D1 = pair.VDV1.Diem + pair.VDV2.Diem;
-                // Deposite point taken off from each pair : CD_DT
-                int CD_DT = level.Diem_Tru * 2;
-                if (C_D1 < level.Trinh - level.Diem_Tru * 2) CD_DT -= Math.Min(level.Diem_Tru * 2, level.Trinh - level.Diem_Tru * 2 - C_D1);
-                else if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - level.Diem_Tru * 3);
-                
-                // Find if pair id is in the DB for this "round"
-                // If yes, update
-                if (_context.Set<DS_Diem>().Any(m => m.ID_Cap == pair.Id && m.ID_Vong == 9))
-                {
-                    var temp = _context.Set<DS_Diem>().FirstOrDefault(m => m.ID_Cap == pair.Id && m.ID_Vong == 9);
-                    temp.Diem = CD_DT;
-                    _context.Update(temp);
-                }
-                // If not, add new instance
-                else
-                {
-                    _context.Add(new DS_Diem
-                    {
-                        Diem = CD_DT,
-                        ID_Cap = pair.Id,
-                        ID_Vong = 10
-                    });
-                }
+            int T_DT = 0;   // Tổng điểm trích toàn Trình
+            int CD_DT = 0;  // Tổng điểm trích cặp VĐV
+            int B_DT = 0;   // Tổng điểm trích từng bảng
+            int i = 0;
+            int? mBang = 0;
+            int C_D1 = 0;   // Điểm của các cặp VĐV
 
-                // Update điểm phân bổ for level
-                T_DT += CD_DT;
+            var mTrinh = _context.Set<DS_Trinh>().First(m => m.Id == idTrinh);
+            var mGiai = _context.Set<DS_Giai>().First(m => m.Id == mTrinh.ID_Giai);
+            var mDate = new DateTime(2022, 03, 30);
+            int compare = DateTime.Compare(mGiai.Ngay, mDate);
+
+            while (i<pairs.Count)
+            {
+                mBang = pairs[i].ID_Bang;
+                B_DT = 0;
+                while (i < pairs.Count && pairs[i].ID_Bang == mBang)
+                {
+                    // Total point of pair before starting : C_D1
+                    C_D1 = pairs[i].VDV1.Diem + pairs[i].VDV2.Diem;
+                    
+                    // Deposite point taken off from each pair : CD_DT
+                    CD_DT = level.Diem_Tru * 2;
+                    if (compare < 0)
+                    { // Công thức cũ
+                        if (C_D1 < level.Trinh - level.Diem_Tru * 2) CD_DT -= Math.Min(level.Diem_Tru * 2, level.Trinh - C_D1 - 10);
+                        if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - 10);
+                    }
+                    else // Công thức mới
+                    {
+                        if (C_D1 < level.Trinh - level.Diem_Tru * 2) CD_DT -= Math.Min(level.Diem_Tru * 2, level.Trinh - level.Diem_Tru * 2 - C_D1);
+                        if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - level.Diem_Tru * 5);
+                    }
+
+                    // Find if pair id is in the DB for this "round"
+                    // If yes, update
+                    if (_context.Set<DS_Diem>().Any(m => m.ID_Cap == pairs[i].Id && m.ID_Vong == 10))
+                    {
+                        var temp = _context.Set<DS_Diem>().FirstOrDefault(m => m.ID_Cap == pairs[i].Id && m.ID_Vong == 10);
+                        temp.Diem = -CD_DT;
+                        _context.Update(temp);
+                    }
+                    // If not, add new instance
+                    else
+                    {
+                        _context.Add(new DS_Diem
+                        {
+                            Diem = -CD_DT,
+                            ID_Cap = pairs[i].Id,
+                            ID_Vong = 10
+                        });
+                    }
+                    i++;
+                    // Update điểm phân bổ for level
+                    T_DT += CD_DT;
+                    B_DT += CD_DT;
+                }
+                // Kết thúc Bảng --> Cập nhật bảng
+                tables.FirstOrDefault(m => m.Id == mBang).Diem = B_DT;
             }
+            // Kết thúc trình
             level.Tong_Diem = T_DT;
             _context.Update(level);
+            _context.UpdateRange(tables);
             _context.SaveChanges();
         }
         /// <summary>
@@ -72,26 +106,43 @@ namespace Library
         /// <returns>List of pair Id and corresponding point</returns>
         public List<DS_Diem> TableAndPositive_Point(int idTrinh, char table)
         {
-            var matches = _context.Set<DS_Tran>().Where(m => m.ID_Trinh == idTrinh && m.Ma_Tran[7] == table).ToList();
-            var pairs = _context.Set<DS_Cap>().Include(m => m.DS_Bang).Where(m => m.DS_Bang.Ten == table).ToList();
+            var matches = _context.Set<DS_Tran>().ToList().Where(m => m.ID_Trinh == idTrinh && m.Ma_Tran[7] == table).ToList();
+            var pairs = _context.Set<DS_Cap>().Include(m => m.DS_Bang).Where(m => m.DS_Bang.Ten == table && m.ID_Trinh==idTrinh).ToList();
             var level = _context.Set<DS_Trinh>().Find(idTrinh);
+            var tables = _context.Set<DS_Bang>().Where(m => m.ID_Trinh == idTrinh).ToList();
             // Total point deposit of the Table
-            var B_DT = _context.Set<DS_Diem>().Where(m => m.ID_Vong == 9 && pairs.Select(m => m.Id).Contains(m.ID_Cap)).Sum(m => m.Diem);
+            var mGiai = _context.Set<DS_Giai>().First(m => m.Id == level.ID_Giai);
+            var mDate = new DateTime(2022, 03, 30);
+            int compare = DateTime.Compare(mGiai.Ngay, mDate);
+
+            decimal B_DT = 0;
+            if (compare<0) 
+            {
+                B_DT = level.Tong_Diem/tables.Count;
+            }
+            else
+            {
+                B_DT = _context.Set<DS_Diem>().Where(m => m.ID_Vong == 10 && pairs.Select(m => m.Id).Contains(m.ID_Cap)).Sum(m => m.Diem); // Lấy điểm trích theo bảng
+            }
+
             // Max award points for this Table
-            var B_max = B_DT * level.TL_Bang;
+            //var B_max = B_DT * level.TL_Bang;
+            var B_max = level.Tong_Diem * level.TL_Bang / tables.Count/100;
             // Max winning ratio for this Table
-            var C_HSMax = matches.Count * 9;
+            var C_HSMax = (pairs.Count-1) * 9;
             // Return list
             var pointList = new List<DS_Diem>();
             var pRatioList = new List<DS_Diem>();
+            decimal mTileDuong = (100 - level.TL_VoDich - level.TL_ChungKet*2 - level.TL_BanKet*4 - level.TL_TuKet*8) / 100;
+
             foreach (var pair in pairs)
             {
-                var C_HS = pair.Tran_Thang * 3 - (matches.Count - pair.Tran_Thang) * 3 + pair.Hieu_so;
+                var C_HS = (pair.Tran_Thang*2 - pairs.Count-1) * 3 + pair.Hieu_so;
 
                 // Calculation for positive ratio point distribution
-                if (C_HS > 0) pRatioList.Add(new DS_Diem {
+                if (mTileDuong>0 && C_HS>0) pRatioList.Add(new DS_Diem {
                     ID_Cap = pair.Id,
-                    Diem = C_HS,
+                    Diem = C_HS *mTileDuong,
                     ID_Vong = 9 // Hệ số dương
                 });
                 // Add score for Table point distribution
@@ -109,6 +160,12 @@ namespace Library
         }
         private decimal Head2Head_Winning(DS_Tran match)
         {
+            // Những trận đấu cũ không tính đối đầu trước ngày 30/03/2022.
+            var mTrinh = _context.Set<DS_Trinh>().First(m => m.Id == match.ID_Trinh);
+            var mGiai = _context.Set<DS_Giai>().First(m => m.Id == mTrinh.ID_Giai);
+            var mDate = new DateTime(2022, 03, 30);
+            int compare = DateTime.Compare(mGiai.Ngay, mDate);
+            if (compare < 0) {return 0;}
             var p1 = _context.Set<DS_Cap>().Include(m => m.VDV1).Include(m => m.VDV2).FirstOrDefault(m => m.Id == match.ID_Cap1);
             var p2 = _context.Set<DS_Cap>().Include(m => m.VDV1).Include(m => m.VDV2).FirstOrDefault(m => m.Id == match.ID_Cap2);
             var level = _context.Set<DS_Trinh>().Find(match.ID_Trinh);
@@ -181,13 +238,13 @@ namespace Library
                 new DS_Diem
                 {
                     ID_Cap = (int)match.ID_Cap1,
-                    Diem = level.Tong_Diem * parameter + match.Kq_1 > match.Kq_2 ? winPoint : -winPoint,
+                    Diem = (decimal) (level.Tong_Diem*parameter)/100 + (match.Kq_1 > match.Kq_2 ? winPoint : -winPoint),
                     ID_Vong = match.Ma_Vong
                 },
                 new DS_Diem
                 {
                     ID_Cap = (int)match.ID_Cap2,
-                    Diem = level.Tong_Diem * parameter + match.Kq_1 < match.Kq_2 ? winPoint : -winPoint,
+                    Diem = (decimal) (level.Tong_Diem * parameter)/100 + (match.Kq_1 < match.Kq_2 ? winPoint : -winPoint),
                     ID_Vong = match.Ma_Vong
                 }
             };
@@ -197,7 +254,7 @@ namespace Library
                 pointList.Add(new DS_Diem
                 {
                     ID_Cap = (int)(match.Kq_1 > match.Kq_2 ? match.ID_Cap1 : match.ID_Cap2),
-                    Diem = level.Tong_Diem * level.TL_VoDich,
+                    Diem = (decimal)(level.Tong_Diem * level.TL_VoDich)/100,
                     ID_Vong = 0
                 });
             }
