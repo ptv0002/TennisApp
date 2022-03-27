@@ -34,7 +34,7 @@ namespace Tennis_Web.Controllers
             return View(model);
         }
 
-        public IActionResult AdditionalInfo(int id)
+        public async Task<IActionResult> AdditionalInfoAsync(int id)
         {
             ViewBag.TourName = _context.DS_Giais.Find(id).Ten;
             // Display for previous tournament
@@ -65,6 +65,7 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Đã có danh sách trận trong cơ sở dữ liệu! Nếu tiếp tục sẽ xóa danh sách trận cũ.");
             }
 
+
             var model = new List<MatchGeneratorViewModel>();
             foreach (var level in levels)
             {
@@ -88,7 +89,31 @@ namespace Tennis_Web.Controllers
                     ChosenPerTable = dict
                 });
             }
-            return View(model.OrderBy(m => m.Trinh).ToList());
+            model = model.OrderBy(m => m.Trinh).ToList();
+            // -------------------  Đọc dữ liệu cũ ra nếu có để gán lại vào form dữ liệu mới
+            FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/MatchGenParam.json");
+            var matchParam = (await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream)).ToList();
+            fileStream.Dispose();
+            for (int i=0; i<model.Count;i++) 
+            { 
+                if ((i<matchParam.Count) && (model[i].ID_Trinh==matchParam[i].ID_Trinh))
+                {
+                    model[i].PlayOff1 = matchParam[i].PlayOff1;
+                    model[i].PlayOff2 = matchParam[i].PlayOff2;
+                    for (int j=0; j< model[i].ChosenPerTable.Count; j++) 
+                    { 
+                        if ((j < matchParam[i].ChosenPerTable.Count) && (model[i].ChosenPerTable[j].Table == matchParam[i].ChosenPerTable[j].Table) )
+                        {
+                            model[i].ChosenPerTable[j].PairsNum = matchParam[i].ChosenPerTable[j].PairsNum;
+                            model[i].ChosenPerTable[j].Chosen = matchParam[i].ChosenPerTable[j].Chosen;
+                            model[i].ChosenPerTable[j].Playoff = matchParam[i].ChosenPerTable[j].Playoff;
+                        }
+                    }
+                }
+            }
+
+            return View(model);
+            //return View(model.OrderBy(m => m.Trinh).ToList());
         }
         [HttpPost]
         public async Task<IActionResult> AdditionalInfoAsync(List<MatchGeneratorViewModel> model, bool exist)
@@ -147,9 +172,12 @@ namespace Tennis_Web.Controllers
                     var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, col2Save);
                     if (!result.Succeeded) goto exit;
                 }
-
+                // ---------------- Trích điểm các cặp VĐV - Và tính tổng điểm trích để lưu vào file tham số ----------------
+                for (int i=0; i<model.Count;i++)
+                {
+                    new ScoreCalculation(_context).Point_Deposit(model[i].ID_Trinh);
+                }
                 // ---------------- Save these paramters to Json file ----------------
-
                 // Get path for the Json file
                 string path = _webHost.WebRootPath + "/Files/Json/MatchGenParam.json";
                 FileStream fileStream;
@@ -240,6 +268,7 @@ namespace Tennis_Web.Controllers
             ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
             return View(model);
         }
+
         public Tuple<int, int> PowerOfTwo(int number)
         {
             var powerOfTwo = new List<int> { 2, 4, 8, 16, 32, 64 };
