@@ -3,20 +3,23 @@
 *@
 @{
     int idCap = 0;
-    
+
+    var RoundList = Library.FileInitializer.Initializer.RoundList();
 }
 @model PointTabViewModel
 @for (int i = 0; i < ViewBag.ListTable.Count; i++)
 {
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h5 class="font-weight-bold">Trình @ViewBag.ListTable[i]</h5>
+            <h5>Trình @ViewBag.ListTable[i]</h5>
         </div>
         <div class="card-body">
             <table class="table">
                 <thead>
                     <tr>
                         <th>Cặp</th>
+                        <th>Điểm cặp</th>
+                        <th>Tổng thưởng</th>
                         <th>Trích điểm</th>
                         <th>Bảng</th>
                         <th>Hiệu số dương</th>
@@ -26,16 +29,18 @@
                         }
                         @for (int j = ViewBag.RoundNum; j >= 0; j--)
                         {
-                            <th>@ViewBag.ListRound[j]</th>
+                            <th>@RoundList[j]</th>
                         }
                     </tr>
                 </thead>
                 <tbody>
                     @for (int j = 0; j < ViewBag.ListNum[i]; j++)
                     {
-                        int total = Model.DS_Cap[idCap].VDV1.Diem + Model.DS_Cap[idCap].VDV2.Diem;
+                        var totalEarned = Model.DS_Diem.Where(m => m.ID_Cap == idCap).Sum(m => m.Diem);
                         <tr>
                             <td>@Model.DS_Cap[idCap].VDV1.Ten_Tat + @Model.DS_Cap[idCap].VDV2.Ten_Tat</td>
+                            <td>@Model.DS_Cap[idCap].Diem</td>
+                            <td>@totalEarned</td>
                             <td>@Score(10,idCap)</td>
                             <td>@Score(8, idCap)</td>
                             <td>@Score(9, idCap)</td>

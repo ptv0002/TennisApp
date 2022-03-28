@@ -7,9 +7,12 @@
     int count = 0;
 
     bool highRole = User.IsInRole("Manager") || User.IsInRole("Admin");
+    var idTrinh = Model.FirstOrDefault() != null ? Model.FirstOrDefault().ID_Trinh : 0;
+
+    var RoundList = Library.FileInitializer.Initializer.RoundList();
 }
-@model RoundTabViewModel
-@if (Model.DS_Tran.Any())
+@model List<Models.DS_Tran>
+@if (Model.Any())
 {
     <form asp-action="Special_Update" asp-controller="Result">
         <input type="hidden" asp-for="@Model.ID_Trinh" />
@@ -18,7 +21,7 @@
                 @for (int i = ViewBag.RoundNum; i > 0; i--)
                 {
                     var space = i == ViewBag.RoundNum ? "bracket-1" : "";
-                    <h3 class="@space">@ViewBag.ListRound[i]</h3>
+                    <h3 class="@space">@RoundList[i]</h3>
                 }
             </div>
             <div class="tournament-brackets">
@@ -27,10 +30,7 @@
                     <ul class="bracket bracket-@bracket">
                         @for (int j = 0; j < Math.Pow(2, i) / 2; j++)
                         {
-                            Models.DS_Cap pair1 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[count].ID_Cap1);
-                            Models.DS_Cap pair2 = Model.DS_Cap.Find(m => m.Id == Model.DS_Tran[count].ID_Cap2);
-
-                            int difference = Model.DS_Tran[count].Kq_1 - Model.DS_Tran[count].Kq_2;
+                            int difference = Model[count].Kq_1 - Model[count].Kq_2;
                             string boldP1 = difference > 0 ? "win" : "";
                             string boldP2 = difference < 0 ? "win" : "";
                             bool first = i == ViewBag.RoundNum;
@@ -39,125 +39,126 @@
                             if (first)
                             {
                                 // Check if next match is already filled
-                                var roundOrder = Convert.ToInt32(Model.DS_Tran[count].Ma_Tran[9..10]);
-                                bool p1 = roundOrder % 2 == 0;
-                                int nextOrder = roundOrder / 2;
-                                var nextMatch = Model.DS_Tran.Find(m => m.Ma_Tran[9..10] == nextOrder.ToString() && m.Ma_Tran[5] == Model.DS_Tran[count].Ma_Tran[5] - 1);
+                                var roundOrder = Convert.ToInt32(Model[count].Ma_Tran[9..11]);
+                                bool p1 = roundOrder % 2 == 1;
+                                int nextOrder = roundOrder / 2 + (p1? 1 : 0);
+                                var nextMatch = Model.Find(m => Convert.ToInt32(m.Ma_Tran[9..11]) == nextOrder 
+                                    && m.Ma_Vong == Model[count].Ma_Vong - 1);
                                 // If current match is in P1 (P2) respective position and ID_Cap1 (ID_Cap2) is null => show dropdown (select = true)
                                 if ((p1 && nextMatch.ID_Cap1 == null) || (!p1 && nextMatch.ID_Cap2 == null)) select = true;
                             }
 
-                        <li class="team-item row">
-                            <input type="hidden" asp-for="@Model.DS_Tran[count].Id" />
-                            <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Vong" />
-                            <input type="hidden" asp-for="@Model.DS_Tran[count].Ma_Tran" />
-                            <input type="hidden" asp-for="@Model.DS_Tran[count].ID_Cap1" />
-                            <input type="hidden" asp-for="@Model.DS_Tran[count].ID_Cap2" />
-                            <input type="hidden" asp-for="@Model.DS_Tran[count].ID_Trinh" />
-                            <div class="child @boldP1">
-                                @if (first)
-                                {
-                                    <div class="col">
-                                        @if (hasRole)
-                                        {
-                                            if (highRole)
+                            <li class="team-item row">
+                                <input type="hidden" asp-for="@Model[count].Id" />
+                                <input type="hidden" asp-for="@Model[count].Ma_Vong" />
+                                <input type="hidden" asp-for="@Model[count].Ma_Tran" />
+                                <input type="hidden" asp-for="@Model[count].ID_Cap1" />
+                                <input type="hidden" asp-for="@Model[count].ID_Cap2" />
+                                <input type="hidden" asp-for="@Model[count].ID_Trinh" />
+                                <div class="child @boldP1">
+                                    @if (first)
+                                    {
+                                        <div class="col">
+                                            @if (hasRole)
                                             {
-                                                // If role is Manager or Admin => full editing
-                                                <input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_1" />
-                                            }
-                                            else
-                                            { <input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_1" disabled />}
+                                                if (highRole)
+                                                {
+                                                    // If role is Manager or Admin => full editing
+                                                    <input class="form-control form-control-sm template" asp-for="@Model[j].Chon_Cap_1" />
+                                                }
+                                                else
+                                                { <input class="form-control form-control-sm template" asp-for="@Model[j].Chon_Cap_1" disabled />}
 
-                                        }
-                                        else
-                                        {@Model.DS_Tran[j].Chon_Cap_1}
-                                    </div>
-                                }
-                                <div class="col middle">
-                                    @if (hasRole && highRole && first && select)
-                                    {
-                                        <select asp-for="@Model.DS_Tran[count].ID_Cap1" class="form-control form-control-sm" asp-items="ViewBag.PairIds">
-                                            @if (pair1 == null)
-                                            {
-                                                <option selected></option>
-                                            }
-                                        </select>
-                                    }
-                                    else if (pair1 != null) // View for NoRole, Referee, next match already filled and 2nd to last special rounds
-                                    {<div>@pair1.VDV1.Ten_Tat + @pair1.VDV2.Ten_Tat</div>}
-                                </div>
-                                <div class="result">
-                                    @if (hasRole)
-                                    {
-                                        if (highRole || (!highRole && Model.DS_Tran[count].Kq_1 <= 0))
-                                        {
-                                            // If role is Manager or Admin => full editing
-                                            // If role is Referee => Only edit 0 field
-                                            <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[count].Kq_1" />
-                                        }
-                                        else
-                                        { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[count].Kq_1" disabled />}
-                                    }
-                                    else
-                                    {
-                                        if (difference > 0)
-                                        { <i class="fa fa-check"></i> }
-                                        @Model.DS_Tran[count].Kq_1
-                                    }
-                                </div>
-                            </div>
-                            <div class="child top-border @boldP2">
-                                @if (first)
-                                {
-                                    <div class="col">
-                                        @if (hasRole)
-                                        {
-                                            if (highRole)
-                                            {
-                                                // If role is Manager or Admin => full editing
-                                                <input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_2" />
                                             }
                                             else
-                                            { <input class="form-control form-control-sm template" asp-for="@Model.DS_Tran[j].Chon_Cap_2" disabled />}
-                                        }
-                                        else
-                                        {@Model.DS_Tran[j].Chon_Cap_2}
-                                    </div>
-                                }
-                                <div class="col middle">
-                                    @if (hasRole && highRole && first && select)
-                                    {
-                                        <select asp-for="@Model.DS_Tran[count].ID_Cap2" class="form-control form-control-sm" asp-items="ViewBag.PairIds">
-                                            @if (pair2 == null)
-                                            {
-                                                <option selected></option>
-                                            }
-                                        </select>
+                                            {@Model[j].Chon_Cap_1}
+                                        </div>
                                     }
-                                    else if (pair2 != null)// View for NoRole, Referee, next match already filled and 2nd to last special rounds
-                                    {<div>@pair2.VDV1.Ten_Tat + @pair2.VDV2.Ten_Tat</div>}
-                                </div>
-                                <div class="result">
-                                    @if (hasRole)
-                                    {
-                                        if (highRole || (!highRole && Model.DS_Tran[count].Kq_2 <= 0))
+                                    <div class="col middle">
+                                        @if (hasRole && highRole && first && select)
                                         {
-                                            // If role is Manager or Admin => full editing
-                                            // If role is Referee => Only edit 0 field
-                                            <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[count].Kq_2" />
+                                            <select asp-for="@Model[count].ID_Cap1" class="form-control form-control-sm" asp-items="ViewBag.PairIds">
+                                                @if (Model[count].ID_Cap1 == null)
+                                                {
+                                                    <option selected></option>
+                                                }
+                                            </select>
+                                        }
+                                        else if (Model[count].ID_Cap1 != null) // View for NoRole, Referee, next match already filled and 2nd to last special rounds
+                                        {<div>@Model[count].DS_Cap1.VDV1.Ten_Tat + @Model[count].DS_Cap1.VDV2.Ten_Tat</div>}
+                                    </div>
+                                    <div class="result">
+                                        @if (hasRole)
+                                        {
+                                            if (highRole || (!highRole && Model[count].Kq_1 <= 0))
+                                            {
+                                                // If role is Manager or Admin => full editing
+                                                // If role is Referee => Only edit 0 field
+                                                <input class="form-control form-control-sm sm-input" asp-for="@Model[count].Kq_1" />
+                                            }
+                                            else
+                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model[count].Kq_1" disabled />}
                                         }
                                         else
-                                        { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[count].Kq_2" disabled />}
-                                    }
-                                    else
-                                    {
-                                        if (difference < 0)
-                                        { <i class="fa fa-check"></i>}
-                                        @Model.DS_Tran[count].Kq_2
-                                    }
+                                        {
+                                            if (difference > 0)
+                                            { <i class="fa fa-check"></i> }
+                                            @Model[count].Kq_1
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
+                                <div class="child top-border @boldP2">
+                                    @if (first)
+                                    {
+                                        <div class="col">
+                                            @if (hasRole)
+                                            {
+                                                if (highRole)
+                                                {
+                                                    // If role is Manager or Admin => full editing
+                                                    <input class="form-control form-control-sm template" asp-for="@Model[j].Chon_Cap_2" />
+                                                }
+                                                else
+                                                { <input class="form-control form-control-sm template" asp-for="@Model[j].Chon_Cap_2" disabled />}
+                                            }
+                                            else
+                                            {@Model[j].Chon_Cap_2}
+                                        </div>
+                                    }
+                                    <div class="col middle">
+                                        @if (hasRole && highRole && first && select)
+                                        {
+                                            <select asp-for="@Model[count].ID_Cap2" class="form-control form-control-sm" asp-items="ViewBag.PairIds">
+                                                @if (Model[count].ID_Cap2 == null)
+                                                {
+                                                    <option selected></option>
+                                                }
+                                            </select>
+                                        }
+                                        else if (Model[count].ID_Cap2 != null)// View for NoRole, Referee, next match already filled and 2nd to last special rounds
+                                        {<div>@Model[count].DS_Cap2.VDV1.Ten_Tat + @Model[count].DS_Cap2.VDV2.Ten_Tat</div>}
+                                    </div>
+                                    <div class="result">
+                                        @if (hasRole)
+                                        {
+                                            if (highRole || (!highRole && Model[count].Kq_2 <= 0))
+                                            {
+                                                // If role is Manager or Admin => full editing
+                                                // If role is Referee => Only edit 0 field
+                                                <input class="form-control form-control-sm sm-input" asp-for="@Model[count].Kq_2" />
+                                            }
+                                            else
+                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model[count].Kq_2" disabled />}
+                                        }
+                                        else
+                                        {
+                                            if (difference < 0)
+                                            { <i class="fa fa-check"></i>}
+                                            @Model[count].Kq_2
+                                        }
+                                    </div>
+                                </div>
+                            </li>
                             count++;
                         }
                     </ul>
@@ -173,7 +174,7 @@
                 Message = "xóa kết quả toàn bộ vòng đặc biệt",
                 ActionName = "Special_Reset",
                 ControllerName = "Result",
-                Id = Model.ID_Trinh.ToString()
+                Id = idTrinh.ToString()
             };
             <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
                 <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" formmethod="post" />
@@ -184,7 +185,7 @@
 }
 else
 {
-    <h5 class="font-weight-bold text-danger">Chưa có danh sách trận đấu!</h5>
+    <h5 class="text-danger">Chưa có danh sách trận đấu!</h5>
 }
 <!-- Modal placeholder -->
 <div id="modal-placeholder"></div>

@@ -16,32 +16,22 @@ namespace Library.FileInitializer
         {
             _webHost = webHost;
         }
-        public async void RoundGeneratorAsync()
+        public static Dictionary<int, string> RoundList()
         {
-            // Get path for the Json file
-            string path = _webHost.WebRootPath + "/Files/Json/RoundInfo.json";
-            var listRound = new List<Round>
+            return new Dictionary<int, string>
                         {
-                            new Round { Ten = "Vô Địch", Ma_Vong = 0 },
-                            new Round { Ten = "Chung Kết", Ma_Vong = 1 },
-                            new Round { Ten = "Bán Kết", Ma_Vong = 2 },
-                            new Round { Ten = "Tứ Kết", Ma_Vong = 3 },
-                            new Round { Ten = "Vòng 3", Ma_Vong = 4 },
-                            new Round { Ten = "Vòng 2", Ma_Vong = 5 },
-                            new Round { Ten = "Vòng 1", Ma_Vong = 6 },
-                            new Round { Ten = "Vòng Playoff", Ma_Vong = 7 },
-                            new Round { Ten = "Vòng Bảng", Ma_Vong = 8 },
-                            new Round { Ten = "Hệ Số Dương", Ma_Vong = 9 },
-                            new Round { Ten = "Trích Điểm", Ma_Vong = 10 }
+                            { 0, "Vô Địch" },
+                            { 1, "Chung Kết"},
+                            { 2, "Bán Kết" },
+                            { 3, "Tứ Kết"},
+                            { 4, "Vòng 3"},
+                            { 5, "Vòng 2" },
+                            { 6, "Vòng 1" },
+                            { 7, "Playoff"},
+                            { 8, "Vòng Bảng" },
+                            { 9, "Hệ Số Dương" },
+                            { 10,"Trích Điểm" }
                         };
-            FileStream fileStream;
-            // Delete file if Json file is already exist
-            if (File.Exists(path)) File.Delete(path);
-
-            fileStream = File.Create(path);
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            await JsonSerializer.SerializeAsync(fileStream, listRound, options);
-            fileStream.Dispose();
         }
         public async void Special1stRoundGenerator()
         {

@@ -15,10 +15,10 @@
         [Key]
         public int Id { get; set; }
         [StringLength(10)]
-        [DisplayName("Mã Cặp")]
+        [DisplayName("Mã cặp")]
         public string Ma_Cap { get; set; }
-        [DisplayName("Điểm")]
-        public decimal Diem { get; set; } // Total point to split
+        [DisplayName("Điểm cặp")]
+        public int Diem { get; set; } // Total point from 2 players
         [DisplayName("Số trận thắng")]
         public int Tran_Thang { get; set; }
         [DisplayName("Bốc thăm")]

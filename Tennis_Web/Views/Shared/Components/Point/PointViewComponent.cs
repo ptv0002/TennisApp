@@ -37,9 +37,6 @@ namespace Tennis_Web.Views.Shared.Components.Point
                 ViewBag.Admin = false;
             }
             else ViewBag.Admin = true;
-            FileStream fileStream = File.OpenRead(_webHost.WebRootPath + "/Files/Json/RoundInfo.json");
-            ViewBag.ListRound = (await JsonSerializer.DeserializeAsync<List<Round>>(fileStream)).ToDictionary(x => x.Ma_Vong, y => y.Ten);
-            fileStream.Dispose();
 
             var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
             var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new

@@ -36,7 +36,7 @@
                             };
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Ten)
+                                    <a asp-action="UpdateAnnouncement" asp-route-id="@item.Id">@item.Ten</a>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Ngay)
@@ -45,7 +45,6 @@
                                     @Html.DisplayFor(modelItem => item.Hien_Thi)
                                 </td>
                                 <td>
-                                    <a asp-action="UpdateAnnouncement" asp-route-id="@item.Id" class="btn btn-primary">Sửa</a>
                                     <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
                                 </td>
                             </tr>

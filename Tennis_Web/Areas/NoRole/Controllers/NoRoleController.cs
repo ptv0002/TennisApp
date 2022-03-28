@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.Text.Json;
 using Library.FileInitializer;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Identity;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -26,11 +27,13 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         private readonly TennisContext _context;
         private readonly IWebHostEnvironment _webHost;
         private readonly INotyfService _notyf;
-        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
+        //private readonly SignInManager<DS_VDV> _signInManager;
+        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf/*, SignInManager<DS_VDV> signInManager*/)
         {
             _context = context;
             _webHost = webHost;
             _notyf = notyf;
+            //_signInManager = signInManager;
         }
 //      public async Task<IActionResult> Index()
         public IActionResult Index()
@@ -43,6 +46,35 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             //var roundFile = await JsonSerializer.DeserializeAsync<List<Special1stViewModel>>(outStream);
             return View();
         }
+        public IActionResult Logout()
+        {
+            //_signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Login()
+        {
+            return View();
+        }
+        //[HttpPost]
+        //public async Task<IActionResult> Login(LoginViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // Find user by Emaik
+        //        DS_VDV user = _context.DS_VDVs.FirstOrDefault(m => m.Email == model.UsernameOrEmail);
+        //        // Return error if not found
+        //        if (user == null)
+        //        {
+        //            ModelState.AddModelError(string.Empty, "Tài khoản không tồn tại!");
+        //            return View(model);
+        //        }
+        //        var result = await _signInManager.PasswordSignInAsync(user,
+        //                            model.Password, model.RememberMe, false);
+        //        if (result.Succeeded) return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
+        //        ModelState.AddModelError(string.Empty, "Đăng nhập không thành công!");
+        //    }
+        //    return View(model);
+        //}
         public IActionResult Player(bool isCurrent, bool isGuest, bool participate)
         {
             List<DS_VDV> model = new();
@@ -74,10 +106,20 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             }
             return View(model);
         }
-        public IActionResult PlayerInfo(int id)
+        public IActionResult PlayerHistory(int id)
         {
-            var model = _context.DS_VDVs.Find(id);
-            return View(model);
+            var matches = _context.DS_Trans.Include(m => m.DS_Cap1.VDV1).Include(m => m.DS_Cap1.VDV2)
+                .Include(m => m.DS_Cap2.VDV1).Include(m => m.DS_Cap2.VDV2)
+                .Include(m => m.DS_Trinh.DS_Giai).Include(m => m.DS_Trinh)
+                .Where(m => m.DS_Cap1.VDV1.Id == id || m.DS_Cap1.VDV2.Id == id || m.DS_Cap2.VDV1.Id == id || m.DS_Cap2.VDV2.Id == id)
+                .OrderByDescending(m => m.DS_Trinh.DS_Giai.Ngay).ThenByDescending(m => m.Ma_Vong)
+                .ToList();
+            return View(new PlayerHistoryViewModel
+            {
+                VDV = _context.DS_VDVs.Find(id),
+                DS_Tran = matches,
+                DS_VDVDiem = _context.DS_VDVDiems.Where(m => m.ID_Vdv == id && m.ID_Trinh != null).ToList()
+            });
         }
         public IActionResult Announcement()
         {

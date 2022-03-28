@@ -4,14 +4,16 @@ using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(TennisContext))]
-    partial class TennisContextModelSnapshot : ModelSnapshot
+    [Migration("20220327075845_edit_dsVDVDiem_init")]
+    partial class edit_dsVDVDiem_init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,7 +233,7 @@ namespace DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Diem")
-                        .HasColumnType("decimal(8,3)");
+                        .HasColumnType("decimal(6,3)");
 
                     b.Property<int>("ID_Trinh")
                         .HasColumnType("int");
@@ -258,7 +260,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Diem")
-                        .HasColumnType("decimal(8,3)");
+                        .HasColumnType("decimal(6,3)");
 
                     b.Property<int>("Hieu_so")
                         .HasColumnType("int");
@@ -306,7 +308,7 @@ namespace DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Diem")
-                        .HasColumnType("decimal(8,3)");
+                        .HasColumnType("decimal(6,3)");
 
                     b.Property<int>("ID_Cap")
                         .HasColumnType("int");
@@ -414,19 +416,19 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TL_BanKet")
-                        .HasColumnType("decimal(8,3)");
+                        .HasColumnType("decimal(6,3)");
 
                     b.Property<decimal>("TL_Bang")
-                        .HasColumnType("decimal(8,3)");
+                        .HasColumnType("decimal(6,3)");
 
                     b.Property<decimal>("TL_ChungKet")
-                        .HasColumnType("decimal(8,3)");
+                        .HasColumnType("decimal(6,3)");
 
                     b.Property<decimal>("TL_TuKet")
-                        .HasColumnType("decimal(8,3)");
+                        .HasColumnType("decimal(6,3)");
 
                     b.Property<decimal>("TL_VoDich")
-                        .HasColumnType("decimal(8,3)");
+                        .HasColumnType("decimal(6,3)");
 
                     b.Property<int>("Tong_Diem")
                         .HasColumnType("int");

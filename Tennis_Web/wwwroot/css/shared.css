@@ -2,9 +2,11 @@
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    text-align:center;
 }
-
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
 a, .link {
     border: 0;
     text-decoration: none;
@@ -26,14 +28,10 @@ a, .link {
 h5 {
     text-align: center;
     margin: 0;
+    font-weight:bold;
 }
 .card-body {
     overflow-x: auto;
-}
-/* Firefox */
-input[type=number] {
-    -moz-appearance: textfield;
-    text-align: center;
 }
 .align-center {
     display: flex;

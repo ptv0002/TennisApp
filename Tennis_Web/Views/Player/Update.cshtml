@@ -6,120 +6,123 @@
 <form asp-action="Update" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
-    <dl class="row">
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Ho_Ten" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Ho_Ten" class="form-control" />
-            <span asp-validation-for="Ho_Ten" class="text-danger"></span>
-        </dd>
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Ten_Tat" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Ten_Tat" class="form-control" required />
-            <span asp-validation-for="Ten_Tat" class="text-danger"></span>
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Gioi_Tinh" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <div>
-                @Html.DropDownList("Gioi_Tinh", new List<SelectListItem>{
-                   new SelectListItem{ Text="Nam", Value = "false" },
-                   new SelectListItem{ Text="Nữ", Value = "true" }}, new { @class = "form-control" })
+    <div class="row">
+        <div class="col-9">
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Ho_Ten" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Ho_Ten" class="form-control" />
+                    <span asp-validation-for="Ho_Ten" class="text-danger"></span>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Ten_Tat" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Ten_Tat" class="form-control" required />
+                    <span asp-validation-for="Ten_Tat" class="text-danger"></span>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Gioi_Tinh" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <div>
+                        @Html.DropDownList("Gioi_Tinh", new List<SelectListItem>{
+                           new SelectListItem{ Text="Nam", Value = "false" },
+                           new SelectListItem{ Text="Nữ", Value = "true" }}, new { @class = "form-control" })
+                    </div>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Tel" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Tel" class="form-control" />
+                    <span asp-validation-for="Tel" class="text-danger"></span>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="CLB" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="CLB" class="form-control" />
+                    <span asp-validation-for="CLB" class="text-danger"></span>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Email" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Password" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Khach_Moi" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Khach_Moi" class="ml-0 form-check-input" />
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Cong_Ty" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Cong_Ty" class="form-control" />
+                    <span asp-validation-for="Cong_Ty" class="text-danger"></span>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Chuc_Vu" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Chuc_Vu" class="form-control" />
+                    <span asp-validation-for="Chuc_Vu" class="text-danger"></span>
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Diem_Cu" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Diem_Cu" class="form-control" disabled />
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Diem" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Diem" class="form-control" disabled />
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    <label asp-for="Status" class="control-label"></label>
+                </dt>
+                <dd class="col-sm-9">
+                    <input asp-for="Status" class="ml-0 form-check-input" />
+                </dd>
+            </dl>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label class="control-label font-weight-bold">Hình đại diện</label>
+                <input class="form-control mb-2" type="file" asp-for="Picture" />
+                @if (Model != null && Model.File_Anh != null)
+                {
+                    var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                    {
+                        BtnMsg = "Xóa",
+                        Message = "xóa ảnh",
+                        ActionName = "DeleteImage",
+                        ControllerName = "Player",
+                        Id = Model.Id.ToString()
+                    };
+                    <img src="@("~/Files/PlayerImg/" + Model.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" />
+                    <button type="button" class="mt-2 btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa ảnh</button>
+                }
+                else
+                { <img style="min-width: 100%;" alt="Chưa có hình đại diện">}
             </div>
-        </dd>
-
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Tel" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Tel" class="form-control" />
-            <span asp-validation-for="Tel" class="text-danger"></span>
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="CLB" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="CLB" class="form-control" />
-            <span asp-validation-for="CLB" class="text-danger"></span>
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Email" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Khach_Moi" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Khach_Moi" class="ml-0 form-check-input" />
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Cong_Ty" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Cong_Ty" class="form-control" />
-            <span asp-validation-for="Cong_Ty" class="text-danger"></span>
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Chuc_Vu" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Chuc_Vu" class="form-control" />
-            <span asp-validation-for="Chuc_Vu" class="text-danger"></span>
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Diem_Cu" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Diem_Cu" class="form-control" disabled />
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Diem" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Diem" class="form-control" disabled />
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="Status" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input asp-for="Status" class="ml-0 form-check-input" />
-        </dd>
-        <dt class="col-sm-3 font-weight-bold">
-            <label asp-for="File_Anh" class="control-label"></label>
-        </dt>
-        <dd class="col-sm-9">
-            <input class="form-control" type="file" asp-for="Picture" />
-        </dd>
-        @if (Model != null && Model.File_Anh != null)
-        {
-            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-            {
-                BtnMsg = "Xóa",
-                Message = "xóa ảnh",
-                ActionName = "DeleteImage",
-                ControllerName = "Player",
-                Id = Model.Id.ToString()
-            };
-            <dt class="col-sm-3 font-weight-bold">
-                <label class="control-label">Hình ảnh</label>
-            </dt>
-            <dd class="col-sm-9">
-                <img src="@("~/Files/PlayerImg/" + Model.File_Anh)" asp-append-version="true" width="200" />
-            </dd>
-            <dt class="col-sm-3 font-weight-bold"></dt>
-            <dd class="col-sm-9">
-                <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa ảnh</button>
-            </dd>
-        }
-    </dl>
+        </div>
+    </div>
     <div class="form-group">
         <input type="submit" value="Lưu thay đổi" class="btn btn-success" />
     </div>

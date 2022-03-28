@@ -103,11 +103,11 @@ namespace Tennis_Web.Controllers
             bool result = Table_UpdateResult(model);
             return TabVMGenerator(model.ID_Trinh, result, Tab.Table, "");
         }
-        public IActionResult Special_Update(RoundTabViewModel model)
+        public IActionResult Special_Update(List<DS_Tran> model)
         {
             // Find and update result for Matches
             bool result = false;
-            var matches = model.DS_Tran.Where(m => m.Ma_Vong <= 6).ToList();
+            var matches = model.Where(m => m.Ma_Vong <= 6).ToList();
             var scoreList = new List<DS_Diem>();
             if (ModelState.IsValid)
             {
@@ -135,7 +135,7 @@ namespace Tennis_Web.Controllers
             else result = false;
             // Save all changes to DB
             if (result) _context.SaveChanges();
-            return TabVMGenerator(model.ID_Trinh, result, Tab.Special, "");
+            return TabVMGenerator(model.FirstOrDefault().ID_Trinh, result, Tab.Special, "");
         }
         public IActionResult Special_Reset(int id)
         {
