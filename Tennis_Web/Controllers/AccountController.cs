@@ -119,7 +119,6 @@ namespace Tennis_Web.Controllers
                     var result3 = await _roleManager.FindByNameAsync("Referee"); // Check for "Referee" role in DB
                     bool upfail = false;
 
-                    new Initializer(_webHost).RoundGeneratorAsync();
                     new Initializer(_webHost).Special1stRoundGenerator();
 
                     if (result1 == null)  // No "Admin" role found

@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@*@using Microsoft.AspNetCore.Identity
+@using Models
+@inject SignInManager<DS_VDV> signInManager*@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -24,7 +27,6 @@
 <body id="page-top">
     <div id="wrapper">
         <div id="content-wrapper" class="d-flex flex-column min-vh-100">
-
             <header id="header">
                 <div class="container">
                     <div class="logo"><a href="#"><img src="~/images/logo_long.png" width="300" alt="BIT Khánh Hòa"></a></div>
@@ -32,15 +34,17 @@
                         <div class="opener-holder">
                             <a href="#" class="nav-opener"><span></span></a>
                         </div>
-                        <a asp-action="Logout" asp-area="" asp-controller="Account" class="btn btn-primary rounded-pill">Đăng nhập</a>
+                        @*@if (signInManager.IsSignedIn(User)) { <a asp-action="Logout" class="btn btn-primary rounded-pill">Đăng nhập</a> }
+                        else { <a asp-action="Login" class="btn btn-primary rounded-pill">Đăng nhập</a> }*@   
+                        <a asp-action="Login" asp-area="" asp-controller="Account" class="btn btn-primary rounded-pill">Đăng nhập</a>
                         <div class="nav-drop" style="float: none;">
                             <ul>
                                 <li @*class="@ViewBag.IActive"*@><a asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
                                 <li @*class="@ViewBag.CActive"*@>
                                     <a class="dropdownBtn" style="padding-bottom: 12px;">Hoạt động xã hội</a>
                                     <div class="dropdown">
-                                        <a >HĐ từ thiện</a>
-                                        <a >HĐ TDTT</a>
+                                        <a>HĐ từ thiện</a>
+                                        <a>HĐ TDTT</a>
                                         <a>HĐ khác</a>
                                     </div>
                                 </li>
@@ -48,14 +52,14 @@
                                     <a class="dropdownBtn" style="padding-bottom: 12px;">Hội viên</a>
                                     <div class="dropdown">
                                         <a asp-action="Player" asp-controller="NoRole">Chính thức</a>
-                                        <a asp-action="Player" asp-controller="NoRole"asp-route-isGuest="true">Khách mời</a>
+                                        <a asp-action="Player" asp-controller="NoRole" asp-route-isGuest="true">Khách mời</a>
                                     </div>
                                 </li>
                                 <li @*class="@ViewBag.CRActive"*@>
                                     <a class="dropdownBtn" style="padding-bottom: 12px;">Giải hiện tại</a>
                                     <div class="dropdown">
                                         <a asp-action="Guideline" asp-controller="CurrentTab">Điều lệ</a>
-                                        <a asp-action="Player" asp-controller="NoRole"asp-route-isCurrent="true">Đăng kí tham gia</a>
+                                        <a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">Đăng kí tham gia</a>
                                         <a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a>
                                         <a asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a>
                                         <a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a>
@@ -69,42 +73,42 @@
                 </div>
             </header>
             @RenderBody()
-            </div>
-            <footer id="footer" class="sticky-footer">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        Copyright © Veronica Vu 2022
-                    </div>
-                    
-                </div>
-            </footer>
         </div>
-        <!-- Scroll to Top Button-->
-        <a class="scroll-to-top rounded-lg" href="#page-top" style=" width: 4.5rem; height: 4.5rem;">
-            <i class="fas fa-angle-up"></i>
-        </a>
-        @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <footer id="footer" class="sticky-footer">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    Copyright © Veronica Vu 2022
+                </div>
+
+            </div>
+        </footer>
+    </div>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded-lg" href="#page-top" style=" width: 4.5rem; height: 4.5rem;">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
 
-        <!-- Bootstrap core JavaScript-->
-        <script src="~/sbadmin/vendor/jquery/jquery.min.js"></script>
-        <script src="~/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/sbadmin/vendor/jquery/jquery.min.js"></script>
+    <script src="~/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Core plugin JavaScript-->
-        <script src="~/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="~/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-        <!-- Custom scripts for all pages-->
-        <script src="~/sbadmin/js/sb-admin-2.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="~/sbadmin/js/sb-admin-2.min.js"></script>
 
-        <!-- Page level plugins -->
+    <!-- Page level plugins -->
 
-        <script src="~/sports-html/js/bootstrap.js"></script>
-        <script src="~/sports-html/js/jquery.main.js"></script>
+    <script src="~/sports-html/js/bootstrap.js"></script>
+    <script src="~/sports-html/js/jquery.main.js"></script>
 
-        <script src="~/datatables/js/jquery.dataTables.min.js"></script>
-        <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
 
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        @RenderSection("Scripts", required: false)
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

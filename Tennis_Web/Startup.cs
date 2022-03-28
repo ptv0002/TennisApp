@@ -49,6 +49,9 @@ namespace Tennis_Web
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<TennisContext>()
                 .AddDefaultTokenProviders();
+            //services.AddIdentity<DS_VDV, IdentityRole>()
+            //    .AddEntityFrameworkStores<TennisContext>()
+            //    .AddDefaultTokenProviders();
 
             // Truy cập IdentityOptions
             services.Configure<IdentityOptions>(options => {

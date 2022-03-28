@@ -45,11 +45,10 @@ namespace Tennis_Web.Views.Shared.Components.Special
             if (vm.Succeeded == true) _notyf.Success("Lưu thay đổi thành công");
             else if (vm.Succeeded == false) _notyf.Error(vm.ErrorMsg ?? "Có lỗi xảy ra khi đang lưu thay đổi!", 30);
 
-            var matches = _context.DS_Trans.Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong <= 6) // Ma_Vong <= 6 are special rounds
-                    .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList();
-            FileStream fileStream = File.OpenRead(_webHost.WebRootPath + "/Files/Json/RoundInfo.json");
-            ViewBag.ListRound = (await JsonSerializer.DeserializeAsync<List<Round>>(fileStream)).ToDictionary(x => x.Ma_Vong, y => y.Ten);
-            fileStream.Dispose();
+            var matches = _context.DS_Trans.Include(m => m.DS_Cap1.VDV1).Include(m => m.DS_Cap1.VDV2)
+                .Include(m => m.DS_Cap2.VDV1).Include(m => m.DS_Cap2.VDV2)
+                .Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong <= 6) // Ma_Vong <= 6 are special rounds
+                .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList();
             ViewBag.IsCurrent = vm.IsCurrent;
             if (matches.Any()) 
             {
@@ -61,12 +60,7 @@ namespace Tennis_Web.Views.Shared.Components.Special
                 ViewBag.PairIds = new SelectList(pairs, "Id", "PairName");  
                 ViewBag.RoundNum = matches.Max(m => m.Ma_Vong);
             }
-            return View(new RoundTabViewModel
-            {
-                ID_Trinh = vm.ID,
-                DS_Tran = matches,
-                DS_Cap = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID).Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()
-            });
+            return View(matches);
         }
     }
 }

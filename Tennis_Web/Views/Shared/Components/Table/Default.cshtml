@@ -25,7 +25,7 @@
             }
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h5 class="font-weight-bold">Bảng @ViewBag.ListTable[i]</h5>
+                    <h5>Bảng @ViewBag.ListTable[i]</h5>
                 </div>
                 <div class="card-body">
                     <table class="table">
@@ -64,30 +64,30 @@
                                         {  // Insert result side
                                             if (hasRole)
                                             {
-                                <td name="ketqua">
-                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0))
-                                    {
-                                        // If role is Manager or Admin => full editing
-                                        // If role is Referee => Only edit 0 field
-                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" />
-                                    }
-                                    else
-                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled min="0" max="7" />}
+                                                <td name="ketqua">
+                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0))
+                                                    {
+                                                        // If role is Manager or Admin => full editing
+                                                        // If role is Referee => Only edit 0 field
+                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" />
+                                                    }
+                                                    else
+                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled min="0" max="7" />}
 
-                                    <span>-</span>
-                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
-                                    {
-                                        // If role is Manager or Admin => full editing
-                                        // If role is Referee => Only edit 0 field
-                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
-                                    }
-                                    else
-                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" disabled />}
+                                                    <span>-</span>
+                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
+                                                    {
+                                                        // If role is Manager or Admin => full editing
+                                                        // If role is Referee => Only edit 0 field
+                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
+                                                    }
+                                                    else
+                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" disabled />}
 
-                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Id" />
-                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].ID_Trinh" />
-                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Ma_Vong" />
-                                </td>
+                                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Id" />
+                                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].ID_Trinh" />
+                                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Ma_Vong" />
+                                                </td>
                                             }
                                             else
                                             { // For No Role View
@@ -144,7 +144,7 @@
             <hr />
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h5 class="font-weight-bold text-success">Playoff</h5>
+                    <h5>Playoff</h5>
                 </div>
                 <div class="card-body">
                     <table class="table">
@@ -225,11 +225,11 @@
         }
         @if (highRole)
         {
-            <div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title text-black-50" id="confirmLabel">Xác nhận</h5>
+                            <h5 class="modal-title" id="confirmLabel">Xác nhận</h5>
                             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -251,5 +251,5 @@
 }
 else
 {
-    <h5 class="font-weight-bold text-danger">Chưa có danh sách trận đấu!</h5>
+    <h5 class="text-danger">Chưa có danh sách trận đấu!</h5>
 }

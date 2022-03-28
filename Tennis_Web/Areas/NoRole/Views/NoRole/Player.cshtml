@@ -64,7 +64,7 @@
                                         <td>
                                             @if (ViewBag.Info)
                                             {
-                                                <a asp-action="PlayerInfo" asp-route-id="@item.Id">@item.Ten_Tat</a>
+                                                <a asp-action="PlayerHistory" asp-route-id="@item.Id">@item.Ten_Tat</a>
                                             }
                                             else
                                             {
@@ -78,7 +78,7 @@
                                             @Html.DisplayFor(modelItem => item.CLB)
                                         </td>
                                         <td>
-                                            <img src="@("~/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />
+                                            <img src="@("~/Files/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Diem)

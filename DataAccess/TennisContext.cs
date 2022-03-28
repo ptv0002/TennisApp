@@ -22,6 +22,7 @@ namespace DataAccess
         public virtual DbSet<DS_Tran> DS_Trans { get; set; }
         public virtual DbSet<DS_Trinh> DS_Trinhs { get; set; }
         public virtual DbSet<DS_VDV> DS_VDVs { get; set; }
+        public virtual DbSet<DS_VDVDiem> DS_VDVDiems { get; set; }
         public virtual DbSet<Khu_Vuc> Khu_Vucs { get; set; }
         public virtual DbSet<DS_Bang> DS_Bangs { get; set; }
         [NotMapped]
@@ -41,21 +42,21 @@ namespace DataAccess
                 }
             }
             modelBuilder.Entity<DS_Diem>()
-                .Property(c => c.Diem).HasColumnType("decimal(6,3)");
+                .Property(c => c.Diem).HasColumnType("decimal(8,3)");
             modelBuilder.Entity<DS_Bang>()
-                .Property(c => c.Diem).HasColumnType("decimal(6,3)");
+                .Property(c => c.Diem).HasColumnType("decimal(8,3)");
             modelBuilder.Entity<DS_Cap>()
-                .Property(c => c.Diem).HasColumnType("decimal(6,3)");
+                .Property(c => c.Diem).HasColumnType("decimal(8,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_VoDich).HasColumnType("decimal(6,3)");
+                .Property(c => c.TL_VoDich).HasColumnType("decimal(8,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_ChungKet).HasColumnType("decimal(6,3)");
+                .Property(c => c.TL_ChungKet).HasColumnType("decimal(8,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_BanKet).HasColumnType("decimal(6,3)");
+                .Property(c => c.TL_BanKet).HasColumnType("decimal(8,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_TuKet).HasColumnType("decimal(6,3)");
+                .Property(c => c.TL_TuKet).HasColumnType("decimal(8,3)");
             modelBuilder.Entity<DS_Trinh>()
-                .Property(c => c.TL_Bang).HasColumnType("decimal(6,3)");
+                .Property(c => c.TL_Bang).HasColumnType("decimal(8,3)");
         }
     }
 }

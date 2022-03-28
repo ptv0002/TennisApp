@@ -54,8 +54,11 @@ namespace Tennis_Web.Controllers
                     {
                         // Delete image if already exists
                         string wwwRootPath = _webHost.WebRootPath + "/Files/PlayerImg/";
-                        string existPath = Path.Combine(wwwRootPath, source.File_Anh);
-                        if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
+                        if (source.File_Anh != null)
+                        {
+                            string existPath = Path.Combine(wwwRootPath, source.File_Anh);
+                            if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
+                        }
 
                         // Save image to wwwroot/PlayerImg
                         string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);

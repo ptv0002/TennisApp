@@ -14,7 +14,7 @@
 }
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h5 class="font-weight-bold">Danh sách cặp</h5>
+        <h5>Danh sách cặp</h5>
     </div>
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -25,7 +25,7 @@
                             <th>Mã cặp</th>
                             <th>VĐV 1</th>
                             <th>VĐV 2</th>
-                            <th>Tổng điểm</th>
+                            <th>Điểm cặp</th>
                             <th>Lệch trình</th>
                             @if (a1)
                             {
@@ -38,7 +38,7 @@
                             <th>Mã cặp</th>
                             <th>VĐV 1</th>
                             <th>VĐV 2</th>
-                            <th>Tổng điểm</th>
+                            <th>Điểm cặp</th>
                             <th>Lệch trình</th>
                             @if (a1)
                             {
@@ -49,13 +49,12 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            int total = item.VDV1.Diem + item.VDV2.Diem;
-                            int difference = total - item.DS_Trinh.Trinh;
+                            int difference = item.Diem - item.DS_Trinh.Trinh;
                             <tr>
                                 <td>@item.Ma_Cap</td>
                                 <td>@item.VDV1.Ten_Tat</td>
                                 <td>@item.VDV2.Ten_Tat</td>
-                                <td>@total</td>
+                                <td>@item.Diem</td>
                                 <td>@difference</td>
                                 @if (a1)
                                 {
@@ -85,7 +84,7 @@
 {
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h5 class="m-0 font-weight-bold">Danh sách VĐV chưa được xếp cặp</h5>
+            <h5>Danh sách VĐV chưa được xếp cặp</h5>
         </div>
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">

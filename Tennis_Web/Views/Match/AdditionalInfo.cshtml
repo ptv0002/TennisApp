@@ -11,7 +11,7 @@
         <input type="hidden" asp-for="@Model[i].Trinh" />
         <div class="card shadow mb-4" name="ntrinh">
             <div class="card-header py-3">
-                <h5 class="font-weight-bold text-success">Trình @Model[i].Trinh</h5>
+                <h5>Trình @Model[i].Trinh</h5>
             </div>
             <div class="card-body">
                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -84,7 +84,7 @@
         @if (ViewBag.Exist == true)
         {
             <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Tạo danh sách trận đấu</button>
-            <div class="modal fade show" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
+            <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
