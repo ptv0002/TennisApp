@@ -19,7 +19,7 @@ namespace Library
         /// Get point deposit from each pair in the level
         /// Use parameters from level to determine
         /// Round Id for this "round" is 9
-        /// - Trích điểm các cặp VDV
+        /// - Trích điểm các cặp VDV --> Cập nhật điểm cho cặp
         /// - Cập nhật tổng điểm vào tham số trình
         /// - Cập nhật tổng điểm theo bảng
         /// </summary>
@@ -52,7 +52,7 @@ namespace Library
                 {
                     // Total point of pair before starting : C_D1
                     C_D1 = pairs[i].VDV1.Diem + pairs[i].VDV2.Diem;
-                    
+                    pairs[i].Diem = C_D1; // Cập nhật điểm tổng theo các cặp
                     // Deposite point taken off from each pair : CD_DT
                     CD_DT = level.Diem_Tru * 2;
                     if (compare < 0)
@@ -94,8 +94,8 @@ namespace Library
             }
             // Kết thúc trình
             level.Tong_Diem = T_DT;
-            _context.Update(level);
-            _context.UpdateRange(tables);
+            _context.Update(level);        // Cập nhật điểm tổng theo trình
+            _context.UpdateRange(tables);  // Cập nhật điểm tổng theo bảng
             _context.SaveChanges();
         }
         /// <summary>
@@ -137,8 +137,7 @@ namespace Library
 
             foreach (var pair in pairs)
             {
-                var C_HS = (pair.Tran_Thang*2 - pairs.Count-1) * 3 + pair.Hieu_so;
-
+                var C_HS = (pair.Tran_Thang*2 - pairs.Count + 1) * 3 + pair.Hieu_so;
                 // Calculation for positive ratio point distribution
                 if (mTileDuong>0 && C_HS>0) pRatioList.Add(new DS_Diem {
                     ID_Cap = pair.Id,
@@ -174,13 +173,13 @@ namespace Library
             var ratio = match.Kq_1 - match.Kq_2;
             if (ratio>0) 
             {
-                C_D1_Thang  = p1.VDV1.Diem + p1.VDV2.Diem ;
-                C_D1_Thua   = p2.VDV1.Diem + p2.VDV2.Diem;
+                C_D1_Thang  = p1.Diem;
+                C_D1_Thua   = p2.Diem;
             }
             else 
             {
-                C_D1_Thang  = p2.VDV1.Diem + p2.VDV2.Diem;
-                C_D1_Thua   = p1.VDV1.Diem + p1.VDV2.Diem;
+                C_D1_Thang  = p2.Diem;
+                C_D1_Thua   = p1.Diem;
             }
             decimal diem = (C_D1_Thua - level.Diem_PB * 2) * ((decimal)level.Diem_Tru / 6) * ((decimal)ratio / 6) / (C_D1_Thang - level.Diem_PB * 2);
             return Math.Abs(diem);
@@ -259,6 +258,33 @@ namespace Library
                 });
             }
             return pointList;
+        }
+        /// <summary>
+        /// Update/Phục hồi lại toàn bộ điểm của VĐV từ DSVDVDiem --> DS_VDV
+        /// </summary>
+        public void Player_Update()
+        {
+            var DSDiem= _context.Set<DS_VDVDiem>().OrderBy(m=>m.ID_Vdv).OrderBy(m => m.Ngay).ToList();
+            int i = 0;
+            int mIDVDV = 0;
+            int mDiem = 0;
+            int mDiemCu = 0;
+            while (i < DSDiem.Count) 
+            {
+                mIDVDV = DSDiem[i].ID_Vdv;
+                mDiem = 0;
+                mDiemCu = 0;
+                while ((i < DSDiem.Count) && (mIDVDV == DSDiem[i].ID_Vdv))
+                {
+                    mDiemCu = mDiem;
+                    mDiem += DSDiem[i].Diem;
+                    i++;
+                }
+                var mVDV = _context.Set<DS_VDV>().Find(mIDVDV);
+                mVDV.Diem = mDiem;
+                mVDV.Diem_Cu= mDiem;
+                _context.Set<DS_VDV>().Update(mVDV);
+            }
         }
         /// <summary>
         /// Distribute points to player of each pair

@@ -65,7 +65,7 @@
                                             if (hasRole)
                                             {
                                                 <td name="ketqua">
-                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0))
+                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0))
                                                     {
                                                         // If role is Manager or Admin => full editing
                                                         // If role is Referee => Only edit 0 field
@@ -75,7 +75,7 @@
                                                     { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled min="0" max="7" />}
 
                                                     <span>-</span>
-                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
+                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0))
                                                     {
                                                         // If role is Manager or Admin => full editing
                                                         // If role is Referee => Only edit 0 field
@@ -219,7 +219,7 @@
             @if (hasRole && Model.DS_Tran.All(m => m.ID_Cap1 != null && m.ID_Cap2 != null))
             {
                 <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
-                    <input type="submit" value="Lưu KQ playoff" class="btn btn-success" formaction="/Result/Table_UpdatePlayoff" />
+                    <input type="submit" value="Lưu KQ playoff" class="btn btn-success" formaction="/Result/Playoff_Update" />
                 </div>
             }
         }
