@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json.local" />
+    <None Remove="appsettings.json.net" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json.local" />
+    <Content Include="appsettings.json.net" />
     <Content Include="Properties\launchSettings.json" />
   </ItemGroup>
 

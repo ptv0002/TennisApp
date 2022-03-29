@@ -56,13 +56,6 @@
                     <span>Kết quả giải hiện tại</span>
                 </a>
             </li>
-            <li class="nav-item @ViewBag.BMActive">
-                <!-- Nav Item - Old Tournaments -->
-                <a class="nav-link" asp-controller="Match" asp-action="Index" asp-route-isCurrent="false">
-                    <i class="fas fa-fw fa-chalkboard-teacher"></i>
-                    <span>Kết quả các giải trước</span>
-                </a>
-            </li>
             <!-- ==========  Tournament Management (Manager) =================== -->
             @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Manager")))
             {<!-- Divider -->
@@ -81,6 +74,13 @@
                     <a class="nav-link" asp-controller="Tournament" asp-action="Index" asp-route-isCurrent="false">
                         <i class="fas fa-fw fa-calendar-alt"></i>
                         <span>Xem các giải trước</span>
+                    </a>
+                </li>
+                <li class="nav-item @ViewBag.BMActive">
+                    <!-- Nav Item - Old Tournaments -->
+                    <a class="nav-link" asp-controller="Match" asp-action="Index" asp-route-isCurrent="false">
+                        <i class="fas fa-fw fa-chalkboard-teacher"></i>
+                        <span>Kết quả các giải trước</span>
                     </a>
                 </li>
                 <li class="nav-item @ViewBag.PActive">

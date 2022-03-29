@@ -29,6 +29,12 @@ namespace Tennis_Web.Controllers
             var model = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
             return View(model);
         }
+        public IActionResult UpScore()
+        {
+            new ScoreCalculation(_context).Player_Update();
+            var model = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
+            return View(model);
+        }
         public IActionResult Update(int id)
         {
             var destination = _context.DS_VDVs.Find(id);
@@ -82,8 +88,12 @@ namespace Tennis_Web.Controllers
             }
             
             // Handle saving object
-            var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu" };
+            var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu","Diem" };
             var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
+            
+            // Cập nhật điểm VĐV mới nhập vào phần phát sinh
+            var mDiemPS = new DS_VDVDiem() { Id = id, Ngay = DateTime.Now, Diem = source.Diem };
+            _context.Update(mDiemPS);
             if (result.Succeeded) 
             {
                 _context.SaveChanges();

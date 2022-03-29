@@ -1,0 +1,18 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "TennisConnection": "Data Source=.; Initial Catalog=DB_Tennis;Integrated Security=True;MultipleActiveResultSets=True"
+  },
+  "EPPlus": {
+    "ExcelPackage": {
+      "LicenseContext": "Commercial" //The license context used
+    }
+  }
+}

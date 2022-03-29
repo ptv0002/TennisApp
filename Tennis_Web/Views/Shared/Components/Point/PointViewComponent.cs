@@ -24,7 +24,7 @@ namespace Tennis_Web.Views.Shared.Components.Point
             _context = context;
             _webHost = webHost;
         }
-        public async Task<IViewComponentResult> InvokeAsync(TabViewModel vm, ResultViewModel alt)
+        public IViewComponentResult Invoke(TabViewModel vm, ResultViewModel alt)
         {
             if (vm == null)
             {
@@ -48,6 +48,7 @@ namespace Tennis_Web.Views.Shared.Components.Point
             ViewBag.ListNum = list.Select(m => m.Num).ToList();
             ViewBag.RoundNum = _context.DS_Trans.Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong <= 6).Max(m => m.Ma_Vong);// Ma_Vong <= 6 are special rounds
             ViewBag.Playoff = _context.DS_Trans.Any(m => m.ID_Trinh == vm.ID && m.Ma_Vong == 7);
+            var DS_Diem = _context.DS_Diems.Where(m => pairs.Select(m => m.Id).Contains(m.ID_Cap)).ToList();
             return View(new PointTabViewModel
             {
                 DS_Cap = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID).Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList(),
