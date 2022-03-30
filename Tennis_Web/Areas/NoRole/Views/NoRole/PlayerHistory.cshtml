@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Lịch sử thi đấu";
+    ViewData["Title"] = Model.VDV.Ten_Tat + " (" + Model.VDV.Diem + ")";
     Layout = "/Areas/_Layout.cshtml";
     var picClass = Model.VDV.File_Anh != null ? "col-3" : "col-0";
     var hisClass = Model.VDV.File_Anh != null ? "col-9" : "col-12";
@@ -10,15 +10,6 @@
     string title = "";
 }
 @model Tennis_Web.Areas.NoRole.Models.PlayerHistoryViewModel
-<section class="main still-background">
-    <div class="visual container">
-        <div class="text-block-sm">
-            <div class="heading-holder">
-                <h1>@Model.VDV.Ten_Tat (@Model.VDV.Diem)</h1>
-            </div>
-        </div>
-    </div>
-    <div class="container">
         <div class="row">
             <div class="@picClass">
                 @if (picClass == "col-3")
@@ -76,5 +67,3 @@
                 </div>
             </div>
         </div>
-    </div>
-</section>

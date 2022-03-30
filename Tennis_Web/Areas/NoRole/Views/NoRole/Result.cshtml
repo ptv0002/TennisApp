@@ -1,50 +1,40 @@
 ﻿@{
-    ViewData["Title"] = "Kết quả";
     Layout = "/Areas/_Layout.cshtml";
     if (ViewBag.IsCurrent) ViewBag.CRActive = "active visible-sm visible-xs";
     else ViewBag.BRActive = "active visible-sm visible-xs";
+    ViewData["Title"] = "Kết quả";
+    if (ViewBag.IsCurrent)
+    {
+        ViewData["Tagline"] = "Giải " + ViewBag.Tournament;
+    }
 }
 @model List<Models.DS_Trinh>
-<section class="main still-background">
-    <div class="visual container">
-        <div class="text-block-sm">
-            <div class="heading-holder">
-                <h1>@ViewData["Title"]</h1>
-            </div>
-            @if (ViewBag.IsCurrent)
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h5>Chọn trình để xem kết quả</h5>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            @if (Model.Any())
             {
-                <p class="tagline">Giải @ViewBag.Tournament</p>
+                foreach (var item in Model)
+                {
+                    string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
+                    <div>
+                        <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs" asp-controller="CurrentTab">
+                            • @title
+                        </a>
+                    </div>
+                }
+            }
+            else
+            {
+                <h5 class="text-danger">Không có giải đấu nào đang diễn ra!</h5>
+                <a class="align-center" style="color:black" asp-action="Result" asp-route-isCurrent="false" asp-controller="NoRole">
+                    Đến danh sách kết quả các giải đấu cũ 🡺
+                </a>
             }
         </div>
     </div>
-    <div class="container">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h5>Chọn trình để xem kết quả</h5>
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    @if (Model.Any())
-                    {
-                        foreach (var item in Model)
-                        {
-                            string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
-                            <div>
-                                <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs" asp-controller="CurrentTab">
-                                    • @title
-                                </a>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <h5 class="text-danger">Không có giải đấu nào đang diễn ra!</h5>
-                        <a class="align-center" style="color:black" asp-action="Result" asp-route-isCurrent="false" asp-controller="NoRole" >
-                            Đến danh sách kết quả các giải đấu cũ 🡺
-                        </a>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+</div>       
