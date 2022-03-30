@@ -44,7 +44,7 @@
                                 var nextMatch = Model.Find(m => Convert.ToInt32(m.Ma_Tran[9..11]) == nextOrder 
                                     && m.Ma_Vong == Model[count].Ma_Vong - 1);
                                 // If current match is in P1 (P2) respective position and ID_Cap1 (ID_Cap2) is null => show dropdown (select = true)
-                                if ((p1 && nextMatch.ID_Cap1 == null) || (!p1 && nextMatch.ID_Cap2 == null)) select = true;
+                                if (nextMatch != null && (p1 && nextMatch.ID_Cap1 == null) || (!p1 && nextMatch.ID_Cap2 == null)) select = true;
                             }
 
                             <li class="team-item row">

@@ -24,6 +24,8 @@
         [StringLength(30)]
         [DisplayName("Tên Tắt")]
         public string Ten_Tat { get; set; }
+        [DisplayName("Dữ liệu cần phê duyệt")]
+        public string Data_PD { get; set; }
         [DisplayName("Phê duyệt")]
         public bool? Phe_Duyet { get; set; }
         [DisplayName("Tham gia")]

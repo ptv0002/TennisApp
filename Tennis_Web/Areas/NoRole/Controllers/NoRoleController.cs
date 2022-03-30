@@ -114,11 +114,29 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 .Where(m => m.DS_Cap1.VDV1.Id == id || m.DS_Cap1.VDV2.Id == id || m.DS_Cap2.VDV1.Id == id || m.DS_Cap2.VDV2.Id == id)
                 .OrderByDescending(m => m.DS_Trinh.DS_Giai.Ngay).ThenByDescending(m => m.Ma_Vong)
                 .ToList();
+
+            var DS_VDVDiem = _context.DS_VDVDiems.Where(m => m.ID_Vdv == id).OrderBy(m => m.Ngay).Select(m => new
+            Extended_VDVDiem {
+                Id = m.Id,
+                ID_Trinh = m.ID_Trinh,
+                ID_Vdv = m.ID_Vdv,
+                Diem = m.Diem,
+                Ngay = m.Ngay,
+                Diem_Moi = 0,
+                Diem_Cu = 0
+            }).ToList();
+            DS_VDVDiem[0].Diem_Moi = DS_VDVDiem[0].Diem_Cu + DS_VDVDiem[0].Diem;
+            for (int i = 1; i < DS_VDVDiem.Count; i++)
+            {
+                DS_VDVDiem[i].Diem_Cu  = DS_VDVDiem[i-1].Diem_Moi;
+                DS_VDVDiem[i].Diem_Moi = DS_VDVDiem[i].Diem_Cu + DS_VDVDiem[i].Diem;
+            }
+
             return View(new PlayerHistoryViewModel
             {
                 VDV = _context.DS_VDVs.Find(id),
                 DS_Tran = matches,
-                DS_VDVDiem = _context.DS_VDVDiems.Where(m => m.ID_Vdv == id && m.ID_Trinh != null).ToList()
+                DS_VDVDiem = DS_VDVDiem.OrderByDescending(m => m.Ngay).ToList()
             });
         }
         public IActionResult Announcement()
