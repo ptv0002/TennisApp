@@ -8,12 +8,14 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 a, .link {
+    color: #1cb079;
     border: 0;
     text-decoration: none;
     background-color: transparent;
 }
 
-    a:hover {
+    a:hover, .link:hover {
+        color: #13855c;
         text-decoration: underline;
     }
 
@@ -28,7 +30,8 @@ a, .link {
 h5 {
     text-align: center;
     margin: 0;
-    font-weight:bold;
+    font-weight: bold;
+    color: #1cc88a;
 }
 .card-body {
     overflow-x: auto;
@@ -54,3 +57,51 @@ h5 {
 .modal-title {
     color: #5a5c69 !important;
 }
+.page-link {
+    line-height: 1.25;
+    color: #1cb079;
+    border: 1px solid #dddfeb;
+}
+
+    .page-link:hover {
+        color: #13855c;
+        background-color: #eaf4f1;
+        border-color: #dddfeb;
+    }
+
+    .page-link:focus {
+        box-shadow: 0 0 0 0.2rem rgba(28,200,138, 0.25);
+    }
+.page-item.active .page-link {
+    background-color: #1cb079;
+    border-color: #1cb079;
+}
+
+.page-item.disabled .page-link {
+    color: #859696;
+    border-color: #dddfeb;
+}
+.login-image {
+    background-image: url('../images/DefaultImg/LG.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+.register-image {
+    background-image: url('../images/DefaultImg/RG.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+.form-control {
+    line-height: 1;
+}
+
+    .form-control::-webkit-input-placeholder, .form-control::-moz-placeholder, .form-control:-ms-input-placeholder,
+    .form-control::-ms-input-placeholder, .form-control::placeholder {
+        color: #859696;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #eaf4f1;
+    }

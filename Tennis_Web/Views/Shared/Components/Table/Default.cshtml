@@ -4,7 +4,6 @@
 @{
     int idTran = 0, idCap = 0;
     bool hasRole = ViewBag.Admin == true && ViewBag.IsCurrent == true;
-    string color = ViewBag.Admin == true ? "teal" : "#ffce1b";
     bool highRole = User.IsInRole("Manager") || User.IsInRole("Admin");
 }
 @model RoundTabViewModel
@@ -31,7 +30,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th style="background-color:@color"></th>
+                                <th style="background-color:teal"></th>
                                 @for (int j = 1; j < ViewBag.ListNum[i] + 1; j++)
                                 {
                                     <th style="min-width:7rem">@ViewBag.ListTable[i]<span>@j</span></th>
@@ -58,7 +57,7 @@
                                     {
                                         if (k == j)
                                         {
-                                            <td style="background-color:@color"></td>
+                                            <td style="background-color:teal"></td>
                                         }
                                         else if (j < k)
                                         {  // Insert result side

@@ -1,53 +1,40 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-    ViewData["Title"] = "Kết quả";
+﻿@{
+    ViewData["Title"] = "Giải " + Model.Tournament;
+    ViewData["Tagline"] = "Trình " + Model.Level;
     Layout = "/Areas/_Layout.cshtml";
     if (Model.IsCurrent) ViewBag.CRActive = "active visible-sm visible-xs";
     else ViewBag.BRActive = "active visible-sm visible-xs";
 }
 @model Tennis_Web.Areas.NoRole.Models.ResultViewModel
-<section class="main still-background">
-    <div class="visual container">
-        <div class="text-block-sm">
-            <div class="heading-holder">
-                <h1>Giải @Model.Tournament</h1>
-            </div>
-            <p class="tagline">Trình @Model.Level</p>
-        </div>
-    </div>
-    <div class="container" style="min-width: 95%">
-        <ul class="nav nav-tabs">
-            <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Table ? "active" : string.Empty)">
-                <a asp-route-tabname="Table" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="CurrentTab">Vòng bảng và playoff</a>
-            </li>
-            <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Special ? "active" : string.Empty)">
-                <a asp-route-tabname="Special" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="CurrentTab">Vòng đặc biệt</a>
-            </li>
-            <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Point ? "active" : string.Empty)">
-                <a asp-route-tabname="Point" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="CurrentTab">Điểm thưởng</a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            @switch (Model.ActiveTab)
-            {
-                case Tennis_Web.Models.Tab.Table:
-                    @await Component.InvokeAsync("Table", new { alt = Model });
-                    break;
-                case Tennis_Web.Models.Tab.Special:
-                    @await Component.InvokeAsync("Special", new { alt = Model });
-                    break;
-                case Tennis_Web.Models.Tab.Point:
-                    @await Component.InvokeAsync("Point", new { alt = Model });
-                    break;
-                default:
-                    break;
-            }
-        </div>
-        <div></div>
-    </div>
-</section>
+
+<ul class="nav nav-tabs">
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Table ? "active" : string.Empty)">
+        <a asp-route-tabname="Table" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="CurrentTab">Vòng bảng và playoff</a>
+    </li>
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Special ? "active" : string.Empty)">
+        <a asp-route-tabname="Special" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="CurrentTab">Vòng đặc biệt</a>
+    </li>
+    <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Point ? "active" : string.Empty)">
+        <a asp-route-tabname="Point" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="CurrentTab">Điểm thưởng</a>
+    </li>
+</ul>
+<div class="tab-content mt-3">
+    @switch (Model.ActiveTab)
+    {
+        case Tennis_Web.Models.Tab.Table:
+            @await Component.InvokeAsync("Table", new { alt = Model });
+            break;
+        case Tennis_Web.Models.Tab.Special:
+            @await Component.InvokeAsync("Special", new { alt = Model });
+            break;
+        case Tennis_Web.Models.Tab.Point:
+            @await Component.InvokeAsync("Point", new { alt = Model });
+            break;
+        default:
+            break;
+    }
+</div>
+
 
 @section Scripts {
     <script type="text/javascript">

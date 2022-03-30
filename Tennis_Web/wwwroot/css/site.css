@@ -3,15 +3,7 @@ for details on configuring this project to bundle and minify static web assets. 
 
 
 /* Provide sufficient contrast against white background */
-h5 {
-    color: #1cc88a;
-}
-a {
-    color: #1cb079;
-}
-a:hover {
-        color: #13855c;
-}
+
 .btn-link {
     color: #1cb079;
 }
@@ -26,52 +18,7 @@ body {
 .modal-content{
     line-height: 1.5
 }
-.login-image {
-    background-image: url('../images/DefaultImg/LG.jpg');
-    background-position: center;
-    background-size: cover;
-}
-.register-image {
-    background-image: url('../images/DefaultImg/RG.jpg');
-    background-position: center;
-    background-size: cover;
-}
-.form-control {
-    line-height: 1;
-}
-    .form-control::-webkit-input-placeholder, .form-control::-moz-placeholder, .form-control:-ms-input-placeholder,
-    .form-control::-ms-input-placeholder, .form-control::placeholder {
-        color: #859696;
-    }
-.form-control:disabled, .form-control[readonly] {
-    background-color: #eaf4f1;
-}
 
-.page-link {
-    line-height: 1.25;
-    color: #1cb079;
-    border: 1px solid #dddfeb;
-}
-    .page-link:hover {
-        color: #13855c;
-        background-color: #eaf4f1;
-        border-color: #dddfeb;
-    }
-
-    .page-link:focus {
-        box-shadow: 0 0 0 0.2rem rgba(28,200,138, 0.25);
-    }    
-
-
-.page-item.active .page-link {
-    background-color: #1cb079;
-    border-color: #1cb079;
-}
-
-.page-item.disabled .page-link {
-    color: #859696;
-    border-color: #dddfeb;
-}
 
 .bg-gradient-success {
     background-color: #1cb079;
