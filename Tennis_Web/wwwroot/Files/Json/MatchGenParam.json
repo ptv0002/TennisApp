@@ -1,15 +1,15 @@
 [
   {
-    "ID_Trinh": 40,
-    "Trinh": 1260,
-    "PlayOff1": 0,
+    "ID_Trinh": 31,
+    "Trinh": 1235,
+    "PlayOff1": 1,
     "PlayOff2": 1,
     "ChosenPerTable": [
       {
         "Table": "A",
-        "PairsNum": 4,
-        "Chosen": 3,
-        "Playoff": false
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
       },
       {
         "Table": "B",
@@ -26,26 +26,26 @@
     ]
   },
   {
-    "ID_Trinh": 39,
-    "Trinh": 1355,
-    "PlayOff1": 2,
-    "PlayOff2": 0,
+    "ID_Trinh": 32,
+    "Trinh": 1385,
+    "PlayOff1": 1,
+    "PlayOff2": 1,
     "ChosenPerTable": [
       {
         "Table": "A",
-        "PairsNum": 4,
+        "PairsNum": 3,
         "Chosen": 2,
         "Playoff": true
       },
       {
         "Table": "B",
-        "PairsNum": 4,
+        "PairsNum": 3,
         "Chosen": 2,
         "Playoff": true
       },
       {
         "Table": "C",
-        "PairsNum": 4,
+        "PairsNum": 3,
         "Chosen": 2,
         "Playoff": true
       }

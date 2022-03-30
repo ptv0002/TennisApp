@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(TennisContext))]
-    [Migration("20220304045119_up_dstran_trinh_chon")]
-    partial class up_dstran_trinh_chon
+    [Migration("20220330030247_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -233,7 +233,7 @@ namespace DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Diem")
-                        .HasColumnType("decimal(6,3)");
+                        .HasColumnType("decimal(8,3)");
 
                     b.Property<int>("ID_Trinh")
                         .HasColumnType("int");
@@ -260,7 +260,10 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Diem")
-                        .HasColumnType("decimal(6,3)");
+                        .HasColumnType("decimal(8,3)");
+
+                    b.Property<int>("Hieu_so")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ID_Bang")
                         .HasColumnType("int");
@@ -305,7 +308,7 @@ namespace DataAccess.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Diem")
-                        .HasColumnType("decimal(6,3)");
+                        .HasColumnType("decimal(8,3)");
 
                     b.Property<int>("ID_Cap")
                         .HasColumnType("int");
@@ -316,8 +319,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ID_Cap");
-
-                    b.HasIndex("ID_Vong");
 
                     b.ToTable("DS_Diems");
                 });
@@ -354,12 +355,13 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Chon_Cap")
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                    b.Property<string>("Chon_Cap_1")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
-                    b.Property<int?>("DS_TrinhId")
-                        .HasColumnType("int");
+                    b.Property<string>("Chon_Cap_2")
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<int?>("ID_Cap1")
                         .HasColumnType("int");
@@ -368,9 +370,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ID_Trinh")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ID_Vong")
                         .HasColumnType("int");
 
                     b.Property<int>("Kq_1")
@@ -383,15 +382,16 @@ namespace DataAccess.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Ma_Vong")
+                        .HasColumnType("int");
 
-                    b.HasIndex("DS_TrinhId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ID_Cap1");
 
                     b.HasIndex("ID_Cap2");
 
-                    b.HasIndex("ID_Vong");
+                    b.HasIndex("ID_Trinh");
 
                     b.ToTable("DS_Trans");
                 });
@@ -416,19 +416,19 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TL_BanKet")
-                        .HasColumnType("decimal(6,3)");
+                        .HasColumnType("decimal(8,3)");
 
                     b.Property<decimal>("TL_Bang")
-                        .HasColumnType("decimal(6,3)");
+                        .HasColumnType("decimal(8,3)");
 
                     b.Property<decimal>("TL_ChungKet")
-                        .HasColumnType("decimal(6,3)");
+                        .HasColumnType("decimal(8,3)");
 
                     b.Property<decimal>("TL_TuKet")
-                        .HasColumnType("decimal(6,3)");
+                        .HasColumnType("decimal(8,3)");
 
                     b.Property<decimal>("TL_VoDich")
-                        .HasColumnType("decimal(6,3)");
+                        .HasColumnType("decimal(8,3)");
 
                     b.Property<int>("Tong_Diem")
                         .HasColumnType("int");
@@ -486,6 +486,13 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Khach_Moi")
                         .HasColumnType("bit");
 
+                    b.Property<string>("Password")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool?>("Phe_Duyet")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -516,7 +523,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("Diem")
                         .HasColumnType("int");
 
-                    b.Property<int>("ID_Giai")
+                    b.Property<int?>("ID_Trinh")
                         .HasColumnType("int");
 
                     b.Property<int>("ID_Vdv")
@@ -529,26 +536,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ID_Vdv");
 
-                    b.ToTable("DS_VDVDiem");
-                });
-
-            modelBuilder.Entity("Models.DS_Vong", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Ma_Vong")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Ten")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DS_Vongs");
+                    b.ToTable("DS_VDVDiems");
                 });
 
             modelBuilder.Entity("Models.Khu_Vuc", b =>
@@ -585,6 +573,9 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Hien_Thi")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("ID_Giai")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Ngay")
                         .HasColumnType("datetime2");
 
@@ -593,6 +584,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(80)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ID_Giai");
 
                     b.ToTable("Thong_Baos");
                 });
@@ -698,23 +691,11 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.DS_Vong", "DS_Vong")
-                        .WithMany()
-                        .HasForeignKey("ID_Vong")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("DS_Cap");
-
-                    b.Navigation("DS_Vong");
                 });
 
             modelBuilder.Entity("Models.DS_Tran", b =>
                 {
-                    b.HasOne("Models.DS_Trinh", "DS_Trinh")
-                        .WithMany("DS_Tran")
-                        .HasForeignKey("DS_TrinhId");
-
                     b.HasOne("Models.DS_Cap", "DS_Cap1")
                         .WithMany()
                         .HasForeignKey("ID_Cap1");
@@ -723,9 +704,9 @@ namespace DataAccess.Migrations
                         .WithMany("DS_Trans")
                         .HasForeignKey("ID_Cap2");
 
-                    b.HasOne("Models.DS_Vong", "DS_Vong")
-                        .WithMany()
-                        .HasForeignKey("ID_Vong")
+                    b.HasOne("Models.DS_Trinh", "DS_Trinh")
+                        .WithMany("DS_Tran")
+                        .HasForeignKey("ID_Trinh")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -734,8 +715,6 @@ namespace DataAccess.Migrations
                     b.Navigation("DS_Cap2");
 
                     b.Navigation("DS_Trinh");
-
-                    b.Navigation("DS_Vong");
                 });
 
             modelBuilder.Entity("Models.DS_Trinh", b =>
@@ -767,6 +746,15 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("DS_VDV");
+                });
+
+            modelBuilder.Entity("Models.Thong_Bao", b =>
+                {
+                    b.HasOne("Models.DS_Giai", "DS_Giai")
+                        .WithMany()
+                        .HasForeignKey("ID_Giai");
+
+                    b.Navigation("DS_Giai");
                 });
 
             modelBuilder.Entity("Models.DS_Bang", b =>

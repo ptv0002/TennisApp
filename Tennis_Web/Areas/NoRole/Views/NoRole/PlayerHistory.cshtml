@@ -3,10 +3,11 @@
     Layout = "/Areas/_Layout.cshtml";
     var picClass = Model.VDV.File_Anh != null ? "col-3" : "col-0";
     var hisClass = Model.VDV.File_Anh != null ? "col-9" : "col-12";
-    var LevelList  = Model.DS_Tran.GroupBy(m => m.DS_Trinh).ToDictionary(x => x.Key.Id, y => "Giải " + y.Key.DS_Giai.Ten + " - Trình " + y.Key.Trinh);
+    var LevelList = Model.DS_Tran.GroupBy(m => m.DS_Trinh).ToDictionary(x => x.Key.Id, y => "Giải " + y.Key.DS_Giai.Ten + " - Trình " + y.Key.Trinh +" : ");
     var Keys = LevelList.Keys.ToList();
     var RoundList = Library.FileInitializer.Initializer.RoundList();
     var count = 1;
+    string title = "";
 }
 @model Tennis_Web.Areas.NoRole.Models.PlayerHistoryViewModel
 <section class="main still-background">
@@ -20,7 +21,8 @@
     <div class="container">
         <div class="row">
             <div class="@picClass">
-                @if (picClass == "col-3") { <img src="@("~/Files/PlayerImg/" + Model.VDV.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" /> }           
+                @if (picClass == "col-3")
+                {<img src="@("~/Files/PlayerImg/" + Model.VDV.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" />}
             </div>
             <div class="@hisClass">
                 <div class="card shadow mb-4">
@@ -30,17 +32,17 @@
                     <div class="card-body">
                         <table class="table-borderless" width="100%">
                             <tbody>
-                                @foreach (var level in LevelList)
+                                @foreach (var mDiem in Model.DS_VDVDiem)
                                 {
-                                    var matches = Model.DS_Tran.Where(m => m.ID_Trinh == level.Key);
-                                    //var current = Model.DS_VDVDiem.Find(m => m.ID_Trinh == level.Key);
-                                    var previous = Keys.IndexOf(level.Key) + 1 != Keys.Count ? Model.DS_VDVDiem.Find(m => m.ID_Trinh == Keys[Keys.IndexOf(level.Key) + 1]) : null;
-                                    var previousDiem = previous != null ? previous.Diem : 0;
-                                    var difference = /*current.Diem*/0 - previousDiem;
-                                    var difTxt = difference < 0 ? "Giảm" : "Tăng";
-
+                                    var matches = Model.DS_Tran.Where(m => m.ID_Trinh == mDiem.ID_Trinh);
+                                    var difTxt =mDiem.Diem < 0 ? "Giảm" : "Tăng";
+                                    if (mDiem.ID_Trinh==null) { title = "Điều chỉnh Điểm :"; }
+                                    else
+                                    {
+                                        title = LevelList[(int) mDiem.ID_Trinh];
+                                    }
                                     <tr>
-                                        <td colspan="8"><span class="font-weight-bold">@count.</span> @level.Value: @difTxt <span class="font-weight-bold">@difference</span> (@previousDiem → <span class="font-weight-bold">0@*@current.Diem*@</span>)</td>
+                                        <td colspan="8"><span class="font-weight-bold">@count.</span> @title @difTxt <span class="font-weight-bold">@mDiem.Diem</span> (@mDiem.Diem_Cu → <span class="font-weight-bold">@mDiem.Diem_Moi</span>)</td>
                                     </tr>
                                     foreach (var match in matches)
                                     {
@@ -51,7 +53,7 @@
                                         <tr>
                                             @if (match.DS_Cap1.VDV1.Id == Model.VDV.Id || match.DS_Cap1.VDV2.Id == Model.VDV.Id)
                                             {
-                                                <td style="text-align:right"><span class="@b11">@match.DS_Cap1.VDV1.Ten_Tat</span>/<span class="@b12">@match.DS_Cap1.VDV2.Ten_Tat</span></td>
+                                                <td style="text-align:right; width:15%"><span class="@b11">@match.DS_Cap1.VDV1.Ten_Tat</span>/<span class="@b12">@match.DS_Cap1.VDV2.Ten_Tat</span></td>
                                                 <td style="width:1.5rem; text-align:center">-</td>
                                                 <td><span class="@b21">@match.DS_Cap2.VDV1.Ten_Tat</span>/<span class="@b22">@match.DS_Cap2.VDV2.Ten_Tat</span></td>
                                             }
@@ -66,6 +68,7 @@
                                             <td style="width: 8rem">(@RoundList[match.Ma_Vong])</td>
                                         </tr>
                                     }
+                                    count++;
                                 }
                             </tbody>
                         </table>

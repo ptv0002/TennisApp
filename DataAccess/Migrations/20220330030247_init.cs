@@ -13,41 +13,14 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Giai_Moi = table.Column<bool>(type: "bit", nullable: false),
                     Ten = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: true),
-                    Ngay = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Ngay = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Ghi_Chu = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DS_Giais", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DS_ThongBaos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ten = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
-                    Ngay = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    FileTB = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DS_ThongBaos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DS_Vongs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ten = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    MaVong = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DS_Vongs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -56,7 +29,7 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaKhuVuc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Ma_KhuVuc = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Ten = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -84,7 +57,7 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    GhiChu = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Ghi_Chu = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -111,17 +84,47 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Trinh = table.Column<int>(type: "int", nullable: true),
-                    TongDiem = table.Column<int>(type: "int", nullable: true),
-                    DiemTru = table.Column<int>(type: "int", nullable: true),
-                    ChenhLech = table.Column<int>(type: "int", nullable: true),
-                    ID_Giai = table.Column<int>(type: "int", nullable: true)
+                    Trinh = table.Column<int>(type: "int", nullable: false),
+                    TL_VoDich = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    TL_ChungKet = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    TL_BanKet = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    TL_TuKet = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    TL_Bang = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    Diem_PB = table.Column<int>(type: "int", nullable: false),
+                    Tong_Diem = table.Column<int>(type: "int", nullable: false),
+                    Diem_Tru = table.Column<int>(type: "int", nullable: false),
+                    Chenh_Lech = table.Column<int>(type: "int", nullable: false),
+                    ID_Giai = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DS_Trinhs", x => x.Id);
                     table.ForeignKey(
                         name: "FK_DS_Trinhs_DS_Giais_ID_Giai",
+                        column: x => x.ID_Giai,
+                        principalTable: "DS_Giais",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Thong_Baos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ten = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
+                    Ngay = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    File_Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    File_Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Hien_Thi = table.Column<bool>(type: "bit", nullable: false),
+                    ID_Giai = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Thong_Baos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Thong_Baos_DS_Giais_ID_Giai",
                         column: x => x.ID_Giai,
                         principalTable: "DS_Giais",
                         principalColumn: "Id",
@@ -134,19 +137,22 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Ho = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Ten = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: true),
-                    Ten_Tat = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
+                    Ho_Ten = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
+                    Ten_Tat = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    Phe_Duyet = table.Column<bool>(type: "bit", nullable: true),
+                    Tham_Gia = table.Column<bool>(type: "bit", nullable: false),
+                    Gioi_Tinh = table.Column<bool>(type: "bit", nullable: false),
                     CLB = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
-                    KhachMoi = table.Column<bool>(type: "bit", nullable: true),
-                    FileAnh = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Khach_Moi = table.Column<bool>(type: "bit", nullable: false),
+                    File_Anh = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Tel = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
-                    Status = table.Column<bool>(type: "bit", nullable: true),
-                    Diem = table.Column<int>(type: "int", nullable: true),
-                    DiemCu = table.Column<int>(type: "int", nullable: true),
-                    CongTy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ChucVu = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    Diem = table.Column<int>(type: "int", nullable: false),
+                    Diem_Cu = table.Column<int>(type: "int", nullable: false),
+                    Cong_Ty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Chuc_Vu = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ID_KhuVuc = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -272,9 +278,9 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Diem = table.Column<decimal>(type: "decimal(5,3)", nullable: true),
-                    Ten = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ID_Trinh = table.Column<int>(type: "int", nullable: true)
+                    Diem = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    Ten = table.Column<string>(type: "nvarchar(1)", nullable: false),
+                    ID_Trinh = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,7 +290,29 @@ namespace DataAccess.Migrations
                         column: x => x.ID_Trinh,
                         principalTable: "DS_Trinhs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DS_VDVDiems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID_Trinh = table.Column<int>(type: "int", nullable: true),
+                    Ngay = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Diem = table.Column<int>(type: "int", nullable: false),
+                    ID_Vdv = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DS_VDVDiems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DS_VDVDiems_DS_VDVs_ID_Vdv",
+                        column: x => x.ID_Vdv,
+                        principalTable: "DS_VDVs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -293,12 +321,16 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaCap = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
-                    Diem = table.Column<decimal>(type: "decimal(5,3)", nullable: true),
-                    ID_Trinh = table.Column<int>(type: "int", nullable: true),
+                    Ma_Cap = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    Diem = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    Tran_Thang = table.Column<int>(type: "int", nullable: false),
+                    Boc_Tham = table.Column<int>(type: "int", nullable: false),
+                    Xep_Hang = table.Column<int>(type: "int", nullable: false),
+                    ID_Trinh = table.Column<int>(type: "int", nullable: false),
                     ID_Bang = table.Column<int>(type: "int", nullable: true),
-                    ID_Vdv1 = table.Column<int>(type: "int", nullable: true),
-                    ID_Vdv2 = table.Column<int>(type: "int", nullable: true)
+                    ID_Vdv1 = table.Column<int>(type: "int", nullable: false),
+                    ID_Vdv2 = table.Column<int>(type: "int", nullable: true),
+                    Hieu_so = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -314,13 +346,13 @@ namespace DataAccess.Migrations
                         column: x => x.ID_Trinh,
                         principalTable: "DS_Trinhs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DS_Caps_DS_VDVs_ID_Vdv1",
                         column: x => x.ID_Vdv1,
                         principalTable: "DS_VDVs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_DS_Caps_DS_VDVs_ID_Vdv2",
                         column: x => x.ID_Vdv2,
@@ -335,10 +367,9 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Diem = table.Column<decimal>(type: "decimal(5,3)", nullable: true),
-                    ID_Cap = table.Column<int>(type: "int", nullable: true),
-                    ID_Vong = table.Column<int>(type: "int", nullable: true),
-                    ID_Trinh = table.Column<int>(type: "int", nullable: true)
+                    Diem = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    ID_Cap = table.Column<int>(type: "int", nullable: false),
+                    ID_Vong = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -348,19 +379,7 @@ namespace DataAccess.Migrations
                         column: x => x.ID_Cap,
                         principalTable: "DS_Caps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DS_Diems_DS_Trinhs_ID_Trinh",
-                        column: x => x.ID_Trinh,
-                        principalTable: "DS_Trinhs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DS_Diems_DS_Vongs_ID_Vong",
-                        column: x => x.ID_Vong,
-                        principalTable: "DS_Vongs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -370,11 +389,14 @@ namespace DataAccess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ma_Tran = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
-                    Kq_1 = table.Column<int>(type: "int", nullable: true),
-                    Kq_2 = table.Column<int>(type: "int", nullable: true),
+                    Kq_1 = table.Column<int>(type: "int", nullable: false),
+                    Kq_2 = table.Column<int>(type: "int", nullable: false),
+                    Chon_Cap_1 = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    Chon_Cap_2 = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: true),
                     ID_Cap1 = table.Column<int>(type: "int", nullable: true),
                     ID_Cap2 = table.Column<int>(type: "int", nullable: true),
-                    ID_Vong = table.Column<int>(type: "int", nullable: true)
+                    Ma_Vong = table.Column<int>(type: "int", nullable: false),
+                    ID_Trinh = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -392,11 +414,11 @@ namespace DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DS_Trans_DS_Vongs_ID_Vong",
-                        column: x => x.ID_Vong,
-                        principalTable: "DS_Vongs",
+                        name: "FK_DS_Trans_DS_Trinhs_ID_Trinh",
+                        column: x => x.ID_Trinh,
+                        principalTable: "DS_Trinhs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -430,16 +452,6 @@ namespace DataAccess.Migrations
                 column: "ID_Cap");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DS_Diems_ID_Trinh",
-                table: "DS_Diems",
-                column: "ID_Trinh");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DS_Diems_ID_Vong",
-                table: "DS_Diems",
-                column: "ID_Vong");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DS_Trans_ID_Cap1",
                 table: "DS_Trans",
                 column: "ID_Cap1");
@@ -450,14 +462,19 @@ namespace DataAccess.Migrations
                 column: "ID_Cap2");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DS_Trans_ID_Vong",
+                name: "IX_DS_Trans_ID_Trinh",
                 table: "DS_Trans",
-                column: "ID_Vong");
+                column: "ID_Trinh");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DS_Trinhs_ID_Giai",
                 table: "DS_Trinhs",
                 column: "ID_Giai");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DS_VDVDiems_ID_Vdv",
+                table: "DS_VDVDiems",
+                column: "ID_Vdv");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DS_VDVs_ID_KhuVuc",
@@ -475,6 +492,11 @@ namespace DataAccess.Migrations
                 column: "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Thong_Baos_ID_Giai",
+                table: "Thong_Baos",
+                column: "ID_Giai");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
@@ -510,13 +532,16 @@ namespace DataAccess.Migrations
                 name: "DS_Diems");
 
             migrationBuilder.DropTable(
-                name: "DS_ThongBaos");
-
-            migrationBuilder.DropTable(
                 name: "DS_Trans");
 
             migrationBuilder.DropTable(
+                name: "DS_VDVDiems");
+
+            migrationBuilder.DropTable(
                 name: "RoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "Thong_Baos");
 
             migrationBuilder.DropTable(
                 name: "UserClaims");
@@ -532,9 +557,6 @@ namespace DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "DS_Caps");
-
-            migrationBuilder.DropTable(
-                name: "DS_Vongs");
 
             migrationBuilder.DropTable(
                 name: "Roles");

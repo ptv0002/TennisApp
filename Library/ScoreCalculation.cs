@@ -41,8 +41,15 @@ namespace Library
 
             var mTrinh = _context.Set<DS_Trinh>().First(m => m.Id == idTrinh);
             var mGiai = _context.Set<DS_Giai>().First(m => m.Id == mTrinh.ID_Giai);
-            var mDate = new DateTime(2022, 03, 30);
-            int compare = DateTime.Compare(mGiai.Ngay, mDate);
+            var mDate1 = new DateTime(2020, 03, 30);
+            var mDate2 = new DateTime(2022, 03, 30);
+            int compare = DateTime.Compare(mGiai.Ngay, mDate1);
+            int congthuc = 0;
+            if (DateTime.Compare(mGiai.Ngay, mDate1)<0) { congthuc = 0; }    
+            else if (DateTime.Compare(mGiai.Ngay, mDate2) < 0) { congthuc = 1;}
+            else { congthuc = 2; }
+
+
 
             while (i<pairs.Count)
             {
@@ -55,17 +62,20 @@ namespace Library
                     pairs[i].Diem = C_D1; // Cập nhật điểm tổng theo các cặp
                     // Deposite point taken off from each pair : CD_DT
                     CD_DT = level.Diem_Tru * 2;
-                    if (compare < 0)
-                    { // Công thức cũ
-                        if (C_D1 < level.Trinh - level.Diem_Tru * 2) CD_DT -= Math.Min(level.Diem_Tru * 2, level.Trinh - C_D1 - 10);
-                        if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - 10);
-                    }
-                    else // Công thức mới
+                    switch (congthuc) 
                     {
-                        if (C_D1 < level.Trinh - level.Diem_Tru * 2) CD_DT -= Math.Min(level.Diem_Tru * 2, level.Trinh - level.Diem_Tru * 2 - C_D1);
-                        if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - level.Diem_Tru * 5);
+                        case 0:
+                            // Tất cả đều trừ chuẩn
+                            break;
+                        case 1:
+                            if (C_D1 < level.Trinh - level.Diem_Tru * 2) CD_DT -= Math.Min(level.Diem_Tru * 2, level.Trinh - C_D1 - 10);
+                            if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - 10);
+                            break;
+                        case 2:
+                            if (C_D1 < level.Trinh - level.Diem_Tru * 2) CD_DT -= Math.Min(level.Diem_Tru * 2, level.Trinh - level.Diem_Tru * 2 - C_D1);
+                            if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - level.Diem_Tru * 5);
+                            break;
                     }
-
                     // Find if pair id is in the DB for this "round"
                     // If yes, update
                     if (_context.Set<DS_Diem>().Any(m => m.ID_Cap == pairs[i].Id && m.ID_Vong == 10))
@@ -89,8 +99,11 @@ namespace Library
                     T_DT += CD_DT;
                     B_DT += CD_DT;
                 }
-                // Kết thúc Bảng --> Cập nhật bảng
-                tables.FirstOrDefault(m => m.Id == mBang).Diem = B_DT;
+                if (tables.FirstOrDefault(m => m.Id == mBang) != null)
+                {
+                    // Kết thúc Bảng --> Cập nhật bảng
+                    tables.FirstOrDefault(m => m.Id == mBang).Diem = B_DT;
+                }
             }
             // Kết thúc trình
             level.Tong_Diem = T_DT;
@@ -134,16 +147,24 @@ namespace Library
             var pointList = new List<DS_Diem>();
             var pRatioList = new List<DS_Diem>();
             decimal mTileDuong = (100 - level.TL_VoDich - level.TL_ChungKet*2 - level.TL_BanKet*4 - level.TL_TuKet*8) / 100;
-
+            int C_HSdSum = 0;
             foreach (var pair in pairs)
             {
                 var C_HS = (pair.Tran_Thang*2 - pairs.Count + 1) * 3 + pair.Hieu_so;
                 // Calculation for positive ratio point distribution
-                if (mTileDuong>0 && C_HS>0) pRatioList.Add(new DS_Diem {
-                    ID_Cap = pair.Id,
-                    Diem = C_HS *mTileDuong,
-                    ID_Vong = 9 // Hệ số dương
-                });
+                if (C_HS > 0)
+                {
+                    C_HSdSum += C_HS;
+                    if (mTileDuong > 0)
+                    {
+                        pRatioList.Add(new DS_Diem
+                        {
+                            ID_Cap = pair.Id,
+                            Diem = C_HS * mTileDuong,
+                            ID_Vong = 9 // Hệ số dương
+                        });
+                    }
+                }
                 // Add score for Table point distribution
                 pointList.Add(new DS_Diem { 
                     ID_Cap = pair.Id, 
@@ -151,7 +172,6 @@ namespace Library
                     ID_Vong = 8 // Bảng
                 });
             }
-            var C_HSdSum = pRatioList.Sum(m => m.Diem);
             pRatioList.ForEach(m => m.Diem = m.Diem * B_DT / C_HSdSum);
             // Add pRatioList to point list and return
             pointList.AddRange(pRatioList);
@@ -269,6 +289,7 @@ namespace Library
             int mIDVDV = 0;
             int mDiem = 0;
             int mDiemCu = 0;
+            DS_VDV mVDV = new();
             while (i < DSDiem.Count) 
             {
                 mIDVDV = DSDiem[i].ID_Vdv;
@@ -280,42 +301,69 @@ namespace Library
                     mDiem += DSDiem[i].Diem;
                     i++;
                 }
-                var mVDV = _context.Set<DS_VDV>().Find(mIDVDV);
+                mVDV = _context.Set<DS_VDV>().Find(mIDVDV);
                 mVDV.Diem = mDiem;
-                mVDV.Diem_Cu= mDiem;
+                mVDV.Diem_Cu= mDiemCu;
                 _context.Set<DS_VDV>().Update(mVDV);
             }
+            _context.SaveChanges();
         }
         /// <summary>
         /// Distribute points to player of each pair
+        /// - Lưu vào danh sách điểm và Lưu vào danh sách thay đổi
         /// </summary>
         /// <param name="idTrinh">Level id</param>
         /// <returns>List of updated score for players</returns>
-        public List<DS_VDV> Player_PointDistribution(int idTrinh)
+        public void Player_PointDistribution(int idTrinh)
         {
-            var level = _context.Set<DS_Trinh>().Find(idTrinh);
+            DS_Trinh level = _context.Set<DS_Trinh>().Find(idTrinh);
+            DS_Giai giai = _context.Set<DS_Giai>().Find(level.ID_Giai);
             var pairs = _context.Set<DS_Cap>().Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.ID_Trinh == idTrinh);
-            var updatedScore = new List<DS_VDV>();
+            DS_VDV      up_VDV       = new();
+            DS_VDVDiem  up_VDVDiem   = new();
+            var colVDV = new List<string> { "Diem", "Diem_Cu" };
+            var colVDVDiem = new List<string> { "ID_Vdv", "Diem", "ID_Trinh", "Ngay" };
             foreach (var pair in pairs)
             {
                 // Sum of all points achieve from new tournament
-                var C_PS = _context.Set<DS_Diem>().Where(m => m.ID_Cap == pair.Id).Sum(m => m.Diem);
+                // Những trận đấu cũ không tính đối đầu trước ngày 30/03/2022.
+                var mDate = new DateTime(2019, 12, 30);
+                decimal C_PS;
+                if (DateTime.Compare(giai.Ngay, mDate) < 0)
+                { // Làm tròn mỗi bước
+                    C_PS = _context.Set<DS_Diem>().Where(m => m.ID_Cap == pair.Id && m.ID_Vong  <7 ).Sum(m => m.Diem);
+                    C_PS = (int)Math.Ceiling(C_PS);
+                    C_PS += _context.Set<DS_Diem>().Where(m => m.ID_Cap == pair.Id && m.ID_Vong >=7).Sum(m => (int)Math.Ceiling(m.Diem));
+                }
+                else
+                {
+                    C_PS = _context.Set<DS_Diem>().Where(m => m.ID_Cap == pair.Id).Sum(m => m.Diem);
+                }
+                var total = pair.Diem - level.Diem_PB * 2;
+                DS_VDVDiem ldiem;
 
-                var total = pair.VDV1.Diem + pair.VDV2.Diem - level.Diem_PB * 2;
-                updatedScore.Add(new DS_VDV
-                {
-                    Id = pair.VDV1.Id,
-                    Diem_Cu = pair.VDV1.Diem,
-                    Diem = (int)Math.Ceiling(pair.VDV1.Diem + (pair.VDV1.Diem - level.Diem_PB) * C_PS / total)
-                });
-                updatedScore.Add(new DS_VDV
-                {
-                    Id = pair.VDV2.Id,
-                    Diem_Cu = pair.VDV2.Diem,
-                    Diem = (int)Math.Ceiling(pair.VDV2.Diem + (pair.VDV2.Diem - level.Diem_PB) * C_PS / total)
-                });
+                up_VDVDiem.ID_Trinh = idTrinh;
+                up_VDVDiem.Ngay = giai.Ngay;
+
+                // VDV 1
+                up_VDV.Diem_Cu = pair.VDV1.Diem;
+                up_VDV.Diem = (int)Math.Ceiling(pair.VDV1.Diem + (pair.VDV1.Diem - level.Diem_PB) * C_PS / total);
+                up_VDVDiem.ID_Vdv = up_VDV.Id = pair.ID_Vdv1;
+                up_VDVDiem.Diem = up_VDV.Diem - up_VDV.Diem_Cu;
+                ldiem = _context.Set<DS_VDVDiem>().FirstOrDefault(m => m.ID_Trinh == idTrinh && m.ID_Vdv == up_VDVDiem.ID_Vdv);
+                new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(up_VDV.Id, up_VDV, colVDV);
+                new DatabaseMethod<DS_VDVDiem>(_context).SaveObjectToDB(ldiem?.Id, up_VDVDiem,colVDVDiem);
+                // VDV 2
+                up_VDV.Diem_Cu = pair.VDV2.Diem;
+                up_VDV.Diem = (int)Math.Ceiling(pair.VDV2.Diem + (pair.VDV2.Diem - level.Diem_PB) * C_PS / total);
+                up_VDVDiem.ID_Vdv = up_VDV.Id = (int) pair.ID_Vdv2;
+                up_VDVDiem.Diem = up_VDV.Diem - up_VDV.Diem_Cu;
+                ldiem = _context.Set<DS_VDVDiem>().FirstOrDefault(m => m.ID_Trinh == idTrinh && m.ID_Vdv == up_VDVDiem.ID_Vdv);
+                if (ldiem != null) { up_VDVDiem.Id = ldiem.Id; }
+                new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(up_VDV.Id, up_VDV, colVDV);
+                new DatabaseMethod<DS_VDVDiem>(_context).SaveObjectToDB(ldiem?.Id, up_VDVDiem, colVDVDiem);
             }
-            return updatedScore;
+            _context.SaveChanges();
         }
     }
 }

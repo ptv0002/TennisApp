@@ -2,22 +2,21 @@
 
 namespace DataAccess.Migrations
 {
-    public partial class up_vdv_vong : Migration
+    public partial class up_dsvdv_data_PD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "Gioi_Tinh",
+            migrationBuilder.AddColumn<string>(
+                name: "Data_PD",
                 table: "DS_VDVs",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
+                type: "nvarchar(max)",
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Gioi_Tinh",
+                name: "Data_PD",
                 table: "DS_VDVs");
         }
     }

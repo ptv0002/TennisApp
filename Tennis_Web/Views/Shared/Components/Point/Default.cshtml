@@ -5,6 +5,7 @@
     int idCap = 0;
 
     var RoundList = Library.FileInitializer.Initializer.RoundList();
+    var idTrinh = Model.DS_Cap.FirstOrDefault() != null ? Model.DS_Cap.FirstOrDefault().ID_Trinh : 0;
 }
 @model PointTabViewModel
 @for (int i = 0; i < ViewBag.ListTable.Count; i++)
@@ -61,6 +62,13 @@
         </div>
     </div>
 }
+@if (User.IsInRole("Admin"))
+{
+    <div class="form-group">
+        <a asp-action="End_Score" asp-controller="Result" asp-route-idTrinh="@idTrinh" class="btn btn-danger">Phân bổ điểm cá nhân</a>
+    </div>
+}
+
 @functions{
     public string Score(int round, int pairId)
     {

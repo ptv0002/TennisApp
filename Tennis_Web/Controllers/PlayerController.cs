@@ -33,7 +33,7 @@ namespace Tennis_Web.Controllers
         {
             new ScoreCalculation(_context).Player_Update();
             var model = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
-            return View(model);
+            return RedirectToAction(nameof(Index), model);
         }
         public IActionResult Update(int id)
         {

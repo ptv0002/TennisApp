@@ -458,6 +458,9 @@ namespace DataAccess.Migrations
                     b.Property<string>("Cong_Ty")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Data_PD")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Diem")
                         .HasColumnType("int");
 

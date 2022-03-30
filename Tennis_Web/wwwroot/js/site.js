@@ -9,6 +9,7 @@ $(function () {
         language: {
             url: '/dataTables/vi.json'
         },
+        pageLength: 25,
         //initComplete: function () {
         //    //// Apply the search
         //    ////this.api().columns().every( function () {     // If you want to only show certain columns you can use a array, see below : 

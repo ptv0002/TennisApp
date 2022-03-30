@@ -213,7 +213,7 @@ namespace Tennis_Web.Controllers
                         ds_cap.AddRange(allPairs.Where(m => m.DS_Bang.Ten == table && m.Xep_Hang == i));
                     }
                 }
-                // Add playoff 1 players if any
+                // Add playoff 1 players if any - Chỉ Add Playoff vị trí đầu
                 if (playoff1.Any()) ds_cap.AddRange(playoff1);
                 var roundNum = _context.DS_Trans.Where(m => m.Ma_Vong <= 6 && m.ID_Trinh == model.ID_Trinh).Max(m => m.Ma_Vong);
                 // Get first special round
@@ -391,6 +391,11 @@ namespace Tennis_Web.Controllers
             }
             if (result) _context.SaveChanges();
             return result;
+        }
+        public IActionResult End_Score(int idTrinh)
+        {
+            new ScoreCalculation(_context).Player_PointDistribution(idTrinh);
+            return TabVMGenerator(idTrinh,true, Tab.Point, "");
         }
         void UpdateScore(List<DS_Diem> scoreList)
         {

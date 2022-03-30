@@ -87,8 +87,15 @@ namespace Tennis_Web.Controllers
             var intId = Convert.ToInt32(id);
             // Find the current Tournament and set IsCurrent to false
             var item = _context.DS_Giais.Find(intId);
+            var mTrinhs = _context.DS_Trinhs.Where(m => m.ID_Giai==intId).ToList();
             item.Giai_Moi = false;
             _context.Update(item);
+            // Phân bổ điểm vào file DS_VDVDiem, đồng thời cập nhật điểm trong DS_VDV
+            foreach ( var mTrinh in mTrinhs) 
+            {
+                new ScoreCalculation(_context).Player_PointDistribution(mTrinh.Id);
+            }
+
             // Reset Participation status to all false and Pair code to null
             var list = _context.DS_VDVs.ToList();
             list.ForEach(m => { m.Tham_Gia = false; m.Phe_Duyet = null; });
