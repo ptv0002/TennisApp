@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using Library;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
@@ -20,6 +21,81 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         public CurrentTabController(TennisContext context)
         {
             _context = context;
+        }
+        public List<DS_Cap> PopulateAutoComplete(int idVdv)
+        {
+            var levels = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi);
+            // Get all pairs with Level Id from the level id list
+            var vdv_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2});
+            // Get all players with from Player Id found in Player1 and Player2 lists
+            var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
+            var eligible = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
+            var model = new List<DS_Cap>();
+            var info = _context.DS_VDVs.Find(idVdv);
+            foreach (var partner in eligible)
+            {
+                var eligibleLevels = levels.Where(m => Math.Abs(m.Trinh - (info.Diem + partner.Diem)) <= 20).ToList();
+                if (eligibleLevels.Any())
+                {
+                    foreach (var level in eligibleLevels)
+                    {
+                        model.Add(new DS_Cap
+                        {
+                            Diem = info.Diem + partner.Diem,
+                            ID_Vdv2 = partner.Id,
+                            VDV2 = partner,
+                            ID_Trinh = level.Id
+                        });
+                    }                    
+                }
+            }
+            return model;
+        }
+        public IActionResult UpdatePair(int idVdv, int idPair)
+        {
+            var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).FirstOrDefault(m => m.Id == idPair);
+
+            if (model == null)
+            {
+                ViewBag.DS_Trinh = new SelectList(_context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi).OrderBy(m => m.Trinh), "Id", "Trinh");
+                ViewBag.DS_VDV = PopulateAutoComplete(idVdv);
+                model = new DS_Cap { ID_Vdv1 = idVdv, VDV1 = _context.DS_VDVs.Find(idVdv) };
+                model.VDV1.Password = null;
+            }
+            else model.VDV2.Password = null;
+            return PartialView(model);
+        }
+        [HttpPost]
+        public IActionResult UpdatePair(DS_Cap pair)
+        {
+            var result = false;
+            // New pair register
+            if (pair.Id == 0)
+            {
+                var p1 = _context.DS_VDVs.Find(pair.ID_Vdv1);
+                if (p1.Password == pair.VDV1.Password)
+                {
+                    pair.Diem = p1.Diem + _context.DS_VDVs.Find(pair.ID_Vdv2).Diem;
+                    result = true;
+                    _context.Add(pair);
+                }
+            }
+            // Confirm part form
+            else
+            {
+                if (_context.DS_VDVs.Find(pair.ID_Vdv2).Password == pair.VDV2.Password)
+                {
+                    result = true;
+                    _context.Add(pair);
+                }
+            }
+            DS_Cap obj;
+            
+            //var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Diem", "ID_Trinh" };
+            //var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, columnsToSave);
+            //if (result.Succeeded) _context.SaveChanges();
+            
+            return RedirectToAction(nameof(Pair));
         }
         public IActionResult Guideline()
         {
@@ -44,10 +120,9 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             // Generate List of all participated players with no pairs
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == current.Id).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
-            var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
-            var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
+            var vdv_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2 });
             // Get all players with from Player Id found in Player1 and Player2 lists
-            var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
+            var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
             ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
             ViewBag.Tournament = current.Ten;
             return View(model);

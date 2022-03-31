@@ -9,7 +9,7 @@ $(function () {
         language: {
             url: '/dataTables/vi.json'
         },
-        pageLength: 25,
+        pageLength: 25
     });
     $('#noPaging').DataTable({
         order: [],
