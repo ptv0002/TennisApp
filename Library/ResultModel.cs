@@ -11,6 +11,7 @@ namespace Library
     {
         public bool Succeeded { get; set; }
         public string Message { get; set; }
+        public int Id { get; set; }
         public List<T> List { get; set; }
         public Dictionary<int, PropertyInfo> ListCol { get; set; }
     }

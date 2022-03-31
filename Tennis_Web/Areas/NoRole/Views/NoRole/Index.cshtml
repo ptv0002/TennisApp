@@ -125,7 +125,7 @@
             </div>
         </div>
         @*<div class="swiper-button-next swiper-button-white"></div>
-        <div class="swiper-button-prev swiper-button-white"></div>*@
+            <div class="swiper-button-prev swiper-button-white"></div>*@
     </div>
     <!-- ***** Main Banner Area End ***** -->
 
@@ -145,60 +145,61 @@
     <!-- Scripts
     <!-- Bootstrap core JavaScript -->
     <script src="~/mexant/vendor/jquery/jquery.min.js"></script>
-    <script src="~/mexant/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @*<script src="~/mexant/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>*@
+    <script src="~/mexant/vendor/bootstrap/js/bootstrap.min.js"></script>
 
     @*<script src="~/mexant/assets/js/isotope.min.js"></script>
-    <script src="~/mexant/assets/js/owl-carousel.js"></script>
-    <script src="~/mexant/assets/js/wow.js"></script>
-    <script src="~/mexant/assets/js/tabs.js"></script>
-    <script src="~/mexant/assets/js/swiper.js"></script>
-    <script src="~/mexant/assets/js/custom.js"></script>*@
+        <script src="~/mexant/assets/js/owl-carousel.js"></script>
+        <script src="~/mexant/assets/js/wow.js"></script>
+        <script src="~/mexant/assets/js/tabs.js"></script>
+        <script src="~/mexant/assets/js/swiper.js"></script>
+        <script src="~/mexant/assets/js/custom.js"></script>*@
     <script src="~/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="~/sbadmin/js/sb-admin-2.min.js"></script>
     @*<script>
-        var interleaveOffset = 0.5;
+            var interleaveOffset = 0.5;
 
-        var swiperOptions = {
-            loop: true,
-            speed: 1000,
-            grabCursor: true,
-            watchSlidesProgress: true,
-            mousewheelControl: true,
-            keyboardControl: true,
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev"
-            },
-            on: {
-                progress: function () {
-                    var swiper = this;
-                    for (var i = 0; i < swiper.slides.length; i++) {
-                        var slideProgress = swiper.slides[i].progress;
-                        var innerOffset = swiper.width * interleaveOffset;
-                        var innerTranslate = slideProgress * innerOffset;
-                        swiper.slides[i].querySelector(".slide-inner").style.transform =
-                            "translate3d(" + innerTranslate + "px, 0, 0)";
-                    }
+            var swiperOptions = {
+                loop: true,
+                speed: 1000,
+                grabCursor: true,
+                watchSlidesProgress: true,
+                mousewheelControl: true,
+                keyboardControl: true,
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev"
                 },
-                touchStart: function () {
-                    var swiper = this;
-                    for (var i = 0; i < swiper.slides.length; i++) {
-                        swiper.slides[i].style.transition = "";
-                    }
-                },
-                setTransition: function (speed) {
-                    var swiper = this;
-                    for (var i = 0; i < swiper.slides.length; i++) {
-                        swiper.slides[i].style.transition = speed + "ms";
-                        swiper.slides[i].querySelector(".slide-inner").style.transition =
-                            speed + "ms";
+                on: {
+                    progress: function () {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            var slideProgress = swiper.slides[i].progress;
+                            var innerOffset = swiper.width * interleaveOffset;
+                            var innerTranslate = slideProgress * innerOffset;
+                            swiper.slides[i].querySelector(".slide-inner").style.transform =
+                                "translate3d(" + innerTranslate + "px, 0, 0)";
+                        }
+                    },
+                    touchStart: function () {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            swiper.slides[i].style.transition = "";
+                        }
+                    },
+                    setTransition: function (speed) {
+                        var swiper = this;
+                        for (var i = 0; i < swiper.slides.length; i++) {
+                            swiper.slides[i].style.transition = speed + "ms";
+                            swiper.slides[i].querySelector(".slide-inner").style.transition =
+                                speed + "ms";
+                        }
                     }
                 }
-            }
-        };
+            };
 
-        var swiper = new Swiper(".swiper-container", swiperOptions);
-    </script>*@
+            var swiper = new Swiper(".swiper-container", swiperOptions);
+        </script>*@
     <script src="~/datatables/js/jquery.dataTables.min.js"></script>
     <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
 

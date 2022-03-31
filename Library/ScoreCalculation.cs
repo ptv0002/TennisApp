@@ -284,7 +284,7 @@ namespace Library
         /// </summary>
         public void Player_Update()
         {
-            var DSDiem= _context.Set<DS_VDVDiem>().OrderBy(m=>m.ID_Vdv).OrderBy(m => m.Ngay).ToList();
+            var DSDiem= _context.Set<DS_VDVDiem>().OrderBy(m => m.ID_Vdv).ThenBy(m => m.Ngay).ToList();
             int i = 0;
             int mIDVDV = 0;
             int mDiem = 0;
@@ -293,6 +293,10 @@ namespace Library
             while (i < DSDiem.Count) 
             {
                 mIDVDV = DSDiem[i].ID_Vdv;
+                //if (mIDVDV==510) 
+                //{ 
+                //    var a = 1; 
+                //}
                 mDiem = 0;
                 mDiemCu = 0;
                 while ((i < DSDiem.Count) && (mIDVDV == DSDiem[i].ID_Vdv))

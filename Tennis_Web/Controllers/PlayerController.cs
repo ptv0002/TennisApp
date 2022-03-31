@@ -44,7 +44,7 @@ namespace Tennis_Web.Controllers
         [HttpPost]
         public IActionResult Update(int id, DS_VDV source)
         {
-            bool a = _context.DS_VDVs.Any(m => m.Ten_Tat == source.Ten_Tat && (m.Id != id || id == 0));
+            bool a = _context.DS_VDVs.Any(m => m.Ten_Tat.ToUpper() == source.Ten_Tat.ToUpper() && (m.Id != id || id == 0));
             if (a)
             {
                 ModelState.AddModelError(string.Empty, "Tên tắt bị trùng. Nhập tên mới!");
@@ -90,10 +90,12 @@ namespace Tennis_Web.Controllers
             // Handle saving object
             var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu","Diem" };
             var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
-            
+            if (id==0)
+            {
+                var mDiemPS = new DS_VDVDiem() { ID_Vdv = result.Id, Ngay = DateTime.Now, Diem = source.Diem };
+                _context.Update(mDiemPS);
+            }
             // Cập nhật điểm VĐV mới nhập vào phần phát sinh
-            var mDiemPS = new DS_VDVDiem() { Id = id, Ngay = DateTime.Now, Diem = source.Diem };
-            _context.Update(mDiemPS);
             if (result.Succeeded) 
             {
                 _context.SaveChanges();

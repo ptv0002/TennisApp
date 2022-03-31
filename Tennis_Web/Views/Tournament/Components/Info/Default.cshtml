@@ -53,7 +53,7 @@
             Message = "kết thúc giải đấu",
             ActionName = "EndTournament",
             ControllerName = "Tournament",
-            Id = Model.Id.ToString()
+            Id = Model != null ? Model.Id.ToString() : null
         };
         <div class="form-group">
             <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" formmethod="post" />

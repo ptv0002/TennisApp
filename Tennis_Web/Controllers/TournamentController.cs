@@ -52,19 +52,16 @@ namespace Tennis_Web.Controllers
                 var temp = _context.DS_Trinhs.Find(trinhID);
                 model.ID = temp.ID_Giai;
             }
-            else if (a1 && a2 && a3)
-            {
-                ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
-                return View(model);
-            }
-            ViewBag.TournamentTitle = _context.DS_Giais.Find(model.ID).Ten;
+            var tournament = _context.DS_Giais.Find(model.ID);
+            ViewBag.TournamentTitle = tournament != null ? tournament.Ten : "mới";
             return View(model);
         }
         [HttpPost]
         public IActionResult UpdateInfo(DS_Giai item)
         {
             // Find and update Tournament Info
-            var columnsToSave = new List<string> { "Ten", "Ghi_Chu", "Ngay" };
+            item.Giai_Moi = true;
+            var columnsToSave = new List<string> { "Ten", "Ghi_Chu", "Ngay", "Giai_Moi"};
             var result = new DatabaseMethod<DS_Giai>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();
             // Assign value for view model
@@ -72,7 +69,7 @@ namespace Tennis_Web.Controllers
             {
                 ActiveTab = Tab.Info,
                 IsCurrent = true,
-                ID = item.Id,
+                ID = item.Id == 0? _context.DS_Giais.FirstOrDefault(m => m.Ten == item.Ten && m.Ngay == item.Ngay).Id : item.Id,
                 Succeeded = result.Succeeded
                 
             };
