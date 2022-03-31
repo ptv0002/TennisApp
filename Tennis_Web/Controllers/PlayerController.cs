@@ -90,14 +90,20 @@ namespace Tennis_Web.Controllers
             }
             
             // Handle saving object
-            var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu","Diem" };
-            var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
+            var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu"};
             if (id==0)
             {
-                var mDiemPS = new DS_VDVDiem() { ID_Vdv = result.Id, Ngay = DateTime.Now, Diem = source.Diem };
-                _context.Update(mDiemPS);
+                columnsToSave.Add("Diem");
+            }    
+            var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
+            if (result.Succeeded) {_context.SaveChanges();}
+
+            if (id==0)
+            {   // --  Cập nhật điểm VĐV mới nhập vào phần phát sinh - Điều chỉnh nhân viên không cho sửa điểm
+                var mid = _context.DS_VDVs.OrderBy(m=> m.Id).Last().Id;
+                var mDiemPS = new DS_VDVDiem() { ID_Vdv = mid, Ngay = DateTime.Now, Diem = source.Diem, Ghi_Chu="" };
+                _context.Add(mDiemPS);
             }
-            // Cập nhật điểm VĐV mới nhập vào phần phát sinh
             if (result.Succeeded) 
             {
                 _context.SaveChanges();

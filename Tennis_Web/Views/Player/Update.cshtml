@@ -51,14 +51,14 @@
                     <label asp-for="Email" class="control-label"></label>
                 </dt>
                 <dd class="col-sm-9">
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" class="form-control" autocomplete="new-email"/>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </dd>
                 <dt class="col-sm-3 font-weight-bold">
                     <label asp-for="Password" class="control-label"></label>
                 </dt>
                 <dd class="col-sm-9">
-                    <input asp-for="Password" class="form-control" />
+                    <input asp-for="Password" class="form-control" autocomplete="new-password"/>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </dd>
                 <dt class="col-sm-3 font-weight-bold">
@@ -91,7 +91,11 @@
                     <label asp-for="Diem" class="control-label"></label>
                 </dt>
                 <dd class="col-sm-9">
-                    <input asp-for="Diem" class="form-control"/>
+                    @if (Model==null)
+                    {
+                        <input asp-for="Diem" class="form-control" />
+                    }
+                    else { <input asp-for="Diem" class="form-control" disabled />}
                 </dd>
                 <dt class="col-sm-3 font-weight-bold">
                     <label asp-for="Status" class="control-label"></label>
@@ -125,7 +129,7 @@
     </div>
     <div class="form-group">
         <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" />
-        <button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updateScore" data-url="@Url.Action("ScoreUpdate", "Player", new { idVDV = Model.Id })">Điều chỉnh điểm</button>
+        @*<button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updateScore" data-url="@Url.Action("ScoreUpdate", "Player", new { idVDV = Model.Id })">Điều chỉnh điểm</button>*@
     </div>
 </form>
 <!-- Modal placeholder -->

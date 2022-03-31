@@ -66,9 +66,9 @@ namespace Library
             else
             {
                 _context.Add(destination);
-                _context.SaveChanges();
-                prop = typeof(T).GetProperties().First(m => m.Name.ToUpper() == "ID");
-                model.Id = (int) prop.GetValue(destination);
+                //_context.SaveChanges();
+                //prop = typeof(T).GetProperties().First(m => m.Name.ToUpper() == "ID");
+                //model.Id = (int) prop.GetValue(destination);
             }
             model.Succeeded = true;
             model.Message = "Save to database successfully!";
