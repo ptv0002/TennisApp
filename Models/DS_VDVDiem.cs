@@ -15,6 +15,8 @@
         public DateTime Ngay { get; set; }
         [DisplayName("Điểm")]
         public int Diem { get; set; }
+        [DisplayName("Ghi chú")]
+        public string Ghi_Chu { get; set; }
         [DisplayName("ID VĐV")]
         public int ID_Vdv { get; set; }
         [ForeignKey("ID_Vdv")]

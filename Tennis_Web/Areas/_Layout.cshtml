@@ -1,6 +1,6 @@
 ﻿@*@using Microsoft.AspNetCore.Identity
-@using Models
-@inject SignInManager<DS_VDV> signInManager*@
+    @using Models
+    @inject SignInManager<DS_VDV> signInManager*@
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,11 +31,9 @@
     https://templatemo.com/tm-574-mexant
 
     -->
-    
-
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    
+
 
 </head>
 
@@ -73,16 +71,20 @@
                                     <li><a asp-action="Player" asp-controller="NoRole" asp-route-isGuest="true">Khách mời</a></li>
                                 </ul>
                             </li>
-                            <li class="has-sub">
-                                <a href="javascript:void(0)">Giải hiện tại</a>
-                                <ul class="sub-menu">
-                                    <li><a asp-action="Guideline" asp-controller="CurrentTab">Điều lệ</a></li>
-                                    <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">Đăng kí tham gia</a></li>
-                                    <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a></li>
-                                    <li><a asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
-                                    <li><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
-                                </ul>
-                            </li>
+                            @if ((bool?)ViewData["HasCurrent"] == true)
+                            {
+                                <li class="has-sub">
+                                    <a href="javascript:void(0)">Giải hiện tại</a>
+                                    <ul class="sub-menu">
+                                        <li><a asp-action="Guideline" asp-controller="CurrentTab">Điều lệ</a></li>
+                                        <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">Đăng kí tham gia</a></li>
+                                        <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a></li>
+                                        <li><a asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
+                                        <li><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
+                                    </ul>
+                                </li>
+                            }
+
                             <li class="scroll-to-section"><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="false">Giải cũ</a></li>
                             <li class="scroll-to-section"><a asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>
                             <li><a asp-action="Login" asp-area="" asp-controller="Account" class="rounded-pill">Đăng nhập</a></li>
@@ -117,7 +119,7 @@
             @RenderBody()
         </div>
     </div>
-    
+
     <!-- ***** Main Banner Area End ***** -->
 
     <footer>
@@ -135,21 +137,22 @@
         </a>*@
     <!-- Scripts
     <!-- Bootstrap core JavaScript -->
-    <script src="~/mexant/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/mexant/vendor/bootstrap/js/bootstrap.min.js"></script>
 
-    @*<script src="~/mexant/assets/js/isotope.min.js"></script>
+    <script src="~/mexant/assets/js/isotope.min.js"></script>
     <script src="~/mexant/assets/js/owl-carousel.js"></script>
     <script src="~/mexant/assets/js/wow.js"></script>
     <script src="~/mexant/assets/js/tabs.js"></script>
-    <script src="~/mexant/assets/js/swiper.js"></script>*@
+    <script src="~/mexant/assets/js/swiper.js"></script>
     <script src="~/mexant/assets/js/custom.js"></script>
     @*<script src="~/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="~/sbadmin/js/sb-admin-2.min.js"></script>*@
-    
+        <script src="~/sbadmin/js/sb-admin-2.min.js"></script>*@
+
     <script src="~/datatables/js/jquery.dataTables.min.js"></script>
     <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @await Component.InvokeAsync("DefaultLayout")
     @await Component.InvokeAsync("Notyf")
     @RenderSection("Scripts", required: false)
 </body>

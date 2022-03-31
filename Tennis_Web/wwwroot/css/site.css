@@ -18,10 +18,6 @@ body {
 .modal-content{
     line-height: 1.5
 }
-
-
-.bg-gradient-success {
-    background-color: #1cb079;
-    background-image: linear-gradient(180deg, #1cc88a 10%, #13855c 100%);
-    background-size: cover;
+.card-body {
+    overflow-x: auto;
 }

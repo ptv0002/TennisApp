@@ -42,10 +42,9 @@ namespace Tennis_Web.Controllers
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == id).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
             var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).ToList();
-            var vdv1_Ids = pairs.Select(m => m.ID_Vdv1);
-            var vdv2_Ids = pairs.Select(m => m.ID_Vdv2);
+            var vdv_Ids = pairs.SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2 });
             // Get all players with from Player Id found in Player1 and Player2 lists
-            var playersFromPair = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
+            var playersFromPair = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
             // Get all players that haven't been put to any pair, or all pairs that haven't got a code
             var noPairPlayers = ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(playersFromPair).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu).ToList();
             var noCodePairs = ViewBag.NoCodePairs = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh).Where(m => levels.Contains(m.ID_Trinh) && m.Ma_Cap == null).OrderBy(m => m.DS_Trinh.Trinh).ToList();

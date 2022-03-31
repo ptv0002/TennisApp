@@ -19,6 +19,10 @@
         public string Ma_Cap { get; set; }
         [DisplayName("Điểm cặp")]
         public int Diem { get; set; } // Total point from 2 players
+        [DisplayName("Xác nhận")]
+        public bool Xac_Nhan { get; set; }
+        [DisplayName("Phê duyệt")]
+        public bool Phe_Duyet { get; set; }
         [DisplayName("Số trận thắng")]
         public int Tran_Thang { get; set; }
         [DisplayName("Bốc thăm")]

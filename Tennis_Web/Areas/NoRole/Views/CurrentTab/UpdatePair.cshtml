@@ -1,0 +1,71 @@
+﻿@model Models.DS_Cap 
+<form asp-action="UpdatePair">
+    <div class="modal fade" id="updatePair" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true" style="display: none">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editLabel">Đăng kí cặp</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <dl class="row">
+                        @if (Model.Id == 0)
+                        {
+                            <dt class="col-sm-3 font-weight-bold">Chọn trình</dt>
+                            <dd class="col-sm-9"><select asp-for="ID_Trinh" class="form-control" asp-items="ViewBag.DS_Trinh"></select></dd>
+                        }
+                        else
+                        {
+                            <dt class="col-sm-3 font-weight-bold">Trình</dt>
+                            <dd class="col-sm-9"><input asp-for="ID_Trinh" class="form-control" disabled /></dd>
+                        }
+                        <dt class="col-sm-3 font-weight-bold">VĐV 1</dt>
+                        <dd class="col-sm-9">
+                            <input type="hidden" asp-for="ID_Vdv1" />
+                            <input asp-for="VDV1.Ten_Tat" class="form-control"disabled />
+                        </dd>
+                        <dt class="col-sm-3"></dt>
+                        <dd class="col-sm-9"><input type="password" asp-for="VDV1.Password" class="form-control" placeholder="Nhập mật khẩu" /></dd>
+                        <dt class="col-sm-3 font-weight-bold">VĐV 2</dt>
+                        <dd class="col-sm-9">
+                            @if (Model.Id == 0)
+                            {
+                                <select asp-for="ID_Vdv2" class="form-control">
+                                    @foreach (var level in ViewBag.DS_Trinh)
+                                    {
+                                        var playerList = (List<Models.DS_Cap>)ViewBag.DS_VDV;
+                                        playerList = playerList.Where(m => m.ID_Trinh == level.Id).OrderByDescending(m => m.Diem).ToList();
+                                        <optgroup label="Trình @level.Trinh">
+                                            @foreach (var player in playerList)
+                                            {
+                                                var dif = player.Diem - level.Trinh;
+                                                <option value="@player.ID_Vdv2">
+                                                    @player.VDV2.Ten_Tat  | @player.Diem | @dif
+                                                </option>
+                                            }
+                                        </optgroup>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <input type="hidden" asp-for="ID_Vdv2" />
+                                <input asp-for="VDV2.Ten_Tat" class="form-control" disabled />
+                            }
+                        </dd>
+                        <dt class="col-sm-3"></dt>
+                        <dd class="col-sm-9"><input type="password" asp-for="VDV2.Password" class="form-control" placeholder="Nhập mật khẩu" /></dd>
+                    </dl>                    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                    <button class="btn btn-success" type="submit">Đăng kí</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

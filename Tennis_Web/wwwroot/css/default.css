@@ -39,7 +39,9 @@
 .table th {
     color: black;
 }
-
+.card-body {
+    overflow-x: auto;
+}
 /*.nav-link{
     padding: 0;
 }

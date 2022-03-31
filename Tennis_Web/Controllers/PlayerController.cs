@@ -37,6 +37,8 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult Update(int id)
         {
+            bool? success = (bool?)TempData["SuccessfulScore"];
+            if (success == true) {_notyf.Success("Lưu thay đổi thành công!");}
             var destination = _context.DS_VDVs.Find(id);
             if (destination != null && destination.File_Anh != null) _notyf.Warning("Upload ảnh mới sẽ xóa ảnh cũ!", 100);
             return View(destination);
@@ -116,5 +118,25 @@ namespace Tennis_Web.Controllers
             }
             return RedirectToAction(nameof(Update), Convert.ToInt32(id));
         }
+        public IActionResult ScoreUpdate(int idVDV)
+        {
+            var player = _context.DS_VDVs.Find(idVDV);
+            //var model = new Extended_VDVDiem()
+            //{
+            //    ID_Vdv = player.Id,
+            //    DS_VDV = player,
+            //    Diem_Cu = player.Diem_Cu,
+            //    Diem_Moi = player.Diem,
+            //    Ngay = DateTime.Now
+            //};
+            return PartialView(/*model*/);
+        }
+        //[HttpPost]
+        //public IActionResult ScoreUpdate(Extended_VDVDiem model)
+        //{
+        //    // Successfully update
+        //    TempData["SuccessfulScore"] = true;
+        //    return RedirectToAction(nameof(Update), new { id = model.ID_Vdv });
+        //}
     }
 }
