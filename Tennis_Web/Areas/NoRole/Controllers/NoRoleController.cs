@@ -122,6 +122,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 ID_Vdv = m.ID_Vdv,
                 Diem = m.Diem,
                 Ngay = m.Ngay,
+                Ghi_Chu = m.Ghi_Chu, 
                 Diem_Moi = 0,
                 Diem_Cu = 0
             }).ToList();

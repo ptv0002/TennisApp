@@ -1,0 +1,19 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "TennisConnection": "Data Source=win1.sweetsoft.org,1444;Initial Catalog=BITKhanhHoa_tennis_22;Persist Security Info=True;User ID=bitkhdba2;Password=BossIT^KH2022t;MultipleActiveResultSets=true;"
+    "TennisConnection": "Data Source=DINHTUAN;Initial Catalog=DB_Tennis;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;"
+  },
+  "EPPlus": {
+    "ExcelPackage": {
+      "LicenseContext": "Commercial" //The license context used
+    }
+  }
+}

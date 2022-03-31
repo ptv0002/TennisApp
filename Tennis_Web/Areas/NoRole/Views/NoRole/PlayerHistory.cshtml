@@ -27,7 +27,7 @@
                                 {
                                     var matches = Model.DS_Tran.Where(m => m.ID_Trinh == mDiem.ID_Trinh);
                                     var difTxt =mDiem.Diem < 0 ? "Giảm" : "Tăng";
-                                    if (mDiem.ID_Trinh==null) { title = "Điều chỉnh Điểm :"; }
+                                    if (mDiem.ID_Trinh==null) { title = string.IsNullOrWhiteSpace(mDiem.Ghi_Chu)? "Điều chỉnh Điểm :": mDiem.Ghi_Chu+" :";}
                                     else
                                     {
                                         title = LevelList[(int) mDiem.ID_Trinh];

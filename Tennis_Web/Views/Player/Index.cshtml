@@ -97,6 +97,6 @@
     </div>
 </div>
 <div class="form-group">
-    <a asp-action="Update" class="btn btn-success mr-2">Thêm mới</a>
+    <a asp-action="Update" asp-route-id="0" class="btn btn-success mr-2">Thêm mới</a>
     @if (User.IsInRole("Admin")) { <a asp-action="UpScore" class="btn btn-danger">Cập nhật điểm</a> }
 </div>
