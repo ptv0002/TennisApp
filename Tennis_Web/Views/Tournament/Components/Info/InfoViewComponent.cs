@@ -30,7 +30,7 @@ namespace Tennis_Web.Views.Tournament.Components.Info
             if (vm.Succeeded != false)
             {
                 item = _context.DS_Giais.Find(vm.ID);
-                if (item == null) ModelState.AddModelError(string.Empty, "Lỗi hệ thống!");
+                if (vm.ID==0) ModelState.AddModelError(string.Empty, "Cần lưu thay đổi trước khi thêm trình!");
             }
            
             ViewBag.IsCurrent = vm.IsCurrent;
