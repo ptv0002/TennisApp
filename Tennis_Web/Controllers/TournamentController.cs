@@ -161,7 +161,7 @@ namespace Tennis_Web.Controllers
             //TempData["PlayerList"] = JsonSerializer.Serialize(list);
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
-        public IActionResult PlayerApproval()
+        public IActionResult ApprovePlayer()
         {
             var model = _context.DS_VDVs.Where(m => m.Phe_Duyet == true).ToList();
             bool? success = (bool?)TempData["PlayerApproval"];
@@ -170,7 +170,7 @@ namespace Tennis_Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult PlayerApproval(List<DS_VDV> list)
+        public IActionResult ApprovePlayer(List<DS_VDV> list)
         {
             if (ModelState.IsValid)
             {
@@ -192,7 +192,45 @@ namespace Tennis_Web.Controllers
                 }
                 else TempData["PlayerApproval"] = false;
             }
-            return RedirectToAction(nameof(PlayerApproval));
+            return RedirectToAction(nameof(ApprovePlayer));
+        }
+        public IActionResult ApprovePair()
+        {
+            var model = _context.DS_Caps.Where(m => m.Xac_Nhan == true).ToList();
+            bool? success = (bool?)TempData["PairApproval"];
+            if (success == true) _notyf.Success("Đã lưu phê duyệt thành công!");
+            else if (success == false) _notyf.Error("Có lỗi xảy ra khi đang lưu!");
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult ApprovePair(List<DS_Cap> list)
+        {
+            if (ModelState.IsValid)
+            {
+                bool result = false;
+                foreach (var item in list)
+                {
+                    // Save approved status to DB
+                    if (item.Phe_Duyet == true)
+                    {
+                        result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet" }).Succeeded;
+                    }
+                    // Delete pair if not approved
+                    else
+                    {
+                        _context.Remove(item);
+                        result = true;
+                    }
+                    if (!result) break;
+                }
+                if (result)
+                {
+                    _context.SaveChanges();
+                    TempData["PairApproval"] = true;
+                }
+                else TempData["PairApproval"] = false;
+            }
+            return RedirectToAction(nameof(ApprovePlayer));
         }
     }
 }

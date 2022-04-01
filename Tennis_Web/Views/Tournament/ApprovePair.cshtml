@@ -1,12 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Phê duyệt VĐV";
+    ViewData["Title"] = "Phê duyệt cặp";
 }
 @model List<Models.DS_VDV>
 <hr />
-<form asp-action="SavePlayerState" asp-controller="Tournament">
-    <div class="form-group" style="text-align:right">
-        <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
-    </div>
+<form asp-action="ApprovePlayer" asp-controller="Tournament">
     <div class="card shadow mb-4">
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -53,5 +50,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="form-group" style="text-align:right">
+        <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
     </div>
 </form>

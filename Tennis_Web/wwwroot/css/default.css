@@ -23,8 +23,8 @@
     align-items:center;
 }
 .tagline {
-    color: #1cb079;
-    font-weight:bold;
+    color: #ffce1b;
+    font-weight: bold;
 }
 /*.tournament-list {
     display: flex;
@@ -42,7 +42,64 @@
 .card-body {
     overflow-x: auto;
 }
-/*.nav-link{
+
+.isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+}
+.nav-link {
+    padding: 0;
+    background: #eaf4f1;
+}
+.section-heading h6,
+.header-area .main-nav .nav li:hover a,
+.header-area .main-nav .nav li a.active,
+.header-area.header-sticky .nav li a.active,
+.background-header .main-nav .nav li:hover a,
+.background-header .main-nav .nav li a.active,
+.slide-inner .header-text h2 em,
+footer p a,
+section.simple-cta h4 strong,
+section.about-us .naccs .menu div.active,
+section.service-details .naccs .menu div.active,
+section.map .info-item a:hover {
+    color: #ffce1b; /*bright yellow*/
+}
+.header-area .main-nav .nav li.has-sub ul li a:hover {
+    color: #ffce1b !important;
+}
+@media (max-width: 767px) {
+    .header-area.header-sticky .nav li a:hover,
+    .header-area.header-sticky .nav li a.active,
+    .header-area .main-nav .nav li a:hover {
+        color: #ffce1b !important;
+    }
+    .header-area .main-nav .nav li.has-sub ul li a:hover {
+        color: #ffce1b !important;
+    }
+}
+.testimonials .owl-dots .active {
+    background-color: #1cb079; /*green*/
+}
+
+.btn-success:hover {
+    color:#fff !important;
+    background-color: #17a673 !important;
+    border-color: #169b6b;
+}
+
+.btn-success:focus, .btn-success.focus {
+    color: #fff !important;
+    background-color: #17a673 !important;
+    border-color: #169b6b;
+    box-shadow: 0 0 0 0.2rem rgba(62, 208, 156, 0.5);
+}
+.font-weight-bold{
+    font-weight:bold;
+}
+    /*.nav-link{
     padding: 0;
 }
 .nav-link a {
@@ -60,38 +117,41 @@
 .nav-tabs > li > a {
     margin: 0;
 }*/
-.color-background {
-    background-color: #1d5414; /*Between color*/
-    background-image: url("../images/overlay.png"), -moz-linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%); /*Bottom left corner then Dark top right corner*/
-    background-image: url("../images/overlay.png"), -webkit-linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%);
-    background-image: url("../images/overlay.png"), -ms-linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%);
-    background-image: url("../images/overlay.png"), linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%);
-}
+    .color-background {
+        background-color: #1d5414; /*Between color*/
+        background-image: url("../images/overlay.png"), -moz-linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%); /*Bottom left corner then Dark top right corner*/
+        background-image: url("../images/overlay.png"), -webkit-linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%);
+        background-image: url("../images/overlay.png"), -ms-linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%);
+        background-image: url("../images/overlay.png"), linear-gradient(45deg, #b5ce3e 15%, #0f2a30 85%);
+    }
 
 
-/*.modal-dialog {
+    /*.modal-dialog {
     z-index:2010;
 }
 .modal-backdrop {
     z-index: 2000;
 }*/
-/*.modal-footer .btn + .btn {
+    /*.modal-footer .btn + .btn {
     margin: 0 0 0 5px;
 }
 .btn {
     font-size: 1.25rem;
 }*/
-.background-header{
-    background-color:darkslategray;
-}
-@media (max-width: 992px) {
-    .header-area {
+    .background-header {
         background-color: darkslategray;
     }
-}
-.header-area {
-    background-image:none;
-}
-footer{
-    background-color: darkslategray;
-}
+
+    @media (max-width: 992px) {
+        .header-area {
+            background-color: darkslategray;
+        }
+    }
+
+    .header-area {
+        background-image: none;
+    }
+
+    footer {
+        background-color: darkslategray;
+    }

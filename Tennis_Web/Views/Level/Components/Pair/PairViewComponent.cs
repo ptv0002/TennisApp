@@ -20,7 +20,8 @@ namespace Tennis_Web.Views.Level.Components.Pair
         {
             ViewBag.IsCurrent = vm.IsCurrent;
             ViewBag.ID_Trinh = vm.ID;
-            var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2).Where(m => m.ID_Trinh == vm.ID).OrderBy(m => m.Ma_Cap).ToList();
+            var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2)
+                .Where(m => m.ID_Trinh == vm.ID && m.Phe_Duyet == true).OrderBy(m => m.Ma_Cap).ToList();
 
             // Generate List of all participated players with no pairs
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == _context.DS_Trinhs.Find(vm.ID).ID_Giai).Select(m => m.Id);

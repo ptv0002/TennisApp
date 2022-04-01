@@ -1,4 +1,5 @@
-﻿using DataAccess;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using DataAccess;
 using Library;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,17 +19,22 @@ namespace Tennis_Web.Areas.NoRole.Controllers
     public class CurrentTabController : Controller
     {
         private readonly TennisContext _context;
-        public CurrentTabController(TennisContext context)
+        public readonly INotyfService _notyf;
+        public CurrentTabController(TennisContext context,INotyfService notyf)
         {
             _context = context;
+            _notyf = notyf;
         }
         public List<DS_Cap> PopulateAutoComplete(int idVdv)
         {
             var levels = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi);
             // Get all pairs with Level Id from the level id list
-            var vdv_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2});
-            // Get all players with from Player Id found in Player1 and Player2 lists
-            var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
+            //var vdv_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2});
+            //// Get all players with from Player Id found in Player1 and Player2 lists
+            //var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
+            var vdv1_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
+            var vdv2_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
+            var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
             var eligible = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
             var model = new List<DS_Cap>();
             var info = _context.DS_VDVs.Find(idVdv);
@@ -86,26 +92,30 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 if (_context.DS_VDVs.Find(pair.ID_Vdv2).Password == pair.VDV2.Password)
                 {
                     result = true;
-                    _context.Add(pair);
+                    pair.Xac_Nhan = true;
+                    pair.Phe_Duyet = true;
+                    result &= new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xac_Nhan", "Phe_Duyet" }).Succeeded;
                 }
             }
-            DS_Cap obj;
-            
-            //var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Diem", "ID_Trinh" };
-            //var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, columnsToSave);
-            //if (result.Succeeded) _context.SaveChanges();
+            if (result)
+            {
+                _context.SaveChanges();
+                TempData["SuccessfulPair"] = true;
+            }
             
             return RedirectToAction(nameof(Pair));
         }
         public IActionResult Guideline()
         {
             var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
-            var model = _context.Thong_Baos.Where(m => m.ID_Giai == current.Id).ToList();
+            var model = _context.Thong_Baos.Where(m => m.ID_Giai == current.Id).OrderByDescending(m => m.Ngay).ToList();
             ViewBag.Tournament = current.Ten;
             return View(model);
         }
         public IActionResult Pair()
         {
+            bool? success = (bool?)TempData["SuccessfulPair"];
+            if (success == true) { _notyf.Success("Lưu thay đổi thành công!"); }
             var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
             var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2)
                 .Where(m => m.DS_Trinh.ID_Giai == current.Id)
@@ -120,9 +130,12 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             // Generate List of all participated players with no pairs
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == current.Id).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
-            var vdv_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2 });
-            // Get all players with from Player Id found in Player1 and Player2 lists
-            var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
+            //var vdv_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2 });
+            //// Get all players with from Player Id found in Player1 and Player2 lists
+            //var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
+            var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
+            var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
+            var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
             ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
             ViewBag.Tournament = current.Ten;
             return View(model);
@@ -130,37 +143,38 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         public IActionResult Register(int id)
         {
             var model = _context.DS_VDVs.Find(id);
-            model.Password = null;
-            return PartialView(model);
+            ViewBag.Password = model.Password;
+            return PartialView(new RegisterViewModel
+            {
+                Id = model.Id,
+                Email = model.Email,
+                Ten_Tat = model.Ten_Tat
+            });
         }
         [HttpPost]
-        public IActionResult Register(DS_VDV model, int id)
+        public IActionResult Register(RegisterViewModel model, int id)
         {
             var old = _context.DS_VDVs.Find(id);
-            var col2Save = new List<string>();
-            if (old.Email == null)
+            bool result = false;
+            // First time user
+            if (old.Password == "bitkhanhhoa@newuser" && model.Password == old.Password && model.ConfirmPassword == model.Password)
             {
-                if (model.ConfirmPassword != model.Password)
-                {
-                    ModelState.AddModelError(string.Empty, "Xác nhận lại mật khẩu");
-                    return PartialView(model);
-                }
-                col2Save.AddRange(new List<string> { "Email", "Tel", "Password", "Phe_Duyet" });
-                model.Phe_Duyet = true;
+                old.Email = model.Email;
+                old.Password = model.NewPassword;
+                old.Tel = model.Tel;
+                old.Phe_Duyet = true;
+                result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Email", "Tel", "Password", "Phe_Duyet" }).Succeeded;
             }
             else
             {
-                if (old.Password != model.Password)
+                if (old.Password == model.Password)
                 {
-                    ModelState.AddModelError(string.Empty, "Sai mật khẩu");
-                    return PartialView(model);
+                    old.Phe_Duyet = true;
+                    result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Phe_Duyet" }).Succeeded;
                 }
-                col2Save.AddRange(new List<string> { "Password", "Phe_Duyet" });
-                model.Phe_Duyet = true;
             }
-
-            var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(model.Id, model, col2Save);
             TempData["SuccessfulRegister"] = result;
+            if (result) { _context.SaveChanges(); }
             return RedirectToAction("Player", "NoRole", new { isCurrent = true, participate = true });
         }
         public IActionResult ResultInfo(ResultViewModel model)
