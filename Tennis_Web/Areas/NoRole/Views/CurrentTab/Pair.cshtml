@@ -63,7 +63,7 @@
 {
     <div class="card shadow mb-4" id="players">
         <div class="card-header py-3">
-            <h5>VĐV chưa được xếp cặp - Chọn tên để đăng kí</h5>
+            <h5>VĐV chưa được xếp cặp @*- Chọn tên để đăng kí*@</h5>
         </div>
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -81,7 +81,8 @@
                             @foreach (var item in ViewBag.NoPairPlayers)
                             {
                                 <tr>
-                                    <td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>
+                                    @*<td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>*@
+                                    <td>@item.Ten_Tat</td>
                                     <td>@item.CLB</td>
                                     <td>@item.Diem_Cu</td>
                                     <td>@item.Diem</td>

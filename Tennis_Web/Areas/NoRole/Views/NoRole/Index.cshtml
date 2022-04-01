@@ -1,121 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Trang chủ";
-    //Layout = "/Areas/_Layout.cshtml";
+    Layout = "/Areas/_Layout.cshtml";
     ViewBag.IActive = "active visible-sm visible-xs";
 }
-@*@using Microsoft.AspNetCore.Identity
-    @using Models
-    @inject SignInManager<DS_VDV> signInManager*@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <title>BIT Khánh Hòa</title>
-    <link rel="icon" type="image/png" href="~/images/icon/KAICT_logo.png" sizes="16x16">
-    <!-- Bootstrap core CSS -->
-    <link href="~/mexant/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" type="text/css" href="~/datatables/css/dataTables.bootstrap4.css" />
-
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="~/mexant/assets/css/fontawesome.css">
-    <link rel="stylesheet" href="~/mexant/assets/css/templatemo-574-mexant.css">
-    <link rel="stylesheet" href="~/mexant/assets/css/owl.css">
-    <link rel="stylesheet" href="~/mexant/assets/css/animate.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
-    <link rel="stylesheet" type="text/css" href="~/css/shared.css" />
-    <link rel="stylesheet" type="text/css" href="~/css/tournament.css" />
-    <link rel="stylesheet" type="text/css" href="~/css/default.css" />
-    <!--
-    TemplateMo 574 Mexant
-    https://templatemo.com/tm-574-mexant
-
-    -->
-</head>
-
-<body>
-
-
-    <!-- ***** Header Area Start ***** -->
-    <header class="header-area header-sticky">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <nav class="main-nav">
-                        <!-- ***** Logo Start ***** -->
-                        <a asp-action="Index" class="logo">
-                            <img src="~/images/KAICT-removebg.png" height="80" alt="BIT Khánh Hòa">
-                        </a>
-                        <!-- ***** Logo End ***** -->
-                        <!-- ***** Menu Start ***** -->
-                        <ul class="nav">
-                            @*@if (signInManager.IsSignedIn(User)) { <a asp-action="Logout" class="btn btn-primary rounded-pill">Đăng nhập</a> }
-                                else { <a asp-action="Login" class="btn btn-primary rounded-pill">Đăng nhập</a> }*@
-                            <li class="scroll-to-section"><a asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
-                            <li class="has-sub">
-                                <a href="javascript:void(0)">Hoạt động xã hội</a>
-                                <ul class="sub-menu">
-                                    <li><a>HĐ từ thiện</a></li>
-                                    <li><a>HĐ TDTT</a></li>
-                                    <li><a>HĐ khác</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-sub">
-                                <a href="javascript:void(0)">Hội viên</a>
-                                <ul class="sub-menu">
-                                    <li><a asp-action="Player" asp-controller="NoRole">Chính thức</a></li>
-                                    <li><a asp-action="Player" asp-controller="NoRole" asp-route-isGuest="true">Khách mời</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-sub">
-                                <a href="javascript:void(0)">Giải hiện tại</a>
-                                <ul class="sub-menu">
-                                    <li><a asp-action="Guideline" asp-controller="CurrentTab">Điều lệ</a></li>
-                                    <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">Đăng kí tham gia</a></li>
-                                    <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a></li>
-                                    <li><a asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
-                                    <li><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
-                                </ul>
-                            </li>
-                            <li class="scroll-to-section"><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="false">Giải cũ</a></li>
-                            <li class="scroll-to-section"><a asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>
-                            <li><a asp-action="Login" asp-area="" asp-controller="Account" class="rounded-pill">Đăng nhập</a></li>
-                        </ul>
-                        <a class="menu-trigger">
-                            <span>Menu</span>
-                        </a>
-                        <!-- ***** Menu End ***** -->
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </header>
-    <!-- ***** Header Area End ***** -->
-    <!-- ***** Main Banner Area Start ***** -->
-
-    <div class="swiper-container swiper-container-horizontal" id="top" style="cursor: grab;">
-        <div class="swiper-wrapper" style="transition-duration: 0ms; transform: translate3d(-1536px, 0px, 0px);">
-            <div class="swiper-slide swiper-slide-duplicate swiper-slide-prev" data-swiper-slide-index="2" style="width: 1536px; transition: all 0ms ease 0s;">
-                <div class="slide-inner" style="background-image: url('~/wwwroot/images/img-dark.jpg'); transform: translate3d(768px, 0px, 0px); transition: all 0ms ease 0s;">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <div class="header-text">
-                                    <h2>Best One in Town<br>&amp; Crypto <em>Services</em></h2>
-                                    <div class="div-dec"></div>
-                                    <p>When you browse through different tags on TemplateMo website, you can see a variety of CSS templates which are responsive website designs for different individual needs. Please tell your friends about our website. Thank you.</p>
-                                    <div class="buttons">
-                                        <div class="green-button">
-                                            <a href="#">Discover More</a>
-                                        </div>
-                                        <div class="orange-button">
-                                            <a href="#">Contact Us</a>
-                                        </div>
+<div class="swiper-container swiper-container-horizontal" id="top" style="cursor: grab;">
+    <div class="swiper-wrapper" style="transition-duration: 0ms; transform: translate3d(-1536px, 0px, 0px);">
+        <div class="swiper-slide swiper-slide-duplicate swiper-slide-prev" data-swiper-slide-index="2" style="width: 1536px; transition: all 0ms ease 0s;">
+            <div class="slide-inner" style="background-image: url('~/wwwroot/images/img-dark.jpg'); transform: translate3d(768px, 0px, 0px); transition: all 0ms ease 0s;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="header-text">
+                                <h2>Best One in Town<br>&amp; Crypto <em>Services</em></h2>
+                                <div class="div-dec"></div>
+                                <p>When you browse through different tags on TemplateMo website, you can see a variety of CSS templates which are responsive website designs for different individual needs. Please tell your friends about our website. Thank you.</p>
+                                <div class="buttons">
+                                    <div class="green-button">
+                                        <a href="#">Discover More</a>
+                                    </div>
+                                    <div class="orange-button">
+                                        <a href="#">Contact Us</a>
                                     </div>
                                 </div>
                             </div>
@@ -124,84 +28,7 @@
                 </div>
             </div>
         </div>
-        @*<div class="swiper-button-next swiper-button-white"></div>
-            <div class="swiper-button-prev swiper-button-white"></div>*@
     </div>
-    <!-- ***** Main Banner Area End ***** -->
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright © Veronica Vu 2022</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- Scroll to Top Button -->
-    @*<a class="scroll-to-top rounded-lg" href="#page-top" style=" width: 4.5rem; height: 4.5rem;">
-            <i class="fas fa-angle-up"></i>
-        </a>*@
-    <!-- Scripts
-    <!-- Bootstrap core JavaScript -->
-    <script src="~/mexant/vendor/jquery/jquery.min.js"></script>
-    <script src="~/mexant/vendor/bootstrap/js/bootstrap.min.js"></script>
-
-    <script src="~/mexant/assets/js/isotope.min.js"></script>
-    <script src="~/mexant/assets/js/owl-carousel.js"></script>
-    <script src="~/mexant/assets/js/wow.js"></script>
-    <script src="~/mexant/assets/js/tabs.js"></script>
-    <script src="~/mexant/assets/js/swiper.js"></script>
-    <script src="~/mexant/assets/js/custom.js"></script>
-    @*<script src="~/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
-        <script src="~/sbadmin/js/sb-admin-2.min.js"></script>*@
-    @*<script>
-            var interleaveOffset = 0.5;
-
-            var swiperOptions = {
-                loop: true,
-                speed: 1000,
-                grabCursor: true,
-                watchSlidesProgress: true,
-                mousewheelControl: true,
-                keyboardControl: true,
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev"
-                },
-                on: {
-                    progress: function () {
-                        var swiper = this;
-                        for (var i = 0; i < swiper.slides.length; i++) {
-                            var slideProgress = swiper.slides[i].progress;
-                            var innerOffset = swiper.width * interleaveOffset;
-                            var innerTranslate = slideProgress * innerOffset;
-                            swiper.slides[i].querySelector(".slide-inner").style.transform =
-                                "translate3d(" + innerTranslate + "px, 0, 0)";
-                        }
-                    },
-                    touchStart: function () {
-                        var swiper = this;
-                        for (var i = 0; i < swiper.slides.length; i++) {
-                            swiper.slides[i].style.transition = "";
-                        }
-                    },
-                    setTransition: function (speed) {
-                        var swiper = this;
-                        for (var i = 0; i < swiper.slides.length; i++) {
-                            swiper.slides[i].style.transition = speed + "ms";
-                            swiper.slides[i].querySelector(".slide-inner").style.transition =
-                                speed + "ms";
-                        }
-                    }
-                }
-            };
-
-            var swiper = new Swiper(".swiper-container", swiperOptions);
-        </script>*@
-    <script src="~/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
-    @await Component.InvokeAsync("DefaultLayout")
-    <script src="~/js/site.js" asp-append-version="true"></script>
-</body>
-</html>
+    @*<div class="swiper-button-next swiper-button-white"></div>
+        <div class="swiper-button-prev swiper-button-white"></div>*@
+</div>

@@ -11,9 +11,10 @@
     <meta name="author" content="">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <title>BIT Khánh Hòa</title>
-    <link rel="icon" type="image/png" href="~/images/icon/KAICT_logo.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="~/images/icon/bg-logo.png" sizes="16x16">
     <!-- Bootstrap core CSS -->
     <link href="~/mexant/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/sbadmin/css/sb-admin-2.min.css">
 
     <link rel="stylesheet" type="text/css" href="~/datatables/css/dataTables.bootstrap4.css" />
 
@@ -38,7 +39,7 @@
 </head>
 
 <body>
-
+    @await Component.InvokeAsync("DefaultLayout")
 
     <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky">
@@ -48,7 +49,7 @@
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a asp-action="Index" class="logo">
-                            <img src="~/images/KAICT-removebg.png" height="80" alt="BIT Khánh Hòa">
+                            <img src="~/images/icon/remove-bg-logo.png" height="80" alt="BIT Khánh Hòa">
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
@@ -57,11 +58,11 @@
                                 else { <a asp-action="Login" class="btn btn-primary rounded-pill">Đăng nhập</a> }*@
                             <li class="scroll-to-section"><a asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
                             <li class="has-sub">
-                                <a href="javascript:void(0)">Hoạt động xã hội</a>
+                                <a href="javascript:void(0)">Hoạt động</a>
                                 <ul class="sub-menu">
-                                    <li><a>HĐ từ thiện</a></li>
-                                    <li><a>HĐ TDTT</a></li>
-                                    <li><a>HĐ khác</a></li>
+                                    <li><a>Từ thiện</a></li>
+                                    <li><a>Tennis</a></li>
+                                    <li><a>Khác</a></li>
                                 </ul>
                             </li>
                             <li class="has-sub">
@@ -71,23 +72,26 @@
                                     <li><a asp-action="Player" asp-controller="NoRole" asp-route-isGuest="true">Khách mời</a></li>
                                 </ul>
                             </li>
-                            @if ((bool?)ViewData["HasCurrent"] == true)
+                            @if ((bool?)TempData["HasCurrent"] == true)
                             {
                                 <li class="has-sub">
                                     <a href="javascript:void(0)">Giải hiện tại</a>
                                     <ul class="sub-menu">
-                                        <li><a asp-action="Guideline" asp-controller="CurrentTab">Điều lệ</a></li>
+                                        <li><a asp-action="Guideline" asp-controller="CurrentTab">Thông báo</a></li>
                                         <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">Đăng kí tham gia</a></li>
                                         <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a></li>
-                                        <li><a asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
-                                        <li><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
+                                        @if ((bool?)TempData["HasLevel"] == true)
+                                        {
+                                            <li><a asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
+                                            <li><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
+                                        }
                                     </ul>
                                 </li>
                             }
-
                             <li class="scroll-to-section"><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="false">Giải cũ</a></li>
-                            <li class="scroll-to-section"><a asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>
-                            <li><a asp-action="Login" asp-area="" asp-controller="Account" class="rounded-pill">Đăng nhập</a></li>
+                            @*<li class="scroll-to-section"><a asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>*@
+                            <li><a asp-action="Login" asp-area="" asp-controller="Account">Đăng nhập</a></li>
+                            <li></li>
                         </ul>
                         <a class="menu-trigger">
                             <span>Menu</span>
@@ -152,7 +156,6 @@
     <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await Component.InvokeAsync("DefaultLayout")
     @await Component.InvokeAsync("Notyf")
     @RenderSection("Scripts", required: false)
 </body>

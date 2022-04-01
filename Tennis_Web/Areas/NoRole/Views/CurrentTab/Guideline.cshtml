@@ -17,11 +17,18 @@
             @if (System.IO.Path.GetExtension(item.File_Path) == ".pdf")
             {
                 <embed type="application/pdf" src="@("/Files/Announcement/" + item.File_Path)" width="600" height="800" />
+
             }
             else
             {
                 <img src="@("~/Files/Announcement/" + item.File_Path)" asp-append-version="true" width="600" />
             }
+            @if (item.File_Text != null)
+            {
+                Html.Raw(item.File_Text);
+                Html.DisplayFor(modelItem => item.File_Text);
+            }
         </div>
     </div>
 }       
+<div class="pro"></div>

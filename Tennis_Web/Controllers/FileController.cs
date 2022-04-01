@@ -98,15 +98,19 @@ namespace Tennis_Web.Controllers
         public IActionResult DeleteAnnouncement(string id)
         {
             var source = _context.Thong_Baos.Find(Convert.ToInt32(id));
-            string wwwRootPath = _webHost.WebRootPath;
-            string path = Path.Combine(wwwRootPath + "/Files/Announcement/", source.File_Path);
-
-            if (System.IO.File.Exists(path))
+            if (source.File_Path != null)
             {
-                System.IO.File.Delete(path);
-                _context.Remove(source);
-                _context.SaveChanges();
+                string wwwRootPath = _webHost.WebRootPath;
+                string path = Path.Combine(wwwRootPath + "/Files/Announcement/", source.File_Path);
+
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
             }
+           
+            _context.Remove(source);
+            _context.SaveChanges();
             return RedirectToAction(nameof(AnnouncementIndex));
         }
         public IActionResult DeleteFile(string id)

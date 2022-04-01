@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Tennis_Web.Areas.NoRole.Models;
 using Tennis_Web.Models;
 
 namespace Tennis_Web.Controllers
@@ -126,19 +127,19 @@ namespace Tennis_Web.Controllers
             }
             return RedirectToAction(nameof(Update), Convert.ToInt32(id));
         }
-        public IActionResult ScoreUpdate(int idVDV)
-        {
-            var player = _context.DS_VDVs.Find(idVDV);
-            //var model = new Extended_VDVDiem()
-            //{
-            //    ID_Vdv = player.Id,
-            //    DS_VDV = player,
-            //    Diem_Cu = player.Diem_Cu,
-            //    Diem_Moi = player.Diem,
-            //    Ngay = DateTime.Now
-            //};
-            return PartialView(/*model*/);
-        }
+        //public IActionResult ScoreUpdate(int idVDV)
+        //{
+        //    var player = _context.DS_VDVs.Find(idVDV);
+        //    var model = new Extended_VDVDiem()
+        //    {
+        //        ID_Vdv = player.Id,
+        //        DS_VDV = player,
+        //        Diem_Cu = player.Diem_Cu,
+        //        Diem_Moi = player.Diem,
+        //        Ngay = DateTime.Now
+        //    };
+        //    return PartialView(model);
+        //}
         //[HttpPost]
         //public IActionResult ScoreUpdate(Extended_VDVDiem model)
         //{

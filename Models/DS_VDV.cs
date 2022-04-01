@@ -52,10 +52,7 @@
         [Display(Name = "Mật khẩu")]
         [StringLength(20)]
         public string Password { get; set; }
-        [NotMapped]
-        [DataType(DataType.Password)]
-        [Display(Name = "Xác nhận mật khẩu")]
-        public string ConfirmPassword { get; set; }
+        [DisplayName("Không hoạt động")]
         public bool Status { get; set; }
 
         [DisplayName("Điểm")]

@@ -39,7 +39,6 @@
   <ItemGroup>
     <Folder Include="Areas\NoRole\Data\" />
     <Folder Include="wwwroot\Files\Json\" />
-    <Folder Include="wwwroot\Files\Announcement\" />
     <Folder Include="wwwroot\Files\PlayerImg\" />
   </ItemGroup>
 

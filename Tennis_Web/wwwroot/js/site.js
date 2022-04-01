@@ -32,4 +32,8 @@ $(function () {
             placeholderElement.find('.modal').modal('show');
         })
     })
+
+
+
+
 })

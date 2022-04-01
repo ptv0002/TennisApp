@@ -8,7 +8,13 @@
 }
 @model TabViewModel
 <hr />
-@if (Model.IsCurrent == true) { <a asp-action="PlayerApproval" asp-controller="Tournament">Đến danh sách phê duyệt VĐV 🡺</a>}
+@if (Model.IsCurrent == true)
+{
+    <div class="form-group">
+        <a asp-action="ApprovePlayer" asp-controller="Tournament" class="col-12">Đến DS phê duyệt VĐV 🡺</a>
+        <a asp-action="ApprovePair" asp-controller="Tournament"  class="col-12">Đến DS phê duyệt cặp 🡺</a>
+    </div>
+}
 <ul class="nav nav-tabs mt-3">
     <li role="presentation" class="nav-link @(Model.ActiveTab == Tennis_Web.Models.Tab.Info ? "active" : string.Empty)">
         <a asp-route-tabname="Info" asp-route-isCurrent="@Model.IsCurrent" asp-route-ID="@Model.ID" asp-action="SwitchToTabs" asp-controller="Method">Thông tin chung</a>

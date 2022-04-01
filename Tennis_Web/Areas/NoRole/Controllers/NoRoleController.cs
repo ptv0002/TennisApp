@@ -1,22 +1,13 @@
 ﻿using DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Data;
-using System.Windows;
-using System.IO;
-using Library;
 using Models;
-using Tennis_Web.Models;
 using Tennis_Web.Areas.NoRole.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
-using System.Text.Json;
-using Library.FileInitializer;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using Microsoft.AspNetCore.Identity;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -27,13 +18,11 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         private readonly TennisContext _context;
         private readonly IWebHostEnvironment _webHost;
         private readonly INotyfService _notyf;
-        //private readonly SignInManager<DS_VDV> _signInManager;
-        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf/*, SignInManager<DS_VDV> signInManager*/)
+        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
         {
             _context = context;
             _webHost = webHost;
             _notyf = notyf;
-            //_signInManager = signInManager;
         }
 //      public async Task<IActionResult> Index()
         public IActionResult Index()
@@ -46,35 +35,6 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             //var roundFile = await JsonSerializer.DeserializeAsync<List<Special1stViewModel>>(outStream);
             return View();
         }
-        public IActionResult Logout()
-        {
-            //_signInManager.SignOutAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        public IActionResult Login()
-        {
-            return View();
-        }
-        //[HttpPost]
-        //public async Task<IActionResult> Login(LoginViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        // Find user by Emaik
-        //        DS_VDV user = _context.DS_VDVs.FirstOrDefault(m => m.Email == model.UsernameOrEmail);
-        //        // Return error if not found
-        //        if (user == null)
-        //        {
-        //            ModelState.AddModelError(string.Empty, "Tài khoản không tồn tại!");
-        //            return View(model);
-        //        }
-        //        var result = await _signInManager.PasswordSignInAsync(user,
-        //                            model.Password, model.RememberMe, false);
-        //        if (result.Succeeded) return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
-        //        ModelState.AddModelError(string.Empty, "Đăng nhập không thành công!");
-        //    }
-        //    return View(model);
-        //}
         public IActionResult Player(bool isCurrent, bool isGuest, bool participate)
         {
             List<DS_VDV> model = new();

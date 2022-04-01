@@ -10,60 +10,61 @@
     string title = "";
 }
 @model Tennis_Web.Areas.NoRole.Models.PlayerHistoryViewModel
-        <div class="row">
-            <div class="@picClass">
-                @if (picClass == "col-3")
-                {<img src="@("~/Files/PlayerImg/" + Model.VDV.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" />}
+<div class="row">
+    <div class="@picClass">
+        @if (picClass == "col-3")
+        {<img src="@("~/Files/PlayerImg/" + Model.VDV.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" />}
+    </div>
+    <div class="@hisClass">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5>Lịch sử thi đấu</h5>
             </div>
-            <div class="@hisClass">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h5>@ViewData["Title"] </h5>
-                    </div>
-                    <div class="card-body">
-                        <table class="table-borderless" width="100%">
-                            <tbody>
-                                @foreach (var mDiem in Model.DS_VDVDiem)
-                                {
-                                    var matches = Model.DS_Tran.Where(m => m.ID_Trinh == mDiem.ID_Trinh);
-                                    var difTxt =mDiem.Diem < 0 ? "Giảm" : "Tăng";
-                                    if (mDiem.ID_Trinh==null) { title = string.IsNullOrWhiteSpace(mDiem.Ghi_Chu)? "Điều chỉnh Điểm :": mDiem.Ghi_Chu+" :";}
+            <div class="card-body">
+                <table class="table-borderless" width="100%">
+                    <tbody>
+                        @foreach (var mDiem in Model.DS_VDVDiem)
+                        {
+                            var matches = Model.DS_Tran.Where(m => m.ID_Trinh == mDiem.ID_Trinh);
+                            var difTxt = mDiem.Diem < 0 ? "Giảm" : "Tăng";
+                            if (mDiem.ID_Trinh == null) { title = string.IsNullOrWhiteSpace(mDiem.Ghi_Chu) ? "Điều chỉnh Điểm :" : mDiem.Ghi_Chu + " :"; }
+                            else
+                            {
+                                title = LevelList[(int)mDiem.ID_Trinh];
+                            }
+
+                            <tr>
+                                <td colspan="8"><span class="font-weight-bold">@count.</span> @title @difTxt <span class="font-weight-bold">@mDiem.Diem</span> (@mDiem.Diem_Cu → <span class="font-weight-bold">@mDiem.Diem_Moi</span>)</td>
+                            </tr>
+                            foreach (var match in matches)
+                            {
+                                var b11 = match.DS_Cap1.VDV1.Id == Model.VDV.Id ? "font-weight-bold" : "";
+                                var b12 = match.DS_Cap1.VDV2.Id == Model.VDV.Id ? "font-weight-bold" : "";
+                                var b21 = match.DS_Cap2.VDV1.Id == Model.VDV.Id ? "font-weight-bold" : "";
+                                var b22 = match.DS_Cap2.VDV2.Id == Model.VDV.Id ? "font-weight-bold" : "";
+                                <tr>
+                                    @if (match.DS_Cap1.VDV1.Id == Model.VDV.Id || match.DS_Cap1.VDV2.Id == Model.VDV.Id)
+                                    {
+                                        <td style="text-align:right; width:25%"><span class="@b11">@match.DS_Cap1.VDV1.Ten_Tat</span>/<span class="@b12">@match.DS_Cap1.VDV2.Ten_Tat</span></td>
+                                        <td style="width:1.5rem; text-align:center">-</td>
+                                        <td><span class="@b21">@match.DS_Cap2.VDV1.Ten_Tat</span>/<span class="@b22">@match.DS_Cap2.VDV2.Ten_Tat</span></td>
+                                        <td style="width: 4rem">@match.Kq_1 - @match.Kq_2</td>
+                                    }
                                     else
                                     {
-                                        title = LevelList[(int) mDiem.ID_Trinh];
+                                        <td style="text-align:right"><span class="@b21">@match.DS_Cap2.VDV1.Ten_Tat</span>/<span class="@b22">@match.DS_Cap2.VDV2.Ten_Tat</span></td>
+                                        <td style="width:1.5rem; text-align:center">-</td>
+                                        <td><span class="@b11">@match.DS_Cap1.VDV1.Ten_Tat</span>/<span class="@b12">@match.DS_Cap1.VDV2.Ten_Tat</span></td>
+                                        <td style="width: 4rem">@match.Kq_2 - @match.Kq_1</td>
                                     }
-                                    <tr>
-                                        <td colspan="8"><span class="font-weight-bold">@count.</span> @title @difTxt <span class="font-weight-bold">@mDiem.Diem</span> (@mDiem.Diem_Cu → <span class="font-weight-bold">@mDiem.Diem_Moi</span>)</td>
-                                    </tr>
-                                    foreach (var match in matches)
-                                    {
-                                        var b11 = match.DS_Cap1.VDV1.Id == Model.VDV.Id ? "font-weight-bold" : "";
-                                        var b12 = match.DS_Cap1.VDV2.Id == Model.VDV.Id ? "font-weight-bold" : "";
-                                        var b21 = match.DS_Cap2.VDV1.Id == Model.VDV.Id ? "font-weight-bold" : "";
-                                        var b22 = match.DS_Cap2.VDV2.Id == Model.VDV.Id ? "font-weight-bold" : "";
-                                        <tr>
-                                        @if (match.DS_Cap1.VDV1.Id == Model.VDV.Id || match.DS_Cap1.VDV2.Id == Model.VDV.Id)
-                                        {
-                                            <td style="text-align:right; width:25%"><span class="@b11">@match.DS_Cap1.VDV1.Ten_Tat</span>/<span class="@b12">@match.DS_Cap1.VDV2.Ten_Tat</span></td>
-                                            <td style="width:1.5rem; text-align:center">-</td>
-                                            <td><span class="@b21">@match.DS_Cap2.VDV1.Ten_Tat</span>/<span class="@b22">@match.DS_Cap2.VDV2.Ten_Tat</span></td>
-                                            <td style="width: 4rem">@match.Kq_1 - @match.Kq_2</td>
-                                        }
-                                        else
-                                        {
-                                            <td style="text-align:right"><span class="@b21">@match.DS_Cap2.VDV1.Ten_Tat</span>/<span class="@b22">@match.DS_Cap2.VDV2.Ten_Tat</span></td>
-                                            <td style="width:1.5rem; text-align:center">-</td>
-                                            <td><span class="@b11">@match.DS_Cap1.VDV1.Ten_Tat</span>/<span class="@b12">@match.DS_Cap1.VDV2.Ten_Tat</span></td>
-                                            <td style="width: 4rem">@match.Kq_2 - @match.Kq_1</td>
-                                        }
-                                        <td style="width: 8rem">(@RoundList[match.Ma_Vong])</td>
-                                        </tr>
-                                    }
-                                    count++;
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                    <td style="width: 8rem">(@RoundList[match.Ma_Vong])</td>
+                                </tr>
+                            }
+                            count++;
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
+</div>
