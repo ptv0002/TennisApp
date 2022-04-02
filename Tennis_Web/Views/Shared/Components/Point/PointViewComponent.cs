@@ -37,23 +37,29 @@ namespace Tennis_Web.Views.Shared.Components.Point
                 ViewBag.Admin = false;
             }
             else ViewBag.Admin = true;
-
-            var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
-            var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
+            if (_context.DS_Trans.Any(m => m.ID_Trinh == vm.ID))
             {
-                Table = m.Key,
-                Num = m.Count()
-            }).OrderBy(m => m.Table);
-            ViewBag.ListTable = list.Select(m => m.Table).ToList();
-            ViewBag.ListNum = list.Select(m => m.Num).ToList();
-            ViewBag.RoundNum = _context.DS_Trans.Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong <= 6).Max(m => m.Ma_Vong);// Ma_Vong <= 6 are special rounds
-            ViewBag.Playoff = _context.DS_Trans.Any(m => m.ID_Trinh == vm.ID && m.Ma_Vong == 7);
-            var DS_Diem = _context.DS_Diems.Where(m => pairs.Select(m => m.Id).Contains(m.ID_Cap)).ToList();
-            return View(new PointTabViewModel
+                var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
+                var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
+                {
+                    Table = m.Key,
+                    Num = m.Count()
+                }).OrderBy(m => m.Table);
+                ViewBag.ListTable = list.Select(m => m.Table).ToList();
+                ViewBag.ListNum = list.Select(m => m.Num).ToList();
+                ViewBag.RoundNum = _context.DS_Trans.Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong <= 6).Max(m => m.Ma_Vong);// Ma_Vong <= 6 are special rounds
+                ViewBag.Playoff = _context.DS_Trans.Any(m => m.ID_Trinh == vm.ID && m.Ma_Vong == 7);
+                var DS_Diem = _context.DS_Diems.Where(m => pairs.Select(m => m.Id).Contains(m.ID_Cap)).ToList();
+                return View(new PointTabViewModel
+                {
+                    DS_Cap = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID).Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList(),
+                    DS_Diem = _context.DS_Diems.Where(m => pairs.Select(m => m.Id).Contains(m.ID_Cap)).ToList()
+                });
+            }
+            else
             {
-                DS_Cap = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID).Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList(),
-                DS_Diem = _context.DS_Diems.Where(m => pairs.Select(m => m.Id).Contains(m.ID_Cap)).ToList()
-            });
+                return View(new PointTabViewModel());
+            }
         }
     }
 }

@@ -82,7 +82,8 @@ namespace Tennis_Web.Controllers
                     ID_Trinh = item.ID_Trinh,
                     ID_Vdv1 = vdv1.Id,
                     ID_Vdv2 = vdv2.Id,
-                    Ma_Cap = item.Ma_Cap
+                    Ma_Cap = item.Ma_Cap,
+                    Phe_Duyet = true
                 };
             }
             else
@@ -91,7 +92,7 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Tên tắt VĐV không chính xác!");
                 return PartialView(item);
             }
-            var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Ma_Cap", "ID_Trinh" };
+            var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Ma_Cap", "ID_Trinh","Phe_Duyet" };
             var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, obj, columnsToSave);
             if (result.Succeeded) _context.SaveChanges();
             else

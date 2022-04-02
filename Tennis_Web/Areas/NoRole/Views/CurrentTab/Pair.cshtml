@@ -8,6 +8,7 @@
 @model List<Models.DS_Cap>
 <div class="form-group">
     <a href="#players" class="btn btn-success">Đăng kí cặp</a>
+    @*<button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVDV, idCap})">Đăng ký cặp</button>*@
 </div>
 @for (int i = 0; i < ViewBag.ListLevel.Count; i++)
 {
@@ -81,7 +82,7 @@
                             @foreach (var item in ViewBag.NoPairPlayers)
                             {
                                 <tr>
-                                    @*<td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>*@
+                                    <td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>
                                     <td>@item.Ten_Tat</td>
                                     <td>@item.CLB</td>
                                     <td>@item.Diem_Cu</td>

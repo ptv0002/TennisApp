@@ -59,7 +59,7 @@
                                     }
                                     else
                                     {
-                                        if (item.Phe_Duyet != false)
+                                        if (item.Phe_Duyet != true)
                                         { <button type="button" class="link" data-toggle="ajax-modal" data-target="#register" data-url="@Url.Action("Register", "CurrentTab", new { id = item.Id })">@item.Ten_Tat</button>}
                                         else
                                         { @item.Ten_Tat}
@@ -69,7 +69,10 @@
                                     @Html.DisplayFor(modelItem => item.CLB)
                                 </td>
                                 <td>
-                                    <img src="@("~/Files/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />
+                                    @if (item.File_Anh != null)
+                                    {
+                                        <img src="@("~/Files/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />
+                                    }
                                 </td>
                                 <td>
                                     <a asp-action="PlayerHistory" asp-route-id="@item.Id">@item.Diem</a>
