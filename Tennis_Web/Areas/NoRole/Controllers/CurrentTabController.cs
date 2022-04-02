@@ -144,8 +144,9 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             {
                 Id = model.Id,
                 Email = model.Email,
-                Ten_Tat = model.Ten_Tat
-            });
+                Ten_Tat = model.Ten_Tat,
+                Tel = model.Tel
+            }); ;
         }
         [HttpPost]
         public IActionResult Register(RegisterViewModel model, int id)
@@ -153,13 +154,20 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             var old = _context.DS_VDVs.Find(id);
             bool result = false;
             // First time user
-            if (old.Password == "bitkhanhhoa@newuser" && model.Password == old.Password && model.ConfirmPassword == model.Password)
+            if (old.Password == "bitkhanhhoa@newuser")
             {
-                old.Email = model.Email;
-                old.Password = model.NewPassword;
-                old.Tel = model.Tel;
-                old.Phe_Duyet = true;
-                result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Email", "Tel", "Password", "Phe_Duyet" }).Succeeded;
+                if ( model.Password == old.Password && model.ConfirmPassword == model.NewPassword) 
+                {
+                    old.Email = model.Email;
+                    old.Password = model.NewPassword;
+                    old.Tel = model.Tel;
+                    old.Phe_Duyet = true;
+                    result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Email", "Tel", "Password", "Phe_Duyet" }).Succeeded;
+                }
+                else // Nhập sai password cũ hoặc password mới không giống nhau
+                {
+                    result = false;
+                }    
             }
             else
             {
@@ -171,7 +179,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             }
             TempData["SuccessfulRegister"] = result;
             if (result) { _context.SaveChanges(); }
-            return RedirectToAction("Player", "NoRole", new { isCurrent = true, participate = true });
+            return RedirectToAction("Player", "NoRole", new { isCurrent = true, participate = false });
+            //return PartialView(model);
         }
         public IActionResult ResultInfo(ResultViewModel model)
         {

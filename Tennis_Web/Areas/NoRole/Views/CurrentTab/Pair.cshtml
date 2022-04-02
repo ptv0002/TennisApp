@@ -84,8 +84,8 @@
                             @foreach (var item in ViewBag.NoPairPlayers)
                             {
                                 <tr>
-                                    <td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>
-                                    @*<td>@item.Ten_Tat</td>*@
+                                    @*<td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>*@
+                                    <td>@item.Ten_Tat</td>
                                     <td>@item.CLB</td>
                                     <td>@item.Diem_Cu</td>
                                     <td>@item.Diem</td>

@@ -95,7 +95,8 @@ namespace Tennis_Web.Controllers
 
             // Reset Participation status to all false and Pair code to null
             var list = _context.DS_VDVs.ToList();
-            list.ForEach(m => { m.Tham_Gia = false; m.Phe_Duyet = null; });
+            //            list.ForEach(m => { m.Tham_Gia = false; m.Phe_Duyet = null; });
+            list.ForEach(m => { m.Tham_Gia = false; m.Phe_Duyet = false; });
             _context.UpdateRange(list);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index), true);
@@ -177,11 +178,12 @@ namespace Tennis_Web.Controllers
                 bool result = false;
                 foreach (var item in list)
                 {
-                    if (item.Phe_Duyet == true) 
-                    { 
-                        item.Tham_Gia = true;
-                        item.Phe_Duyet = false;
-                    }
+                    item.Phe_Duyet = false;
+                    //if (item.Phe_Duyet == true) 
+                    //{ 
+                    //    item.Tham_Gia = true;
+                    //    item.Phe_Duyet = false;
+                    //}
                     result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet", "Tham_Gia" }).Succeeded;
                     if (!result) break;
                 }

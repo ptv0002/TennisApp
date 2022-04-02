@@ -5,71 +5,80 @@
     int idCap = 0;
 
     var RoundList = Library.FileInitializer.Initializer.RoundList();
-    var idTrinh = Model.DS_Cap.FirstOrDefault() != null ? Model.DS_Cap.FirstOrDefault().ID_Trinh : 0;
-
+    var idTrinh = 0;
+    if (Model.DS_Cap != null)
+    {
+        idTrinh = Model.DS_Cap.FirstOrDefault() != null ? Model.DS_Cap.FirstOrDefault().ID_Trinh : 0;
+    }
 }
 @model PointTabViewModel
-@for (int i = 0; i < ViewBag.ListTable.Count; i++)
+@if (Model.DS_Cap != null)
 {
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h5>Bảng @ViewBag.ListTable[i]</h5>
-        </div>
-        <div class="card-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Cặp</th>
-                        <th>Điểm cặp</th>
-                        <th>Tổng thưởng</th>
-                        <th>Trích điểm</th>
-                        <th>Bảng</th>
-                        <th>Hệ số dương</th>
-                        @if (Model.DS_Diem.Any(m => m.ID_Vong == 7))
-                        {
-                            <th>Playoff</th>
-                        }
-                        @for (int j = ViewBag.RoundNum; j >= 0; j--)
-                        {
-                            <th>@RoundList[j]</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int j = 0; j < ViewBag.ListNum[i]; j++)
-                    {
-                        var totalEarned = Model.DS_Diem.Where(m => m.ID_Cap == Model.DS_Cap[idCap].Id).Sum(m => m.Diem);
+    @for (int i = 0; i < ViewBag.ListTable.Count; i++)
+    {
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h5>Bảng @ViewBag.ListTable[i]</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>@Model.DS_Cap[idCap].VDV1.Ten_Tat + @Model.DS_Cap[idCap].VDV2.Ten_Tat</td>
-                            <td>@Model.DS_Cap[idCap].Diem</td>
-                            <td>@totalEarned</td>
-                            <td>@Score(10, Model.DS_Cap[idCap].Id)</td>
-                            <td>@Score(8, Model.DS_Cap[idCap].Id)</td>
-                            <td>@Score(9, Model.DS_Cap[idCap].Id)</td>
+                            <th>Cặp</th>
+                            <th>Điểm cặp</th>
+                            <th>Tổng thưởng</th>
+                            <th>Trích điểm</th>
+                            <th>Bảng</th>
+                            <th>Hệ số dương</th>
                             @if (Model.DS_Diem.Any(m => m.ID_Vong == 7))
                             {
-                                <td>@Score(7, Model.DS_Cap[idCap].Id)</td>
+                                <th>Playoff</th>
                             }
-                            @for (int k = ViewBag.RoundNum; k >= 0; k--)
+                            @for (int j = ViewBag.RoundNum; j >= 0; j--)
                             {
-                                // Display special rounds score
-                                <td>@Score(k, Model.DS_Cap[idCap].Id)</td>
+                                <th>@RoundList[j]</th>
                             }
                         </tr>
-                        idCap++;
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @for (int j = 0; j < ViewBag.ListNum[i]; j++)
+                        {
+                            var totalEarned = Model.DS_Diem.Where(m => m.ID_Cap == Model.DS_Cap[idCap].Id).Sum(m => m.Diem);
+                            <tr>
+                                <td>@Model.DS_Cap[idCap].VDV1.Ten_Tat + @Model.DS_Cap[idCap].VDV2.Ten_Tat</td>
+                                <td>@Model.DS_Cap[idCap].Diem</td>
+                                <td>@totalEarned</td>
+                                <td>@Score(10, Model.DS_Cap[idCap].Id)</td>
+                                <td>@Score(8, Model.DS_Cap[idCap].Id)</td>
+                                <td>@Score(9, Model.DS_Cap[idCap].Id)</td>
+                                @if (Model.DS_Diem.Any(m => m.ID_Vong == 7))
+                                {
+                                    <td>@Score(7, Model.DS_Cap[idCap].Id)</td>
+                                }
+                                @for (int k = ViewBag.RoundNum; k >= 0; k--)
+                                {
+                                    // Display special rounds score
+                                    <td>@Score(k, Model.DS_Cap[idCap].Id)</td>
+                                }
+                            </tr>
+                            idCap++;
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    }
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="form-group">
+            <a asp-action="End_Score" asp-controller="Result" asp-route-idTrinh="@idTrinh" class="btn btn-danger">Phân bổ điểm cá nhân</a>
+        </div>
+    }
 }
-@if (User.IsInRole("Admin"))
+else
 {
-    <div class="form-group">
-        <a asp-action="End_Score" asp-controller="Result" asp-route-idTrinh="@idTrinh" class="btn btn-danger">Phân bổ điểm cá nhân</a>
-    </div>
+    <h5 class="text-danger">Chưa có danh sách trận đấu!</h5>
 }
-
 @functions{
     public string Score(int round, int pairId)
     {
