@@ -1,12 +1,7 @@
 ﻿@{
     Layout = "/Areas/_Layout.cshtml";
-    if (ViewBag.IsCurrent) ViewBag.CRActive = "active visible-sm visible-xs";
-    else ViewBag.BRActive = "active visible-sm visible-xs";
     ViewData["Title"] = "Kết quả";
-    if (ViewBag.IsCurrent)
-    {
-        ViewData["Tagline"] = "Giải " + ViewBag.Tournament;
-    }
+    ViewData["Tagline"] = "Giải " + ViewBag.Tournament;
 }
 @model List<Models.DS_Trinh>
 
@@ -20,10 +15,9 @@
             {
                 foreach (var item in Model)
                 {
-                    string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
                     <div>
                         <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-action="SwitchToTabs" asp-controller="CurrentTab">
-                            • @title
+                            • Trình @item.Trinh
                         </a>
                     </div>
                 }

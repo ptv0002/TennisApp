@@ -12,7 +12,7 @@
     var RoundList = Library.FileInitializer.Initializer.RoundList();
 }
 @model List<Models.DS_Tran>
-@if (Model.Any())
+@if (Model != null && Model.Any())
 {
     <form asp-action="Special_Update" asp-controller="Result">
         <div class="tournament-container">

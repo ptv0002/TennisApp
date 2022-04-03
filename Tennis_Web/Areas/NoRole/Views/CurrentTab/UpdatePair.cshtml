@@ -11,7 +11,6 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" asp-for="Id" />
-                    <div asp-validation-summary="All" class="text-danger"></div>
                     <dl class="row">
                         @if (Model.Id == 0)
                         {
@@ -35,7 +34,7 @@
                             @if (Model.Id == 0)
                             {
                                 <select asp-for="ID_Vdv2" class="form-control">
-                                    @foreach (var level in ViewBag.DS_Trinh)
+                                    @foreach (var level in ViewBag.LevelList)
                                     {
                                         var playerList = (List<Models.DS_Cap>)ViewBag.DS_VDV;
                                         playerList = playerList.Where(m => m.ID_Trinh == level.Id).OrderByDescending(m => m.Diem).ToList();

@@ -1,162 +1,134 @@
-﻿@*@using Microsoft.AspNetCore.Identity
-    @using Models
-    @inject SignInManager<DS_VDV> signInManager*@
-<!DOCTYPE html>
+﻿    <!-- Scroll to Top Button -->
+    @*<a class="scroll-to-top rounded-lg" href="#page-top" style=" width: 4.5rem; height: 4.5rem;">
+            <i class="fas fa-angle-up"></i>
+        </a>*@
+
 <html lang="en">
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <title>@ViewData["Title"]</title>
+    <!-- Favicon-->
+    <link href="~/images/icon/bg-logo.png" sizes="16x16"rel="icon" type="image/png">
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Core theme CSS (includes Bootstrap)-->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-    <title>BIT Khánh Hòa</title>
-    <link rel="icon" type="image/png" href="~/images/icon/bg-logo.png" sizes="16x16">
-    <!-- Bootstrap core CSS -->
-    <link href="~/mexant/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="~/sbadmin/css/sb-admin-2.min.css">
-
-    <link rel="stylesheet" type="text/css" href="~/datatables/css/dataTables.bootstrap4.css" />
-
-    <!-- Additional CSS Files -->
-    <link rel="stylesheet" href="~/mexant/assets/css/fontawesome.css">
-    <link rel="stylesheet" href="~/mexant/assets/css/templatemo-574-mexant.css">
-    <link rel="stylesheet" href="~/mexant/assets/css/owl.css">
-    <link rel="stylesheet" href="~/mexant/assets/css/animate.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
-    <link rel="stylesheet" type="text/css" href="~/css/shared.css" />
-    <link rel="stylesheet" type="text/css" href="~/css/tournament.css" />
-    <link rel="stylesheet" type="text/css" href="~/css/default.css" />
-    <!--
-    TemplateMo 574 Mexant
-    https://templatemo.com/tm-574-mexant
-
-    -->
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-
+    <link href="~/datatables/css/dataTables.bootstrap4.css" rel="stylesheet" type="text/css" />
+    <link href="~/modern-business/css/styles.css" rel="stylesheet">
+    <link href="~/css/shared.css" rel="stylesheet">
+    <link href="~/css/tournament.css" rel="stylesheet" type="text/css">
+    <link href="~/css/default.css" rel="stylesheet">
 </head>
-
-<body>
+<body class="d-flex flex-column h-100">
     @await Component.InvokeAsync("DefaultLayout")
 
-    <!-- ***** Header Area Start ***** -->
-    <header class="header-area header-sticky">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <nav class="main-nav">
-                        <!-- ***** Logo Start ***** -->
-                        <a asp-action="Index" class="logo">
-                            <img src="~/images/icon/remove-bg-logo.png" height="80" alt="BIT Khánh Hòa">
-                        </a>
-                        <!-- ***** Logo End ***** -->
-                        <!-- ***** Menu Start ***** -->
-                        <ul class="nav">
-                            @*@if (signInManager.IsSignedIn(User)) { <a asp-action="Logout" class="btn btn-primary rounded-pill">Đăng nhập</a> }
-                                else { <a asp-action="Login" class="btn btn-primary rounded-pill">Đăng nhập</a> }*@
-                            <li class="scroll-to-section"><a asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
-                            <li class="has-sub">
-                                <a href="javascript:void(0)">Hoạt động</a>
-                                <ul class="sub-menu">
-                                    <li><a>Từ thiện</a></li>
-                                    <li><a>Tennis</a></li>
-                                    <li><a>Khác</a></li>
+    <main class="flex-shrink-0 background-img">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container px-5">
+                <a class="navbar-brand" asp-action="Index"><img src="~/images/icon/remove-bg-logo.png" height="50" alt="BIT Khánh Hòa"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="NoRole">Trang chủ</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarActivity" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hoạt động</a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarActivity">
+                                <li><a class="dropdown-item">Từ thiện</a></li>
+                                <li><a class="dropdown-item">Tennis</a></li>
+                                <li><a class="dropdown-item">Khác</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarPlayer" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hội viên</a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarPlayer">
+                                <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea">Chính thức</a></li>
+                                <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isGuest="true">Khách mời</a></li>
+                            </ul>
+                        </li>
+                        @if ((bool?)TempData["HasCurrent"] == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarCurrent" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Giải hiện tại</a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarCurrent">
+                                    <li><a class="dropdown-item" asp-action="Announcement" asp-controller="NoRole" asp-route-isCurrent="true">Thông báo</a></li>
+                                    <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isCurrent="true">Đăng kí tham gia</a></li>
+                                    <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a></li>
+                                    @if ((bool?)TempData["HasLevel"] == true)
+                                    {
+                                        <li><a class="dropdown-item" asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
+                                        <li><a class="dropdown-item" asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
+                                    }
                                 </ul>
                             </li>
-                            <li class="has-sub">
-                                <a href="javascript:void(0)">Hội viên</a>
-                                <ul class="sub-menu">
-                                    <li><a asp-action="Player" asp-controller="NoRole">Chính thức</a></li>
-                                    <li><a asp-action="Player" asp-controller="NoRole" asp-route-isGuest="true">Khách mời</a></li>
-                                </ul>
-                            </li>
-                            @if ((bool?)TempData["HasCurrent"] == true)
-                            {
-                                <li class="has-sub">
-                                    <a href="javascript:void(0)">Giải hiện tại</a>
-                                    <ul class="sub-menu">
-                                        <li><a asp-action="Guideline" asp-controller="CurrentTab">Thông báo</a></li>
-                                        <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true">Đăng kí tham gia</a></li>
-                                        <li><a asp-action="Player" asp-controller="NoRole" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a></li>
-                                        @if ((bool?)TempData["HasLevel"] == true)
-                                        {
-                                            <li><a asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
-                                            <li><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
-                                        }
-                                    </ul>
-                                </li>
-                            }
-                            <li class="scroll-to-section"><a asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="false">Giải cũ</a></li>
-                            @*<li class="scroll-to-section"><a asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>*@
-                            <li><a asp-action="Login" asp-area="" asp-controller="Account">Đăng nhập</a></li>
-                            <li></li>
-                        </ul>
-                        <a class="menu-trigger">
-                            <span>Menu</span>
-                        </a>
-                        <!-- ***** Menu End ***** -->
-                    </nav>
+                        }
+                        <li class="nav-item"><a class="nav-link" asp-action="Tournament" asp-controller="NoRole">Giải cũ</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-action="Login" asp-area="" asp-controller="Account">Đăng nhập</a></li>
+
+                    </ul>
                 </div>
             </div>
-        </div>
-    </header>
-    <!-- ***** Header Area End ***** -->
-    <!-- ***** Main Banner Area Start ***** -->
-    <div class="background-img">
-        <div class="container ">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="page-heading">
-                        <div class="header-text">
-                            <h2>@ViewData["Title"]</h2>
-                            <h4 class="tagline">@ViewData["Tagline"]</h4>
-                            <div class="div-dec"></div>
+        </nav>
+        <!-- Header-->
+        @*<header class="bg-dark py-5">
+                <div class="container px-5">
+                    <div class="row gx-5 align-items-center justify-content-center">
+                        <div class="col-lg-8 col-xl-7 col-xxl-6">
+                            <div class="my-5 text-center text-xl-start">
+                                <h1 class="display-5 fw-bolder text-white mb-2">A Bootstrap 5 template for modern businesses</h1>
+                                <p class="lead fw-normal text-white-50 mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit!</p>
+                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                                    <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#features">Get Started</a>
+                                    <a class="btn btn-outline-light btn-lg px-4" href="#!">Learn More</a>
+                                </div>
+                            </div>
                         </div>
+                        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..."></div>
                     </div>
-
                 </div>
+            </header>*@
+        <div class="container px-5 my-5">
+            <div class="text-center mb-3">
+                <h1 class="fw-bolder" style="color:white">@ViewData["Title"]</h1>
+                <p class="lead fw-normal mb-0 tagline">@ViewData["Tagline"]</p>
+                <div class="div-dec"></div>
+            </div>
+            <div class="row gx-5 justify-content-center">
+                @RenderBody()
             </div>
         </div>
-        <div class="container">
-            @RenderBody()
-        </div>
-    </div>
-
-    <!-- ***** Main Banner Area End ***** -->
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright © Veronica Vu 2022</p>
-                </div>
+    </main>
+    <!-- Footer-->
+    <footer class="bg-dark mt-auto py-4">
+        <div class="container px-5" style="text-align:center; color:white">
+            <div>
+                @*class="row align-items-center justify-content-between flex-column flex-sm-row"<div class="col-auto"><div class="small m-0 text-white">Copyright © Your Website 2022</div></div>*@
+                @*<div class="col-auto">
+                        <a class="link-light small" href="#!">Privacy</a>
+                        <span class="text-white mx-1">·</span>
+                        <a class="link-light small" href="#!">Terms</a>
+                        <span class="text-white mx-1">·</span>
+                        <a class="link-light small" href="#!">Contact</a>
+                    </div>*@
+                Copyright © Veronica Vu 2022
             </div>
         </div>
     </footer>
-    <!-- Scroll to Top Button -->
-    @*<a class="scroll-to-top rounded-lg" href="#page-top" style=" width: 4.5rem; height: 4.5rem;">
-            <i class="fas fa-angle-up"></i>
-        </a>*@
-    <!-- Scripts
-    <!-- Bootstrap core JavaScript -->
-    <script src="~/mexant/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
-    <script src="~/mexant/assets/js/isotope.min.js"></script>
-    <script src="~/mexant/assets/js/owl-carousel.js"></script>
-    <script src="~/mexant/assets/js/wow.js"></script>
-    <script src="~/mexant/assets/js/tabs.js"></script>
-    <script src="~/mexant/assets/js/swiper.js"></script>
-    <script src="~/mexant/assets/js/custom.js"></script>
-    @*<script src="~/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
-        <script src="~/sbadmin/js/sb-admin-2.min.js"></script>*@
-
+    <!-- Core theme JS-->
     <script src="~/datatables/js/jquery.dataTables.min.js"></script>
     <script src="~/datatables/js/dataTables.bootstrap4.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await Component.InvokeAsync("Notyf")
     @RenderSection("Scripts", required: false)
+
 </body>
 </html>

@@ -43,25 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\mexant\assets\js\custom.js" />
-    <None Include="wwwroot\mexant\assets\js\isotope.js" />
-    <None Include="wwwroot\mexant\assets\js\isotope.min.js" />
-    <None Include="wwwroot\mexant\assets\js\owl-carousel.js" />
-    <None Include="wwwroot\mexant\assets\js\swiper.js" />
-    <None Include="wwwroot\mexant\assets\js\tabs.js" />
-    <None Include="wwwroot\mexant\assets\js\video.js" />
-    <None Include="wwwroot\mexant\assets\js\wow.js" />
-    <None Include="wwwroot\mexant\assets\webfonts\fa-brands-400.woff2" />
-    <None Include="wwwroot\mexant\assets\webfonts\fa-regular-400.woff2" />
-    <None Include="wwwroot\mexant\assets\webfonts\fa-solid-900.woff2" />
-    <None Include="wwwroot\mexant\assets\webfonts\fa-v4compatibility.woff2" />
-    <None Include="wwwroot\mexant\vendor\bootstrap\js\bootstrap.min.js" />
-    <None Include="wwwroot\mexant\vendor\jquery\jquery.js" />
-    <None Include="wwwroot\mexant\vendor\jquery\jquery.min.js" />
-    <None Include="wwwroot\mexant\vendor\jquery\jquery.min.map" />
-    <None Include="wwwroot\mexant\vendor\jquery\jquery.slim.js" />
-    <None Include="wwwroot\mexant\vendor\jquery\jquery.slim.min.js" />
-    <None Include="wwwroot\mexant\vendor\jquery\jquery.slim.min.map" />
+    <None Include="wwwroot\modern-business\js\scripts.js" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties wwwroot_4datatables_4vi_1json__JsonSchema="https://cdn.datatables.net/plug-ins/1.11.4/i18n/vi.json" /></VisualStudio></ProjectExtensions>

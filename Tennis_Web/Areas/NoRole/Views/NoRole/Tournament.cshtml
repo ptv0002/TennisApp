@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "/Areas/_Layout.cshtml";
+    ViewData["Title"] = "Giải cũ";
+}
+@model List<Models.DS_Giai>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h5>Chọn trình để xem kết quả</h5>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            @foreach (var item in Model)
+            {
+                <div>
+                    <a asp-action="Result" asp-route-id="@item.Id">
+                        • Giải @item.Ten
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>       

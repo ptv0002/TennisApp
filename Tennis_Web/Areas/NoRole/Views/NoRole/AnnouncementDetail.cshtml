@@ -1,0 +1,34 @@
+﻿@{
+    Layout = "/Areas/_Layout.cshtml";
+    ViewData["Title"] = Model.Ten;
+    ViewData["Tagline"] = Model.Ngay.Day + "/" + Model.Ngay.Month + "/" + Model.Ngay.Year;
+}
+@model Models.Thong_Bao
+
+<div class="card shadow mb-4">
+    @if (ViewBag.Tournament != null)
+    {
+        <div class="card-header py-3">
+            <h5>@ViewBag.Tournament</h5>
+        </div>
+    }
+    <div class="card-body">
+        @if (Model.File_Path != null)
+        {
+            @if (System.IO.Path.GetExtension(Model.File_Path) == ".pdf")
+            {
+                <embed type="application/pdf" src="@("/Files/Announcement/" + Model.File_Path)" style="width:100%"/>
+            }
+            else
+            {
+                <img src="@("~/Files/Announcement/" + Model.File_Path)" asp-append-version="true" width="600" />
+            }   
+        }
+
+        @if (Model.File_Text != null)
+        {
+            <p>@Html.Raw(Model.File_Text)</p>
+        }
+    </div>
+</div>
+    

@@ -63,7 +63,9 @@ namespace Tennis_Web.Areas.NoRole.Controllers
 
             if (model == null)
             {
-                ViewBag.DS_Trinh = new SelectList(_context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi).OrderBy(m => m.Trinh), "Id", "Trinh");
+                var levels = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi).OrderBy(m => m.Trinh);
+                ViewBag.DS_Trinh = new SelectList(levels, "Id", "Trinh");
+                ViewBag.LevelList = levels;
                 ViewBag.DS_VDV = PopulateAutoComplete(idVdv);
                 model = new DS_Cap { ID_Vdv1 = idVdv, VDV1 = _context.DS_VDVs.Find(idVdv) };
                 model.VDV1.Password = null;
@@ -105,13 +107,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             
             return RedirectToAction(nameof(Pair));
         }
-        public IActionResult Guideline()
-        {
-            var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
-            var model = _context.Thong_Baos.Where(m => m.ID_Giai == current.Id).OrderByDescending(m => m.Ngay).ToList();
-            ViewBag.Tournament = current.Ten;
-            return View(model);
-        }
+        
         public IActionResult Pair()
         {
             bool? success = (bool?)TempData["SuccessfulPair"];

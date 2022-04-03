@@ -6,9 +6,12 @@
     ViewBag.CActive = "active visible-sm visible-xs";
 }
 @model List<Models.DS_Cap>
-<div class="form-group">
-    <a href="#players" class="btn btn-success">Đăng kí cặp</a>
-</div>
+@if (ViewBag.NoPairPlayers.Count > 0)
+{
+    <div style="margin-bottom:1rem; padding:0">
+        <a href="#players" class="btn btn-success">Đăng kí cặp</a>
+    </div>
+}
 @for (int i = 0; i < ViewBag.ListLevel.Count; i++)
 {
     <div class="card shadow mb-4">
@@ -81,8 +84,8 @@
                             @foreach (var item in ViewBag.NoPairPlayers)
                             {
                                 <tr>
-                                    @*<td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>*@
-                                    <td>@item.Ten_Tat</td>
+                                    <td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>
+                                    @*<td>@item.Ten_Tat</td>*@
                                     <td>@item.CLB</td>
                                     <td>@item.Diem_Cu</td>
                                     <td>@item.Diem</td>

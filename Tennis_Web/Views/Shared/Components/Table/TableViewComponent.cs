@@ -42,21 +42,28 @@ namespace Tennis_Web.Views.Shared.Components.Table
             var matches = _context.DS_Trans
                     .Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong > 6) // Ma_Vong > 6 are Table and Playoff rounds
                     .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList(); 
-            var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
-            var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
+            if (matches.Any())
             {
-                Table = m.Key,
-                Num = m.Count()
-            }).OrderBy(m => m.Table);
-            ViewBag.ListTable = list.Select(m => m.Table).ToList();
-            ViewBag.ListNum = list.Select(m => m.Num).ToList();
-            ViewBag.IsCurrent = vm.IsCurrent;
-            return View(new RoundTabViewModel
+                var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
+                var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
+                {
+                    Table = m.Key,
+                    Num = m.Count()
+                }).OrderBy(m => m.Table);
+                ViewBag.ListTable = list.Select(m => m.Table).ToList();
+                ViewBag.ListNum = list.Select(m => m.Num).ToList();
+                ViewBag.IsCurrent = vm.IsCurrent;
+                return View(new RoundTabViewModel
+                {
+                    ID_Trinh = vm.ID,
+                    DS_Tran = matches,
+                    DS_Cap = pairs.Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()
+                });
+            }
+            else
             {
-                ID_Trinh = vm.ID,
-                DS_Tran = matches,
-                DS_Cap = pairs.Include(m => m.VDV1).Include(m => m.VDV2).OrderBy(m => m.Ma_Cap).ToList()
-            });
+                return View(new RoundTabViewModel());
+            }
         }
     }
 }
