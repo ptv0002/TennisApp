@@ -12,6 +12,8 @@ using Tennis_Web.Areas.NoRole.Models;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
+    [Area("NoRole")]
+    [Route("[Action]")]
     public class PlayerAreaController : Controller
     {
         private readonly TennisContext _context;
@@ -23,7 +25,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             _webHost = webHost;
             _notyf = notyf;
         }
-        public IActionResult Index(bool isCurrent, bool isGuest, bool participate)
+        public IActionResult Player(bool isCurrent, bool isGuest, bool participate)
         {
             List<DS_VDV> model = new();
             if (isCurrent)

@@ -37,7 +37,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public IActionResult Announcement(bool isCurrent)
         {
-            var model = _context.Thong_Baos.Where(m => m.DS_Giai.Giai_Moi == isCurrent)
+            var model = _context.Thong_Baos.Where(m => m.DS_Giai.Giai_Moi == isCurrent && m.Hien_Thi)
                 .OrderByDescending(m => m.DS_Giai.Ngay).ThenByDescending(m => m.Ngay).ToList();
             ViewBag.IsCurrent = isCurrent;
             return View(model);

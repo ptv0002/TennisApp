@@ -3,7 +3,7 @@
     Layout = "/Areas/_Layout.cshtml";
     var picClass = Model.VDV.File_Anh != null ? "col-3" : "col-0";
     var hisClass = Model.VDV.File_Anh != null ? "col-9" : "col-12";
-    var LevelList = Model.DS_Tran.GroupBy(m => m.DS_Trinh).ToDictionary(x => x.Key.Id, y => "Giải " + y.Key.DS_Giai.Ten + " - Trình " + y.Key.Trinh +" : ");
+    var LevelList = Model.DS_Tran.GroupBy(m => m.DS_Trinh).ToDictionary(x => x.Key.Id, y => "Giải " + y.Key.DS_Giai.Ten + " - Trình " + y.Key.Trinh + " : ");
     var Keys = LevelList.Keys.ToList();
     var RoundList = Library.FileInitializer.Initializer.RoundList();
     var count = 1;
@@ -18,7 +18,7 @@
     <div class="@hisClass">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h5>Lịch sử thi đấu</h5>
+                <h5>@ViewData["Title"] </h5>
             </div>
             <div class="card-body">
                 <table class="table-borderless" width="100%">
@@ -32,7 +32,6 @@
                             {
                                 title = LevelList[(int)mDiem.ID_Trinh];
                             }
-
                             <tr>
                                 <td colspan="8"><span class="font-weight-bold">@count.</span> @title @difTxt <span class="font-weight-bold">@mDiem.Diem</span> (@mDiem.Diem_Cu → <span class="font-weight-bold">@mDiem.Diem_Moi</span>)</td>
                             </tr>

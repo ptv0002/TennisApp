@@ -179,7 +179,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             }
             TempData["SuccessfulRegister"] = result;
             if (result) { _context.SaveChanges(); }
-            return RedirectToAction("Player", "NoRole", new { isCurrent = true, participate = false });
+            return RedirectToAction("Player", "PlayerArea", new { isCurrent = true, participate = false });
             //return PartialView(model);
         }
         public IActionResult ResultInfo(ResultViewModel model)

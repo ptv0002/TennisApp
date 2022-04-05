@@ -1,0 +1,33 @@
+﻿@{
+    // Match Index Level View
+    bool a1 = Model.Any();
+
+    @if (a1)
+    {
+        ViewData["Title"] = "Chọn trình đấu để nhập/xem kết quả - Giải " + Model.FirstOrDefault().DS_Giai.Ten;
+    }
+    else ViewData["Title"] = "Chọn giải cũ để xem kết quả";
+}
+@model IEnumerable<Models.DS_Trinh>
+<hr />
+<div class="form-group">
+    @if (a1)
+    {
+        foreach (var item in Model)
+        {
+            string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
+            <div class="row ml-2 mb-1">
+                <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Method">
+                    • @item.Trinh
+                </a>
+            </div>
+        }
+    }
+    else
+    {
+        <h5 class="text-danger">Chưa có trình đấu!</h5>
+        <a class="align-center" style="color:black" asp-action="Index" asp-route-isCurrent="false" asp-controller="Match">
+            Đến danh sách kết quả các giải đấu cũ 🡺
+        </a>
+    }
+</div>

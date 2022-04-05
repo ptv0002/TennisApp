@@ -25,8 +25,13 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult Index(bool isCurrent)
         {
-            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi == isCurrent).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            var model = _context.DS_Giais.Where(m => m.Giai_Moi == isCurrent).OrderByDescending(m => m.Ngay).ToList();
             ViewBag.isCurrent = isCurrent;
+            return View(model);
+        }
+        public IActionResult IndexLevel(int id)
+        {
+            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.ID_Giai == id).OrderBy(m => m.Trinh).ToList();
             return View(model);
         }
         public IActionResult MatchInfo(TabViewModel model)

@@ -9,7 +9,7 @@
 @if (ViewBag.NoPairPlayers.Count > 0)
 {
     <div style="margin-bottom:1rem; padding:0">
-        <a href="#players" class="btn btn-success">Đăng kí cặp</a>
+        @*<a href="#players" class="btn btn-success">Đăng kí cặp</a>*@
     </div>
 }
 @for (int i = 0; i < ViewBag.ListLevel.Count; i++)
@@ -28,19 +28,8 @@
                             <th>VĐV 2</th>
                             <th>Tổng điểm</th>
                             <th>Lệch trình</th>
-                            <th>Trích điểm</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Mã cặp</th>
-                            <th>VĐV 1</th>
-                            <th>VĐV 2</th>
-                            <th>Tổng điểm</th>
-                            <th>Lệch trình</th>
-                            <th>Trích điểm</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                         @for (int j = 0; j < ViewBag.ListNum[i]; j++)
                         {
@@ -52,7 +41,6 @@
                                 <td>@Model[idCap].VDV2.Ten_Tat</td>
                                 <td>@total</td>
                                 <td>@difference</td>
-                                <td></td>
                             </tr>
                             idCap++;
                         }
@@ -66,29 +54,30 @@
 {
     <div class="card shadow mb-4" id="players">
         <div class="card-header py-3">
-            <h5>VĐV chưa được xếp cặp @*- Chọn tên để đăng kí*@</h5>
+            <h5>VĐV chưa được xếp cặp</h5>
         </div>
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <div class="table-responsive">
-                    <table class="table dataTable">
+                    <table class="table dataTable" id="normalTable">
                         <thead>
                             <tr>
                                 <th>Tên tắt</th>
                                 <th>CLB</th>
                                 <th>Điểm cũ</th>
                                 <th>Điểm</th>
+                                @*<th></th>*@
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in ViewBag.NoPairPlayers)
                             {
                                 <tr>
-                                    @*<td><button type="button" class="link" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">@item.Ten_Tat</button></td>*@
                                     <td>@item.Ten_Tat</td>
                                     <td>@item.CLB</td>
                                     <td>@item.Diem_Cu</td>
                                     <td>@item.Diem</td>
+                                    @*<td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">Đăng kí</button></td>*@
                                 </tr>
                             }
                         </tbody>
@@ -98,3 +87,5 @@
         </div>
     </div>
 }
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>

@@ -5,25 +5,24 @@
         ViewBag.CMActive = "active";
     }
     else ViewBag.BMActive = "active";
-    bool a1 = Model.Count() > 0;
+    bool a1 = Model.Any();
 
     @if (a1)
     {
-        ViewData["Title"] = "Chọn trình đấu để nhập/xem kết quả";
+        ViewData["Title"] = "Chọn giải đấu để nhập/xem kết quả";
     }
     else ViewData["Title"] = "Chọn giải cũ để xem kết quả";
 }
-@model IEnumerable<Models.DS_Trinh>
+@model IEnumerable<Models.DS_Giai>
 <hr />
 <div class="form-group">
     @if (a1)
     {
         foreach (var item in Model)
         {
-            string title = "Giải " + item.DS_Giai.Ten + " - Trình " + item.Trinh;
             <div class="row ml-2 mb-1">
-                <a asp-route-tabname="Table" asp-route-isCurrent="@item.DS_Giai.Giai_Moi" asp-route-id="@item.Id" asp-route-detailedTitle="@title" asp-action="SwitchToTabs" asp-controller="Method">
-                    • @title
+                <a asp-route-id="@item.Id" asp-action="IndexLevel">
+                    • Giải @item.Ten
                 </a>
             </div>
         }
