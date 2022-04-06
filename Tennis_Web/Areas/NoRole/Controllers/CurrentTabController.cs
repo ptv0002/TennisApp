@@ -48,10 +48,14 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                             Diem = info.Diem + partner.Diem,
                             ID_Vdv2 = partner.Id,
                             VDV2 = partner,
-                            ID_Trinh = level.Id
+                            ID_Trinh = level.Id,
                         });
                     }                    
                 }
+                else
+                {
+                    // Không có VĐV nào tương ứng để đăng ký - vui lòng chờ bốc thăm
+                    _notyf.Error("Không có VĐV đủ điều kiện đăng ký trước - Vui lòng chờ Bốc thăm sau !",30);}
             }
             return model;
         }
@@ -176,6 +180,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 }
                 else // Nhập sai password cũ hoặc password mới không giống nhau
                 {
+                    _notyf.Error("Nhập sai Password hoặc Password mới không đồng nhất !");
                     result = false;
                 }    
             }
@@ -185,6 +190,10 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 {
                     old.Phe_Duyet = true;
                     result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Phe_Duyet" }).Succeeded;
+                }
+                else
+                {
+                    _notyf.Error("Nhập sai Password !");
                 }
             }
             TempData["SuccessfulRegister"] = result;

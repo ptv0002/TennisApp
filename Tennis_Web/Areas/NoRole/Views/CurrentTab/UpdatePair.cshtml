@@ -30,7 +30,7 @@
                         <dt class="col-sm-3"></dt>
                         <dd class="col-sm-9"><input type="password" asp-for="VDV1.Password" class="form-control" placeholder="Nhập mật khẩu" /></dd>
                         <dt class="col-sm-3 font-weight-bold">VĐV 2</dt>
-                        <dd class="col-sm-9">
+                        <dd class="col-sm-9" >
                             @if (Model.Id == 0)
                             {
                                 <select asp-for="ID_Vdv2" class="form-control">
@@ -38,6 +38,7 @@
                                     {
                                         var playerList = (List<Models.DS_Cap>)ViewBag.DS_VDV;
                                         playerList = playerList.Where(m => m.ID_Trinh == level.Id).OrderByDescending(m => m.Diem).ToList();
+
                                         <optgroup label="Trình @level.Trinh">
                                             @foreach (var player in playerList)
                                             {
