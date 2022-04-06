@@ -49,10 +49,11 @@
                                     }
                                     else
                                     {
+                                        //Tạm thời không cho đăng ký đến hết giải
                                         if (item.Phe_Duyet != true)
                                         { <button type="button" class="link" data-toggle="ajax-modal" data-target="#register" data-url="@Url.Action("Register", "CurrentTab", new { id = item.Id })">@item.Ten_Tat</button>}
                                         else
-                                        { @item.Ten_Tat}
+                                        {@item.Ten_Tat}
                                     }
                                 </td>
                                 <td>
@@ -80,6 +81,5 @@
         </div>
     </div>
 </div>
-    
 <!-- Modal placeholder -->
 <div id="modal-placeholder"></div>

@@ -30,7 +30,7 @@
                         <dt class="col-sm-3"></dt>
                         <dd class="col-sm-9"><input type="password" asp-for="VDV1.Password" class="form-control" placeholder="Nhập mật khẩu" /></dd>
                         <dt class="col-sm-3 font-weight-bold">VĐV 2</dt>
-                        <dd class="col-sm-9">
+                        <dd class="col-sm-9" >
                             @if (Model.Id == 0)
                             {
                                 <select asp-for="ID_Vdv2" class="form-control">
@@ -38,13 +38,18 @@
                                     {
                                         var playerList = (List<Models.DS_Cap>)ViewBag.DS_VDV;
                                         playerList = playerList.Where(m => m.ID_Trinh == level.Id).OrderByDescending(m => m.Diem).ToList();
+
                                         <optgroup label="Trình @level.Trinh">
                                             @foreach (var player in playerList)
                                             {
                                                 var dif = player.Diem - level.Trinh;
-                                                <option value="@player.ID_Vdv2">
-                                                    @player.VDV2.Ten_Tat  | @player.Diem | @dif
-                                                </option>
+                                                <!--var ten = player.VDV2.Ten_Tat.Trim();
+                                                var nguoichoi = ten.PadRight(50);-->
+                                                @*@for (int i=0;i<50-ten.Length;i++) {nguoichoi += "&nbsp;";}*@
+                                                <!--nguoichoi += "| " + player.Diem + " - " + dif;-->
+                                            <option value="@player.ID_Vdv2" style="white-space:pre-wrap">
+                                                @player.Diem : @dif : @player.VDV2.Ten_Tat
+                                            </option>
                                             }
                                         </optgroup>
                                     }

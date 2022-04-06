@@ -34,13 +34,16 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             //var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
             var vdv1_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
             var vdv2_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
-            var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
+            var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id) || m.Id==idVdv);
+            var info = _context.DS_VDVs.Find(idVdv);
             var eligible = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
             var model = new List<DS_Cap>();
-            var info = _context.DS_VDVs.Find(idVdv);
+            int mbd_tren = 4;
+            int mbd_duoi = 8;
             foreach (var partner in eligible)
             {
-                var eligibleLevels = levels.Where(m => Math.Abs(m.Trinh - (info.Diem + partner.Diem)) <= 20).ToList();
+                //var eligibleLevels = levels.Where(m => Math.Abs(m.Trinh - (info.Diem + partner.Diem)) <= 20).ToList();
+                var eligibleLevels = levels.Where(m => (info.Diem + partner.Diem)<= (m.Trinh+mbd_tren) && (info.Diem + partner.Diem) >= (m.Trinh - mbd_duoi)).ToList();
                 if (eligibleLevels.Any())
                 {
                     foreach (var level in eligibleLevels)
@@ -50,10 +53,14 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                             Diem = info.Diem + partner.Diem,
                             ID_Vdv2 = partner.Id,
                             VDV2 = partner,
-                            ID_Trinh = level.Id
+                            ID_Trinh = level.Id,
                         });
                     }                    
                 }
+                else
+                {
+                    // Không có VĐV nào tương ứng để đăng ký - vui lòng chờ bốc thăm
+                    _notyf.Error("Không có VĐV đủ điều kiện đăng ký trước - Vui lòng chờ Bốc thăm sau !",30);}
             }
             return model;
         }
@@ -166,6 +173,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 }
                 else // Nhập sai password cũ hoặc password mới không giống nhau
                 {
+                    _notyf.Error("Nhập sai Password hoặc Password mới không đồng nhất !");
                     result = false;
                 }    
             }
@@ -175,6 +183,10 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 {
                     old.Phe_Duyet = true;
                     result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Phe_Duyet" }).Succeeded;
+                }
+                else
+                {
+                    _notyf.Error("Nhập sai Password !");
                 }
             }
             TempData["SuccessfulRegister"] = result;

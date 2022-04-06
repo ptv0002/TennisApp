@@ -66,19 +66,19 @@
                                 <th>CLB</th>
                                 <th>Điểm cũ</th>
                                 <th>Điểm</th>
-                                @*<th></th>*@
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in ViewBag.NoPairPlayers)
                             {
-                                <tr>
-                                    <td>@item.Ten_Tat</td>
-                                    <td>@item.CLB</td>
-                                    <td>@item.Diem_Cu</td>
-                                    <td>@item.Diem</td>
-                                    @*<td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">Đăng kí</button></td>*@
-                                </tr>
+                            <tr>
+                                <td>@item.Ten_Tat</td>
+                                <td>@item.CLB</td>
+                                <td>@item.Diem_Cu</td>
+                                <td>@item.Diem</td>
+                                <td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">Đăng kí Cặp</button></td>
+                            </tr>
                             }
                         </tbody>
                     </table>
