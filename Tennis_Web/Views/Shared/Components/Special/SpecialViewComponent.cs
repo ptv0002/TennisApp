@@ -28,7 +28,8 @@ namespace Tennis_Web.Views.Shared.Components.Special
             _notyf = notyf;
             _webHost = webHost;
         }
-        public async Task<IViewComponentResult> InvokeAsync(TabViewModel vm, ResultViewModel alt)
+        //public async Task<IViewComponentResult> InvokeAsync(TabViewModel vm, ResultViewModel alt)
+        public IViewComponentResult Invoke(TabViewModel vm, ResultViewModel alt)
         {
             if (vm == null)
             {
