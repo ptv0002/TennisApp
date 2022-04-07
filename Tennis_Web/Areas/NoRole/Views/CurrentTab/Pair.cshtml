@@ -39,6 +39,7 @@
                             <th>VĐV 2</th>
                             <th>Tổng điểm</th>
                             <th>Lệch trình</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,15 +47,19 @@
                         {
                             int total = Model[idCap].VDV1.Diem + Model[idCap].VDV2.Diem;
                             int difference = total - Model[idCap].DS_Trinh.Trinh;
-                            <tr>
-                                <td>@Model[idCap].Ma_Cap</td>
-                                <td>@Model[idCap].VDV1.Ten_Tat</td>
-                                <td>@Model[idCap].VDV2.Ten_Tat</td>
-                                <td>@total</td>
-                                <td>@difference</td>
-                            </tr>
+                        <tr>
+                            <td>@Model[idCap].Ma_Cap</td>
+                            <td>@Model[idCap].VDV1.Ten_Tat</td>
+                            <td>@Model[idCap].VDV2.Ten_Tat</td>
+                            <td>@total</td>
+                            <td>@difference</td>
+                            @if (ViewBag.Type == 2) 
+                            {
+                                <td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { pair = Model[idCap].Id})">Xác nhận</button></td>
+                            }
+                        </tr>
                             idCap++;
-                        }
+                            }
                     </tbody>
                 </table>
             </div>
@@ -88,7 +93,7 @@
                                     <td>@item.CLB</td>
                                     <td>@item.Diem_Cu</td>
                                     <td>@item.Diem</td>
-                                    <td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">Đăng kí</button></td>
+                                    <td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">Đăng kí cặp</button></td>
                                 </tr>
                             }
                         </tbody>

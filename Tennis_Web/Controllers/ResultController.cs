@@ -320,8 +320,8 @@ namespace Tennis_Web.Controllers
                                     if (winPairs[k].DS_Bang.Ten== mbang && winPairs[k].Xep_Hang== mhang)
                                     { special1stRound[i].ID_Cap2 = winPairs[k].Id;
                                         ok++;
-                                        break;
                                         result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(special1stRound[i].Id, special1stRound[i], new List<string> { "ID_Cap2" }).Succeeded;
+                                        break;
                                     }
                                 }
                             }

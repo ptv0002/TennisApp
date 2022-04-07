@@ -39,8 +39,10 @@ namespace Tennis_Web.Views.Shared.Components.Point
             else ViewBag.Admin = true;
             if (_context.DS_Trans.Any(m => m.ID_Trinh == vm.ID))
             {
+                //var pairs = _context.DS_Caps.Include(m => m.DS_Bang).Include(m => m.VDV1).Include(m => m.VDV2)
+                //    .Where(m => m.ID_Trinh == vm.ID && m.Phe_Duyet).OrderBy(m => m.Ma_Cap).ToList();
                 var pairs = _context.DS_Caps.Include(m => m.DS_Bang).Include(m => m.VDV1).Include(m => m.VDV2)
-                    .Where(m => m.ID_Trinh == vm.ID && m.Phe_Duyet).OrderBy(m => m.Ma_Cap).ToList();
+                    .Where(m => m.ID_Trinh == vm.ID).OrderBy(m => m.Ma_Cap).ToList();
                 var list = pairs.GroupBy(m => m.DS_Bang.Ten).Select(m => new
                 {
                     Table = m.Key,

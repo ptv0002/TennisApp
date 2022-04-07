@@ -52,10 +52,10 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                         });
                     }                    
                 }
-                else
-                {
-                    // Không có VĐV nào tương ứng để đăng ký - vui lòng chờ bốc thăm
-                    _notyf.Error("Không có VĐV đủ điều kiện đăng ký trước - Vui lòng chờ Bốc thăm sau !",30);}
+                //else
+                //{
+                //    // Không có VĐV nào tương ứng để đăng ký - vui lòng chờ bốc thăm
+                //    _notyf.Error("Không có VĐV đủ điều kiện đăng ký trước - Vui lòng chờ Bốc thăm sau !",30);}
             }
             return model;
         }
@@ -86,8 +86,15 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 if (p1.Password == pair.VDV1.Password)
                 {
                     pair.Diem = p1.Diem + _context.DS_VDVs.Find(pair.ID_Vdv2).Diem;
+                    pair.Phe_Duyet = true;
+                    pair.Xac_Nhan= false;
                     result = true;
                     _context.Add(pair);
+                    _notyf.Success("Đăng ký cặp thành công - Chờ partner xác nhận !", 30);
+                }
+                else
+                {
+                    _notyf.Error("Sai password - Không được phép đăng ký !",30);
                 }
             }
             // Confirm part form
@@ -95,10 +102,14 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             {
                 if (_context.DS_VDVs.Find(pair.ID_Vdv2).Password == pair.VDV2.Password)
                 {
-                    result = true;
                     pair.Xac_Nhan = true;
                     pair.Phe_Duyet = true;
-                    result &= new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xac_Nhan", "Phe_Duyet" }).Succeeded;
+                    result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xac_Nhan", "Phe_Duyet" }).Succeeded;
+                    _notyf.Success("Cặp đấu đã đăng ký xong - Chờ BTC phê duyệt !", 30);
+                }
+                else
+                {
+                    _notyf.Error("Sai password - Chưa được xác nhận !", 30);
                 }
             }
             if (result)
@@ -125,16 +136,20 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             }).OrderBy(m => m.Trinh);
             ViewBag.ListLevel = list.Select(m => m.Trinh).ToList();
             ViewBag.ListNum = list.Select(m => m.Num).ToList();
+            ViewBag.Type = 1;            
             switch (selected)
             {
                 case "1": // Cặp đã được phê duyệt (thành công)
                     model = model.Where(m => !m.Phe_Duyet && !m.Xac_Nhan).ToList();
+                    ViewBag.Type = 1;
                     break;
                 case "2": // Cặp thiếu chữ kí xác nhận
                     model = model.Where(m => m.Phe_Duyet && !m.Xac_Nhan).ToList();
+                    ViewBag.Type = 2;
                     break;
                 case "3": // Cặp chờ phê duyệt
                     model = model.Where(m => m.Phe_Duyet && m.Xac_Nhan).ToList();
+                    ViewBag.Type = 3;
                     break;
                 default:
                     break;

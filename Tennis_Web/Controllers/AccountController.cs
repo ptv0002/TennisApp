@@ -79,13 +79,15 @@ namespace Tennis_Web.Controllers
                 if (result.Succeeded)
                 {
                     a1 = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "Manager") || await _userManager.IsInRoleAsync(user, "Referee");
-                    switch (a1)
-                    {
-                        case true:
-                            return RedirectToAction("Index", "Match", new { isCurrent = true });
-                        default:
-                            return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
-                    }
+                    //switch (a1)
+                    //{
+                    //    case true:
+                    //        return RedirectToAction("Index", "Match", new { isCurrent = true });
+                    //    default:
+                    //        return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
+                    //}
+                    if (a1) { return RedirectToAction("Index", "Match", new { isCurrent = true }); } 
+                    else { return RedirectToAction("Index", "Home", new { area = "NoRole" }); }// Redirect to Players Index page
                 }
                 ModelState.AddModelError(string.Empty, "Đăng nhập không thành công!");
             }

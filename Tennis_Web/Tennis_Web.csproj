@@ -47,6 +47,6 @@
     <None Include="wwwroot\modern-business\js\scripts.js" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4datatables_4vi_1json__JsonSchema="https://cdn.datatables.net/plug-ins/1.11.4/i18n/vi.json" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
