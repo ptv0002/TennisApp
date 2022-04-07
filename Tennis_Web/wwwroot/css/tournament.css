@@ -216,3 +216,14 @@
     .sticky + .tournament-brackets {
         padding-top: 102px;
     }
+@media (min-width: 768px){
+    .bracket-2 .team-item:nth-of-type(odd):after {
+        height: 150%;
+        top: 50%;
+    }
+
+    .bracket-2 .team-item:nth-of-type(even):after {
+        height: 150%;
+        top: -92%;
+    }
+}

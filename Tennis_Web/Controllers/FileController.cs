@@ -85,7 +85,7 @@ namespace Tennis_Web.Controllers
                     break;
             }
             // Handle saving object
-            var columnsToSave = new List<string> { "Ten", "Ngay", "Hien_Thi", "ID_Giai", "File_Text", column };
+            var columnsToSave = new List<string> { "Ten", "Ngay", "Hien_Thi", "Tin_Nong" ,"ID_Giai", "File_Text", column };
             var result = new DatabaseMethod<Thong_Bao>(_context).SaveObjectToDB(id, source, columnsToSave);
             if (result.Succeeded)
             {

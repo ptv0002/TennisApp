@@ -21,14 +21,14 @@ namespace Tennis_Web.Views.Level.Components.Pair
             ViewBag.IsCurrent = vm.IsCurrent;
             ViewBag.ID_Trinh = vm.ID;
             var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2)
-                .Where(m => m.ID_Trinh == vm.ID && m.Phe_Duyet == true).OrderBy(m => m.Ma_Cap).ToList();
+                .Where(m => m.ID_Trinh == vm.ID && !m.Phe_Duyet && !m.Xac_Nhan).OrderBy(m => m.Ma_Cap).ToList();
 
             // Generate List of all participated players with no pairs
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == _context.DS_Trinhs.Find(vm.ID).ID_Giai).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
 
-            var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
-            var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
+            var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && !m.Phe_Duyet && !m.Xac_Nhan).Select(m => m.ID_Vdv1);
+            var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && !m.Phe_Duyet && !m.Xac_Nhan).Select(m => m.ID_Vdv2);
             var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
 
             // Get all players with from Player Id found in Player1 and Player2 lists

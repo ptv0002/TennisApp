@@ -29,21 +29,17 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         {
             var levels = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi);
             // Get all pairs with Level Id from the level id list
-            //var vdv_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2});
-            //// Get all players with from Player Id found in Player1 and Player2 lists
-            //var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
             var vdv1_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
             var vdv2_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
-            var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id) || m.Id==idVdv);
-            var info = _context.DS_VDVs.Find(idVdv);
-            var eligible = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
+            // Get all players with from Player Id found in Player1 and Player2 lists
+            var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
+            var eligible = _context.DS_VDVs.Where(m => m.Tham_Gia && m.Id != idVdv).Except(players).ToList();
             var model = new List<DS_Cap>();
             int mbd_tren = 4;
             int mbd_duoi = 8;
             foreach (var partner in eligible)
             {
-                //var eligibleLevels = levels.Where(m => Math.Abs(m.Trinh - (info.Diem + partner.Diem)) <= 20).ToList();
-                var eligibleLevels = levels.Where(m => (info.Diem + partner.Diem)<= (m.Trinh+mbd_tren) && (info.Diem + partner.Diem) >= (m.Trinh - mbd_duoi)).ToList();
+                var eligibleLevels = levels.Where(m => m.Trinh - m.BD_Duoi <= (info.Diem + partner.Diem) && (info.Diem + partner.Diem) <= m.Trinh + m.BD_Tren).ToList();
                 if (eligibleLevels.Any())
                 {
                     foreach (var level in eligibleLevels)
@@ -115,7 +111,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             return RedirectToAction(nameof(Pair));
         }
         
-        public IActionResult Pair()
+        public IActionResult Pair(string selected)
         {
             bool? success = (bool?)TempData["SuccessfulPair"];
             if (success == true) { _notyf.Success("Lưu thay đổi thành công!"); }
@@ -130,14 +126,26 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             }).OrderBy(m => m.Trinh);
             ViewBag.ListLevel = list.Select(m => m.Trinh).ToList();
             ViewBag.ListNum = list.Select(m => m.Num).ToList();
+            switch (selected)
+            {
+                case "1": // Cặp đã được phê duyệt (thành công)
+                    model = model.Where(m => !m.Phe_Duyet && !m.Xac_Nhan).ToList();
+                    break;
+                case "2": // Cặp thiếu chữ kí xác nhận
+                    model = model.Where(m => m.Phe_Duyet && !m.Xac_Nhan).ToList();
+                    break;
+                case "3": // Cặp chờ phê duyệt
+                    model = model.Where(m => m.Phe_Duyet && m.Xac_Nhan).ToList();
+                    break;
+                default:
+                    break;
+            }
             // Generate List of all participated players with no pairs
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == current.Id).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
-            //var vdv_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2 });
-            //// Get all players with from Player Id found in Player1 and Player2 lists
-            //var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
             var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
             var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
+            // Get all players with from Player Id found in Player1 and Player2 lists
             var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
             ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
             ViewBag.Tournament = current.Ten;

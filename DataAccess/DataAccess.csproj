@@ -19,6 +19,8 @@
     <Compile Include="Migrations\20220331050652_up_dscap_phe_duyet.Designer.cs" />
     <Compile Include="Migrations\20220331090753_up_vdvdiem_ghichu.cs" />
     <Compile Include="Migrations\20220331090753_up_vdvdiem_ghichu.Designer.cs" />
+    <Compile Include="Migrations\20220407060147_up_ds_trinh_bienDo.cs" />
+    <Compile Include="Migrations\20220407060147_up_ds_trinh_bienDo.Designer.cs" />
     <Compile Include="Migrations\TennisContextModelSnapshot.cs" />
   </ItemGroup>
 

@@ -35,6 +35,10 @@
         public int Diem_Tru { get; set; } // T_TD
         [DisplayName("Chênh lệch")]
         public int Chenh_Lech { get; set; }
+        [DisplayName("Biên độ trên")]
+        public int BD_Tren { get; set; }
+        [DisplayName("Biên độ dưới")]
+        public int BD_Duoi { get; set; }
         public int ID_Giai { get; set; }
         [ForeignKey("ID_Giai")]
         public virtual DS_Giai DS_Giai { get; set; }

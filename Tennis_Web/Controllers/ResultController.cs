@@ -148,7 +148,9 @@ namespace Tennis_Web.Controllers
             var tables = matchParam.ChosenPerTable.Where(m => m.Playoff);
             foreach (var table in tables)
             {
-                var pair = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => m.ID_Trinh == model.ID_Trinh).FirstOrDefault(m => m.DS_Bang.Ten == table.Table && m.Xep_Hang == (table.Chosen + 1));
+                var pair = _context.DS_Caps.Include(m => m.DS_Bang)
+                    .Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan)
+                    .FirstOrDefault(m => m.DS_Bang.Ten == table.Table && m.Xep_Hang == (table.Chosen + 1));
                 considerList.Add(pair);
             }
             considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ThenBy(m => m.Boc_Tham).ToList();
@@ -170,7 +172,9 @@ namespace Tennis_Web.Controllers
             foreach (var table in tables)
             {
                 // Any pair has repeated ranking then returns null
-                var pair = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => m.ID_Trinh == model.ID_Trinh).FirstOrDefault(m => m.DS_Bang.Ten == table.Table && m.Xep_Hang == (table.Chosen + 1));
+                var pair = _context.DS_Caps.Include(m => m.DS_Bang)
+                    .Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan)
+                    .FirstOrDefault(m => m.DS_Bang.Ten == table.Table && m.Xep_Hang == (table.Chosen + 1));
                 considerList.Add(pair);
             }
             considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ThenBy(m => m.Boc_Tham).ToList();
@@ -201,7 +205,8 @@ namespace Tennis_Web.Controllers
 
             if (placement != null && result)
             {
-                var allPairs = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => m.ID_Trinh == model.ID_Trinh).ToList();
+                var allPairs = _context.DS_Caps.Include(m => m.DS_Bang)
+                    .Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan).ToList();
                 var ds_cap = new List<DS_Cap>();
 
                 // Generate straight to special list 

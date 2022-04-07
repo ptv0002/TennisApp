@@ -33,6 +33,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
 
             //FileStream outStream = System.IO.File.OpenRead(path);
             //var roundFile = await JsonSerializer.DeserializeAsync<List<Special1stViewModel>>(outStream);
+            // Copy data from ViewModel to IdentityUser
+            
             return View();
         }
         public IActionResult Announcement(bool isCurrent)

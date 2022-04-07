@@ -7,17 +7,18 @@ $(function () {
     $('#normalTable').DataTable({
         order: [],
         language: {
-            url: '/dataTables/vi.json'
+            url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/vi.json'
         },
         pageLength: 25
     });
     $('#noPaging').DataTable({
         order: [],
         language: {
-            url: '/dataTables/vi.json'
+            url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/vi.json'
         },
         paging: false,
-        searching: false
+        searching: false,
+        fixedHeader:true
     });
 
     // ---------------- Script for confirm modal popup ----------------

@@ -27,7 +27,8 @@ namespace Tennis_Web.Controllers
         public IActionResult UpdateParameter(DS_Trinh item)
         {
             // Find and update Parameters from DS_Trinh
-            var columnsToSave = new List<string> { "Trinh", "Diem_Tru", "Diem_PB", "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
+            var columnsToSave = new List<string> { "Trinh", "Diem_Tru", "Diem_PB", "BD_Tren", "BD_Duoi",
+                "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
             var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();
             var temp = _context.DS_Giais.Find(item.ID_Giai);
@@ -48,12 +49,9 @@ namespace Tennis_Web.Controllers
         {
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == _context.DS_Trinhs.Find(idTrinh).ID_Giai).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
-            //var vdv_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2 });
-            // Get all players with from Player Id found in Player1 and Player2 lists
-            //var players = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
-
             var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
             var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
+            // Get all players with from Player Id found in Player1 and Player2 lists
             var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
 
             return _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
@@ -82,8 +80,7 @@ namespace Tennis_Web.Controllers
                     ID_Trinh = item.ID_Trinh,
                     ID_Vdv1 = vdv1.Id,
                     ID_Vdv2 = vdv2.Id,
-                    Ma_Cap = item.Ma_Cap,
-                    Phe_Duyet = true
+                    Ma_Cap = item.Ma_Cap
                 };
             }
             else
@@ -92,7 +89,7 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Tên tắt VĐV không chính xác!");
                 return PartialView(item);
             }
-            var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Ma_Cap", "ID_Trinh","Phe_Duyet" };
+            var columnsToSave = new List<string> { "ID_Vdv1", "ID_Vdv2", "Ma_Cap", "ID_Trinh" };
             var result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, obj, columnsToSave);
             if (result.Succeeded) _context.SaveChanges();
             else

@@ -12,6 +12,17 @@
         @*<a href="#players" class="btn btn-success">Đăng kí cặp</a>*@
     </div>
 }
+<form asp-action="Pair" class="px-0">
+    <div style="display:flex">
+        <select name="selected" class="form-control" style="width:max-content"> @*Chỗ này không phải lỗi! Để nguyên*@
+            <option>Tất cả</option>
+            <option value="1">Cặp đã được phê duyệt</option>
+            <option value="2">Cặp thiếu chữ kí xác nhận</option>
+            <option value="3">Cặp chờ phê duyệt</option>
+        </select>
+        <input type="submit" formmethod="post" class="mx-2 btn btn-success" value="Cập nhật" />
+    </div>
+</form>
 @for (int i = 0; i < ViewBag.ListLevel.Count; i++)
 {
     <div class="card shadow mb-4">
@@ -72,13 +83,13 @@
                         <tbody>
                             @foreach (var item in ViewBag.NoPairPlayers)
                             {
-                            <tr>
-                                <td>@item.Ten_Tat</td>
-                                <td>@item.CLB</td>
-                                <td>@item.Diem_Cu</td>
-                                <td>@item.Diem</td>
-                                <td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">Đăng kí Cặp</button></td>
-                            </tr>
+                                <tr>
+                                    <td>@item.Ten_Tat</td>
+                                    <td>@item.CLB</td>
+                                    <td>@item.Diem_Cu</td>
+                                    <td>@item.Diem</td>
+                                    @*<td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">Đăng kí cặp</button></td>*@
+                                </tr>
                             }
                         </tbody>
                     </table>
