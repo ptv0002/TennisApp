@@ -1,48 +1,59 @@
 ﻿@{
     ViewData["Title"] = "Phê duyệt cặp";
 }
-@model List<Models.DS_VDV>
+@model List<Models.DS_Cap>
 <hr />
-<form asp-action="ApprovePlayer" asp-controller="Tournament">
+@if (Model.Any())
+{
     <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h5>Cặp cần phê duyệt</h5>
+        </div>
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
                 <div class="table-responsive">
                     <table class="table dataTable" id="noPaging">
                         <thead>
                             <tr>
-                                <th style="text-align:left">Tên tắt</th>
-                                <th>Phê duyệt</th>
-                                <th>CLB</th>
-                                <th>Điểm cũ</th>
-                                <th>Điểm</th>
+                                <th>VĐV 1</th>
+                                <th>VĐV 2</th>
+                                <th>Điểm cặp</th>
+                                <th>Lệch trình</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th style="text-align:left">Tên tắt</th>
-                                <th>Phê duyệt</th>
-                                <th>CLB</th>
-                                <th>Điểm cũ</th>
-                                <th>Điểm</th>
+                                <th>VĐV 1</th>
+                                <th>VĐV 2</th>
+                                <th>Điểm cặp</th>
+                                <th>Lệch trình</th>
+                                <th></th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            @for (int i = 0; i < Model.Count(); i++)
+                            @foreach (var item in Model)
                             {
+                                int difference = item.Diem - item.DS_Trinh.Trinh;
                                 <tr>
-                                    <td style="text-align:left">@Model[i].Ten_Tat</td>
+                                    <td>@item.VDV1.Ten_Tat</td>
+                                    <td>@item.VDV2.Ten_Tat</td>
+                                    <td>@item.Diem</td>
+                                    <td>@difference</td>
+                                    @{
+                                        var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                                        {
+                                            BtnMsg = "Xóa",
+                                            Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
+                                            ActionName = "DeletePair",
+                                            ControllerName = "Level",
+                                            Id = item.Id.ToString()
+                                        };
+                                    }
                                     <td>
-                                        <input type="hidden" asp-for="@Model[i].Id" />
-                                        <input type="hidden" asp-for="@Model[i].Ten_Tat" />
-                                        <input type="hidden" asp-for="@Model[i].CLB" />
-                                        <input type="hidden" asp-for="@Model[i].Diem_Cu" />
-                                        <input type="hidden" asp-for="@Model[i].Diem" />
-                                        <input asp-for="@Model[i].Phe_Duyet" type="checkbox" class="checkbox" />
+                                        <a asp-action="ApprovePairAction" asp-controller="Tournament" class="btn btn-primary" asp-route-id="@item.Id">Phê duyệt</a>
+                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
                                     </td>
-                                    <td>@Model[i].CLB</td>
-                                    <td>@Model[i].Diem_Cu</td>
-                                    <td>@Model[i].Diem</td>
                                 </tr>
                             }
                         </tbody>
@@ -51,7 +62,65 @@
             </div>
         </div>
     </div>
-    <div class="form-group" style="text-align:right">
-        <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
+}
+@if (ViewBag.NotEnough.Count > 0)
+{
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h5>Cặp chưa đủ chữ kí</h5>
+        </div>
+        <div class="card-body">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="table-responsive">
+                    <table class="table dataTable" id="noPaging">
+                        <thead>
+                            <tr>
+                                <th>VĐV 1</th>
+                                <th>VĐV 2</th>
+                                <th>Điểm cặp</th>
+                                <th>Lệch trình</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>VĐV 1</th>
+                                <th>VĐV 2</th>
+                                <th>Điểm cặp</th>
+                                <th>Lệch trình</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            @foreach (var item in ViewBag.NotEnough)
+                            {
+                                int difference = item.Diem - item.DS_Trinh.Trinh;
+                                <tr>
+                                    <td>@item.VDV1.Ten_Tat</td>
+                                    <td>@item.VDV2.Ten_Tat</td>
+                                    <td>@item.Diem</td>
+                                    <td>@difference</td>
+                                    @{
+                                        var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                                        {
+                                            BtnMsg = "Xóa",
+                                            Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
+                                            ActionName = "DeletePair",
+                                            ControllerName = "Level",
+                                            Id = item.Id.ToString()
+                                        };
+                                    }
+                                    <td>
+                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-</form>
+}
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>    

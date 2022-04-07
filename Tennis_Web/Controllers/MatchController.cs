@@ -1,5 +1,6 @@
 ﻿using DataAccess;
 using Library;
+using Library.FileInitializer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,6 @@ namespace Tennis_Web.Controllers
         {
             return View(model);
         }
-
         public async Task<IActionResult> AdditionalInfoAsync(int id)
         {
             ViewBag.TourName = _context.DS_Giais.Find(id).Ten;
@@ -46,13 +46,14 @@ namespace Tennis_Web.Controllers
             // Get all levels from given tournament
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == id).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
-            var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).ToList();
+            var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && !m.Phe_Duyet && !m.Xac_Nhan).ToList();
             var vdv_Ids = pairs.SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2 });
             // Get all players with from Player Id found in Player1 and Player2 lists
             var playersFromPair = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
             // Get all players that haven't been put to any pair, or all pairs that haven't got a code
             var noPairPlayers = ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(playersFromPair).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu).ToList();
-            var noCodePairs = ViewBag.NoCodePairs = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh).Where(m => levels.Contains(m.ID_Trinh) && m.Ma_Cap == null).OrderBy(m => m.DS_Trinh.Trinh).ToList();
+            var noCodePairs = ViewBag.NoCodePairs = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh)
+                .Where(m => levels.Contains(m.ID_Trinh) && m.Ma_Cap == null && !m.Phe_Duyet).OrderBy(m => m.DS_Trinh.Trinh).ToList();
             // If there's any players who haven't been put in pairs, or pairs that haven't got a code, return error
             if (noCodePairs.Count > 0 || noPairPlayers.Count > 0)
             {
@@ -153,7 +154,7 @@ namespace Tennis_Web.Controllers
                 // Get level ids
                 var levels = model.Select(m => m.ID_Trinh).ToList();
                 // Get all pairs with Level Id from the level id list
-                var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).ToList();
+                var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && m.Phe_Duyet).ToList();
 
                 // ---------------- Update Table Id to pairs (Create new table if needed) ----------------
                 // Reset old results from pairs
@@ -242,21 +243,35 @@ namespace Tennis_Web.Controllers
                         count++;
                     }
                     // Add Special Rounds
+                    // Get position from template and add to first special round
                     var totalPairs = level.ChosenPerTable.Sum(m => m.Chosen) + level.PlayOff1 + level.PlayOff2;
-                    var ma_vong = (int)Math.Log2(totalPairs);
+                    fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/Special1stRound.json");
+                    var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPairs && m.TableNum == level.ChosenPerTable.Count);
+                    fileStream.Dispose();
+                
+                    int ma_vong = (int)Math.Log2(totalPairs), max_round = ma_vong;
+                    string chon1 = "", chon2 = "";
                     while (ma_vong > 0)
                     {
                         int roundCount = 1;
                         string roundOrder = "";
                         for (int i = 0; i < totalPairs / 2; i++)
                         {
+                            if (ma_vong == max_round && placement != null) 
+                            {
+                                // If position is found in template template => assign to first special round
+                                chon1 = placement.P1_P2_Pair.ElementAt(i).Key;
+                                chon2 = placement.P1_P2_Pair.ElementAt(i).Value;
+                            }
                             order = "*" + ("000" + count)[^3..];
                             roundOrder = "*" + ("00" + roundCount)[^2..];
                             _context.Add(new DS_Tran
                             {
                                 Ma_Tran = level.Trinh + "*" + ma_vong.ToString() + "*0" + roundOrder + order,
                                 Ma_Vong = ma_vong,
-                                ID_Trinh = level.ID_Trinh
+                                ID_Trinh = level.ID_Trinh,
+                                Chon_Cap_1 = chon1,
+                                Chon_Cap_2 = chon2
                             });
                             roundCount++;
                             count++;

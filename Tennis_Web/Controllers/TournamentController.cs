@@ -61,7 +61,7 @@ namespace Tennis_Web.Controllers
         {
             // Find and update Tournament Info
             item.Giai_Moi = true;
-            var columnsToSave = new List<string> { "Ten", "Ghi_Chu", "Ngay", "Giai_Moi"};
+            var columnsToSave = new List<string> { "Ten", "Ghi_Chu", "Ngay", "Giai_Moi" };
             var result = new DatabaseMethod<DS_Giai>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();
             // Assign value for view model
@@ -69,9 +69,9 @@ namespace Tennis_Web.Controllers
             {
                 ActiveTab = Tab.Info,
                 IsCurrent = true,
-                ID = item.Id == 0? _context.DS_Giais.FirstOrDefault(m => m.Ten == item.Ten && m.Ngay == item.Ngay).Id : item.Id,
+                ID = item.Id == 0 ? _context.DS_Giais.FirstOrDefault(m => m.Ten == item.Ten && m.Ngay == item.Ngay).Id : item.Id,
                 Succeeded = result.Succeeded
-                
+
             };
             //TempData["TournamentInfo"] = JsonSerializer.Serialize(item);
             // CurrentModel = JsonSerializer.Serialize(item)
@@ -84,11 +84,11 @@ namespace Tennis_Web.Controllers
             var intId = Convert.ToInt32(id);
             // Find the current Tournament and set IsCurrent to false
             var item = _context.DS_Giais.Find(intId);
-            var mTrinhs = _context.DS_Trinhs.Where(m => m.ID_Giai==intId).ToList();
+            var mTrinhs = _context.DS_Trinhs.Where(m => m.ID_Giai == intId).ToList();
             item.Giai_Moi = false;
             _context.Update(item);
             // Phân bổ điểm vào file DS_VDVDiem, đồng thời cập nhật điểm trong DS_VDV
-            foreach ( var mTrinh in mTrinhs) 
+            foreach (var mTrinh in mTrinhs)
             {
                 new ScoreCalculation(_context).Player_PointDistribution(mTrinh.Id);
             }
@@ -158,7 +158,7 @@ namespace Tennis_Web.Controllers
                 ID = idGiai,
                 Succeeded = result
             };
-                //CurrentModel = JsonSerializer.Serialize(list)
+            //CurrentModel = JsonSerializer.Serialize(list)
             //TempData["PlayerList"] = JsonSerializer.Serialize(list);
             return RedirectToAction(nameof(TournamentInfo), vm);
         }
@@ -187,8 +187,8 @@ namespace Tennis_Web.Controllers
                     result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet", "Tham_Gia" }).Succeeded;
                     if (!result) break;
                 }
-                if (result) 
-                { 
+                if (result)
+                {
                     _context.SaveChanges();
                     TempData["PlayerApproval"] = true;
                 }
@@ -198,41 +198,63 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult ApprovePair()
         {
-            var model = _context.DS_Caps.Where(m => m.Xac_Nhan == true).ToList();
+            var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m =>m.DS_Trinh)
+                .Where(m => m.Xac_Nhan == true && m.Phe_Duyet).ToList();
+            ViewBag.NotEnough = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh)
+                .Where(m => m.Xac_Nhan == false && m.Phe_Duyet).ToList();
             bool? success = (bool?)TempData["PairApproval"];
             if (success == true) _notyf.Success("Đã lưu phê duyệt thành công!");
             else if (success == false) _notyf.Error("Có lỗi xảy ra khi đang lưu!");
             return View(model);
         }
-        [HttpPost]
-        public IActionResult ApprovePair(List<DS_Cap> list)
+        public IActionResult ApprovePairAction(int id)
         {
-            if (ModelState.IsValid)
+            var item = new DS_Cap
             {
-                bool result = false;
-                foreach (var item in list)
-                {
-                    // Save approved status to DB
-                    if (item.Phe_Duyet == true)
-                    {
-                        result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet" }).Succeeded;
-                    }
-                    // Delete pair if not approved
-                    else
-                    {
-                        _context.Remove(item);
-                        result = true;
-                    }
-                    if (!result) break;
-                }
-                if (result)
-                {
-                    _context.SaveChanges();
-                    TempData["PairApproval"] = true;
-                }
-                else TempData["PairApproval"] = false;
+                Id = id,
+                Phe_Duyet = false,
+                Xac_Nhan = false
+            };
+            bool result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet", "Xac_Nhan" }).Succeeded;
+
+            if (result)
+            {
+                _context.SaveChanges();
+                TempData["PairApproval"] = true;
             }
+            else TempData["PairApproval"] = false;
+
             return RedirectToAction(nameof(ApprovePlayer));
         }
+        //[HttpPost]
+        //public IActionResult ApprovePair(List<DS_Cap> list)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        bool result = false;
+        //        foreach (var item in list)
+        //        {
+        //            // Save approved status to DB
+        //            if (item.Phe_Duyet)
+        //            {
+        //                result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet" }).Succeeded;
+        //            }
+        //            // Delete pair if not approved
+        //            else
+        //            {
+        //                _context.Remove(item);
+        //                result = true;
+        //            }
+        //            if (!result) break;
+        //        }
+        //        if (result)
+        //        {
+        //            _context.SaveChanges();
+        //            TempData["PairApproval"] = true;
+        //        }
+        //        else TempData["PairApproval"] = false;
+        //    }
+        //    return RedirectToAction(nameof(ApprovePlayer));
+        //}
     }
 }

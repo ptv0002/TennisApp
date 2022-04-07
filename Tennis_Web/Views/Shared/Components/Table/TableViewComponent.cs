@@ -44,7 +44,7 @@ namespace Tennis_Web.Views.Shared.Components.Table
                     .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList(); 
             if (matches.Any())
             {
-                var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
+                var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID && m.Phe_Duyet);
                 var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
                 {
                     Table = m.Key,

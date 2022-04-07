@@ -39,8 +39,8 @@ namespace Tennis_Web.Views.Tournament.Components.Player
                 // Get all levels from given tournament
                 var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == vm.ID).Select(m => m.Id);
                 // Get all pairs with Level Id from the level id list
-                var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv1);
-                var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
+                var vdv1_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && m.Phe_Duyet).Select(m => m.ID_Vdv1);
+                var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && m.Phe_Duyet).Select(m => m.ID_Vdv2);
                 // Get all players with from Player Id found in Player1 and Player2 lists
                 players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id)).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu).ToList();
             }

@@ -201,7 +201,7 @@ namespace Tennis_Web.Controllers
                 selectedValue = roles[0];
             }
             ViewBag.RoleName = new SelectList(_roleManager.Roles, "Name", "Name", selectedValue);
-            ViewBag.Ma_Vong = id;
+            ViewBag.Id = id;
             return View(model);
         }
         [HttpPost]

@@ -25,7 +25,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             _webHost = webHost;
             _notyf = notyf;
         }
-        public IActionResult Player(bool isCurrent, bool isGuest, bool participate)
+        public IActionResult Player(bool isCurrent, bool? isGuest, bool participate)
         {
             List<DS_VDV> model = new();
             if (isCurrent)
@@ -49,13 +49,23 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             }
             else
             {
-                model = _context.DS_VDVs.OrderByDescending(m => m.Diem).Where(m => m.Khach_Moi == isGuest).ToList();
-                ViewBag.Title = isGuest ? "Hội viên khách mời" : "Hội viên chính thức";
+                if (isGuest != null) { model = _context.DS_VDVs.OrderByDescending(m => m.Diem).Where(m => m.Khach_Moi == isGuest).ToList();}
+                else { model = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList(); }
+                ViewBag.Title = isGuest == true ? "Hội viên khách mời" : (isGuest == false ? "Hội viên chính thức" : "Tất cả hội viên");
                 ViewBag.Info = true;
                 ViewBag.IsCurrent = false;
             }
             return View(model);
         }
+        public IActionResult UpdatePlayer(int id)
+        {
+            return View();
+        }
+        //[HttpPost]
+        //public IActionResult UpdatePlayer(int id)
+        //{
+        //    return View();
+        //}
         public IActionResult History(int id)
         {
             var matches = _context.DS_Trans.Include(m => m.DS_Cap1.VDV1).Include(m => m.DS_Cap1.VDV2)
