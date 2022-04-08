@@ -102,8 +102,8 @@
                                     <td>@item.Diem_Cu</td>
                                     <td><button data-url="@Url.Action("CheckPassword", "NoRole", new {
                                                          id = item.Id,
-                                                         action = "UpdatePair",
-                                                         controller = "CurrentTab",
+                                                         nextaction = "UpdatePair",
+                                                         nextcontroller = "CurrentTab",
                                                          currentAction = "Pair",
                                                          currentController = "CurrentTab"
                                                      })" type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#chkPw">Đăng kí cặp</button>
