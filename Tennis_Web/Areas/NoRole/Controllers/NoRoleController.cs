@@ -71,7 +71,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             var model = _context.DS_Giais.Where(m => !m.Giai_Moi).OrderByDescending(m => m.Ngay).ToList();
             return View(model);
         }
-        public IActionResult CheckPassword(int id, string action, string controller, string currentAction, string currentController)
+        public IActionResult CheckPassword(int id, string nextaction, string nextcontroller, string currentAction, string currentController)
         {
             var model = _context.DS_VDVs.Find(id);
             ViewBag.Password = model.Password;
@@ -79,8 +79,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             {
                 Id = model.Id,
                 Ten_Tat = model.Ten_Tat,
-                Action = action,
-                Controller = controller,
+                Action = nextaction,
+                Controller = nextcontroller,
                 CurrentAction = currentAction,
                 CurrentController = currentController
             });
