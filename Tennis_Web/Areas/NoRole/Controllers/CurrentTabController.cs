@@ -59,21 +59,22 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             }
             return model;
         }
-        public IActionResult UpdatePair(int idVdv, int idPair)
+        public IActionResult UpdatePair(int id)
         {
-            var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).FirstOrDefault(m => m.Id == idPair);
+            var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2)
+                .FirstOrDefault(m => m.ID_Vdv2 == id && m.Phe_Duyet && !m.Xac_Nhan);
 
             if (model == null)
             {
                 var levels = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi).OrderBy(m => m.Trinh);
                 ViewBag.DS_Trinh = new SelectList(levels, "Id", "Trinh");
                 ViewBag.LevelList = levels;
-                ViewBag.DS_VDV = PopulateAutoComplete(idVdv);
-                model = new DS_Cap { ID_Vdv1 = idVdv, VDV1 = _context.DS_VDVs.Find(idVdv) };
-                model.VDV1.Password = null;
+                ViewBag.DS_VDV = PopulateAutoComplete(id);
+                model = new DS_Cap { ID_Vdv1 = id, VDV1 = _context.DS_VDVs.Find(id) };
+                //model.VDV1.Password = null;
             }
-            else model.VDV2.Password = null;
-            return PartialView(model);
+            //else model.VDV2.Password = null;
+            return View(model);
         }
         [HttpPost]
         public IActionResult UpdatePair(DS_Cap pair)
@@ -83,34 +84,34 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             if (pair.Id == 0)
             {
                 var p1 = _context.DS_VDVs.Find(pair.ID_Vdv1);
-                if (p1.Password == pair.VDV1.Password)
-                {
+                //if (p1.Password == pair.VDV1.Password)
+                //{
                     pair.Diem = p1.Diem + _context.DS_VDVs.Find(pair.ID_Vdv2).Diem;
                     pair.Phe_Duyet = true;
                     pair.Xac_Nhan= false;
                     result = true;
                     _context.Add(pair);
                     _notyf.Success("Đăng ký cặp thành công - Chờ partner xác nhận !", 30);
-                }
-                else
-                {
-                    _notyf.Error("Sai password - Không được phép đăng ký !",30);
-                }
+                //}
+                //else
+                //{
+                //    _notyf.Error("Sai password - Không được phép đăng ký !",30);
+                //}
             }
             // Confirm part form
             else
             {
-                if (_context.DS_VDVs.Find(pair.ID_Vdv2).Password == pair.VDV2.Password)
-                {
+                //if (_context.DS_VDVs.Find(pair.ID_Vdv2).Password == pair.VDV2.Password)
+                //{
                     pair.Xac_Nhan = true;
                     pair.Phe_Duyet = true;
                     result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xac_Nhan", "Phe_Duyet" }).Succeeded;
                     _notyf.Success("Cặp đấu đã đăng ký xong - Chờ BTC phê duyệt !", 30);
-                }
-                else
-                {
-                    _notyf.Error("Sai password - Chưa được xác nhận !", 30);
-                }
+                //}
+                //else
+                //{
+                //    _notyf.Error("Sai password - Chưa được xác nhận !", 30);
+                //}
             }
             if (result)
             {
@@ -120,7 +121,6 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             
             return RedirectToAction(nameof(Pair));
         }
-        
         public IActionResult Pair(string selected)
         {
             bool? success = (bool?)TempData["SuccessfulPair"];
@@ -135,8 +135,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 Num = m.Count()
             }).OrderBy(m => m.Trinh);
             ViewBag.ListLevel = list.Select(m => m.Trinh).ToList();
-            ViewBag.ListNum = list.Select(m => m.Num).ToList();
-            ViewBag.Type = 1;            
+            ViewBag.ListNum = list.Select(m => m.Num).ToList();        
             switch (selected)
             {
                 case "1": // Cặp đã được phê duyệt (thành công)
@@ -152,6 +151,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                     ViewBag.Type = 3;
                     break;
                 default:
+                    ViewBag.Type = 1;
                     break;
             }
             // Generate List of all participated players with no pairs
@@ -167,54 +167,40 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public IActionResult Register(int id)
         {
-            var model = _context.DS_VDVs.Find(id);
-            ViewBag.Password = model.Password;
-            return PartialView(new RegisterViewModel
+            //var old = _context.DS_VDVs.Find(id);
+            //bool result = false;
+            //// First time user
+            //if (old.Password == "bitkhanhhoa@newuser")
+            //{
+            //    if ( model.Password == old.Password && model.ConfirmPassword == model.NewPassword) 
+            //    {
+            //        old.Email = model.Email;
+            //        old.Password = model.NewPassword;
+            //        old.Tel = model.Tel;
+            //        old.Phe_Duyet = true;
+            //        result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Email", "Tel", "Password", "Phe_Duyet" }).Succeeded;
+            //    }
+            //    else // Nhập sai password cũ hoặc password mới không giống nhau
+            //    {
+            //        _notyf.Error("Nhập sai Password hoặc Password mới không đồng nhất !");
+            //        result = false;
+            //    }    
+            //}
+            //else
+            //{
+            //    if (old.Password == model.Password)
+            //    {
+            var item = new DS_VDV
             {
-                Id = model.Id,
-                Email = model.Email,
-                Ten_Tat = model.Ten_Tat,
-                Tel = model.Tel
-            }); ;
-        }
-        [HttpPost]
-        public IActionResult Register(RegisterViewModel model, int id)
-        {
-            var old = _context.DS_VDVs.Find(id);
-            bool result = false;
-            // First time user
-            if (old.Password == "bitkhanhhoa@newuser")
-            {
-                if ( model.Password == old.Password && model.ConfirmPassword == model.NewPassword) 
-                {
-                    old.Email = model.Email;
-                    old.Password = model.NewPassword;
-                    old.Tel = model.Tel;
-                    old.Phe_Duyet = true;
-                    result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Email", "Tel", "Password", "Phe_Duyet" }).Succeeded;
-                }
-                else // Nhập sai password cũ hoặc password mới không giống nhau
-                {
-                    _notyf.Error("Nhập sai Password hoặc Password mới không đồng nhất !");
-                    result = false;
-                }    
-            }
-            else
-            {
-                if (old.Password == model.Password)
-                {
-                    old.Phe_Duyet = true;
-                    result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Phe_Duyet" }).Succeeded;
-                }
-                else
-                {
-                    _notyf.Error("Nhập sai Password !");
-                }
-            }
+                Id = id,
+                Phe_Duyet = true
+            };
+            bool result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet" }).Succeeded;
+
+
             TempData["SuccessfulRegister"] = result;
             if (result) { _context.SaveChanges(); }
             return RedirectToAction("Player", "PlayerArea", new { isCurrent = true, participate = false });
-            //return PartialView(model);
         }
         public IActionResult ResultInfo(ResultViewModel model)
         {

@@ -11,8 +11,12 @@
 @if (Model.IsCurrent == true)
 {
     <div class="form-group">
-        <a asp-action="ApprovePlayer" asp-controller="Tournament" class="col-12">Đến DS phê duyệt VĐV 🡺</a>
-        <a asp-action="ApprovePair" asp-controller="Tournament"  class="col-12">Đến DS phê duyệt cặp 🡺</a>
+        <div class="row ml-0 mb-1">
+            <a asp-action="ApprovePlayer" asp-controller="Tournament">Đến DS phê duyệt VĐV 🡺</a>
+        </div>
+        <div class="row ml-0 mb-1">
+            <a asp-action="ApprovePair" asp-controller="Tournament">Đến DS phê duyệt cặp 🡺</a>
+        </div>
     </div>
 }
 <ul class="nav nav-tabs mt-3">

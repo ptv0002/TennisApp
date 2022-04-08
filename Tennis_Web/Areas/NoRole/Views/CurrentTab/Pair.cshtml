@@ -9,18 +9,18 @@
 @if (ViewBag.NoPairPlayers.Count > 0)
 {
     <div style="margin-bottom:1rem; padding:0">
-        @*<a href="#players" class="btn btn-success">Đăng kí cặp</a>*@
+        @*<a href="#players" class="btn btn-primary">Đăng kí cặp</a>*@
     </div>
 }
 <form asp-action="Pair" class="px-0">
     <div style="display:flex">
-        <select name="selected" class="form-control" style="width:max-content"> @*Chỗ này không phải lỗi! Để nguyên*@
+        <select name="selected" class="form-control" style="width:max-content">
             <option>Tất cả</option>
             <option value="1">Cặp đã được phê duyệt</option>
             <option value="2">Cặp thiếu chữ kí xác nhận</option>
             <option value="3">Cặp chờ phê duyệt</option>
         </select>
-        <input type="submit" formmethod="post" class="mx-2 btn btn-success" value="Cập nhật" />
+        <input type="submit" formmethod="post" class="mx-2 btn btn-warning" value="Cập nhật" />
     </div>
 </form>
 @for (int i = 0; i < ViewBag.ListLevel.Count; i++)
@@ -39,7 +39,7 @@
                             <th>VĐV 2</th>
                             <th>Tổng điểm</th>
                             <th>Lệch trình</th>
-                            <th></th>
+                            @if (ViewBag.Type == 2) {<th></th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -47,17 +47,24 @@
                         {
                             int total = Model[idCap].VDV1.Diem + Model[idCap].VDV2.Diem;
                             int difference = total - Model[idCap].DS_Trinh.Trinh;
-                        <tr>
-                            <td>@Model[idCap].Ma_Cap</td>
-                            <td>@Model[idCap].VDV1.Ten_Tat</td>
-                            <td>@Model[idCap].VDV2.Ten_Tat</td>
-                            <td>@total</td>
-                            <td>@difference</td>
-                            @if (ViewBag.Type == 2) 
-                            {
-                                <td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { pair = Model[idCap].Id})">Xác nhận</button></td>
-                            }
-                        </tr>
+                            <tr>
+                                <td>@Model[idCap].Ma_Cap</td>
+                                <td>@Model[idCap].VDV1.Ten_Tat</td>
+                                <td>@Model[idCap].VDV2.Ten_Tat</td>
+                                <td>@total</td>
+                                <td>@difference</td>
+                                @if (ViewBag.Type == 2) 
+                                {
+                                    <td><button data-url="@Url.Action("CheckPassword", "NoRole", new { 
+                                                         id = Model[idCap].ID_Vdv2,
+                                                         action = "UpdatePair",
+                                                         controller = "CurrentTab",
+                                                         currentAction = "Pair",
+                                                         currentController = "CurrentTab"
+                                                     })" type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#chkPw">Xác nhận</button>
+                                </td>
+                                }
+                            </tr>
                             idCap++;
                             }
                     </tbody>
@@ -80,8 +87,8 @@
                             <tr>
                                 <th>Tên tắt</th>
                                 <th>CLB</th>
-                                <th>Điểm cũ</th>
                                 <th>Điểm</th>
+                                <th>Điểm cũ</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -91,9 +98,16 @@
                                 <tr>
                                     <td>@item.Ten_Tat</td>
                                     <td>@item.CLB</td>
-                                    <td>@item.Diem_Cu</td>
                                     <td>@item.Diem</td>
-                                    <td><button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "CurrentTab", new { idVdv = item.Id })">Đăng kí cặp</button></td>
+                                    <td>@item.Diem_Cu</td>
+                                    <td><button data-url="@Url.Action("CheckPassword", "NoRole", new {
+                                                         id = item.Id,
+                                                         action = "UpdatePair",
+                                                         controller = "CurrentTab",
+                                                         currentAction = "Pair",
+                                                         currentController = "CurrentTab"
+                                                     })" type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#chkPw">Đăng kí cặp</button>
+                                    </td>
                                 </tr>
                             }
                         </tbody>

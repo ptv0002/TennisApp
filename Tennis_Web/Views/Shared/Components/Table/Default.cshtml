@@ -134,7 +134,7 @@
                 <input type="submit" value="Lưu KQ bảng" class="btn btn-success mr-2" formmethod="post" />
                 @if (highRole)
                 {
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmModal">Tính xếp hạng</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-target="#confirmModal">Tính xếp hạng</button>
                 }
             </div>
         }
@@ -229,7 +229,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="confirmLabel">Xác nhận</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
@@ -238,7 +238,7 @@
                             Hành động này không thể bị khôi phục.
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Hủy</button>
                             <input type="submit" value="Tiếp tục" class="btn btn-primary" formaction="/Result/Table_PerformRanking" />
                         </div>
                     </div>

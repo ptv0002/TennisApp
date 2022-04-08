@@ -23,6 +23,10 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Hien_Thi)
                             </th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model.Tin_Nong)
+                            </th>
                             <th></th>
                         </tr>
                     </thead>
@@ -46,6 +50,9 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Hien_Thi)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Tin_Nong)
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
