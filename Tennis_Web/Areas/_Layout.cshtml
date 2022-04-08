@@ -30,7 +30,7 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container px-5">
-                <a class="navbar-brand" asp-action="Index"><img src="~/images/icon/remove-bg-logo.png" height="50" alt="BIT Khánh Hòa"></a>
+                <a class="navbar-brand" asp-action="Index">@*<img src="~/images/icon/remove-bg-logo.png" height="50" alt="BIT Khánh Hòa">*@</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -46,25 +46,26 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarPlayer" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hội viên</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarPlayer">
-                                <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea">Chính thức</a></li>
+                                <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isGuest="false">Chính thức</a></li>
                                 <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isGuest="true">Khách mời</a></li>
+                                <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea">Tất cả</a></li>
                             </ul>
                         </li>
                         @if ((bool?)TempData["HasCurrent"] == true)
                         {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarCurrent" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Giải hiện tại</a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarCurrent">
-                                <li><a class="dropdown-item" asp-action="Announcement" asp-controller="NoRole" asp-route-isCurrent="true">Thông báo</a></li>
-                                @*<li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isCurrent="true">Đăng kí tham gia</a></li>*@
-                                <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a></li>
-                                @if ((bool?)TempData["HasLevel"] == true)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarCurrent" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Giải hiện tại</a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarCurrent">
+                                    <li><a class="dropdown-item" asp-action="Announcement" asp-controller="NoRole" asp-route-isCurrent="true">Thông báo</a></li>
+                                    @*<li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isCurrent="true">Đăng kí tham gia</a></li>*@
+                                    <li><a class="dropdown-item" asp-action="Player" asp-controller="PlayerArea" asp-route-isCurrent="true" asp-route-participate="true">VĐV tham gia</a></li>
+                                    @if ((bool?)TempData["HasLevel"] == true)
                                     {
-                                <li><a class="dropdown-item" asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
-                                <li><a class="dropdown-item" asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
+                                        <li><a class="dropdown-item" asp-action="Pair" asp-controller="CurrentTab">Danh sách cặp</a></li>
+                                        <li><a class="dropdown-item" asp-action="Result" asp-controller="NoRole" asp-route-isCurrent="true">Kết quả thi đấu</a></li>
                                     }
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
                         }
                         <li class="nav-item"><a class="nav-link" asp-action="Tournament" asp-controller="NoRole">Giải cũ</a></li>
                         @*<li class="nav-item"><a class="nav-link" asp-action="Announcement" asp-controller="NoRole">Thông báo</a></li>*@
@@ -74,21 +75,62 @@
                 </div>
             </div>
         </nav>
-        <div class="container px-5 my-5">
-            <div class="text-center mb-3">
-                <h1 class="fw-bolder" style="color:white">@ViewData["Title"]</h1>
-                <p class="lead fw-normal mb-0 tagline">@ViewData["Tagline"]</p>
-                <div class="div-dec"></div>
-            </div>
-            <div class="row gx-5 justify-content-center">
+
+        <!-- Header-->
+        @if (ViewData["Title"].ToString() == "Trang chủ")
+        {
+            <header class="bg-dark py-2">
+                <div class="container px-5">
+                    <div class="row gx-5 align-items-center justify-content-center">
+                        <div class="col-lg-8 col-xl-7 col-xxl-6">
+                            <div class="my-5 text-center text-xl-start">
+                                <h1 class="display-5 fw-bolder text-white mb-2">BIT Khánh Hòa</h1>
+                                <p class="lead fw-normal text-white-50 mb-4">CLB các doanh nghiệp CNTT tỉnh Khánh Hòa</p>
+                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                                    <a class="btn btn-success btn-lg px-4 me-sm-3" asp-action="HotNews" asp-controller="NoRole">Tin nóng</a>
+                                    <a class="btn btn-outline-light btn-lg px-4" href="https://hoitinhoc.khanhhoa.vn/gioi-thieu-hoi-tin-hoc-khanh-hoa_270_338_0_a.html">Giới thiệu CLB</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+                            <img class="img-fluid rounded-3 my-5" src="~/images/still-bg-1.jpg">
+                        </div>
+                    </div>
+                </div>
+            </header>
+        }
+        <div class="container px-4 my-4">
+            @if (ViewData["Title"].ToString() != "Trang chủ") { 
+                <div class="text-center mb-3">
+                    <h1>@ViewData["Title"]</h1>
+                    <p class="lead mb-0 tagline">@ViewData["Tagline"]</p>
+                    <div class="div-dec"></div>
+                </div>
+                }
+            
+            <div class="row gx-5 justify-content-center" id="body">
                 @RenderBody()
             </div>
         </div>
     </main>
     <!-- Footer-->
-    <footer class="bg-dark mt-auto py-1">
-        <div class="container px-5" style="color:white">
-            <div style="text-align:center">Copyright © Veronica Vu 2022</div>
+    <footer class="bg-dark mt-auto py-1 small">
+        <div class="container px-5">
+            <div class="row align-items-center justify-content-between flex-column flex-sm-row text-white">
+                <div class="col-auto"><div class="m-0">Copyright © Veronica Vu 2022</div></div>
+                <div class="col-auto">
+                    <span>Website khác</span>
+                    <a class="fs-5 px-2 link-light" href="https://www.facebook.com/bit.khanhhoa/"><i class="bi-facebook"></i></a>
+                    <a class="fs-5 link-light" href="https://kaict.org.vn/"><i class="bi-globe2"></i></a>
+                </div>
+                <div class="col-auto">
+                    <span class="mx-1">Lượt truy cập</span>
+                    <!-- hitwebcounter Code START -->
+                    <a href="https://www.hitwebcounter.com" target="_blank">
+                        <img src="https://hitwebcounter.com/counter/counter.php?page=7971993&style=0006&nbdigits=9&type=page&initCount=0" title="Free Counter" Alt="web counter" border="0" />
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
     <!-- Bootstrap core JS-->

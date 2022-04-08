@@ -137,7 +137,7 @@ namespace Tennis_Web.Controllers
         public IActionResult ResetPassword(string id)
         {
             var source = new DS_VDV { Password = "bitkhanhhoa@newuser"};
-            var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, new List<string> { "Password" });
+            var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(Convert.ToInt32(id), source, new List<string> { "Password" });
             if (result.Succeeded)
             {
                 _context.SaveChanges();

@@ -40,9 +40,25 @@
                             <tr>
                                 <td>
                                     @if (!ViewBag.Info && item.Phe_Duyet != true)
-                                    {<button type="button" class="link" data-toggle="ajax-modal" data-target="#register" data-url="@Url.Action("Register", "CurrentTab", new { id = item.Id })">@name</button>}
+                                    {
+                                        <button data-url="@Url.Action("CheckPassword", "NoRole", new
+                                                     {
+                                                         id = item.Id,
+                                                         action = "Register",
+                                                         controller = "CurrentTab",
+                                                         currentAction = "Player",
+                                                         currentController = "PlayerArea"
+                                                     })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">@name</button>}
                                     else
-                                    { <a asp-action="UpdatePlayer" asp-route-id="@item.Id">@name</a>}
+                                    {
+                                        <button data-url="@Url.Action("CheckPassword", "NoRole", new
+                                                     {
+                                                         id = item.Id,
+                                                         action = "UpdatePlayer",
+                                                         controller = "PlayerArea",
+                                                         currentAction = "Player",
+                                                         currentController = "PlayerArea"
+                                                     })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">@name</button>}
                                 </td>
                                 <td>@item.Cong_Ty</td>
                                 <td>@item.CLB</td>

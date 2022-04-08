@@ -83,13 +83,13 @@
     <div class="form-group">
         @if (ViewBag.Exist == true)
         {
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Tạo danh sách trận đấu</button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-target="#confirmModal">Tạo danh sách trận đấu</button>
             <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="confirmLabel">Xác nhận</h5>
-                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
@@ -101,7 +101,7 @@
                             Hành động này không thể bị khôi phục.
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Hủy</button>
                             <input type="submit" value="Tiếp tục" class="btn btn-danger" formmethod="post" asp-route-exist="true" />
                         </div>
                     </div>

@@ -1,17 +1,13 @@
 ﻿@{
     Layout = "/Areas/_Layout.cshtml";
     ViewData["Title"] = Model.Ten;
-    ViewData["Tagline"] = Model.Ngay.Day + "/" + Model.Ngay.Month + "/" + Model.Ngay.Year;
+    ViewData["Tagline"] = ViewBag.Tournament;
 }
 @model Models.Thong_Bao
-
 <div class="card shadow mb-4">
-    @if (ViewBag.Tournament != null)
-    {
-        <div class="card-header py-3">
-            <h5>@ViewBag.Tournament</h5>
-        </div>
-    }
+    <div class="card-header py-3">
+         <h5>Ngày: @Model.Ngay.Day/@Model.Ngay.Month/@Model.Ngay.Year</h5>
+    </div>
     <div class="card-body">
         @if (Model.File_Path != null)
         {
