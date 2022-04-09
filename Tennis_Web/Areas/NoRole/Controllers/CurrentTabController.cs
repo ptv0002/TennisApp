@@ -109,13 +109,25 @@ namespace Tennis_Web.Areas.NoRole.Controllers
 
             return RedirectToAction(nameof(Pair));
         }
+        public IActionResult DeletePair(int id)
+        {
+            var pair = _context.DS_Caps.Include(m => m.VDV1).FirstOrDefault(m => m.Id == id);
+            var name = pair.VDV1.Ten_Tat;
+            _context.Remove(pair);
+            _context.SaveChanges();
+            TempData["WarningPair"] = true;
+            TempData["Message"] = "Không đồng ý đứng chung với " + name + "!";
+            return RedirectToAction(nameof(Pair));
+        }
         public IActionResult Pair(string selected)
         {
             bool? success = (bool?)TempData["SuccessfulPair"];
             bool? chkPw = (bool?)TempData["CheckPassword"];
+            bool? warning = (bool?)TempData["WarningPair"];
 
-            if (chkPw == false) { _notyf.Error(TempData["Message"].ToString() ?? "Có lỗi xảy ra khi đang lưu thay đổi!", 30); }
+            if (chkPw == false) { _notyf.Error(TempData["Message"].ToString() ?? "Có lỗi xảy ra khi đang lưu thay đổi!"); }
             if (success == true) { _notyf.Success(TempData["Message"].ToString() ?? "Lưu thay đổi thành công!"); }
+            if (warning == true) { _notyf.Warning(TempData["Message"].ToString()); }
             
             var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
             var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2)

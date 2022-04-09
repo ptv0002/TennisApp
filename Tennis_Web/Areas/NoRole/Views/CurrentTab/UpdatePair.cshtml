@@ -69,7 +69,7 @@
                 else
                 {
                     <input class="btn btn-success mr-2" value="Đồng ý" type="submit" />
-                    <a asp-action="DeletePair" asp-controller="CurrentTab" class="btn btn-danger" asp-route-accept="false">Không đồng ý</a>
+                    <a asp-action="DeletePair" asp-controller="CurrentTab" class="btn btn-danger" asp-route-id="@Model.Id">Không đồng ý</a>
                 }
             </div>
         </div>
