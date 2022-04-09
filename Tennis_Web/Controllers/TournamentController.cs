@@ -224,7 +224,7 @@ namespace Tennis_Web.Controllers
             }
             else TempData["PairApproval"] = false;
 
-            return RedirectToAction(nameof(ApprovePlayer));
+            return RedirectToAction(nameof(ApprovePair));
         }
         //[HttpPost]
         //public IActionResult ApprovePair(List<DS_Cap> list)

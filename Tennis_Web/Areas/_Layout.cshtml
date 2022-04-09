@@ -2,7 +2,10 @@
     @*<a class="scroll-to-top rounded-lg" href="#page-top" style=" width: 4.5rem; height: 4.5rem;">
             <i class="fas fa-angle-up"></i>
         </a>*@
-
+@{ 
+    var indexPage = ViewData["Title"].ToString() == "Trang chủ";
+    var background = indexPage ? "background-img" : "color-background";
+}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -23,14 +26,17 @@
     <link href="~/css/tournament.css" rel="stylesheet" type="text/css">
     <link href="~/css/default.css" rel="stylesheet">
 </head>
-<body class="d-flex flex-column h-100">
+<body class="d-flex flex-column h-100" id="page-top">
     @await Component.InvokeAsync("DefaultLayout")
 
-    <main class="flex-shrink-0 background-img">
+    <main class="flex-shrink-0 @background">
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container px-5">
-                <a class="navbar-brand" asp-action="Index">@*<img src="~/images/icon/remove-bg-logo.png" height="50" alt="BIT Khánh Hòa">*@</a>
+                <a class="navbar-brand" asp-action="Index">
+                    <img src="~/images/icon/white-logo.png" height="50" alt="BIT Khánh Hòa">
+                    <span class="font-weight-bold" style="font-family:Arial, Helvetica, sans-serif">Khanh Hoa IT Business Club</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -77,9 +83,9 @@
         </nav>
 
         <!-- Header-->
-        @if (ViewData["Title"].ToString() == "Trang chủ")
+        @if (indexPage)
         {
-            <header class="bg-dark py-2">
+            <header class="py-2" style="background-color:transparent">
                 <div class="container px-5">
                     <div class="row gx-5 align-items-center justify-content-center">
                         <div class="col-lg-8 col-xl-7 col-xxl-6">
@@ -87,7 +93,7 @@
                                 <h1 class="display-5 fw-bolder text-white mb-2">BIT Khánh Hòa</h1>
                                 <p class="lead fw-normal text-white-50 mb-4">CLB các doanh nghiệp CNTT tỉnh Khánh Hòa</p>
                                 <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                                    <a class="btn btn-success btn-lg px-4 me-sm-3" asp-action="HotNews" asp-controller="NoRole">Tin nóng</a>
+                                    <a class="btn btn-warning btn-lg px-4 me-sm-3" asp-action="HotNews" asp-controller="NoRole">Tin nổi bật</a>
                                     <a class="btn btn-outline-light btn-lg px-4" href="https://hoitinhoc.khanhhoa.vn/gioi-thieu-hoi-tin-hoc-khanh-hoa_270_338_0_a.html">Giới thiệu CLB</a>
                                 </div>
                             </div>
@@ -100,14 +106,15 @@
             </header>
         }
         <div class="container px-4 my-4">
-            @if (ViewData["Title"].ToString() != "Trang chủ") { 
+            @if (!indexPage)
+            {
+                //style="@color"var color = ViewData["Tagline"] ?? "color:#ffce1b";
                 <div class="text-center mb-3">
                     <h1>@ViewData["Title"]</h1>
                     <p class="lead mb-0 tagline">@ViewData["Tagline"]</p>
                     <div class="div-dec"></div>
                 </div>
-                }
-            
+            }
             <div class="row gx-5 justify-content-center" id="body">
                 @RenderBody()
             </div>
@@ -137,11 +144,12 @@
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    
+
     <!-- Page level plugins -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 
+    <script src="~/js/default.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await Component.InvokeAsync("Notyf")
     @RenderSection("Scripts", required: false)

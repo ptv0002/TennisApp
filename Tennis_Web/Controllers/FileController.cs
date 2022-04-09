@@ -60,21 +60,22 @@ namespace Tennis_Web.Controllers
                     string extension = Path.GetExtension(source.File.FileName);
                     if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".pdf")
                     {
-                        // Delete image if already exists
-                        string wwwRootPath = _webHost.WebRootPath + "/Files/Announcement/";
-                        if (source.File_Path != null)
-                        {
-                            string existPath = Path.Combine(wwwRootPath, source.File_Path);
-                            if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
-                        }
+                        //// Delete image if already exists
+                        //string wwwRootPath = _webHost.WebRootPath + "/Files/Announcement/";
+                        //if (source.File_Path != null)
+                        //{
+                        //    string existPath = Path.Combine(wwwRootPath, source.File_Path);
+                        //    if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
+                        //}
 
-                        // Save image to wwwroot/PlayerImg
-                        string fileName = Path.GetFileNameWithoutExtension(source.File.FileName);
-                        source.File_Path = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                        string path = Path.Combine(wwwRootPath, fileName);
-                        using var fileStream = System.IO.File.Create(path);
-                        source.File.CopyTo(fileStream);
-                        fileStream.Dispose();
+                        //// Save image to wwwroot/PlayerImg
+                        //string fileName = Path.GetFileNameWithoutExtension(source.File.FileName);
+                        //source.File_Path = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                        //string path = Path.Combine(wwwRootPath, fileName);
+                        //using var fileStream = System.IO.File.Create(path);
+                        //source.File.CopyTo(fileStream);
+                        //fileStream.Dispose();
+                        new FileMethod(_context, _webHost).SaveAnnouncement(source);
                     }
                     else
                     {

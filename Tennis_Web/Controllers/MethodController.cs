@@ -20,6 +20,7 @@ namespace Tennis_Web.Controllers
             public string Message { get; set; }
             public string ActionName { get; set; }
             public string ControllerName { get; set; }
+            public string AreaName { get; set; }
             public string Id { get; set; }
         }
         
@@ -30,7 +31,11 @@ namespace Tennis_Web.Controllers
         [HttpPost]
         public IActionResult ConfirmModal(ConfirmViewModal model, string any = "")
         {
-            return RedirectToAction(model.ActionName, model.ControllerName, new { id = model.Id });
+            if (model.ControllerName == null)
+            {
+                return RedirectToAction(model.ActionName, new { area = model.AreaName, id = model.Id });
+            }
+            return RedirectToAction(model.ActionName, model.ControllerName, new { area = model.AreaName, id = model.Id });
         }
         public IActionResult SwitchToTabs(string tabname, bool isCurrent, int id, string detailedTitle)
         {

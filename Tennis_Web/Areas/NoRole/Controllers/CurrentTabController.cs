@@ -67,13 +67,11 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             if (model == null)
             {
                 var levels = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi).OrderBy(m => m.Trinh);
-                ViewBag.DS_Trinh = new SelectList(levels, "Id", "Trinh");
+                //ViewBag.DS_Trinh = new SelectList(levels, "Id", "Trinh");
                 ViewBag.LevelList = levels;
                 ViewBag.DS_VDV = PopulateAutoComplete(id);
                 model = new DS_Cap { ID_Vdv1 = id, VDV1 = _context.DS_VDVs.Find(id) };
-                //model.VDV1.Password = null;
             }
-            //else model.VDV2.Password = null;
             return View(model);
         }
         [HttpPost]
@@ -84,76 +82,79 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             if (pair.Id == 0)
             {
                 var p1 = _context.DS_VDVs.Find(pair.ID_Vdv1);
-                //if (p1.Password == pair.VDV1.Password)
-                //{
-                    pair.Diem = p1.Diem + _context.DS_VDVs.Find(pair.ID_Vdv2).Diem;
-                    pair.Phe_Duyet = true;
-                    pair.Xac_Nhan= false;
-                    result = true;
-                    _context.Add(pair);
-                    _notyf.Success("Đăng ký cặp thành công - Chờ partner xác nhận !", 30);
-                //}
-                //else
-                //{
-                //    _notyf.Error("Sai password - Không được phép đăng ký !",30);
-                //}
+                //pair.Id = 0;
+                pair.Diem = p1.Diem + _context.DS_VDVs.Find(pair.ID_Vdv2).Diem;
+                var level = _context.DS_Trinhs.Where(m => m.DS_Giai.Giai_Moi)
+                    .FirstOrDefault(m => m.Trinh - m.BD_Duoi <= pair.Diem && pair.Diem <= m.Trinh + m.BD_Tren);
+                pair.Phe_Duyet = true;
+                pair.Xac_Nhan = false;
+                pair.ID_Trinh = level.Id;
+                result = true;
+                _context.Add(pair);
+                TempData["Message"] = "Đăng ký cặp thành công - Chờ partner xác nhận!";
             }
             // Confirm part form
             else
             {
-                //if (_context.DS_VDVs.Find(pair.ID_Vdv2).Password == pair.VDV2.Password)
-                //{
-                    pair.Xac_Nhan = true;
-                    pair.Phe_Duyet = true;
-                    result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xac_Nhan", "Phe_Duyet" }).Succeeded;
-                    _notyf.Success("Cặp đấu đã đăng ký xong - Chờ BTC phê duyệt !", 30);
-                //}
-                //else
-                //{
-                //    _notyf.Error("Sai password - Chưa được xác nhận !", 30);
-                //}
+                pair.Xac_Nhan = true;
+                pair.Phe_Duyet = true;
+                result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xac_Nhan", "Phe_Duyet" }).Succeeded;
+                TempData["Message"] = "Cặp đấu đã đăng ký xong - Chờ BTC phê duyệt!";
             }
             if (result)
             {
                 _context.SaveChanges();
                 TempData["SuccessfulPair"] = true;
             }
-            
+
             return RedirectToAction(nameof(Pair));
         }
         public IActionResult Pair(string selected)
         {
             bool? success = (bool?)TempData["SuccessfulPair"];
-            if (success == true) { _notyf.Success("Lưu thay đổi thành công!"); }
+            bool? chkPw = (bool?)TempData["CheckPassword"];
+
+            if (chkPw == false) { _notyf.Error(TempData["Message"].ToString() ?? "Có lỗi xảy ra khi đang lưu thay đổi!", 30); }
+            if (success == true) { _notyf.Success(TempData["Message"].ToString() ?? "Lưu thay đổi thành công!"); }
+            
             var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
             var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2)
                 .Where(m => m.DS_Trinh.ID_Giai == current.Id)
                 .OrderBy(m => m.DS_Trinh.Trinh).ThenBy(m => m.Ma_Cap).ToList();
+
+
+            string errorMsg = "";
+
+            switch (selected)
+            {
+                case "1": // Cặp đã được phê duyệt (thành công)
+                    model = model.Where(m => !m.Phe_Duyet && !m.Xac_Nhan).ToList();
+                    ViewBag.Type = 1;
+                    errorMsg = "Không có cặp đã được phê duyệt";
+                    break;
+                case "2": // Cặp thiếu chữ kí xác nhận
+                    model = model.Where(m => m.Phe_Duyet && !m.Xac_Nhan).ToList();
+                    ViewBag.Type = 2;
+                    errorMsg = "Không có cặp thiếu chữ kí xác nhận";
+                    break;
+                case "3": // Cặp chờ phê duyệt
+                    model = model.Where(m => m.Phe_Duyet && m.Xac_Nhan).ToList();
+                    ViewBag.Type = 3;
+                    errorMsg = "Không có cặp chờ phê duyệt";
+                    break;
+                default:
+                    ViewBag.Type = 0;
+                    errorMsg = "Không có danh sách cặp";
+                    break;
+            }
+            if (!model.Any()) { _notyf.Error(errorMsg); }
             var list = model.GroupBy(m => m.DS_Trinh.Trinh).Select(m => new
             {
                 Trinh = m.Key,
                 Num = m.Count()
             }).OrderBy(m => m.Trinh);
             ViewBag.ListLevel = list.Select(m => m.Trinh).ToList();
-            ViewBag.ListNum = list.Select(m => m.Num).ToList();        
-            switch (selected)
-            {
-                case "1": // Cặp đã được phê duyệt (thành công)
-                    model = model.Where(m => !m.Phe_Duyet && !m.Xac_Nhan).ToList();
-                    ViewBag.Type = 1;
-                    break;
-                case "2": // Cặp thiếu chữ kí xác nhận
-                    model = model.Where(m => m.Phe_Duyet && !m.Xac_Nhan).ToList();
-                    ViewBag.Type = 2;
-                    break;
-                case "3": // Cặp chờ phê duyệt
-                    model = model.Where(m => m.Phe_Duyet && m.Xac_Nhan).ToList();
-                    ViewBag.Type = 3;
-                    break;
-                default:
-                    ViewBag.Type = 1;
-                    break;
-            }
+            ViewBag.ListNum = list.Select(m => m.Num).ToList(); 
             // Generate List of all participated players with no pairs
             var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == current.Id).Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
@@ -167,37 +168,12 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public IActionResult Register(int id)
         {
-            //var old = _context.DS_VDVs.Find(id);
-            //bool result = false;
-            //// First time user
-            //if (old.Password == "bitkhanhhoa@newuser")
-            //{
-            //    if ( model.Password == old.Password && model.ConfirmPassword == model.NewPassword) 
-            //    {
-            //        old.Email = model.Email;
-            //        old.Password = model.NewPassword;
-            //        old.Tel = model.Tel;
-            //        old.Phe_Duyet = true;
-            //        result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Email", "Tel", "Password", "Phe_Duyet" }).Succeeded;
-            //    }
-            //    else // Nhập sai password cũ hoặc password mới không giống nhau
-            //    {
-            //        _notyf.Error("Nhập sai Password hoặc Password mới không đồng nhất !");
-            //        result = false;
-            //    }    
-            //}
-            //else
-            //{
-            //    if (old.Password == model.Password)
-            //    {
             var item = new DS_VDV
             {
                 Id = id,
                 Phe_Duyet = true
             };
             bool result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(item.Id, item, new List<string> { "Phe_Duyet" }).Succeeded;
-
-
             TempData["SuccessfulRegister"] = result;
             if (result) { _context.SaveChanges(); }
             return RedirectToAction("Player", "PlayerArea", new { isCurrent = true, participate = false });

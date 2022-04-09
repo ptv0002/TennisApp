@@ -1,5 +1,6 @@
 ﻿@{ 
     bool first = Model.Id == 0;
+    Layout = "/Areas/_Layout.cshtml";
     if (first) { ViewData["Title"] = "Đăng kí cặp"; }
     else { ViewData["Title"] = "Xác nhận cặp"; }
 }
@@ -8,10 +9,10 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <input type="hidden" asp-for="@Model.Id" />
+            <input type="hidden" value="@Model.Id" asp-for="Id" />
             <div class="row">
                 <dl class="row">
-                    @if (first)
+                    @*@if (first)
                     {
                         <dt class="col-sm-3 font-weight-bold">Chọn trình</dt>
                         <dd class="col-sm-9"><select asp-for="ID_Trinh" class="form-control" asp-items="ViewBag.DS_Trinh"></select></dd>
@@ -20,7 +21,7 @@
                     {
                         <dt class="col-sm-3 font-weight-bold">Trình</dt>
                         <dd class="col-sm-9"><input asp-for="ID_Trinh" class="form-control" disabled /></dd>
-                    }
+                    }*@
                     <dt class="col-sm-3 font-weight-bold">VĐV 1</dt>
                     <dd class="col-sm-9">
                         <input type="hidden" asp-for="ID_Vdv1" />
@@ -61,7 +62,7 @@
                 </dl>
             </div>
             <div class="form-group">
-                @if (!first)
+                @if (first)
                 {
                     <input class="btn btn-success" value="Đăng kí" type="submit" />
                 }

@@ -71,7 +71,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             var model = _context.DS_Giais.Where(m => !m.Giai_Moi).OrderByDescending(m => m.Ngay).ToList();
             return View(model);
         }
-        public IActionResult CheckPassword(int id, string nextaction, string nextcontroller, string currentAction, string currentController)
+        public IActionResult CheckPassword(int id, string nextAction, string nextController, 
+            string currentAction, string currentController)
         {
             var model = _context.DS_VDVs.Find(id);
             ViewBag.Password = model.Password;
@@ -79,8 +80,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             {
                 Id = model.Id,
                 Ten_Tat = model.Ten_Tat,
-                Action = nextaction,
-                Controller = nextcontroller,
+                Action = nextAction,
+                Controller = nextController,
                 CurrentAction = currentAction,
                 CurrentController = currentController
             });
@@ -88,22 +89,30 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         [HttpPost]
         public IActionResult CheckPassword(int id, PasswordViewModel model)
         {
-            var old = _context.DS_VDVs.Find(id);
-            if (model.Password == old.Password/* && model.ConfirmPassword == model.NewPassword*/)
+            if (ModelState.IsValid)
             {
-                // First time user
-                if (old.Password == "bitkhanhhoa@newuser")
+                var old = _context.DS_VDVs.Find(id);
+                if (model.Password == old.Password)
                 {
-                    old.Password = model.NewPassword;
-                    bool result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Password" }).Succeeded;
-                    if (result) _context.SaveChanges();
-
+                    // First time user
+                    if (old.Password == "bitkhanhhoa@newuser")
+                    {
+                        old.Password = model.NewPassword;
+                        bool result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Password" }).Succeeded;
+                        if (result) _context.SaveChanges();
+                    }
+                    return RedirectToAction(model.Action, model.Controller, new { id });
                 }
-                return RedirectToAction(model.Action, model.Controller, new { id });
+                else // Wrong password
+                {
+                    TempData["CheckPassword"] = false;
+                    TempData["Message"] = "Nhập sai mật khẩu";
+                }
             }
-            else // Wrong password
+            else 
             {
-                _notyf.Error("Nhập sai Password!");
+                TempData["CheckPassword"] = false;
+                TempData["Message"] = "Xác nhận mật khẩu không trùng khớp"; 
             }
             return RedirectToAction(model.CurrentAction, model.CurrentController);
         }

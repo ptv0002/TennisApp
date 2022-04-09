@@ -6,21 +6,49 @@
     ViewBag.CActive = "active visible-sm visible-xs";
 }
 @model List<Models.DS_Cap>
-@if (ViewBag.NoPairPlayers.Count > 0)
-{
-    <div style="margin-bottom:1rem; padding:0">
-        @*<a href="#players" class="btn btn-primary">Đăng kí cặp</a>*@
-    </div>
-}
-<form asp-action="Pair" class="px-0">
+
+<form asp-action="Pair" class="px-0" style="display: flex; justify-content: space-between;">
+    @if (ViewBag.NoPairPlayers.Count > 0)
+    {
+        <a href="#players" class="btn btn-warning">Đăng kí cặp</a>
+    }
     <div style="display:flex">
         <select name="selected" class="form-control" style="width:max-content">
-            <option>Tất cả</option>
-            <option value="1">Cặp đã được phê duyệt</option>
-            <option value="2">Cặp thiếu chữ kí xác nhận</option>
-            <option value="3">Cặp chờ phê duyệt</option>
+            @{ switch (ViewBag.Type)
+                {
+                    case 1:
+                        <option value="0">Tất cả</option>
+                        <option selected value="1">Cặp đã được phê duyệt</option>
+                        <option value="2">Cặp thiếu chữ kí xác nhận</option>
+                        <option value="3">Cặp chờ phê duyệt</option>
+                        break;
+                    case 2:
+                        <option value="0">Tất cả</option>
+                        <option value="1">Cặp đã được phê duyệt</option>
+                        <option selected value="2">Cặp thiếu chữ kí xác nhận</option>
+                        <option value="3">Cặp chờ phê duyệt</option>
+                        break;
+                    case 3:
+                        <option value="0">Tất cả</option>
+                        <option value="1">Cặp đã được phê duyệt</option>
+                        <option value="2">Cặp thiếu chữ kí xác nhận</option>
+                        <option selected value="3">Cặp chờ phê duyệt</option>
+                        break;
+                    default:
+                        <option selected value="0">Tất cả</option>
+                        <option value="1">Cặp đã được phê duyệt</option>
+                        <option value="2">Cặp thiếu chữ kí xác nhận</option>
+                        <option value="3">Cặp chờ phê duyệt</option>
+                        break;
+
+                }
+            }
+            @*<option value="0">Tất cả</option>
+                <option value="1">Cặp đã được phê duyệt</option>
+                <option value="2">Cặp thiếu chữ kí xác nhận</option>
+                <option value="3">Cặp chờ phê duyệt</option>*@
         </select>
-        <input type="submit" formmethod="post" class="mx-2 btn btn-warning" value="Cập nhật" />
+        <input type="submit" formmethod="get" class="mx-2 btn btn-outline-secondary" value="Cập nhật" />
     </div>
 </form>
 @for (int i = 0; i < ViewBag.ListLevel.Count; i++)
@@ -31,7 +59,7 @@
         </div>
         <div class="card-body">
             <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                <table class="table dataTable" id="normalTable">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Mã cặp</th>
@@ -39,34 +67,47 @@
                             <th>VĐV 2</th>
                             <th>Tổng điểm</th>
                             <th>Lệch trình</th>
-                            @if (ViewBag.Type == 2) {<th></th>}
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (int j = 0; j < ViewBag.ListNum[i]; j++)
                         {
                             int total = Model[idCap].VDV1.Diem + Model[idCap].VDV2.Diem;
-                            int difference = total - Model[idCap].DS_Trinh.Trinh;
+                        int difference = total - Model[idCap].DS_Trinh.Trinh;
                             <tr>
                                 <td>@Model[idCap].Ma_Cap</td>
                                 <td>@Model[idCap].VDV1.Ten_Tat</td>
                                 <td>@Model[idCap].VDV2.Ten_Tat</td>
                                 <td>@total</td>
                                 <td>@difference</td>
-                                @if (ViewBag.Type == 2) 
-                                {
-                                    <td><button data-url="@Url.Action("CheckPassword", "NoRole", new { 
+                                <td>
+                                    @switch (Model[idCap].Phe_Duyet, Model[idCap].Xac_Nhan)
+                                    {
+                                        case (false, false):
+                                            <span class="text-muted">(Đã được phê duyệt)</span>
+                                            break;
+                                        case (true, false):
+                                            <button data-url="@Url.Action("CheckPassword", "NoRole", new {
                                                          id = Model[idCap].ID_Vdv2,
-                                                         action = "UpdatePair",
-                                                         controller = "CurrentTab",
+                                                         nextAction = "UpdatePair",
+                                                         nextController = "CurrentTab",
                                                          currentAction = "Pair",
                                                          currentController = "CurrentTab"
-                                                     })" type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#chkPw">Xác nhận</button>
+                                                     })" type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#chkPw">
+                                                Xác nhận
+                                            </button>
+                                            break;
+                                        case (true, true):
+                                            <span class="text-muted">(Chờ phê duyệt)</span>
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                 </td>
-                                }
                             </tr>
                             idCap++;
-                            }
+                        }
                     </tbody>
                 </table>
             </div>
@@ -94,7 +135,7 @@
                         </thead>
                         <tbody>
                             @foreach (var item in ViewBag.NoPairPlayers)
-                            {
+                             {
                                 <tr>
                                     <td>@item.Ten_Tat</td>
                                     <td>@item.CLB</td>
@@ -102,8 +143,8 @@
                                     <td>@item.Diem_Cu</td>
                                     <td><button data-url="@Url.Action("CheckPassword", "NoRole", new {
                                                          id = item.Id,
-                                                         nextaction = "UpdatePair",
-                                                         nextcontroller = "CurrentTab",
+                                                         nextAction = "UpdatePair",
+                                                         nextController = "CurrentTab",
                                                          currentAction = "Pair",
                                                          currentController = "CurrentTab"
                                                      })" type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#chkPw">Đăng kí cặp</button>

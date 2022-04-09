@@ -87,7 +87,7 @@ namespace Tennis_Web.Controllers
                     //        return RedirectToAction("Index", "Home", new { area = "NoRole" }); // Redirect to Players Index page
                     //}
                     if (a1) { return RedirectToAction("Index", "Match", new { isCurrent = true }); } 
-                    else { return RedirectToAction("Index", "Home", new { area = "NoRole" }); }// Redirect to Players Index page
+                    else { return RedirectToAction("Index", "NoRole", new { area = "NoRole" }); }// Redirect to Players Index page
                 }
                 ModelState.AddModelError(string.Empty, "Đăng nhập không thành công!");
             }
