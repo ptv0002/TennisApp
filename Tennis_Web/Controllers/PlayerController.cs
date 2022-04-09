@@ -65,21 +65,22 @@ namespace Tennis_Web.Controllers
                 {
                     if (source.Picture.Length <= 250000)
                     {
-                        // Delete image if already exists
-                        string wwwRootPath = _webHost.WebRootPath + "/Files/PlayerImg/";
-                        if (source.File_Anh != null)
-                        {
-                            string existPath = Path.Combine(wwwRootPath, source.File_Anh);
-                            if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
-                        }
+                        //// Delete image if already exists
+                        //string wwwRootPath = _webHost.WebRootPath + "/Files/PlayerImg/";
+                        //if (source.File_Anh != null)
+                        //{
+                        //    string existPath = Path.Combine(wwwRootPath, source.File_Anh);
+                        //    if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
+                        //}
 
-                        // Save image to wwwroot/PlayerImg
-                        string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
-                        source.File_Anh = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                        string path = Path.Combine(wwwRootPath, fileName);
-                        using var fileStream = System.IO.File.Create(path);
-                        source.Picture.CopyTo(fileStream);
-                        fileStream.Dispose();
+                        //// Save image to wwwroot/PlayerImg
+                        //string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
+                        //source.File_Anh = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                        //string path = Path.Combine(wwwRootPath, fileName);
+                        //using var fileStream = System.IO.File.Create(path);
+                        //source.Picture.CopyTo(fileStream);
+                        //fileStream.Dispose();
+                        new FileMethod(_context, _webHost).SaveImage(source);
                     }
                     else
                     {
@@ -122,16 +123,7 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult DeleteImage(string id)
         {
-            var source = _context.DS_VDVs.Find(Convert.ToInt32(id));
-            string wwwRootPath = _webHost.WebRootPath;
-            string path = Path.Combine(wwwRootPath + "/Files/PlayerImg/", source.File_Anh);
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
-                source.File_Anh = null;
-                var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, new List<string> { "File_Anh" });
-                if (result.Succeeded) _context.SaveChanges();
-            }
+            new FileMethod(_context, _webHost).DeleteImage(id);
             return RedirectToAction(nameof(Update), Convert.ToInt32(id));
         }
         public IActionResult ResetPassword(string id)

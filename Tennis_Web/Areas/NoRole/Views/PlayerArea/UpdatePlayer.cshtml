@@ -1,6 +1,7 @@
 ﻿@model Models.DS_VDV
 @{
     ViewData["Title"] = "Thông tin VĐV";
+    Layout = "/Areas/_Layout.cshtml";
 }
 <form asp-action="UpdatePlayer" enctype="multipart/form-data">
     <div class="card shadow mb-4">
@@ -21,8 +22,7 @@
                             <label asp-for="Ten_Tat" class="control-label"></label>
                         </dt>
                         <dd class="col-sm-9">
-                            <input asp-for="Ten_Tat" class="form-control" required />
-                            <span asp-validation-for="Ten_Tat" class="text-danger"></span>
+                            <input asp-for="Ten_Tat" class="form-control" disabled />
                         </dd>
                         <dt class="col-sm-3 font-weight-bold text-align-right">
                             <label asp-for="Gioi_Tinh" class="control-label"></label>
@@ -89,24 +89,25 @@
                         <input class="form-control mb-2" type="file" asp-for="Picture" />
                         @if (Model != null && Model.File_Anh != null)
                         {
-                            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-                            {
-                                BtnMsg = "Xóa",
-                                Message = "xóa ảnh",
-                                ActionName = "DeleteImage",
-                                ControllerName = "Player",
-                                Id = Model.Id.ToString()
-                            };
+                            //var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                            //{
+                            //    BtnMsg = "Xóa",
+                            //    Message = "xóa ảnh",
+                            //    ActionName = "DeleteImage",
+                            //    //ControllerName = "PlayerArea",
+                            //    AreaName = "NoRole",
+                            //    Id = Model.Id.ToString()
+                            //};
                             <img src="@("~/Files/PlayerImg/" + Model.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" />
-                            <button type="button" class="mt-2 btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa ảnh</button>
+                            @*<button type="button" class="mt-2 btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa ảnh</button>*@
                         }
                         else
                         { <img style="min-width: 100%;" alt="Chưa có hình đại diện">}
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" />
+            <div class="form-group" style="text-align:center">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-success" />
             </div>
         </div>
     </div>

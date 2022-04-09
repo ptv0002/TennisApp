@@ -44,8 +44,8 @@
                                         <button data-url="@Url.Action("CheckPassword", "NoRole", new
                                                      {
                                                          id = item.Id,
-                                                         action = "Register",
-                                                         controller = "CurrentTab",
+                                                         nextAction = "Register",
+                                                         nextController = "CurrentTab",
                                                          currentAction = "Player",
                                                          currentController = "PlayerArea"
                                                      })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">@name</button>}
@@ -54,8 +54,8 @@
                                         <button data-url="@Url.Action("CheckPassword", "NoRole", new
                                                      {
                                                          id = item.Id,
-                                                         action = "UpdatePlayer",
-                                                         controller = "PlayerArea",
+                                                         nextAction = "UpdatePlayer",
+                                                         nextController = "PlayerArea",
                                                          currentAction = "Player",
                                                          currentController = "PlayerArea"
                                                      })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">@name</button>}

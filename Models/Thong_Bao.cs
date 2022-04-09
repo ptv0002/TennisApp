@@ -24,7 +24,7 @@
         public string File_Text { get; set; }
         [DisplayName("Hiển thị")]
         public bool Hien_Thi { get; set; }
-        [DisplayName("Tin nóng")]
+        [DisplayName("Tin nổi bật")]
         public bool Tin_Nong { get; set; }
         public int? ID_Giai { get; set; }
         [ForeignKey("ID_Giai")]

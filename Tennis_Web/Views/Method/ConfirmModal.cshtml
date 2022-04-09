@@ -20,10 +20,11 @@
                 <input type="hidden" asp-for="Message" />
                 <input type="hidden" asp-for="ActionName" />
                 <input type="hidden" asp-for="ControllerName" />
+                <input type="hidden" asp-for="AreaName" />
                 <input type="hidden" asp-for="Id" />
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Hủy</button>
-                    <input class="btn btn-danger" type="submit" value="@Model.BtnMsg" formmethod="post"/>
+                    <input class="btn btn-danger" type="submit" value="@Model.BtnMsg" formmethod="post" />
                 </div>
             </form>
         </div>
