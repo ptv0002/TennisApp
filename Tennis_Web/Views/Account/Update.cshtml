@@ -41,7 +41,7 @@
         else
         {
             <dd class="col-sm-9">
-                <a class="btn btn-danger" data-bs-toggle="modal" data-target="#confirmModal">Thay đổi mật khẩu</a>
+                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Thay đổi mật khẩu</a>
             </dd>
         }
         <dt class="col-sm-3 font-weight-bold">
@@ -88,7 +88,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" value="@ViewBag.Id" name="id" />
+                    <input type="hidden" asp-for="Username" />
                     <div class="form-group">
                         <label asp-for="Password" class="control-label font-weight-bold"></label>
                         <input asp-for="Password" class="form-control" required />

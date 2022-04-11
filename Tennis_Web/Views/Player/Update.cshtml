@@ -5,6 +5,7 @@
 <hr />
 <form asp-action="Update" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="col-12 mb-3 text-danger">• Cần lưu tất cả thay đổi trước khi đặt lại mật khẩu!</div>
     <input type="hidden" asp-for="Id" />
     <div class="row">
         <div class="col-9">
@@ -54,25 +55,25 @@
                     <input asp-for="Email" class="form-control" autocomplete="new-email" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </dd>
-                @if (Model != null)
-                {
-                    <dt class="col-sm-3 font-weight-bold text-align-right">
-                        <label asp-for="Password" class="control-label"></label>
-                    </dt>
-                    <dd class="col-sm-9">
-                        @{
-                            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-                            {
-                                BtnMsg = "Tiếp tục",
-                                Message = "đặt lại mật khẩu VĐV " + Model.Ten_Tat,
-                                ActionName = "ResetPassword",
-                                ControllerName = "Player",
-                                Id = Model.Id.ToString()
-                            };
-                        }
-                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Đặt lại mật khẩu</button>
-                    </dd>
-                }
+                @*@if (Model != null)
+                    {
+                        <dt class="col-sm-3 font-weight-bold text-align-right">
+                            <label asp-for="Password" class="control-label"></label>
+                        </dt>
+                        <dd class="col-sm-9">
+                            @{
+                                var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                                {
+                                    BtnMsg = "Tiếp tục",
+                                    Message = "đặt lại mật khẩu VĐV " + Model.Ten_Tat,
+                                    ActionName = "ResetPassword",
+                                    ControllerName = "Player",
+                                    Id = Model.Id.ToString()
+                                };
+                            }
+                            <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Đặt lại mật khẩu</button>
+                        </dd>
+                    }*@
 
                 <dt class="col-sm-3 font-weight-bold text-align-right">
                     <label asp-for="Khach_Moi" class="control-label"></label>

@@ -27,10 +27,10 @@ namespace Library
             if (File.Exists(path))
             {
                 File.Delete(path);
-                source.File_Anh = null;
-                var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, new List<string> { "File_Anh" });
-                if (result.Succeeded) _context.SaveChanges();
             }
+            source.File_Anh = null;
+            var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(source.Id, source, new List<string> { "File_Anh" });
+            if (result.Succeeded) _context.SaveChanges();
         }
         public void SaveImage(DS_VDV source)
         {

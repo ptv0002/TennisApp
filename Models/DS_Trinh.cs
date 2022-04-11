@@ -39,6 +39,10 @@
         public int BD_Tren { get; set; }
         [DisplayName("Biên độ dưới")]
         public int BD_Duoi { get; set; }
+        [DisplayName("Điểm tham gia tối đa")]
+        public int Max_Point { get; set; }
+        [DisplayName("Điểm tham gia tối thiểu")]
+        public int Min_Point { get; set; }
         public int ID_Giai { get; set; }
         [ForeignKey("ID_Giai")]
         public virtual DS_Giai DS_Giai { get; set; }

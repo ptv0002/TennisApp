@@ -112,7 +112,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             else 
             {
                 TempData["CheckPassword"] = false;
-                TempData["Message"] = "Xác nhận mật khẩu không trùng khớp"; 
+                TempData["Message"] = "Xác nhận mật khẩu không trùng khớp!"; 
             }
             return RedirectToAction(model.CurrentAction, model.CurrentController);
         }

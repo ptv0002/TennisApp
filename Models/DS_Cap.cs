@@ -29,6 +29,8 @@
         public int Boc_Tham { get; set; }
         [DisplayName("Xếp hạng")]
         public int Xep_Hang { get; set; }
+        [DisplayName("Ngày đăng kí")]
+        public DateTime? Ngay { get; set; }
         public int ID_Trinh { get; set; }
         [ForeignKey("ID_Trinh")]
         public virtual DS_Trinh DS_Trinh { get; set; }

@@ -25,25 +25,26 @@ namespace Tennis_Web.Controllers
             _webHost = webHost;
         }
 
-        IActionResult TabVMGenerator(int idTrinh, bool result, Tab tabName, string msg)
-        {
-            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).FirstOrDefault(m => m.Id == idTrinh);
-            var vm = new TabViewModel
-            {
-                ActiveTab = tabName,
-                IsCurrent = true,
-                ID = temp.Id,
-                DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
-                Succeeded = result,
-                ErrorMsg = msg
-            };
-            // If save successfully, view error and display View with model from DB 
-            return RedirectToAction("MatchInfo", "Match", vm);
-        }
+        //IActionResult TabVMGenerator(int idTrinh, bool result, Tab tabName, string msg)
+        //{
+        //    var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).FirstOrDefault(m => m.Id == idTrinh);
+        //    var vm = new TabViewModel
+        //    {
+        //        ActiveTab = tabName,
+        //        IsCurrent = true,
+        //        ID = temp.Id,
+        //        DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
+        //        Succeeded = result,
+        //        ErrorMsg = msg
+        //    };
+        //    // If save successfully, view error and display View with model from DB 
+        //    return RedirectToAction("MatchInfo", "Match", vm);
+        //}
         public IActionResult Table_UpdateTable(RoundTabViewModel model)
         {
             bool result = Table_UpdateResult(model);
-            return TabVMGenerator(model.ID_Trinh, result, Tab.Table, "");
+            return new MethodController(_context).TabVMGenerator_Level(model.ID_Trinh, result,
+                Tab.Table, "", "MatchInfo", "Match");
         }
         /// <summary>
         /// Cập nhật kết quả thi đấu các bảng
@@ -118,7 +119,8 @@ namespace Tennis_Web.Controllers
                 // Save all changes to DB
                 if (result) _context.SaveChanges();
             }
-            return TabVMGenerator(model.ID_Trinh, result, Tab.Table, "");
+            return new MethodController(_context).TabVMGenerator_Level(model.ID_Trinh, result,
+                Tab.Table, "", "MatchInfo", "Match");
         }
         /// <summary>
         /// Tính điểm toàn bộ bảng trong trình
@@ -336,7 +338,8 @@ namespace Tennis_Web.Controllers
                 }
             }
             if (result) _context.SaveChanges();
-            return TabVMGenerator(model.ID_Trinh, result, Tab.Table, msg);
+            return new MethodController(_context).TabVMGenerator_Level(model.ID_Trinh, result,
+                Tab.Table, msg, "MatchInfo", "Match");
         }
         public IActionResult Special_Update(List<DS_Tran> model)
         {
@@ -370,12 +373,14 @@ namespace Tennis_Web.Controllers
             else result = false;
             // Save all changes to DB
             if (result) _context.SaveChanges();
-            return TabVMGenerator(model.FirstOrDefault().ID_Trinh, result, Tab.Special, "");
+            return new MethodController(_context).TabVMGenerator_Level(model.FirstOrDefault().ID_Trinh, result,
+                Tab.Special, "", "MatchInfo", "Match");
         }
         public IActionResult Special_Reset(int id)
         {
             bool result = Special_ResetResult(id);
-            return TabVMGenerator(id, result, Tab.Table, "");
+            return new MethodController(_context).TabVMGenerator_Level(id, result,
+                Tab.Table, "", "MatchInfo", "Match");
         }
                 
         bool Special_ResetResult(int idTrinh)
@@ -395,7 +400,8 @@ namespace Tennis_Web.Controllers
         public IActionResult End_Score(int idTrinh)
         {
             new ScoreCalculation(_context).Player_PointDistribution(idTrinh);
-            return TabVMGenerator(idTrinh,true, Tab.Point, "");
+            return new MethodController(_context).TabVMGenerator_Level(idTrinh, true,
+                Tab.Point, "", "MatchInfo", "Match");
         }
         void UpdateScore(List<DS_Diem> scoreList)
         {
