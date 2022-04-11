@@ -5,13 +5,13 @@
     ViewBag.PActive = "active";
 }
 @*<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" />*@
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css" />*@
 <div class="card shadow mb-4">
     <div class="card-body">
         <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
             <div class="table-responsive">
                 <table class="table dataTable" id="normalTable">
-                @*<table class="table dataTable" id="noPaging">*@
+                    @*<table class="table dataTable" id="noPaging">*@
                     <thead>
                         <tr>
                             <th style="text-align:left;">
@@ -35,6 +35,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Gioi_Tinh)
                             </th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,6 +44,14 @@
                             string gender;
                             if (item.Gioi_Tinh) gender = "Nữ";
                             else gender = "Nam";
+                            var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                            {
+                                BtnMsg = "Tiếp tục",
+                                Message = "đặt lại mật khẩu VĐV " + item.Ten_Tat,
+                                ActionName = "ResetPassword",
+                                ControllerName = "Player",
+                                Id = item.Id.ToString()
+                            };
                             <tr>
                                 <td style="text-align:left">
                                     <a asp-action="Update" asp-route-id="@item.Id">@item.Ten_Tat</a>
@@ -54,7 +63,10 @@
                                     @Html.DisplayFor(modelItem => item.Khach_Moi)
                                 </td>
                                 <td>
-                                    <img src="@("~/Files/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />
+                                    @if (item.File_Anh != null)
+                                    {
+                                        <img src="@("~/Files/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />
+                                    }
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Diem)
@@ -65,35 +77,13 @@
                                 <td>
                                     @gender
                                 </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Đặt lại mật khẩu</button>
+                                </td>
                             </tr>
 
                         }
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <th style="text-align:left">
-                                @Html.DisplayNameFor(model => model.Ten_Tat)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.CLB)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Khach_Moi)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.File_Anh)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Diem)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Diem_Cu)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Gioi_Tinh)
-                            </th>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -104,22 +94,24 @@
     @if (User.IsInRole("Admin"))
     {<a asp-action="UpScore" class="btn btn-danger">Cập nhật điểm</a>}
 </div>
+<!-- Modal placeholder -->
+<div id="modal-placeholder"></div>
 @*<script>
-    $(document).ready( function() {
-        $('#noPaging').DataTable( {
-            dom: 'Bfrtip',
-            buttons: [ {
-                extend: 'excelHtml5',
-                customize: function( xlsx ) {
-                    var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                    $('row c[r^="C"]', sheet).attr( 's', '2' );
-                }
-            } ]
-        } );
-    });
-</script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>*@
+        $(document).ready( function() {
+            $('#noPaging').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [ {
+                    extend: 'excelHtml5',
+                    customize: function( xlsx ) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                        $('row c[r^="C"]', sheet).attr( 's', '2' );
+                    }
+                } ]
+            } );
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>*@

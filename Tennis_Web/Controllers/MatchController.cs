@@ -44,16 +44,17 @@ namespace Tennis_Web.Controllers
             ViewBag.TourName = _context.DS_Giais.Find(id).Ten;
             // Display for previous tournament
             // Get all levels from given tournament
-            var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == id).Select(m => m.Id);
+            var levels = _context.DS_Trinhs.Where(m => m.ID_Giai == id);
+            var levelIds = levels.Select(m => m.Id);
             // Get all pairs with Level Id from the level id list
-            var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && !m.Phe_Duyet && !m.Xac_Nhan).ToList();
+            var pairs = _context.DS_Caps.Where(m => levelIds.Contains(m.ID_Trinh) && !m.Phe_Duyet && !m.Xac_Nhan).ToList();
             var vdv_Ids = pairs.SelectMany(m => new[] { m.ID_Vdv1, m.ID_Vdv2 });
             // Get all players with from Player Id found in Player1 and Player2 lists
             var playersFromPair = _context.DS_VDVs.Where(m => vdv_Ids.Contains(m.Id));
             // Get all players that haven't been put to any pair, or all pairs that haven't got a code
             var noPairPlayers = ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(playersFromPair).OrderByDescending(m => m.Diem).ThenByDescending(m => m.Diem_Cu).ToList();
             var noCodePairs = ViewBag.NoCodePairs = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh)
-                .Where(m => levels.Contains(m.ID_Trinh) && m.Ma_Cap == null && !m.Phe_Duyet).OrderBy(m => m.DS_Trinh.Trinh).ToList();
+                .Where(m => levelIds.Contains(m.ID_Trinh) && m.Ma_Cap == null && !m.Phe_Duyet).OrderBy(m => m.DS_Trinh.Trinh).ToList();
             // If there's any players who haven't been put in pairs, or pairs that haven't got a code, return error
             if (noCodePairs.Count > 0 || noPairPlayers.Count > 0)
             {
@@ -64,7 +65,7 @@ namespace Tennis_Web.Controllers
             // -------------------------------- If all conditions met --------------------------------
 
             // If any match found, return error message before proceeding
-            if (_context.DS_Trans.Any(m => levels.Contains(m.ID_Trinh)))
+            if (_context.DS_Trans.Any(m => levelIds.Contains(m.ID_Trinh)))
             {
                 ViewBag.Exist = true;
                 ModelState.AddModelError(string.Empty, "Đã có danh sách trận trong cơ sở dữ liệu! Nếu tiếp tục sẽ xóa danh sách trận cũ.");
@@ -76,7 +77,7 @@ namespace Tennis_Web.Controllers
             {
                 var dict = new List<ChosenPerTable>();
                 // Get name of all (distinct) tables from the given Ma_Cap (Pair Code)
-                var tables = pairs.Where(m => m.ID_Trinh == level).GroupBy(m => char.ToUpper(m.Ma_Cap[0])).Select(m => new
+                var tables = pairs.Where(m => m.ID_Trinh == level.Id).GroupBy(m => char.ToUpper(m.Ma_Cap[0])).Select(m => new
                 {
                     Table = m.Key,
                     Num = m.Count()
@@ -89,8 +90,8 @@ namespace Tennis_Web.Controllers
                 // Add all levels to model (Tournament)
                 model.Add(new MatchGeneratorViewModel
                 {
-                    ID_Trinh = level,
-                    Trinh = _context.DS_Trinhs.Find(level).Trinh,
+                    ID_Trinh = level.Id,
+                    Trinh = level.Trinh,
                     ChosenPerTable = dict
                 });
             }

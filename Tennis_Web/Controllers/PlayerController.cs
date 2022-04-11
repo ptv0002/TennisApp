@@ -36,8 +36,8 @@ namespace Tennis_Web.Controllers
         public IActionResult UpScore()
         {
             new ScoreCalculation(_context).Player_Update();
-            var model = _context.DS_VDVs.OrderByDescending(m => m.Diem).ToList();
-            return RedirectToAction(nameof(Index), model);
+            TempData["SuccessfulUpdatePlayer"] = true;
+            return RedirectToAction(nameof(Index));
         }
         public IActionResult Update(int id)
         {
@@ -45,7 +45,6 @@ namespace Tennis_Web.Controllers
             if (success == true) {_notyf.Success("Lưu thay đổi thành công!");}
             var destination = _context.DS_VDVs.Find(id);
             if (destination != null && destination.File_Anh != null) _notyf.Warning("Upload ảnh mới sẽ xóa ảnh cũ!", 100);
-            if (id != 0) _notyf.Information("Cần lưu thay đổi (nếu có) trước khi đặt lại mật khẩu!", 100);
             return View(destination);
         }
         [HttpPost]
@@ -65,21 +64,6 @@ namespace Tennis_Web.Controllers
                 {
                     if (source.Picture.Length <= 250000)
                     {
-                        //// Delete image if already exists
-                        //string wwwRootPath = _webHost.WebRootPath + "/Files/PlayerImg/";
-                        //if (source.File_Anh != null)
-                        //{
-                        //    string existPath = Path.Combine(wwwRootPath, source.File_Anh);
-                        //    if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
-                        //}
-
-                        //// Save image to wwwroot/PlayerImg
-                        //string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
-                        //source.File_Anh = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                        //string path = Path.Combine(wwwRootPath, fileName);
-                        //using var fileStream = System.IO.File.Create(path);
-                        //source.Picture.CopyTo(fileStream);
-                        //fileStream.Dispose();
                         new FileMethod(_context, _webHost).SaveImage(source);
                     }
                     else
@@ -96,7 +80,7 @@ namespace Tennis_Web.Controllers
             }
 
             // Handle saving object
-            var columnsToSave = new List<string> { "Ho", "Ten", "Ten_Tat", "Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu" };
+            var columnsToSave = new List<string> { "Ho_Ten", "Ten_Tat", "Gioi_Tinh", "CLB", "Khach_Moi", "File_Anh", "Tel", "Email", "Status", "Cong_Ty", "Chuc_Vu" };
             if (id == 0)
             {
                 columnsToSave.Add("Diem");
@@ -124,7 +108,7 @@ namespace Tennis_Web.Controllers
         public IActionResult DeleteImage(string id)
         {
             new FileMethod(_context, _webHost).DeleteImage(id);
-            return RedirectToAction(nameof(Update), Convert.ToInt32(id));
+            return RedirectToAction(nameof(Update), new { id = Convert.ToInt32(id) });
         }
         public IActionResult ResetPassword(string id)
         {

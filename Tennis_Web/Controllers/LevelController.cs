@@ -31,19 +31,20 @@ namespace Tennis_Web.Controllers
                 "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
             var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();
-            var temp = _context.DS_Giais.Find(item.ID_Giai);
-            // Assign value for view model
-            var vm = new TabViewModel
-            {
-                ActiveTab = Tab.Parameter,
-                IsCurrent = true,
-                ID = item.Id,
-                DetailedTitle = "Giải " + temp.Ten + " - Trình " + item.Trinh,
-                Succeeded = result.Succeeded
-            };
+            //var temp = _context.DS_Giais.Find(item.ID_Giai);
+            //// Assign value for view model
+            //var vm = new TabViewModel
+            //{
+            //    ActiveTab = Tab.Parameter,
+            //    IsCurrent = true,
+            //    ID = item.Id,
+            //    DetailedTitle = "Giải " + temp.Ten + " - Trình " + item.Trinh,
+            //    Succeeded = result.Succeeded
+            //};
             TempData["ParameterInfo"] = JsonSerializer.Serialize(item);
             // If save successfully, view error and display View with model from DB 
-            return RedirectToAction(nameof(LevelInfo), vm);
+            return new MethodController(_context).TabVMGenerator_Level(item.Id, result.Succeeded,
+                Tab.Parameter, "", "LevelInfo", "Level");
         }
         public List<DS_VDV> PopulateAutoComplete(int idTrinh)
         {
@@ -99,30 +100,30 @@ namespace Tennis_Web.Controllers
                 return PartialView(item);
             }
             new ScoreCalculation(_context).Point_Deposit(item.ID_Trinh);
-            return TabVMGenerator(Tab.Pair, item.ID_Trinh);
+            return new MethodController(_context).TabVMGenerator_Level(item.ID_Trinh, true,
+                Tab.Pair, "", "LevelInfo", "Level");
         }
         public IActionResult DeletePair(string id)
         {
             var pair = _context.DS_Caps.Find(Convert.ToInt32(id));
-            var matches = _context.DS_Trans.Where(m => m.ID_Cap1 == pair.Id || m.ID_Cap2 == pair.Id);
-            _context.RemoveRange(matches);
-            _context.Remove(pair);
-            _context.SaveChanges();
-            new ScoreCalculation(_context).Point_Deposit(pair.ID_Trinh);
-            return TabVMGenerator(Tab.Pair, pair.ID_Trinh);
+            var methods = new MethodController(_context);
+            methods.DeletePair_Method(pair);
+            return methods.TabVMGenerator_Level(pair.ID_Trinh, true,
+                Tab.Pair, "", "LevelInfo", "Level");
         }
-        public IActionResult TabVMGenerator (Tab tabName, int idTrinh)
-        {
-            var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == idTrinh).FirstOrDefault();
-            // Assign value for view model
-            var vm = new TabViewModel
-            {
-                ActiveTab = tabName,
-                IsCurrent = true,
-                ID = temp.Id,
-                DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
-            };
-            return RedirectToAction(nameof(LevelInfo), vm);
-        }
+        //IActionResult TabVMGenerator (Tab tabName, int idTrinh)
+        //{
+        //    var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.Id == idTrinh).FirstOrDefault();
+        //    // Assign value for view model
+        //    var vm = new TabViewModel
+        //    {
+        //        ActiveTab = tabName,
+        //        IsCurrent = true,
+        //        ID = temp.Id,
+        //        DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
+        //    };
+        //    return RedirectToAction(nameof(LevelInfo), vm);
+        //}
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using DataAccess;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using DataAccess;
 using Library.FileInitializer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,14 +24,16 @@ namespace Tennis_Web.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly TennisContext _context;
         private readonly IWebHostEnvironment _webHost;
+        private readonly INotyfService _notyf;
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-            RoleManager<IdentityRole> roleManager, TennisContext context, IWebHostEnvironment webHost)
+            RoleManager<IdentityRole> roleManager, TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _context = context;
             _webHost = webHost;
+            _notyf = notyf;
         }
         [Route("Admin")]
         public IActionResult Logout()
@@ -190,6 +193,10 @@ namespace Tennis_Web.Controllers
         }
         public async Task<IActionResult> Update(string id)
         {
+            bool? success = (bool?)TempData["SuccessfulAccount"];
+            if (success == true) _notyf.Success(TempData["Message"].ToString() ?? "Lưu thay đổi thành công!");
+            else if (success == false) _notyf.Error(TempData["Message"].ToString() ?? "Có lỗi xảy ra khi đang lưu thay đổi!");
+
             string selectedValue = null;
             var model = new AccountViewModel();
             if(id != null)
@@ -232,12 +239,22 @@ namespace Tennis_Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> ResetPassword(string id, AccountViewModel model)
+        public async Task<IActionResult> ResetPassword(AccountViewModel source)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            await _userManager.ResetPasswordAsync(user, token, model.Password);
-            return RedirectToAction(nameof(Update), new { isNew = false, id });
+            var user = await _userManager.FindByNameAsync(source.Username);
+            if (ModelState.IsValid)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                await _userManager.ResetPasswordAsync(user, token, source.Password);
+                TempData["SuccessfulAccount"] = true;
+                TempData["Message"] = "Lưu mật khẩu mới thành công";
+            }
+            else
+            {
+                TempData["SuccessfulAccount"] = false;
+                TempData["Message"] = "Xác nhận mật khẩu không trùng khớp!";
+            }
+            return RedirectToAction(nameof(Update), new { isNew = false, user.Id });
         }
         public IActionResult Delete(string id)
         {

@@ -25,7 +25,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             _context = context;
             _notyf = notyf;
         }
-        public List<DS_Cap> PopulateAutoComplete(int idVdv)
+        public List<DS_Cap> PopulateAutoComplete(int idVdv, IEnumerable<int> eligibleList)
         {
             var levels = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi);
             // Get all pairs with Level Id from the level id list
@@ -33,12 +33,14 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             var vdv2_Ids = _context.DS_Caps.Where(m => levels.Select(m => m.Id).Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
             // Get all players with from Player Id found in Player1 and Player2 lists
             var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
-            var eligible = _context.DS_VDVs.Where(m => m.Tham_Gia && m.Id != idVdv).Except(players).ToList();
+            var eligiblePartner = _context.DS_VDVs.Where(m => m.Tham_Gia && m.Id != idVdv).Except(players).ToList();
             var model = new List<DS_Cap>();
             var info = _context.DS_VDVs.Find(idVdv);
-            foreach (var partner in eligible)
+            foreach (var partner in eligiblePartner)
             {
-                var eligibleLevels = levels.Where(m => m.Trinh - m.BD_Duoi <= (info.Diem + partner.Diem) && (info.Diem + partner.Diem) <= m.Trinh + m.BD_Tren).ToList();
+                var eligibleLevels = levels.Where(m => eligibleList.Contains(m.Id) &&
+                    m.Trinh - m.BD_Duoi <= (info.Diem + partner.Diem) 
+                    && (info.Diem + partner.Diem) <= m.Trinh + m.BD_Tren).ToList();
                 if (eligibleLevels.Any())
                 {
                     foreach (var level in eligibleLevels)
@@ -61,17 +63,43 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public IActionResult UpdatePair(int id)
         {
-            var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2)
-                .FirstOrDefault(m => m.ID_Vdv2 == id && m.Phe_Duyet && !m.Xac_Nhan);
-
+            //var list = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh)
+            //    .Where(m => m.ID_Vdv2 == id && m.Phe_Duyet && !m.Xac_Nhan)
+            //    .OrderBy(m => m.DS_Trinh.Trinh).ThenByDescending(m => m.Diem);
+            var model = _context.DS_Caps.Include(m => m.VDV1).Include(m => m.VDV2).Include(m => m.DS_Trinh)
+                  .FirstOrDefault(m => m.ID_Vdv2 == id && m.Phe_Duyet && !m.Xac_Nhan);
             if (model == null)
             {
+                var vdv = _context.DS_VDVs.Find(id);
                 var levels = _context.DS_Trinhs.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi).OrderBy(m => m.Trinh);
+                var eligible = new List<DS_Trinh>();
+                foreach (var level in levels)
+                {
+                    bool a1 = level.Min_Point == 0;
+                    bool a2 = level.Max_Point == 0;
+                    switch (a1, a2)
+                    {
+                        case (true,true):
+                            eligible.Add(level);
+                            break;
+                        case (true, false):
+                            if (level.Max_Point > vdv.Diem) eligible.Add(level);
+                            break;
+                        case (false, true):
+                            if (level.Min_Point < vdv.Diem) eligible.Add(level);
+                            break;
+                        case (false, false):
+                            if (level.Min_Point < vdv.Diem && vdv.Diem < level.Max_Point) eligible.Add(level);
+                            break;
+
+                    }
+                }
                 //ViewBag.DS_Trinh = new SelectList(levels, "Id", "Trinh");
-                ViewBag.LevelList = levels;
-                ViewBag.DS_VDV = PopulateAutoComplete(id);
+                ViewBag.LevelList = eligible;
+                ViewBag.DS_VDV = PopulateAutoComplete(id, eligible.Select(m=>m.Id));
                 model = new DS_Cap { ID_Vdv1 = id, VDV1 = _context.DS_VDVs.Find(id) };
             }
+            //else { ViewBag.List = list; }
             return View(model);
         }
         [HttpPost]
@@ -89,6 +117,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 pair.Phe_Duyet = true;
                 pair.Xac_Nhan = false;
                 pair.ID_Trinh = level.Id;
+                pair.Ngay = DateTime.Now;
                 result = true;
                 _context.Add(pair);
                 TempData["Message"] = "Đăng ký cặp thành công - Chờ partner xác nhận!";
@@ -109,6 +138,21 @@ namespace Tennis_Web.Areas.NoRole.Controllers
 
             return RedirectToAction(nameof(Pair));
         }
+        //public IActionResult AcceptPair(int id, int idVdv)
+        //{
+        //    var pair = _context.DS_Caps.Find(id);
+        //    pair.Xac_Nhan = true;
+        //    pair.Phe_Duyet = true;
+        //    new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xac_Nhan", "Phe_Duyet" });
+            
+        //    var list = _context.DS_Caps.Include(m => m.DS_Trinh)
+        //        .Where(m => m.ID_Vdv2 == idVdv && m.Phe_Duyet && !m.Xac_Nhan && m.Id != id);
+        //    _context.RemoveRange(list);
+        //    _context.SaveChanges();
+        //    TempData["SuccessfulPair"] = true;
+        //    TempData["Message"] = "Cặp đấu đã đăng ký xong - Chờ BTC phê duyệt!";
+        //    return RedirectToAction(nameof(Pair));
+        //}
         public IActionResult DeletePair(int id)
         {
             var pair = _context.DS_Caps.Include(m => m.VDV1).FirstOrDefault(m => m.Id == id);
@@ -125,8 +169,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             bool? chkPw = (bool?)TempData["CheckPassword"];
             bool? warning = (bool?)TempData["WarningPair"];
 
-            if (chkPw == false) { _notyf.Error(TempData["Message"].ToString() ?? "Có lỗi xảy ra khi đang lưu thay đổi!"); }
-            if (success == true) { _notyf.Success(TempData["Message"].ToString() ?? "Lưu thay đổi thành công!"); }
+            if (chkPw == false) { _notyf.Error((string)(TempData["Message"] ?? "Có lỗi xảy ra khi đang lưu thay đổi!")); }
+            if (success == true) { _notyf.Success((string)(TempData["Message"] ?? "Lưu thay đổi thành công!")); }
             if (warning == true) { _notyf.Warning(TempData["Message"].ToString()); }
             
             var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
@@ -174,7 +218,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             var vdv2_Ids = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).Select(m => m.ID_Vdv2);
             // Get all players with from Player Id found in Player1 and Player2 lists
             var players = _context.DS_VDVs.Where(m => vdv1_Ids.Contains(m.Id) || vdv2_Ids.Contains(m.Id));
-            ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).ToList();
+            ViewBag.NoPairPlayers = _context.DS_VDVs.Where(m => m.Tham_Gia).Except(players).OrderByDescending(m => m.Diem).ToList();
             ViewBag.Tournament = current.Ten;
             return View(model);
         }

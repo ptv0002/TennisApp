@@ -17,6 +17,7 @@
                             <tr>
                                 <th>VĐV 1</th>
                                 <th>VĐV 2</th>
+                                <th>Trình</th>
                                 <th>Điểm cặp</th>
                                 <th>Lệch trình</th>
                                 <th></th>
@@ -26,6 +27,7 @@
                             <tr>
                                 <th>VĐV 1</th>
                                 <th>VĐV 2</th>
+                                <th>Trình</th>
                                 <th>Điểm cặp</th>
                                 <th>Lệch trình</th>
                                 <th></th>
@@ -38,6 +40,7 @@
                                 <tr>
                                     <td>@item.VDV1.Ten_Tat</td>
                                     <td>@item.VDV2.Ten_Tat</td>
+                                    <td>@item.DS_Trinh.Trinh</td>
                                     <td>@item.Diem</td>
                                     <td>@difference</td>
                                     @{
@@ -46,7 +49,7 @@
                                             BtnMsg = "Xóa",
                                             Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
                                             ActionName = "DeletePair",
-                                            ControllerName = "Level",
+                                            ControllerName = "Tournament",
                                             Id = item.Id.ToString()
                                         };
                                     }
@@ -63,6 +66,10 @@
         </div>
     </div>
 }
+else
+{
+    <h5 class="text-danger">Không có cặp cần phê duyệt!</h5>
+}
 @if (ViewBag.NotEnough.Count > 0)
 {
     <div class="card shadow mb-4">
@@ -77,6 +84,7 @@
                             <tr>
                                 <th>VĐV 1</th>
                                 <th>VĐV 2</th>
+                                <th>Trình</th>
                                 <th>Điểm cặp</th>
                                 <th>Lệch trình</th>
                                 <th></th>
@@ -86,6 +94,7 @@
                             <tr>
                                 <th>VĐV 1</th>
                                 <th>VĐV 2</th>
+                                <th>Trình</th>
                                 <th>Điểm cặp</th>
                                 <th>Lệch trình</th>
                                 <th></th>
@@ -98,6 +107,7 @@
                                 <tr>
                                     <td>@item.VDV1.Ten_Tat</td>
                                     <td>@item.VDV2.Ten_Tat</td>
+                                    <td>@item.DS_Trinh.Trinh</td>
                                     <td>@item.Diem</td>
                                     <td>@difference</td>
                                     @{
@@ -106,7 +116,7 @@
                                             BtnMsg = "Xóa",
                                             Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
                                             ActionName = "DeletePair",
-                                            ControllerName = "Level",
+                                            ControllerName = "Tournament",
                                             Id = item.Id.ToString()
                                         };
                                     }

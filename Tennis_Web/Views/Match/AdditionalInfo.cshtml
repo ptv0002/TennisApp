@@ -37,7 +37,7 @@
                                             <input type="hidden" asp-for="@Model[i].ChosenPerTable[j].PairsNum" />
                                             @Model[i].ChosenPerTable[j].PairsNum
                                         </td>
-                                        <td class="align-center" name="chosen"><input class="form-control col-6" asp-for="@Model[i].ChosenPerTable[j].Chosen"/></td>
+                                        <td class="align-center" name="chosen"><input class="form-control col-6" style="text-align:center" asp-for="@Model[i].ChosenPerTable[j].Chosen"/></td>
                                         <td name="playoff"><input class="checkbox" type="checkbox" asp-for="@Model[i].ChosenPerTable[j].Playoff" /></td>
                                     </tr>
                                 }
@@ -45,7 +45,7 @@
                             <tfoot>
                                 <tr>
                                     <th colspan="2" style="text-align:right">Tổng số cặp đã chọn</th>
-                                    <td class="align-center"><input class="form-control col-6" disabled name="sselect" style="text-align:center"/></td>
+                                    <td class="align-center"><input class="form-control col-6" disabled name="sselect"/></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -83,7 +83,7 @@
     <div class="form-group">
         @if (ViewBag.Exist == true)
         {
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-target="#confirmModal">Tạo danh sách trận đấu</button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Tạo danh sách trận đấu</button>
             <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmLabel" aria-hidden="true" style="display: none">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
