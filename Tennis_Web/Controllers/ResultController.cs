@@ -114,10 +114,17 @@ namespace Tennis_Web.Controllers
                 // 3. ========================= Get ranking and put in playoff =========================
                 var playoff1 = Table_ToPlayoff1(matchParam, model);
                 result = Table_ToPlayoff2(matchParam, model);
-                // ================== Add players to First Special ==================
-                result = result && await Table_ToSpecialAsync(playoff1, matchParam, model);
-                // Save all changes to DB
-                if (result) _context.SaveChanges();
+                if (!result || (playoff1==null && matchParam.PlayOff1 > 0)) // Chưa được xếp hạng đầy đủ --> không chọn được playoff
+                {
+                    TempData["PlayOff"] = true;
+                }
+                else
+                {
+                    // ================== Add players to First Special ==================
+                    result = result && await Table_ToSpecialAsync(playoff1, matchParam, model);
+                    // Save all changes to DB
+                    if (result) _context.SaveChanges();
+                }
             }
             return new MethodController(_context).TabVMGenerator_Level(model.ID_Trinh, result,
                 Tab.Table, "", "MatchInfo", "Match");
@@ -150,10 +157,12 @@ namespace Tennis_Web.Controllers
             var tables = matchParam.ChosenPerTable.Where(m => m.Playoff);
             foreach (var table in tables)
             {
+                    //.Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan)
                 var pair = _context.DS_Caps.Include(m => m.DS_Bang)
-                    .Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan)
+                    .Where(m => m.ID_Trinh == model.ID_Trinh)
                     .FirstOrDefault(m => m.DS_Bang.Ten == table.Table && m.Xep_Hang == (table.Chosen + 1));
-                considerList.Add(pair);
+                if (pair==null) { return null;} // Chưa được xếp hạng đầy đủ --> không chọn được playoff
+                else { considerList.Add(pair);}
             }
             considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ThenBy(m => m.Boc_Tham).ToList();
             // If there's playoff 1 rounds then proceeds
@@ -168,18 +177,19 @@ namespace Tennis_Web.Controllers
             if (matchParam.PlayOff2 <= 0) { return true; }
             bool result = true;
             var straight2Special = matchParam.ChosenPerTable.ToDictionary(x => x.Table, y => y.Chosen);
-            // Check if tables have unique ranking
             var considerList = new List<DS_Cap>();
             var tables = matchParam.ChosenPerTable.Where(m => m.Playoff);
+            // --  Chọn các cặp ở vị trí Playoff của bảng
             foreach (var table in tables)
             {
-                // Any pair has repeated ranking then returns null
                 var pair = _context.DS_Caps.Include(m => m.DS_Bang)
                     .Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan)
                     .FirstOrDefault(m => m.DS_Bang.Ten == table.Table && m.Xep_Hang == (table.Chosen + 1));
-                considerList.Add(pair);
+                if (pair == null) { return false; } // Chưa được xếp hạng đầy đủ --> không chọn được playoff
+                else { considerList.Add(pair); }
             }
             considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ThenBy(m => m.Boc_Tham).ToList();
+            // --  Loại các cặp Playoff1
             considerList.RemoveRange(0, matchParam.PlayOff1);
             var P2match = model.DS_Tran.Where(m => m.Ma_Vong == 7).OrderBy(m => m.Ma_Tran).ToList();
             considerList = considerList.OrderBy(m => m.DS_Bang.Ten).ToList();
@@ -192,6 +202,7 @@ namespace Tennis_Web.Controllers
                  result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(P2match[i].Id, P2match[i], new List<string> { "ID_Cap1", "ID_Cap2" }).Succeeded;
                  if (!result) break;
             }
+            // --  Còn lại các cặp sau khi chọn Playoff2 là các cặp bị loại trực tiếp
             return result;
         }
         async Task<bool> Table_ToSpecialAsync(List<DS_Cap> playoff1, MatchGeneratorViewModel matchParam, RoundTabViewModel model)
@@ -288,8 +299,10 @@ namespace Tennis_Web.Controllers
             {
                 var roundNum = _context.DS_Trans.Where(m => m.Ma_Vong <= 6 && m.ID_Trinh == model.ID_Trinh).Max(m => m.Ma_Vong);
                 // Get first special round
-                var special1stRound = _context.DS_Trans.Where(m => m.Ma_Vong == roundNum && m.ID_Trinh == model.ID_Trinh && m.ID_Cap2 == null)
-                    .OrderBy(m => m.Ma_Tran).ToList();
+                //var special1stRound = _context.DS_Trans.Where(m => m.Ma_Vong == roundNum && m.ID_Trinh == model.ID_Trinh && m.ID_Cap2 == null)
+                //    .OrderBy(m => m.Ma_Tran).ToList();
+                var special1stRound = _context.DS_Trans.Where(m => m.Ma_Vong == roundNum && m.ID_Trinh == model.ID_Trinh && m.Chon_Cap_2.Length>2)
+                    .OrderBy(m => m.Ma_Tran).ToList ();
 
 
                 // If there's any special 1st round with empty slot, proceeds
@@ -297,39 +310,64 @@ namespace Tennis_Web.Controllers
                 {
                     var winId = matches.Select(m => m.Kq_1 > m.Kq_2 ? m.ID_Cap1 : m.ID_Cap2).ToList();
                     var winPairs = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => winId.Contains(m.Id)).ToList();  // Các cặp playoff2
-                    // Thêm các cặp Playoff 1 vào
+                    // -----   Thêm các cặp Playoff 1 vào
                     FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/MatchGenParam.json");
                     var matchParam = (await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream)).Find(m => m.ID_Trinh == model.ID_Trinh);
                     fileStream.Dispose();
                     var playoff1 = Table_ToPlayoff1(matchParam, model);
                     if (playoff1!=null) { winPairs.AddRange(playoff1); }
+                    // -----   Bắt đầu cập nhật 
                     int mlen = special1stRound[0].Chon_Cap_2.Length;
-                    // Quét theo cột
-                    int ok = 0;
-                    int j = 1;
-                    int mhang ;
-                    char mbang ;
-                    while (ok < special1stRound.Count && j < mlen)
+                    char mbang;
+                    int mhang ; // Thứ hạng trong 1 bảng mà playoff được chọn vào
+                    List<DS_Tran> loaibo = new();
+                    // Quét theo cột - Cập nhật cặp vào bảng, cặp nào cập nhật được thì loại trừ ra, Trận nào được cập nhật --> Loại ra
+                    foreach (var match in special1stRound) { match.ID_Cap2 = null;}
+                    for (int i = 0; i < mlen; i++)  // Duyệt cột chọn bảng
                     {
-                        for (int i = 0; i < special1stRound.Count; i++)
+                        foreach (var match in special1stRound)  // Duyệt các trận còn trống
                         {
-                            if (special1stRound[i].ID_Cap2==null) 
+                            if (match.ID_Cap2 == null)          // Duyệt các trận còn trống
                             {
-                                mhang= (int)char.GetNumericValue(special1stRound[i].Chon_Cap_2[0]);
-                                mbang= special1stRound[i].Chon_Cap_2[j]; 
-                                for (int k = 0; k < winPairs.Count; k++) 
-                                {   
-                                    if (winPairs[k].DS_Bang.Ten== mbang && winPairs[k].Xep_Hang== mhang)
-                                    { special1stRound[i].ID_Cap2 = winPairs[k].Id;
-                                        ok++;
-                                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(special1stRound[i].Id, special1stRound[i], new List<string> { "ID_Cap2" }).Succeeded;
+                                mbang = match.Chon_Cap_2[i];
+                                mhang = (int)char.GetNumericValue(match.Chon_Cap_2[0]);
+                                for (int k = 0; k < winPairs.Count; k++)  // Duyệt danh sách playoff chưa xếp vào đặc biệt
+                                {
+                                    if (winPairs[k].DS_Bang.Ten == mbang && winPairs[k].Xep_Hang == mhang)
+                                    {
+                                        match.ID_Cap2 = winPairs[k].Id;
+                                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(match.Id, match, new List<string> { "ID_Cap2" }).Succeeded;
+                                        winPairs.RemoveAt(k);  // Xếp rồi loại ra danh sách
                                         break;
                                     }
                                 }
                             }
                         }
-                        j++;
                     }
+                    //int ok = 0;
+                    //int mhang ;
+                    //char mbang ;
+                    //while (ok < special1stRound.Count && j < mlen)       // Duyệt các dòng chọn bảng -- Mỗi lần 1 cột
+                    //{
+                    //    for (int i = 0; i < special1stRound.Count; i++)  // Duyệt cột chọn bảng
+                    //    {
+                    //        if (special1stRound[i].ID_Cap2==null) 
+                    //        {
+                    //            mhang= (int)char.GetNumericValue(special1stRound[i].Chon_Cap_2[0]);
+                    //            mbang= special1stRound[i].Chon_Cap_2[j]; 
+                    //            for (int k = 0; k < winPairs.Count; k++)  // Duyệt danh sách playoff vào đặc biệt
+                    //            {   
+                    //                if (winPairs[k].DS_Bang.Ten== mbang && winPairs[k].Xep_Hang== mhang)
+                    //                { special1stRound[i].ID_Cap2 = winPairs[k].Id;
+                    //                    ok++;
+                    //                    result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(special1stRound[i].Id, special1stRound[i], new List<string> { "ID_Cap2" }).Succeeded;
+                    //                    break;
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //    j++;
+                    //}
                 }
                 else
                 {

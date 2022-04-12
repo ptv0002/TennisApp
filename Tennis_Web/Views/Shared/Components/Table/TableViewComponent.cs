@@ -46,11 +46,12 @@ namespace Tennis_Web.Views.Shared.Components.Table
             {
                 //var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID && m.Phe_Duyet);
                 var pairs = _context.DS_Caps.Where(m => m.ID_Trinh == vm.ID);
+
                 var list = pairs.Include(m => m.DS_Bang).GroupBy(m => m.DS_Bang.Ten).Select(m => new
                 {
                     Table = m.Key,
                     Num = m.Count()
-                }).OrderBy(m => m.Table);
+                }).OrderBy(m => m.Table).ToList();
                 ViewBag.ListTable = list.Select(m => m.Table).ToList();
                 ViewBag.ListNum = list.Select(m => m.Num).ToList();
                 ViewBag.IsCurrent = vm.IsCurrent;
