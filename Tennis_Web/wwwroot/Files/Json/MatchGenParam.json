@@ -1,35 +1,15 @@
 [
   {
-    "ID_Trinh": 44,
-    "Trinh": 1270,
-    "PlayOff1": 0,
-    "PlayOff2": 0,
+    "ID_Trinh": 3046,
+    "Trinh": 1240,
+    "PlayOff1": 2,
+    "PlayOff2": 2,
     "ChosenPerTable": [
       {
         "Table": "A",
-        "PairsNum": 4,
+        "PairsNum": 3,
         "Chosen": 2,
-        "Playoff": false
-      },
-      {
-        "Table": "B",
-        "PairsNum": 4,
-        "Chosen": 2,
-        "Playoff": false
-      }
-    ]
-  },
-  {
-    "ID_Trinh": 45,
-    "Trinh": 1360,
-    "PlayOff1": 0,
-    "PlayOff2": 1,
-    "ChosenPerTable": [
-      {
-        "Table": "A",
-        "PairsNum": 4,
-        "Chosen": 3,
-        "Playoff": false
+        "Playoff": true
       },
       {
         "Table": "B",
@@ -39,6 +19,112 @@
       },
       {
         "Table": "C",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "D",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "E",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "F",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      }
+    ]
+  },
+  {
+    "ID_Trinh": 3045,
+    "Trinh": 1330,
+    "PlayOff1": 2,
+    "PlayOff2": 2,
+    "ChosenPerTable": [
+      {
+        "Table": "A",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "B",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "C",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "D",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "E",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "F",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      }
+    ]
+  },
+  {
+    "ID_Trinh": 3044,
+    "Trinh": 1400,
+    "PlayOff1": 2,
+    "PlayOff2": 2,
+    "ChosenPerTable": [
+      {
+        "Table": "A",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "B",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "C",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "D",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "E",
+        "PairsNum": 3,
+        "Chosen": 2,
+        "Playoff": true
+      },
+      {
+        "Table": "F",
         "PairsNum": 3,
         "Chosen": 2,
         "Playoff": true

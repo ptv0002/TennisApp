@@ -175,19 +175,19 @@
                                             {
                                                 // If role is Manager or Admin => full editing
                                                 // If role is Referee => Only edit 0 field
-                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" />
+                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[i].Kq_1" min="0" max="7" />
                                             }
                                             else
-                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" disabled />}
+                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[i].Kq_1" min="0" max="7" disabled />}
                                             <span>-</span>
                                             @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
                                             {
                                                 // If role is Manager or Admin => full editing
                                                 // If role is Referee => Only edit 0 field
-                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
+                                                <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[i].Kq_2" min="0" max="7" />
                                             }
                                             else
-                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" disabled />}
+                                            { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[i].Kq_2" min="0" max="7" disabled />}
                                             <input type="hidden" asp-for="@Model.DS_Tran[i].ID_Cap1" />
                                             <input type="hidden" asp-for="@Model.DS_Tran[i].ID_Cap2" />
                                         </td>

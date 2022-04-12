@@ -12,6 +12,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Tennis_Web.Models;
+using AspNetCoreHero.ToastNotification.Abstractions;
+
 
 namespace Tennis_Web.Controllers
 {
@@ -19,13 +21,18 @@ namespace Tennis_Web.Controllers
     {
         private readonly TennisContext _context;
         private readonly IWebHostEnvironment _webHost;
-        public MatchController(TennisContext context, IWebHostEnvironment webHost)
+        public readonly INotyfService _notyf;
+
+        public MatchController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
         {
             _context = context;
             _webHost = webHost;
+            _notyf = notyf;
         }
         public IActionResult Index(bool isCurrent)
         {
+            var success = (bool?) TempData["MatchList"] ;
+            if (success == true) _notyf.Success("Đã tạo xong danh sách trận đấu");
             var model = _context.DS_Giais.Where(m => m.Giai_Moi == isCurrent).OrderByDescending(m => m.Ngay).ToList();
             ViewBag.isCurrent = isCurrent;
             return View(model);
@@ -37,6 +44,9 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult MatchInfo(TabViewModel model)
         {
+            var success = (bool?)TempData["PlayOff"];
+            if (success == true) _notyf.Success("Cần phải bốc thăm để lựa chọn Playoff");
+
             return View(model);
         }
         public async Task<IActionResult> AdditionalInfoAsync(int id)
@@ -70,8 +80,6 @@ namespace Tennis_Web.Controllers
                 ViewBag.Exist = true;
                 ModelState.AddModelError(string.Empty, "Đã có danh sách trận trong cơ sở dữ liệu! Nếu tiếp tục sẽ xóa danh sách trận cũ.");
             }
-
-
             var model = new List<MatchGeneratorViewModel>();
             foreach (var level in levels)
             {
@@ -121,6 +129,19 @@ namespace Tennis_Web.Controllers
             return View(model);
             //return View(model.OrderBy(m => m.Trinh).ToList());
         }
+        /// <summary>
+        /// 1. Xóa danh sách trận cũ nếu có 
+        /// 2. Cập nhật lại danh sách các bảng
+        /// 3. Trích điểm các cặp
+        /// 4. Lưu lại tham số vào file JSON
+        /// 5. Tạo danh sách trận đấu
+        ///     - Danh sách trận vòng bảng
+        ///     - Danh sách trận Playoff
+        ///     - Danh sách trận vòng đặc biệt + Cập nhật Tham số vòng 1 đặc biệt
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="exist"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> AdditionalInfoAsync(List<MatchGeneratorViewModel> model, bool exist)
         {
@@ -131,7 +152,7 @@ namespace Tennis_Web.Controllers
                 ModelState.AddModelError(string.Empty, "Đã có danh sách trận trong cơ sở dữ liệu! Nếu tiếp tục sẽ xóa danh sách trận cũ.");
             }
             bool error = false;
-            // Check for any errors before proceeding
+            //-------  Check for any errors before proceeding (Lỗi số cặp chọn, Playoff .v.v... không hợp lệ)
             foreach (var level in model)
             {
                 var tuple = PowerOfTwo(level.ChosenPerTable.Sum(m => m.Chosen) + level.PlayOff1 + level.PlayOff2);
@@ -141,12 +162,13 @@ namespace Tennis_Web.Controllers
                     if (tuple.Item1 < 0) ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " có tổng số cặp đi tiếp quá lớn hoặc quá nhỏ so với cho phép!");
                     else if (tuple.Item1 > 0) ModelState.AddModelError(string.Empty, "Thêm hoặc bớt cặp trình " + level.Trinh + " để tổng số cặp đi tiếp là " + tuple.Item1 + " hoặc " + tuple.Item2);
                 }
-                if ((level.PlayOff2>0) && ((level.PlayOff2 * 2 + level.PlayOff1) != level.ChosenPerTable.Count(m => m.Playoff)))
-                {
-                    error = true;
-                    var soBang = level.PlayOff2 * 2 + level.PlayOff1;
-                    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " cần chọn " + soBang + " bảng cho Playoff!");
-                }
+                // Bỏ trường hợp này --> do có thể khi xét vé vớt toàn cuch : chọn Playoff1 và loại 1 số cặp trực tiếp --> Còn lại 1 số cặp chẵn vào Playoff2
+                //if ((level.PlayOff2>0) && ((level.PlayOff2 * 2 + level.PlayOff1) != level.ChosenPerTable.Count(m => m.Playoff)))
+                //{
+                //    error = true;
+                //    var soBang = level.PlayOff2 * 2 + level.PlayOff1;
+                //    ModelState.AddModelError(string.Empty, "Trình " + level.Trinh + " cần chọn " + soBang + " bảng cho Playoff!");
+                //}
             }
             if (error) return View(model);
 
@@ -155,8 +177,15 @@ namespace Tennis_Web.Controllers
                 // Get level ids
                 var levels = model.Select(m => m.ID_Trinh).ToList();
                 // Get all pairs with Level Id from the level id list
-                var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && m.Phe_Duyet).ToList();
-
+                //var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh) && m.Phe_Duyet).ToList();
+                var pairs = _context.DS_Caps.Where(m => levels.Contains(m.ID_Trinh)).ToList();
+                // ---------------- Delete old matches ----------------
+                if (exist)
+                {
+                    // Get old matches
+                    var oldMatches = _context.DS_Trans.Where(m => levels.Contains(m.ID_Trinh)).ToList();
+                    _context.RemoveRange(oldMatches);
+                }
                 // ---------------- Update Table Id to pairs (Create new table if needed) ----------------
                 // Reset old results from pairs
                 foreach (var pair in pairs)
@@ -195,13 +224,6 @@ namespace Tennis_Web.Controllers
                 await JsonSerializer.SerializeAsync(fileStream, model, options);
                 fileStream.Dispose();
 
-                // ---------------- Delete old matches ----------------
-                if (exist)
-                {
-                    // Get old matches
-                    var oldMatches = _context.DS_Trans.Where(m => levels.Contains(m.ID_Trinh)).ToList();
-                    _context.RemoveRange(oldMatches);
-                }
                 // ---------------- Generate list of matches here ----------------
 
                 foreach (var level in model)
@@ -281,6 +303,7 @@ namespace Tennis_Web.Controllers
                         totalPairs /= 2;
                     }
                 }
+                TempData["MatchList"] = true;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index), new { isCurrent = true });
             }
