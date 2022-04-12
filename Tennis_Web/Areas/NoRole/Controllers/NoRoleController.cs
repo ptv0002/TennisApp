@@ -95,13 +95,29 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 if (model.Password == old.Password)
                 {
                     // First time user
-                    if (old.Password == "bitkhanhhoa@newuser")
+                    //if (old.Password == "bitkhanhhoa@newuser" && model.NewPassword != old.Password)
+                    //{
+                    //    old.Password = model.NewPassword;
+                    //    bool result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Password" }).Succeeded;
+                    //    if (result) _context.SaveChanges();
+                    //    return RedirectToAction(model.Action, model.Controller, new { id });
+                    //}
+                    bool a1 = old.Password == "bitkhanhhoa@newuser";
+                    bool a2 = model.NewPassword != old.Password;
+                    switch (a1, a2)
                     {
-                        old.Password = model.NewPassword;
-                        bool result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Password" }).Succeeded;
-                        if (result) _context.SaveChanges();
+                        case (true, true): // Default old password && newPassword
+                            old.Password = model.NewPassword;
+                            bool result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Password" }).Succeeded;
+                            if (result) _context.SaveChanges();
+                            return RedirectToAction(model.Action, model.Controller, new { id });
+                        case (false, true or false): // Personalized password
+                            return RedirectToAction(model.Action, model.Controller, new { id });
+                        case (true, false): // Default old password && illegal newPassword
+                            TempData["CheckPassword"] = false;
+                            TempData["Message"] = "Không được dùng mật khẩu mặc định cho mật khẩu mới!";
+                            return RedirectToAction(model.CurrentAction, model.CurrentController);
                     }
-                    return RedirectToAction(model.Action, model.Controller, new { id });
                 }
                 else // Wrong password
                 {

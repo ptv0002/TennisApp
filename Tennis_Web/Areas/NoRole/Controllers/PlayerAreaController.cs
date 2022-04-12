@@ -31,7 +31,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         public IActionResult Player(bool isCurrent, bool? isGuest, bool participate)
         {
             bool? player = (bool?)TempData["SuccessfulUpdatePlayer"];
-            if (player == true) _notyf.Success(TempData.ContainsKey("Message") ? TempData["Message"].ToString() : "Lưu thay đổi thành công!");
+            if (player == true) _notyf.Success((string)(TempData["Message"] ?? "Lưu thay đổi thành công!"));
 
             List<DS_VDV> model = new();
             if (isCurrent)
@@ -61,7 +61,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 ViewBag.IsCurrent = false;
 
                 bool? chkPw = (bool?)TempData["CheckPassword"];
-                if (chkPw == false) { _notyf.Error(TempData["Message"].ToString() ?? "Có lỗi xảy ra khi đang lưu thay đổi!", 30); }
+                if (chkPw == false) { _notyf.Error((string)(TempData["Message"] ?? "Có lỗi xảy ra khi đang lưu thay đổi!"), 30); }
 
             }
             return View(model);
@@ -69,8 +69,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         public IActionResult UpdatePlayer(int id)
         {
             bool? success = (bool?)TempData["SuccessfulPlayer"];
-            if (success == true) _notyf.Success(TempData["Message"].ToString() ?? "Lưu thay đổi thành công!");
-            else if (success == false) _notyf.Error(TempData["Message"].ToString() ?? "Có lỗi xảy ra khi đang lưu thay đổi!");
+            if (success == true) _notyf.Success((string)(TempData["Message"] ?? "Lưu thay đổi thành công!"));
+            else if (success == false) _notyf.Error((string)(TempData["Message"] ?? "Có lỗi xảy ra khi đang lưu thay đổi!"));
             
             var source = _context.DS_VDVs.Find(id);
             if (source != null && source.File_Anh != null) _notyf.Warning("Upload ảnh mới sẽ xóa ảnh cũ!", 100);
@@ -100,13 +100,13 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 string extension = Path.GetExtension(source.Picture.FileName);
                 if (extension == ".jpg" || extension == ".jpeg" || extension == ".png")
                 {
-                    if (source.Picture.Length <= 250000)
+                    if (source.Picture.Length <= 1000000)
                     {
                         new FileMethod(_context, _webHost).SaveImage(source);
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "File ảnh lớn hơn độ lớn cho phép! Upload ảnh nhỏ hơn 250 KB");
+                        ModelState.AddModelError(string.Empty, "File ảnh lớn hơn độ lớn cho phép! Upload ảnh nhỏ hơn 1MB");
                         return View(source);
                     }
                 }
@@ -140,13 +140,21 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         {
             if (ModelState.IsValid)
             {
-                var destination = _context.DS_VDVs.Find(source.Id);
-                destination.Password = source.NewPassword;
+                if (source.NewPassword != "bitkhanhhoa@newuser")
+                {
+                    var destination = _context.DS_VDVs.Find(source.Id);
+                    destination.Password = source.NewPassword;
                 
-                var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(source.Id, destination, new List<string> { "Password" }).Succeeded;
-                if (result) _context.SaveChanges();
-                TempData["SuccessfulPlayer"] = true;
-                TempData["Message"] = "Lưu mật khẩu mới thành công";
+                    var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(source.Id, destination, new List<string> { "Password" }).Succeeded;
+                    if (result) _context.SaveChanges();
+                    TempData["SuccessfulPlayer"] = true;
+                    TempData["Message"] = "Lưu mật khẩu mới thành công";
+                }
+                else
+                {
+                    TempData["SuccessfulPlayer"] = false;
+                    TempData["Message"] = "Không được dùng mật khẩu mặc định cho mật khẩu mới!";
+                }
             }
             else
             {
