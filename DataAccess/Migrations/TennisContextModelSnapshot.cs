@@ -279,6 +279,9 @@ namespace DataAccess.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<DateTime?>("Ngay")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Phe_Duyet")
                         .HasColumnType("bit");
 
@@ -423,6 +426,12 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ID_Giai")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Max_Point")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Min_Point")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TL_BanKet")

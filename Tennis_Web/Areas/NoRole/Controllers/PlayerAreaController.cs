@@ -31,7 +31,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         public IActionResult Player(bool isCurrent, bool? isGuest, bool participate)
         {
             bool? player = (bool?)TempData["SuccessfulUpdatePlayer"];
-            if (player == true) _notyf.Success(TempData["Message"].ToString() ?? "Lưu thay đổi thành công!");
+            if (player == true) _notyf.Success(TempData.ContainsKey("Message") ? TempData["Message"].ToString() : "Lưu thay đổi thành công!");
 
             List<DS_VDV> model = new();
             if (isCurrent)

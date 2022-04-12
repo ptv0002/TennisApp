@@ -94,6 +94,10 @@ namespace DataAccess.Migrations
                     Tong_Diem = table.Column<int>(type: "int", nullable: false),
                     Diem_Tru = table.Column<int>(type: "int", nullable: false),
                     Chenh_Lech = table.Column<int>(type: "int", nullable: false),
+                    BD_Tren = table.Column<int>(type: "int", nullable: false),
+                    BD_Duoi = table.Column<int>(type: "int", nullable: false),
+                    Max_Point = table.Column<int>(type: "int", nullable: false),
+                    Min_Point = table.Column<int>(type: "int", nullable: false),
                     ID_Giai = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -118,6 +122,7 @@ namespace DataAccess.Migrations
                     File_Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     File_Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Hien_Thi = table.Column<bool>(type: "bit", nullable: false),
+                    Tin_Nong = table.Column<bool>(type: "bit", nullable: false),
                     ID_Giai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -139,6 +144,7 @@ namespace DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ho_Ten = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: true),
                     Ten_Tat = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    Data_PD = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phe_Duyet = table.Column<bool>(type: "bit", nullable: true),
                     Tham_Gia = table.Column<bool>(type: "bit", nullable: false),
                     Gioi_Tinh = table.Column<bool>(type: "bit", nullable: false),
@@ -302,6 +308,7 @@ namespace DataAccess.Migrations
                     ID_Trinh = table.Column<int>(type: "int", nullable: true),
                     Ngay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Diem = table.Column<int>(type: "int", nullable: false),
+                    Ghi_Chu = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ID_Vdv = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -323,9 +330,12 @@ namespace DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ma_Cap = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
                     Diem = table.Column<decimal>(type: "decimal(8,3)", nullable: false),
+                    Xac_Nhan = table.Column<bool>(type: "bit", nullable: false),
+                    Phe_Duyet = table.Column<bool>(type: "bit", nullable: false),
                     Tran_Thang = table.Column<int>(type: "int", nullable: false),
                     Boc_Tham = table.Column<int>(type: "int", nullable: false),
                     Xep_Hang = table.Column<int>(type: "int", nullable: false),
+                    Ngay = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ID_Trinh = table.Column<int>(type: "int", nullable: false),
                     ID_Bang = table.Column<int>(type: "int", nullable: true),
                     ID_Vdv1 = table.Column<int>(type: "int", nullable: false),

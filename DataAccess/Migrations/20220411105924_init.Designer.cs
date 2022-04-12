@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(TennisContext))]
-    [Migration("20220330030247_init")]
+    [Migration("20220411105924_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -281,8 +281,17 @@ namespace DataAccess.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<DateTime?>("Ngay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Phe_Duyet")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Tran_Thang")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Xac_Nhan")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Xep_Hang")
                         .HasColumnType("int");
@@ -403,6 +412,12 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("BD_Duoi")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BD_Tren")
+                        .HasColumnType("int");
+
                     b.Property<int>("Chenh_Lech")
                         .HasColumnType("int");
 
@@ -413,6 +428,12 @@ namespace DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ID_Giai")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Max_Point")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Min_Point")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TL_BanKet")
@@ -458,6 +479,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cong_Ty")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Data_PD")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Diem")
@@ -523,6 +547,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("Diem")
                         .HasColumnType("int");
 
+                    b.Property<string>("Ghi_Chu")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ID_Trinh")
                         .HasColumnType("int");
 
@@ -582,6 +609,9 @@ namespace DataAccess.Migrations
                     b.Property<string>("Ten")
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
+
+                    b.Property<bool>("Tin_Nong")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
