@@ -87,7 +87,6 @@ namespace Tennis_Web.Controllers
             var mTrinhs = _context.DS_Trinhs.Where(m => m.ID_Giai == intId).ToList();
             item.Giai_Moi = false;
             _context.Update(item);
-            _context.SaveChanges();
             // Phân bổ điểm vào file DS_VDVDiem, đồng thời cập nhật điểm trong DS_VDV
             foreach (var mTrinh in mTrinhs)
             {

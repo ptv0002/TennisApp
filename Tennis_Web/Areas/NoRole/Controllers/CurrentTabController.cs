@@ -171,7 +171,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
 
             if (chkPw == false) { _notyf.Error((string)(TempData["Message"] ?? "Có lỗi xảy ra khi đang lưu thay đổi!")); }
             if (success == true) { _notyf.Success((string)(TempData["Message"] ?? "Lưu thay đổi thành công!")); }
-            if (warning == true) { _notyf.Warning(TempData["Message"].ToString()); }
+            if (warning == true) { _notyf.Warning((string)TempData["Message"]); }
             
             var current = _context.DS_Giais.FirstOrDefault(m => m.Giai_Moi);
             var model = _context.DS_Caps.Include(m => m.DS_Trinh).Include(m => m.VDV1).Include(m => m.VDV2)

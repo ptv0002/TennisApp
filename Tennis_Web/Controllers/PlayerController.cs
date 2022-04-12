@@ -62,13 +62,13 @@ namespace Tennis_Web.Controllers
                 string extension = Path.GetExtension(source.Picture.FileName);
                 if (extension == ".jpg" || extension == ".jpeg" || extension == ".png")
                 {
-                    if (source.Picture.Length <= 250000)
+                    if (source.Picture.Length <= 1000000)
                     {
                         new FileMethod(_context, _webHost).SaveImage(source);
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "File ảnh lớn hơn độ lớn cho phép! Upload ảnh nhỏ hơn 250 KB");
+                        ModelState.AddModelError(string.Empty, "File ảnh lớn hơn độ lớn cho phép! Upload ảnh nhỏ hơn 1MB");
                         return View(source);
                     }
                 }

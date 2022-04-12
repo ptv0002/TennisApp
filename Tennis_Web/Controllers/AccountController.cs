@@ -194,8 +194,8 @@ namespace Tennis_Web.Controllers
         public async Task<IActionResult> Update(string id)
         {
             bool? success = (bool?)TempData["SuccessfulAccount"];
-            if (success == true) _notyf.Success(TempData["Message"].ToString() ?? "Lưu thay đổi thành công!");
-            else if (success == false) _notyf.Error(TempData["Message"].ToString() ?? "Có lỗi xảy ra khi đang lưu thay đổi!");
+            if (success == true) _notyf.Success((string)(TempData["Message"] ?? "Lưu thay đổi thành công!"));
+            else if (success == false) _notyf.Error((string)(TempData["Message"] ?? "Có lỗi xảy ra khi đang lưu thay đổi!"));
 
             string selectedValue = null;
             var model = new AccountViewModel();
