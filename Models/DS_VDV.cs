@@ -40,7 +40,7 @@
 
         [NotMapped]
         public IFormFile Picture { get; set; }
-        [DisplayName("File ảnh")]
+        [NotMapped]
         public string File_Anh { get; set; }
 
         [DisplayName("SĐT")]

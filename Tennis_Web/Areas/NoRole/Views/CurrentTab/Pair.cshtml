@@ -62,6 +62,7 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>STT</th>
                             <th>Mã cặp</th>
                             <th>VĐV 1</th>
                             <th>VĐV 2</th>
@@ -75,37 +76,38 @@
                         {
                             int total = Model[idCap].VDV1.Diem + Model[idCap].VDV2.Diem;
                         int difference = total - Model[idCap].DS_Trinh.Trinh;
-                            <tr>
-                                <td>@Model[idCap].Ma_Cap</td>
-                                <td>@Model[idCap].VDV1.Ten_Tat</td>
-                                <td>@Model[idCap].VDV2.Ten_Tat</td>
-                                <td>@total</td>
-                                <td>@difference</td>
-                                <td>
-                                    @switch (Model[idCap].Phe_Duyet, Model[idCap].Xac_Nhan)
-                                    {
-                                        case (false, false):
-                                            <span class="text-muted">(Đã được phê duyệt)</span>
-                                            break;
-                                        case (true, false):
-                                            <button data-url="@Url.Action("CheckPassword", "NoRole", new {
+                        <tr>
+                            <td>@(j+1)</td>
+                            <td>@Model[idCap].Ma_Cap</td>
+                            <td>@Model[idCap].VDV1.Ten_Tat</td>
+                            <td>@Model[idCap].VDV2.Ten_Tat</td>
+                            <td>@total</td>
+                            <td>@difference</td>
+                            <td>
+                                @switch (Model[idCap].Phe_Duyet, Model[idCap].Xac_Nhan)
+                                {
+                                    case (false, false):
+                                        <span class="text-muted">(Đã được phê duyệt)</span>
+                                        break;
+                                    case (true, false):
+                                        <button data-url="@Url.Action("CheckPassword", "NoRole", new {
                                                          id = Model[idCap].ID_Vdv2,
                                                          nextAction = "UpdatePair",
                                                          nextController = "CurrentTab",
                                                          currentAction = "Pair",
                                                          currentController = "CurrentTab"
                                                      })" type="button" class="btn btn-success" data-toggle="ajax-modal" data-bs-target="#chkPw">
-                                                Xác nhận
-                                            </button>
-                                            break;
-                                        case (true, true):
-                                            <span class="text-muted">(Chờ phê duyệt)</span>
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                </td>
-                            </tr>
+                                            Xác nhận
+                                        </button>
+                                        break;
+                                    case (true, true):
+                                        <span class="text-muted">(Chờ phê duyệt)</span>
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            </td>
+                        </tr>
                             idCap++;
                         }
                     </tbody>

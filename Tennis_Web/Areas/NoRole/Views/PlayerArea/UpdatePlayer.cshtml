@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Thông tin VĐV";
     Layout = "/Areas/_Layout.cshtml";
+    //string TenFile = "";
 }
 <form asp-action="UpdatePlayer" enctype="multipart/form-data">
     <div class="card shadow mb-4">
@@ -93,19 +94,10 @@
                     <div class="form-group">
                         <label class="control-label font-weight-bold">Hình đại diện</label>
                         <input class="form-control mb-2" type="file" asp-for="Picture" />
-                        @if (Model != null && Model.File_Anh != null)
+                        @if (Model.File_Anh != null)
                         {
-                            //var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-                            //{
-                            //    BtnMsg = "Xóa",
-                            //    Message = "xóa ảnh",
-                            //    ActionName = "DeleteImage",
-                            //    //ControllerName = "PlayerArea",
-                            //    AreaName = "NoRole",
-                            //    Id = Model.Id.ToString()
-                            //};
-                            <img src="@("~/Files/PlayerImg/" + Model.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" />
-                            @*<button type="button" class="mt-2 btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa ảnh</button>*@
+                            <img src="@("~/Files/PlayerImg/"+ Model.File_Anh)" class="col-12" style="padding:inherit;" asp-append-version="true" alt="Chưa có hình đại diện" />
+                            @*<button type="button" class="mt-2 btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", "")">Xóa ảnh</button>*@
                         }
                         else
                         { <img style="min-width: 100%;" alt="Chưa có hình đại diện">}
@@ -133,7 +125,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="Id" id="Password" />
                     <div class="form-group">
                         <label asp-for="NewPassword" class="control-label font-weight-bold"></label>
                         <input asp-for="NewPassword" class="form-control" required />

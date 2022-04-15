@@ -39,17 +39,17 @@
     "PairNum": 8,
     "P1_P2_Pair": {
       "1A": "1E",
-      "1B": "2DCEA",
-      "1C": "2AEBD",
-      "1D": "2EABC"
+      "1B": "2CDE",
+      "1C": "2ADE",
+      "1D": "2BED"
     }
   },
   {
     "TableNum": 6,
     "PairNum": 16,
     "P1_P2_Pair": {
-      "1A": "3FCD",
-      "1B": "3ECD",
+      "1A": "3FDC",
+      "1B": "3EDC",
       "1C": "2D",
       "2F": "2B",
       "2A": "2E",
@@ -69,7 +69,7 @@
       "2A": "2B",
       "1E": "2D",
       "1F": "2C",
-      "1G": "3ABCFED"
+      "1G": "3ABCDEF"
     }
   },
   {
