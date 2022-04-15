@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Tennis_Web.Areas.NoRole.Models;
 
+
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
     [Area("NoRole")]
@@ -64,6 +65,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 if (chkPw == false) { _notyf.Error((string)(TempData["Message"] ?? "Có lỗi xảy ra khi đang lưu thay đổi!"), 30); }
 
             }
+            foreach (var user in model) { user.File_Anh = new FileMethod(_context, _webHost).NameImageTest(user.Id); };
             return View(model);
         }
         public IActionResult UpdatePlayer(int id)
@@ -73,6 +75,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             else if (success == false) _notyf.Error((string)(TempData["Message"] ?? "Có lỗi xảy ra khi đang lưu thay đổi!"));
             
             var source = _context.DS_VDVs.Find(id);
+            var FileAnh = new FileMethod(_context, _webHost).NameImageTest(id);
             if (source != null && source.File_Anh != null) _notyf.Warning("Upload ảnh mới sẽ xóa ảnh cũ!", 100);
             var destination = new PasswordViewModel();
             if (source != null)
@@ -82,7 +85,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 destination.Gioi_Tinh = source.Gioi_Tinh;
                 destination.Tel = source.Tel;
                 destination.CLB = source.CLB;
-                destination.File_Anh = source.File_Anh;
+                destination.File_Anh = FileAnh;
                 destination.Email = source.Email;
                 destination.Cong_Ty = source.Cong_Ty;
                 destination.Chuc_Vu = source.Chuc_Vu;
@@ -97,8 +100,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             if (source.Picture != null)
             {
                 // Handle picture attachment
-                string extension = Path.GetExtension(source.Picture.FileName);
-                if (extension == ".jpg" || extension == ".jpeg" || extension == ".png")
+                string extension = Path.GetExtension(source.Picture.FileName).ToUpper();
+                if (extension == ".JPG" || extension == ".JPEG" || extension == ".PNG")
                 {
                     if (source.Picture.Length <= 1000000)
                     {
@@ -118,7 +121,8 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             }
 
             // Handle saving object
-            var columnsToSave = new List<string> { "Ho_Ten", "Gioi_Tinh", "CLB", "File_Anh", "Tel", "Email", "Cong_Ty", "Chuc_Vu" };
+            //var columnsToSave = new List<string> { "Ho_Ten", "Gioi_Tinh", "CLB", "File_Anh", "Tel", "Email", "Cong_Ty", "Chuc_Vu" };
+            var columnsToSave = new List<string> { "Ho_Ten", "Gioi_Tinh", "CLB", "Tel", "Email", "Cong_Ty", "Chuc_Vu" };
             var result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(id, source, columnsToSave);
             
             if (result.Succeeded)

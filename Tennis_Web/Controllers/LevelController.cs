@@ -27,7 +27,7 @@ namespace Tennis_Web.Controllers
         public IActionResult UpdateParameter(DS_Trinh item)
         {
             // Find and update Parameters from DS_Trinh
-            var columnsToSave = new List<string> { "Trinh", "Diem_Tru", "Diem_PB", "BD_Tren", "BD_Duoi",
+            var columnsToSave = new List<string> { "Trinh", "Diem_Tru", "Diem_PB", "BD_Tren", "BD_Duoi","Min_Point","Max_Point",
                 "TL_VoDich", "TL_ChungKet", "TL_BanKet", "TL_TuKet", "TL_Bang" };
             var result = new DatabaseMethod<DS_Trinh>(_context).SaveObjectToDB(item.Id, item, columnsToSave);
             _context.SaveChanges();

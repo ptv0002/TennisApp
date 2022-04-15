@@ -7,81 +7,88 @@
     }
 }
 @model IEnumerable<Models.DS_VDV>
-
-<div class="card shadow mb-4">
-    <div class="card-body">
-        <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-            <div class="table-responsive">
-                <table class="table dataTable" id="normalTable">
-                    <thead>
-                        <tr>
-                            <th>Họ và tên/ Tên tắt</th>
-                            <th>Công ty</th>
-                            <th>@Html.DisplayNameFor(model => model.CLB)</th>
-                            <th>@Html.DisplayNameFor(model => model.File_Anh)</th>
-                            <th>@Html.DisplayNameFor(model => model.Diem)</th>
-                            <th>@Html.DisplayNameFor(model => model.Diem_Cu)</th>
-                            <th>@Html.DisplayNameFor(model => model.Gioi_Tinh)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            string gender;
-                            if (item.Gioi_Tinh) gender = "Nữ";
-                            else gender = "Nam";
-                            string name;
-                            if (item.Ho_Ten != null)
-                            {
-                                name = item.Ho_Ten;
-                            }
-                            else
-                            { name = item.Ten_Tat; }
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                <div class="table-responsive">
+                    <table class="table dataTable" id="normalTable">
+                        <thead>
                             <tr>
-                                <td>
-                                    @if (!ViewBag.Info && item.Phe_Duyet != true)
-                                    {
-                                        <button data-url="@Url.Action("CheckPassword", "NoRole", new
+                                <th>Họ và tên/ Tên tắt</th>
+                                <th>Công ty</th>
+                                <th>@Html.DisplayNameFor(model => model.CLB)</th>
+                                @*<th>@Html.DisplayNameFor(model => model.File_Anh)</th>*@
+                                <th>Ảnh</th>
+                                <th>@Html.DisplayNameFor(model => model.Diem)</th>
+                                <th>@Html.DisplayNameFor(model => model.Diem_Cu)</th>
+                                @*<th>Tăng/Giảm</th>*@
+                                <th>@Html.DisplayNameFor(model => model.Gioi_Tinh)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                string gender;
+                                if (item.Gioi_Tinh) gender = "Nữ";
+                                else gender = "Nam";
+                                string name;
+                                if (item.Ho_Ten != null)
+                                {
+                                    name = item.Ho_Ten;
+                                }
+                                else
+                                { name = item.Ten_Tat; }
+                                <tr>
+                                    <td>
+                                        @if (!ViewBag.Info && item.Phe_Duyet != true)
+                                        {
+                                            <button data-url="@Url.Action("CheckPassword", "NoRole", new
                                                      {
                                                          id = item.Id,
                                                          nextAction = "Register",
                                                          nextController = "CurrentTab",
                                                          currentAction = "Player",
                                                          currentController = "PlayerArea"
-                                                     })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">@name</button>}
-                                    else
-                                    {
-                                        <button data-url="@Url.Action("CheckPassword", "NoRole", new
+                                                     })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">
+                                                @name
+                                                </button>}
+                                            else
+                                            {
+                                                <button data-url="@Url.Action("CheckPassword", "NoRole", new
                                                      {
                                                          id = item.Id,
                                                          nextAction = "UpdatePlayer",
                                                          nextController = "PlayerArea",
                                                          currentAction = "Player",
                                                          currentController = "PlayerArea"
-                                                     })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">@name</button>}
-                                </td>
-                                <td>@item.Cong_Ty</td>
-                                <td>@item.CLB</td>
-                                <td>
-                                    @if (item.File_Anh != null)
-                                    {<img src="@("~/Files/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />}
-                                </td>
-                                <td>@item.Diem</td>
-                                <td>
-                                    <a asp-action="History" asp-route-id="@item.Id">@item.Diem_Cu</a>
-                                </td>
-                                <td>
-                                    @gender
-                                </td>
-                            </tr>
-
-                        }
-                    </tbody>
-                </table>
+                                                     })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">
+                                                    @name
+                                                </button>}
+                                    </td>
+                                    <td>@item.Cong_Ty</td>
+                                    <td>@item.CLB</td>
+                                    <td>
+                                        @if (item.File_Anh != null) 
+                                        {
+                                            <img src="@("~/Files/PlayerImg/"+ item.File_Anh)" asp-append-version="true" width="70" />
+                                            @*<img src="C:/TennisApp/Tennis_Web/wwwroot/Files/PlayerImg/521.JPG"  asp-append-version="true" width="70" />*@
+                                        }
+                                    </td>
+                                    <td>@item.Diem</td>
+                                    <td>
+                                        <a asp-action="History" asp-route-id="@item.Id">@item.Diem_Cu</a>
+                                    </td>
+                                    <td>
+                                        @gender
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal placeholder -->
-<div id="modal-placeholder"></div>
+    <!-- Modal placeholder -->
+    <div id="modal-placeholder"></div>

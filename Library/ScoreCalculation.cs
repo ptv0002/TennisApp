@@ -179,6 +179,7 @@ namespace Library
         }
         private decimal Head2Head_Winning(DS_Tran match)
         {
+            int mheso = 4; // Hệ số này tính bình quân số trận của 1 cặp * để nhân với số trận đấu nếu thắng/thua sẽ tương đương với điểm trích (từ vòng trực tiếp)
             // Những trận đấu cũ không tính đối đầu trước ngày 30/03/2022.
             var mTrinh = _context.Set<DS_Trinh>().First(m => m.Id == match.ID_Trinh);
             var mGiai = _context.Set<DS_Giai>().First(m => m.Id == mTrinh.ID_Giai);
@@ -201,7 +202,7 @@ namespace Library
                 C_D1_Thang  = p2.Diem;
                 C_D1_Thua   = p1.Diem;
             }
-            decimal diem = (C_D1_Thua - level.Diem_PB * 2) * ((decimal)level.Diem_Tru / 6) * ((decimal)ratio / 6) / (C_D1_Thang - level.Diem_PB * 2);
+            decimal diem = (C_D1_Thua - level.Diem_PB * 2) * ((decimal)level.Diem_Tru / mheso) * ((decimal)ratio / 6) / (C_D1_Thang - level.Diem_PB * 2);
             return Math.Abs(diem);
         }
         /// <summary>

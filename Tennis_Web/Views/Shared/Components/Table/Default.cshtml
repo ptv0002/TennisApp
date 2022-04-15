@@ -37,89 +37,86 @@
                                 }
                                 <th>Số trận thắng</th>
                                 <th>Hiệu số</th>
-                                @if (highRole)
-                                {
+                                @*@if (highRole)
+                                {*@
                                     <th>Bốc thăm</th>
-                                }
+                                @*}*@
                                 <th>Xếp hạng</th>
                             </tr>
                         </thead>
                         <tbody name="bang" >
                             @for (int j = 0; j < ViewBag.ListNum[i]; j++)
                             {
-                                <tr>
-                                    <th>
-                                        @Model.DS_Cap[idCap].VDV1.Ten_Tat + @Model.DS_Cap[idCap].VDV2.Ten_Tat
-                                        <input type="hidden" asp-for="@Model.DS_Cap[idCap].Id" />
-                                        <input type="hidden" asp-for="@Model.DS_Cap[idCap].ID_Trinh" />
-                                    </th>
-                                    @for (int k = 0; k < ViewBag.ListNum[i]; k++)
+                            <tr>
+                                <th>
+                                    @Model.DS_Cap[idCap].VDV1.Ten_Tat + @Model.DS_Cap[idCap].VDV2.Ten_Tat
+                                    <input type="hidden" asp-for="@Model.DS_Cap[idCap].Id" />
+                                    <input type="hidden" asp-for="@Model.DS_Cap[idCap].ID_Trinh" />
+                                </th>
+                                @for (int k = 0; k < ViewBag.ListNum[i]; k++)
+                                {
+                                    if (k == j)
                                     {
-                                        if (k == j)
+                                        <td style="background-color:teal"></td>
+                                    }
+                                    else if (j < k)
+                                    {  // Insert result side
+                                        if (hasRole)
                                         {
-                                            <td style="background-color:teal"></td>
-                                        }
-                                        else if (j < k)
-                                        {  // Insert result side
-                                            if (hasRole)
-                                            {
-                                                <td name="ketqua">
-                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0))
-                                                    {
-                                                        // If role is Manager or Admin => full editing
-                                                        // If role is Referee => Only edit 0 field
-                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" />
-                                                    }
-                                                    else
-                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled min="0" max="7" />}
+                                            <td name="ketqua">
+                                                @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0))
+                                                {
+                                                    // If role is Manager or Admin => full editing
+                                                    // If role is Referee => Only edit 0 field
+                                                    <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" />
+                                                }
+                                                else
+                                                { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled min="0" max="7" />}
 
-                                                    <span>-</span>
-                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0))
-                                                    {
-                                                        // If role is Manager or Admin => full editing
-                                                        // If role is Referee => Only edit 0 field
-                                                        <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
-                                                    }
-                                                    else
-                                                    { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" disabled />}
+                                                <span>-</span>
+                                                @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0))
+                                                {
+                                                    // If role is Manager or Admin => full editing
+                                                    // If role is Referee => Only edit 0 field
+                                                    <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
+                                                }
+                                                else
+                                                { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" disabled />}
 
-                                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Id" />
-                                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].ID_Trinh" />
-                                                    <input type="hidden" asp-for="@Model.DS_Tran[idTran].Ma_Vong" />
-                                                </td>
-                                            }
-                                            else
-                                            { // For No Role View
-                                                <td>@Model.DS_Tran[idTran].Kq_1 - @Model.DS_Tran[idTran].Kq_2</td>
-                                            }
-                                            idTran++;
+                                                <input type="hidden" asp-for="@Model.DS_Tran[idTran].Id" />
+                                                <input type="hidden" asp-for="@Model.DS_Tran[idTran].ID_Trinh" />
+                                                <input type="hidden" asp-for="@Model.DS_Tran[idTran].Ma_Vong" />
+                                            </td>
                                         }
                                         else
-                                        {  // Reflection side
-                                            <td name="kqsuydien">
-                                                @Model.DS_Tran[reflectCount[k]].Kq_2 - @Model.DS_Tran[reflectCount[k]].Kq_1
-                                            </td>
-                                            reflectCount[k]++;
+                                        { // For No Role View
+                                            <td>@Model.DS_Tran[idTran].Kq_1 - @Model.DS_Tran[idTran].Kq_2</td>
                                         }
-                                    }
-                                    @if (hasRole)
-                                    {
-                                        <td name="tranthang"><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Tran_Thang" disabled /></td>
-                                        <td name="hieuso"><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Hieu_so" disabled /></td>
+                                        idTran++;
                                     }
                                     else
-                                    {
-                                        <td>@Model.DS_Cap[idCap].Tran_Thang</td>
-                                        <td>@Model.DS_Cap[idCap].Hieu_so</td>
-                                    }
-                                    @if (highRole)
-                                    {
-                                        <td>
-                                            <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Boc_Tham" />
+                                    {  // Reflection side
+                                        <td name="kqsuydien">
+                                            @Model.DS_Tran[reflectCount[k]].Kq_2 - @Model.DS_Tran[reflectCount[k]].Kq_1
                                         </td>
-
+                                        reflectCount[k]++;
                                     }
-                                    <td>@Model.DS_Cap[idCap].Xep_Hang</td>
+                                }
+                                @if (hasRole)
+                                {
+                                    <td name="tranthang"><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Tran_Thang" disabled /></td>
+                                    <td name="hieuso"><input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Hieu_so" disabled /></td>
+                                }
+                                else
+                                {
+                                    <td>@Model.DS_Cap[idCap].Tran_Thang</td>
+                                    <td>@Model.DS_Cap[idCap].Hieu_so</td>
+                                }
+                                <td>
+                                    @if (highRole) {<input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Boc_Tham" /> }
+                                    else {@Model.DS_Cap[idCap].Boc_Tham}
+                                </td>
+                                <td>@Model.DS_Cap[idCap].Xep_Hang</td>
                                 </tr>
                                 idCap++;
                             }
