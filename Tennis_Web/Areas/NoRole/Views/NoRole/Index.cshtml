@@ -3,3 +3,26 @@
     Layout = "/Areas/_Layout.cshtml";
     ViewBag.IActive = "active visible-sm visible-xs";
 }
+@model List<Models.Thong_Bao>
+
+@if (Model.Any())
+{
+    <div class="card shadow mb-4 col-xl-5 col-xxl-6">
+        <div class="card-header py-3">
+            <h5>Tin nổi bật</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                @foreach (var item in Model)
+                {
+                    <div class="row mb-1">
+                        <span class="small text-muted">@item.Ngay.Day/@item.Ngay.Month/@item.Ngay.Year @item.Ngay.TimeOfDay</span>
+                        <a asp-action="AnnouncementDetail" asp-route-id="@item.Id" class="h2" style="color:black;text-decoration:underline;font-size:x-large">
+                            @item.Ten
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

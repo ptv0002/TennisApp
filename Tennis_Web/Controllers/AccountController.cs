@@ -186,6 +186,10 @@ namespace Tennis_Web.Controllers
                     Urlredirect = Url.Action("Index", "Home", new { area = "NoRole" })
                 });
         }
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
         public IActionResult Index()
         {
             var model = _userManager.Users.ToList();
