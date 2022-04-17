@@ -25,22 +25,15 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             _webHost = webHost;
             _notyf = notyf;
         }
-        //      public async Task<IActionResult> Index()
         public IActionResult Index()
-        {
-            //new Initializer(_webHost).Special1stRoundGenerator();
-
-            return View();
-        }
-        public IActionResult HotNews()
         {
             var model = _context.Thong_Baos.Where(m => m.Hien_Thi && m.Tin_Nong).OrderByDescending(m => m.Ngay).ToList();
             return View(model);
         }
         public IActionResult Announcement(bool isCurrent)
         {
-            var model = _context.Thong_Baos.Where(m => m.DS_Giai.Giai_Moi == isCurrent && m.Hien_Thi)
-                .OrderByDescending(m => m.DS_Giai.Ngay).ThenByDescending(m => m.Ngay).ToList();
+            var model = _context.Thong_Baos.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi == isCurrent && m.Hien_Thi)
+                .OrderByDescending(m => m.DS_Giai.Ngay).ThenByDescending(m => m.Ngay).ToList();            
             ViewBag.IsCurrent = isCurrent;
             return View(model);
         }

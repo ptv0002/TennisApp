@@ -21,6 +21,8 @@
     <Compile Include="Migrations\20220331090753_up_vdvdiem_ghichu.Designer.cs" />
     <Compile Include="Migrations\20220407060147_up_ds_trinh_bienDo.cs" />
     <Compile Include="Migrations\20220407060147_up_ds_trinh_bienDo.Designer.cs" />
+    <Compile Include="Migrations\20220415052805_edit_multiple_tables.cs" />
+    <Compile Include="Migrations\20220415052805_edit_multiple_tables.Designer.cs" />
     <Compile Include="Migrations\TennisContextModelSnapshot.cs" />
   </ItemGroup>
 

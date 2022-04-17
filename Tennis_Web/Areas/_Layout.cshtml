@@ -4,6 +4,7 @@
         </a>*@
 @{ 
     var indexPage = ViewData["Title"].ToString() == "Trang chủ";
+    var align = indexPage ? "justify-content-xl-start" :"";
     var background = indexPage ? "background-img" : "color-background";
 }
 <html lang="en">
@@ -86,20 +87,21 @@
         @if (indexPage)
         {
             <header class="py-2" style="background-color:transparent">
-                <div class="container px-5">
-                    <div class="row gx-5 align-items-center justify-content-center">
-                        <div class="col-lg-8 col-xl-7 col-xxl-6">
+                <div class="container px-0">
+                    <div class="row gx-5 align-items-lg-center justify-content-xl-start">
+                        <div class="">
                             <div class="my-5 text-center text-xl-start">
                                 <h1 class="display-5 fw-bolder text-white mb-2">BIT Khánh Hòa</h1>
-                                <p class="lead fw-normal text-white-50 mb-4">CLB các doanh nghiệp CNTT tỉnh Khánh Hòa</p>
-                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                                    <a class="btn btn-warning btn-lg px-4 me-sm-3" asp-action="HotNews" asp-controller="NoRole">Tin nổi bật</a>
-                                    <a class="btn btn-outline-light btn-lg px-4" href="https://hoitinhoc.khanhhoa.vn/gioi-thieu-hoi-tin-hoc-khanh-hoa_270_338_0_a.html">Giới thiệu CLB</a>
-                                </div>
+                                <p class="lead fw-normal text-white-50">CLB các doanh nghiệp CNTT tỉnh Khánh Hòa</p>
+                                @* justify-content-center
+                                    col-lg-8 col-xl-7 col-xxl-6<div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+            <a class="btn btn-warning btn-lg px-4 me-sm-3" asp-action="HotNews" asp-controller="NoRole">Tin nổi bật</a>
+            <a class="btn btn-outline-light btn-lg px-4" href="https://hoitinhoc.khanhhoa.vn/gioi-thieu-hoi-tin-hoc-khanh-hoa_270_338_0_a.html">Giới thiệu CLB</a>
+        </div>*@
                             </div>
                         </div>
-                        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
-                            <img class="img-fluid rounded-3 my-5" src="~/images/still-bg-1.jpg">
+                        <div class="col-xl-5 col-xxl-6 d-none d-xl-block">
+                            <img class="img-fluid rounded-3 mb-4" src="~/images/still-bg-1.jpg">
                         </div>
                     </div>
                 </div>
@@ -108,14 +110,13 @@
         <div class="container px-4 my-4">
             @if (!indexPage)
             {
-                //style="@color"var color = ViewData["Tagline"] ?? "color:#ffce1b";
                 <div class="text-center mb-3">
                     <h1>@ViewData["Title"]</h1>
                     <p class="lead mb-0 tagline">@ViewData["Tagline"]</p>
                     <div class="div-dec"></div>
                 </div>
             }
-            <div class="row gx-5 justify-content-center" id="body">
+            <div class="row gx-5 justify-content-center @align" id="body">
                 @RenderBody()
             </div>
         </div>
