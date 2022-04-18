@@ -60,7 +60,7 @@ namespace Library
             string fileNew = NameImage(source.Id) + extension;
             if (fileOld != null) System.IO.File.Delete(fileOld);    // Xóa file cũ nếu có
             // Chép file mới vào
-            string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
+            //string fileName = Path.GetFileNameWithoutExtension(source.Picture.FileName);
             using var fileStream = File.Create(fileNew);
             source.Picture.CopyTo(fileStream);
             fileStream.Dispose();

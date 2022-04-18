@@ -30,7 +30,7 @@ namespace Library
             // ============= Xếp hạng theo điểm
             returnList = Rank_Point(returnList, ds_tran, true); 
             //=============== Kiểm tra nếu xếp hạng bằng nhau --> Xếp hạng theo điểm nội bộ
-            List<Rank_Data> data = Rank_Select(returnList, ds_tran);
+            List<Rank_Data> data = Rank_Select(returnList, ds_tran); // Các nhóm cặp đồng hạng
             List<DS_Cap> mini_dscap = new();
             for (int i=0; i< data.Count; i++)
             {
@@ -159,6 +159,12 @@ namespace Library
             }
             return lCap.OrderBy(m => m.Xep_Hang).ToList();
         }
+        /// <summary>
+        /// Tách ra các list : Mỗi list gồm các cặp xếp hạng bằng nhau, và danh sách các trận có liên quan
+        /// </summary>
+        /// <param name="lCap"></param>
+        /// <param name="lTran"></param>
+        /// <returns></returns>
         public static List<Rank_Data> Rank_Select(List<DS_Cap> lCap, List<DS_Tran> lTran)
         {
             List<Rank_Data> lData = new();

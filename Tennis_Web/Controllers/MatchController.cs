@@ -44,9 +44,7 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult MatchInfo(TabViewModel model)
         {
-            var success = (bool?)TempData["PlayOff"];
-            if (success == true) _notyf.Success("Cần phải bốc thăm để lựa chọn Playoff");
-
+            if (TempData["Table"] !=null ) _notyf.Success(TempData["Table"].ToString());
             return View(model);
         }
         public async Task<IActionResult> AdditionalInfoAsync(int id)
@@ -106,6 +104,7 @@ namespace Tennis_Web.Controllers
             model = model.OrderBy(m => m.Trinh).ToList();
             // -------------------  Đọc dữ liệu cũ ra nếu có để gán lại vào form dữ liệu mới
             FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/MatchGenParam.json");
+            //FileStream fileStream = System.IO.File.OpenRead("~/wwwroot/Files/Json/MatchGenParam.json");
             var matchParam = (await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream)).ToList();
             fileStream.Dispose();
             for (int i=0; i<model.Count;i++) 
@@ -215,6 +214,7 @@ namespace Tennis_Web.Controllers
                 // ---------------- Save these paramters to Json file ----------------
                 // Get path for the Json file
                 string path = _webHost.WebRootPath + "/Files/Json/MatchGenParam.json";
+                //string path = "~/wwwroot/Files/Json/MatchGenParam.json";
                 FileStream fileStream;
                 // Delete file if Json file is already exist
                 if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
@@ -269,6 +269,7 @@ namespace Tennis_Web.Controllers
                     // Get position from template and add to first special round
                     var totalPairs = level.ChosenPerTable.Sum(m => m.Chosen) + level.PlayOff1 + level.PlayOff2;
                     fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/Special1stRound.json");
+                    //fileStream = System.IO.File.OpenRead("~/wwwroot/Files/Json/Special1stRound.json");
                     var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPairs && m.TableNum == level.ChosenPerTable.Count);
                     fileStream.Dispose();
                 
