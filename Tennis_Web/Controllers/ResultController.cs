@@ -77,7 +77,7 @@ namespace Tennis_Web.Controllers
         }
         /// <summary>
         /// 1. Xếp hạng các cặp trong các bảng
-        /// 2. Đã có kết quả các trận đấu vòng bảng --> Tính điểm vòng bảng
+        /// 2. Đã có kết quả các trận đấu vòng bảng --> Tính điểm vòng bảng  --> Có bảng nào tính điểm bảng đó
         /// 3. Có đầy đủ kết quả vòng bảng  --> Cập nhật vòng Playoff
         /// 4. Các cặp được chọn cập nhật vào vòng trong
         /// 5. Có đầy đủ kết quả vòng bảng + Playoff --> Cập nhật lại vòng đặc biệt và khóa vòng bảng (Chỉ cho Admin cập nhật lại)
@@ -87,47 +87,83 @@ namespace Tennis_Web.Controllers
         public async Task<IActionResult> Table_PerformRankingAsync(RoundTabViewModel model)
         {
             bool result = true;
+            string msg = "";
             //bool result = Table_UpdateResult(model);
             // If update successfully, proceeds
             if (result)
             {
                 FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/MatchGenParam.json");
+                //FileStream fileStream = System.IO.File.OpenRead("~/wwwroot/Files/Json/MatchGenParam.json");
                 var matchParam = (await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream)).Find(m => m.ID_Trinh == model.ID_Trinh);
                 fileStream.Dispose();
-
+                string mThongbao = null;
+                string mTable0ok= null;
+                bool mtest = false; // Test xếp hạng đầy đủ chưa của 1 bảng
                 // 1. ========================= Rank pairs =========================
-
                 var tables = _context.DS_Bangs.Where(m => m.ID_Trinh == model.ID_Trinh);
+                List<DS_Bang> tableok = new(); // Danh sách các bảng đã được xếp hạng & cập nhật kết quả đầy đủ
                 foreach (var table in tables)
                 {
-                    var rankedPairs = new MatchCalculation(_context).Rank_Full(model.ID_Trinh, table.Ten);
-                    foreach (var pair in rankedPairs)
+                    int mxephang = 0;
+                    var lkqbang = _context.DS_Trans.ToList().Where(m => m.Ma_Vong == 8 && m.ID_Trinh == model.ID_Trinh && m.Ma_Tran[7] == table.Ten && (m.Kq_1 + m.Kq_2) == 0);
+                    if (lkqbang.Any()) // Chưa đủ kết quả không xếp hạng
                     {
-                        result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xep_Hang", "Tran_Thang", "Hieu_so" }).Succeeded;
-                        if (!result) break;
+                        mTable0ok = mTable0ok + table.Ten + ", ";
                     }
+                    else
+                    {
+                        var rankedPairs = new MatchCalculation(_context).Rank_Full(model.ID_Trinh, table.Ten);
+                        foreach (var pair in rankedPairs)
+                        {
+                            if (pair.Xep_Hang == mxephang && !mtest)
+                            {
+                                mThongbao += pair.DS_Bang.Ten + ", ";
+                                mtest = true;
+                            }
+                            mxephang = pair.Xep_Hang;
+                            result = new DatabaseMethod<DS_Cap>(_context).SaveObjectToDB(pair.Id, pair, new List<string> { "Xep_Hang", "Tran_Thang", "Hieu_so" }).Succeeded;
+                            if (!result) break;
+                        }
+                        if (!mtest) 
+                        {
+                            tableok.Add(table);
+                        }
+                    }
+                    mtest = false;
                 }
+                if (mTable0ok != null) { msg = "Các bảng chưa đủ kết quả thi đấu : " + mTable0ok ; } // Gán cái này để tí về MatchInfo hiện thông báo
+                if (mThongbao != null) { msg += "Các bảng chưa được xếp hạng đầy đủ : " + mThongbao; } // Gán cái này để tí về MatchInfo hiện thông báo
+
                 if (result) _context.SaveChanges();
-                // 2. ========================= Get Score if finnish Round =========================
+                // 2. ========================= Get Score if finnish Round  =========================
                 var lketqua = _context.DS_Trans.Where(m => m.Ma_Vong == 8 && m.ID_Trinh == model.ID_Trinh && (m.Kq_1 + m.Kq_2) == 0);
-                if (! lketqua.Any()) { Table_Scoring(model);}
+                if (!lketqua.Any()) { Table_Scoring(model); }
                 // 3. ========================= Get ranking and put in playoff =========================
                 var playoff1 = Table_ToPlayoff1(matchParam, model);
-                result = Table_ToPlayoff2(matchParam, model);
-                if (!result || (playoff1==null && matchParam.PlayOff1 > 0)) // Chưa được xếp hạng đầy đủ --> không chọn được playoff
+                if (playoff1==null && matchParam.PlayOff1 >0)
                 {
-                    TempData["PlayOff"] = true;
+                    msg += "Chưa xếp hạng được các bảng để chọn playoff1 ";
+                    result = false;
                 }
-                else
+                result = result && Table_ToPlayoff2(matchParam, model);
+                if (result && (playoff1 != null || matchParam.PlayOff1 == 0))
                 {
                     // ================== Add players to First Special ==================
                     result = result && await Table_ToSpecialAsync(playoff1, matchParam, model);
                     // Save all changes to DB
                     if (result) _context.SaveChanges();
                 }
+                else // Chưa được xếp hạng đầy đủ --> không chọn được playoff
+                {    // Trường hợp có bảng nào đầy đủ kết quả rồi --> Chuyển vào vòng đặc biệt trước để tham khảo
+                    foreach (var table in tableok)
+                    {
+                        Table1_ToSpecial(table.Ten, matchParam, model);
+                    }
+                    _context.SaveChanges();
+                }
             }
             return new MethodController(_context).TabVMGenerator_Level(model.ID_Trinh, result,
-                Tab.Table, "", "MatchInfo", "Match");
+                Tab.Table, msg, "MatchInfo", "Match");
         }
         /// <summary>
         /// Tính điểm toàn bộ bảng trong trình
@@ -157,18 +193,24 @@ namespace Tennis_Web.Controllers
             var tables = matchParam.ChosenPerTable.Where(m => m.Playoff);
             foreach (var table in tables)
             {
-                    //.Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan)
+                //.Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan)
                 var pair = _context.DS_Caps.Include(m => m.DS_Bang)
                     .Where(m => m.ID_Trinh == model.ID_Trinh)
                     .FirstOrDefault(m => m.DS_Bang.Ten == table.Table && m.Xep_Hang == (table.Chosen + 1));
-                if (pair==null) { return null;} // Chưa được xếp hạng đầy đủ --> không chọn được playoff
-                else { considerList.Add(pair);}
+                if (pair == null) { return null; } // Chưa được xếp hạng đầy đủ --> không chọn được playoff
+                else { considerList.Add(pair); }
             }
             considerList = considerList.OrderByDescending(m => m.Tran_Thang).ThenByDescending(m => m.Hieu_so).ThenBy(m => m.Boc_Tham).ToList();
             // If there's playoff 1 rounds then proceeds
             for (int i = 0; i < matchParam.PlayOff1; i++)
             {
                 l_DSCap.Add(considerList[i]);
+            }
+            if (considerList[matchParam.PlayOff1].Tran_Thang == considerList[matchParam.PlayOff1-1].Tran_Thang 
+                && considerList[matchParam.PlayOff1].Hieu_so == considerList[matchParam.PlayOff1 - 1].Hieu_so
+                && considerList[matchParam.PlayOff1].Boc_Tham == considerList[matchParam.PlayOff1 - 1].Boc_Tham) 
+            {
+                return null;  //Chưa xếp hạng được trên các bảng
             }
             return l_DSCap;
         }
@@ -197,20 +239,52 @@ namespace Tennis_Web.Controllers
             // ================== Add players to Playoff2 rounds ==================
             for (int i = 0; i < P2match.Count; i++)
             {
-                 P2match[i].ID_Cap1 = considerList[count++].Id;
-                 P2match[i].ID_Cap2 = considerList[count++].Id;
-                 result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(P2match[i].Id, P2match[i], new List<string> { "ID_Cap1", "ID_Cap2" }).Succeeded;
-                 if (!result) break;
+                P2match[i].ID_Cap1 = considerList[count++].Id;
+                P2match[i].ID_Cap2 = considerList[count++].Id;
+                result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(P2match[i].Id, P2match[i], new List<string> { "ID_Cap1", "ID_Cap2" }).Succeeded;
+                if (!result) break;
             }
             // --  Còn lại các cặp sau khi chọn Playoff2 là các cặp bị loại trực tiếp
             return result;
         }
-        async Task<bool> Table_ToSpecialAsync(List<DS_Cap> playoff1, MatchGeneratorViewModel matchParam, RoundTabViewModel model)
+        void Table1_ToSpecial(char bang, MatchGeneratorViewModel matchParam, RoundTabViewModel model)
+        {
+            bool result = false;
+            var totalPair = matchParam.ChosenPerTable.Find(m => m.Table == bang).Chosen;
+            var allPairs = _context.DS_Caps.Include(m => m.DS_Bang)
+                .Where(m => m.ID_Trinh == model.ID_Trinh && m.DS_Bang.Ten==bang && m.Xep_Hang <=totalPair ).OrderBy(m=>m.Xep_Hang).ToList();
+            var roundNum = _context.DS_Trans.Where(m => m.Ma_Vong <= 6 && m.ID_Trinh == model.ID_Trinh).Max(m => m.Ma_Vong);
+            // Get first special round
+            var special1stRound = _context.DS_Trans.Where(m => m.Ma_Vong == roundNum && m.ID_Trinh == model.ID_Trinh).OrderBy(m => m.Ma_Tran).ToList();
+            foreach (var pair in allPairs) 
+            {
+                for (var i=0; i<= special1stRound.Count;i++)
+                {
+                    if (special1stRound[i].Chon_Cap_1.Contains(pair.Xep_Hang.ToString()+bang)) 
+                    {
+                        special1stRound[i].ID_Cap1 = pair.Id;
+                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(special1stRound[i].Id, special1stRound[i],new List<string> { "ID_Cap1" }).Succeeded;
+                        break;
+                    }
+                    if (special1stRound[i].Chon_Cap_2.Contains(pair.Xep_Hang.ToString() + bang))
+                    {
+                        special1stRound[i].ID_Cap2 = pair.Id;
+                        result = new DatabaseMethod<DS_Tran>(_context).SaveObjectToDB(special1stRound[i].Id, special1stRound[i], new List<string> { "ID_Cap2" }).Succeeded;
+                        break;
+                    }
+                }
+                // Không có cặp nào được gán là lỗi logic chương trình 
+            }
+            return;
+        }
+    async Task<bool> Table_ToSpecialAsync(List<DS_Cap> playoff1, MatchGeneratorViewModel matchParam, RoundTabViewModel model)
         {
             bool result = false;
             var totalPair = matchParam.ChosenPerTable.Sum(m => m.Chosen) + matchParam.PlayOff1 + matchParam.PlayOff2;
             var straight2Special = matchParam.ChosenPerTable.ToDictionary(x => x.Table, y => y.Chosen);
             FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/Special1stRound.json");
+            //FileStream fileStream = System.IO.File.OpenRead("~/wwwroot/Files/Json/Special1stRound.json");
+
             var placement = (await JsonSerializer.DeserializeAsync<List<Special1stRound>>(fileStream)).Find(m => m.PairNum == totalPair && m.TableNum == straight2Special.Count);
             fileStream.Dispose();
             // Reset all special rounds' value before proceeding
@@ -219,7 +293,8 @@ namespace Tennis_Web.Controllers
             if (placement != null && result)
             {
                 var allPairs = _context.DS_Caps.Include(m => m.DS_Bang)
-                    .Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan).ToList();
+                    .Where(m => m.ID_Trinh == model.ID_Trinh).ToList();
+                    //.Where(m => m.ID_Trinh == model.ID_Trinh && !m.Phe_Duyet && !m.Xac_Nhan).ToList();
                 var ds_cap = new List<DS_Cap>();
 
                 // Generate straight to special list 
@@ -312,6 +387,7 @@ namespace Tennis_Web.Controllers
                     var winPairs = _context.DS_Caps.Include(m => m.DS_Bang).Where(m => winId.Contains(m.Id)).ToList();  // Các cặp playoff2
                     // -----   Thêm các cặp Playoff 1 vào
                     FileStream fileStream = System.IO.File.OpenRead(_webHost.WebRootPath + "/Files/Json/MatchGenParam.json");
+                    //FileStream fileStream = System.IO.File.OpenRead("~/wwwroot/Files/Json/MatchGenParam.json");
                     var matchParam = (await JsonSerializer.DeserializeAsync<List<MatchGeneratorViewModel>>(fileStream)).Find(m => m.ID_Trinh == model.ID_Trinh);
                     fileStream.Dispose();
                     var playoff1 = Table_ToPlayoff1(matchParam, model);
