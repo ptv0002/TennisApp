@@ -46,14 +46,14 @@
   {
     "ID_Trinh": 3045,
     "Trinh": 1330,
-    "PlayOff1": 2,
+    "PlayOff1": 1,
     "PlayOff2": 2,
     "ChosenPerTable": [
       {
         "Table": "A",
-        "PairsNum": 3,
-        "Chosen": 2,
-        "Playoff": true
+        "PairsNum": 4,
+        "Chosen": 3,
+        "Playoff": false
       },
       {
         "Table": "B",

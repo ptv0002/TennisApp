@@ -73,7 +73,7 @@ namespace Library
                             break;
                         case 2:
                             if (C_D1 < level.Trinh - level.Diem_Tru * 2) CD_DT -= Math.Min(level.Diem_Tru * 2, level.Trinh - level.Diem_Tru * 2 - C_D1);
-                            if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - level.Diem_Tru * 5);
+                            if (C_D1 > level.Trinh + level.Diem_Tru * 2) CD_DT += Math.Max(0, C_D1 - level.Trinh - level.Diem_Tru * 4);
                             break;
                     }
                     // Find if pair id is in the DB for this "round"

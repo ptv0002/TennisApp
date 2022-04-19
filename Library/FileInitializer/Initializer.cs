@@ -36,7 +36,7 @@ namespace Library.FileInitializer
         public async void Special1stRoundGenerator()
         {
             // Get path for the Json file
-            string path = _webHost.WebRootPath + "/Files/Json/Special1stRound.json";
+            string path = _webHost.WebRootPath + "/uploads/Json/Special1stRound.json";
             var param = new List<Special1stRound>
             {
                 new Special1stRound

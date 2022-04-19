@@ -61,7 +61,7 @@ namespace Tennis_Web.Controllers
                     if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".pdf")
                     {
                         //// Delete image if already exists
-                        //string wwwRootPath = _webHost.WebRootPath + "/Files/Announcement/";
+                        //string wwwRootPath = _webHost.WebRootPath + "/uploads/Announcement/";
                         //if (source.File_Path != null)
                         //{
                         //    string existPath = Path.Combine(wwwRootPath, source.File_Path);
@@ -102,7 +102,7 @@ namespace Tennis_Web.Controllers
             if (source.File_Path != null)
             {
                 string wwwRootPath = _webHost.WebRootPath;
-                string path = Path.Combine(wwwRootPath + "/Files/Announcement/", source.File_Path);
+                string path = Path.Combine(wwwRootPath + "/uploads/Announcement/", source.File_Path);
 
                 if (System.IO.File.Exists(path))
                 {
@@ -118,7 +118,7 @@ namespace Tennis_Web.Controllers
         {
             var source = _context.Thong_Baos.Find(Convert.ToInt32(id));
             string wwwRootPath = _webHost.WebRootPath;
-            string path = Path.Combine(wwwRootPath + "/Files/Announcement/", source.File_Path);
+            string path = Path.Combine(wwwRootPath + "/uploads/Announcement/", source.File_Path);
 
             if (System.IO.File.Exists(path))
             {
