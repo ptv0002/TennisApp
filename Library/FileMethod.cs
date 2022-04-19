@@ -31,7 +31,7 @@ namespace Library
         public string NameImageTest(int id)
         {
             string FileAnh = id.ToString();
-            string path = Path.Combine(_webHost.WebRootPath + "/Files/PlayerImg/", FileAnh);
+            string path = Path.Combine(_webHost.WebRootPath + "/uploads/PlayerImg/", FileAnh);
             bool tontai = false;
             if (File.Exists(path + ".jpg")) { FileAnh += ".jpg"; tontai = true; }
             if (File.Exists(path + ".png")) { FileAnh += ".png"; tontai = true; }
@@ -44,7 +44,7 @@ namespace Library
         {
             var source = _context.Set<DS_VDV>().Find(Convert.ToInt32(id));
             string wwwRootPath = _webHost.WebRootPath;
-            string path = Path.Combine(wwwRootPath + "/Files/PlayerImg/", source.File_Anh);
+            string path = Path.Combine(wwwRootPath + "/uploads/PlayerImg/", source.File_Anh);
             if (File.Exists(path))
             {
                 File.Delete(path);
@@ -69,7 +69,7 @@ namespace Library
         {
             string extension = Path.GetExtension(source.Picture.FileName);
             // Delete image if already exists
-            string wwwRootPath = _webHost.WebRootPath + "/Files/PlayerImg/";
+            string wwwRootPath = _webHost.WebRootPath + "/uploads/PlayerImg/";
             if (source.File_Anh != null)
             {
                 string existPath = Path.Combine(wwwRootPath, source.File_Anh);
@@ -89,7 +89,7 @@ namespace Library
         {
             string extension = Path.GetExtension(source.File.FileName);
             // Delete image if already exists
-            string wwwRootPath = _webHost.WebRootPath + "/Files/Announcement/";
+            string wwwRootPath = _webHost.WebRootPath + "/uploads/Announcement/";
             if (source.File_Path != null)
             {
                 string existPath = Path.Combine(wwwRootPath, source.File_Path);

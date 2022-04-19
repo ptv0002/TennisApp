@@ -66,11 +66,11 @@
                 <input type="hidden" asp-for="File_Path" />
                 @if (System.IO.Path.GetExtension(Model.File_Path) == ".pdf")
                 {
-                    <embed type="application/pdf" src="@("/Files/Announcement/" + Model.File_Path)" width="600" height="300"/>
+                    <embed type="application/pdf" src="@("/uploads/Announcement/" + Model.File_Path)" width="600" height="300"/>
                 }
                 else
                 {
-                    <img src="@("~/Files/Announcement/" + Model.File_Path)" asp-append-version="true" width="600" />
+                    <img src="@("~/uploads/Announcement/" + Model.File_Path)" asp-append-version="true" width="600" />
                 }
             </dd>
             <dt class="col-sm-2 font-weight-bold"></dt>

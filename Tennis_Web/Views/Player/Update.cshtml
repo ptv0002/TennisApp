@@ -134,7 +134,7 @@
                         ControllerName = "Player",
                         Id = Model.Id.ToString()
                     };
-                    <img src="@("~/Files/PlayerImg/" + Model.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" />
+                    <img src="@("~/uploads/PlayerImg/" + Model.File_Anh)" class="col-12" style="padding: 0;" asp-append-version="true" />
                     <button type="button" class="mt-2 btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa ảnh</button>
                 }
                 else

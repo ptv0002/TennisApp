@@ -96,7 +96,7 @@
                         <input class="form-control mb-2" type="file" asp-for="Picture" />
                         @if (Model.File_Anh != null)
                         {
-                            <img src="@("~/Files/PlayerImg/"+ Model.File_Anh)" class="col-12" style="padding:inherit;" asp-append-version="true" alt="Chưa có hình đại diện" />
+                            <img src="@("~/uploads/PlayerImg/"+ Model.File_Anh)" class="col-12" style="padding:inherit;" asp-append-version="true" alt="Chưa có hình đại diện" />
                             @*<button type="button" class="mt-2 btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", "")">Xóa ảnh</button>*@
                         }
                         else
