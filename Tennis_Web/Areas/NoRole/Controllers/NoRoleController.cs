@@ -30,6 +30,15 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             var model = _context.Thong_Baos.Where(m => m.Hien_Thi && m.Tin_Nong).OrderByDescending(m => m.Ngay).ToList();
             return View(model);
         }
+        public IActionResult Activity(string tab)
+        {
+            
+            return View();
+        }
+        public IActionResult ActivityDetail(int id)
+        {
+            return View();
+        }
         public IActionResult Announcement(bool isCurrent)
         {
             var model = _context.Thong_Baos.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi == isCurrent && m.Hien_Thi)
@@ -87,14 +96,6 @@ namespace Tennis_Web.Areas.NoRole.Controllers
                 var old = _context.DS_VDVs.Find(id);
                 if (model.Password == old.Password)
                 {
-                    // First time user
-                    //if (old.Password == "bitkhanhhoa@newuser" && model.NewPassword != old.Password)
-                    //{
-                    //    old.Password = model.NewPassword;
-                    //    bool result = new DatabaseMethod<DS_VDV>(_context).SaveObjectToDB(old.Id, old, new List<string> { "Password" }).Succeeded;
-                    //    if (result) _context.SaveChanges();
-                    //    return RedirectToAction(model.Action, model.Controller, new { id });
-                    //}
                     bool a1 = old.Password == "bitkhanhhoa@newuser";
                     bool a2 = model.NewPassword != old.Password;
                     switch (a1, a2)
