@@ -26,7 +26,7 @@ namespace Library
         public string NameImage(int id)
         {
             string FileAnh=id.ToString();
-            return Path.Combine(_webHost.WebRootPath + "\\Files\\PlayerImg\\", FileAnh);
+            return Path.Combine(_webHost.WebRootPath + "/uploads/PlayerImg/", FileAnh);
         }
         public string NameImageTest(int id)
         {

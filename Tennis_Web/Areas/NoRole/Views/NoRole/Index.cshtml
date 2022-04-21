@@ -15,12 +15,14 @@
             <div class="form-group">
                 @foreach (var item in Model)
                 {
-                    <div class="row mb-1">
-                        <span class="small text-muted">@item.Ngay.Day/@item.Ngay.Month/@item.Ngay.Year @item.Ngay.TimeOfDay</span>
-                        <a asp-action="AnnouncementDetail" asp-route-id="@item.Id" class="h2" style="color:black;text-decoration:underline;font-size:x-large">
+                <div class="row mb-1">
+                    <span class="small text-muted">
+                        @item.Ngay.Day/@item.Ngay.Month/@item.Ngay.Year &nbsp;&nbsp;
+                        <a asp-action="AnnouncementDetail" asp-route-id="@item.Id" class="h2" style="color:black;text-decoration:underline;font-size:medium">
                             @item.Ten
                         </a>
-                    </div>
+                    </span>
+                </div>
                 }
             </div>
         </div>
