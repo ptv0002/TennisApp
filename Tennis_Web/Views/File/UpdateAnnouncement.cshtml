@@ -28,7 +28,9 @@
         <dd class="col-sm-10">
             <select asp-for="@Model.ID_Giai" class="form-control form-control-sm" asp-items="ViewBag.GiaiList">
                 @if (Model == null || Model.ID_Giai == null)
-                {<option selected></option>}
+                {
+                    <option selected></option>
+}
             </select>
         </dd>
         <dt class="col-sm-2 font-weight-bold">
@@ -64,9 +66,9 @@
             </dt>
             <dd class="col-sm-10">
                 <input type="hidden" asp-for="File_Path" />
-                @if (System.IO.Path.GetExtension(Model.File_Path) == ".pdf")
+                @if (System.IO.Path.GetExtension(Model.File_Path).ToUpper() == ".PDF")
                 {
-                    <embed type="application/pdf" src="@("/uploads/Announcement/" + Model.File_Path)" width="600" height="300"/>
+                    <embed type="application/pdf" src="@("~/uploads/Announcement/" + Model.File_Path)" width="600" height="300" />
                 }
                 else
                 {
