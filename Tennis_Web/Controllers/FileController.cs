@@ -48,17 +48,17 @@ namespace Tennis_Web.Controllers
             ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
             switch (source.File == null)
             {
-                case true:
+                case true:  // Không có nội dung file
                     if (source.File_Text == null && source.File_Path == null)
                     {
                         ModelState.AddModelError(string.Empty, "Soạn thảo hoặc upload file thông báo!");
                         return View(source);
                     }
                     else break;
-                case false:
+                case false: // Có nội dung file
                     // Handle file attachment
-                    string extension = Path.GetExtension(source.File.FileName);
-                    if (extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".pdf")
+                    string extension = Path.GetExtension(source.File.FileName).ToUpper();
+                    if (extension == ".JPG" || extension == ".JPEG" || extension == ".PNG" || extension == ".PDF")
                     {
                         //// Delete image if already exists
                         //string wwwRootPath = _webHost.WebRootPath + "/uploads/Announcement/";
