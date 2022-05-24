@@ -13,10 +13,32 @@ namespace Library
 {
     public class ExcelMethod<T> where T : class, new()
     {
-        //public ResultModel<T> ListToExcel(List<T> list)
-        //{
-
-        //}
+        public void ListToExcel(List<T> list, string fName, ExcelPackage package, List<string> colName)
+        {
+            var sheet = package.Workbook.Worksheets.Add(fName);
+            var props = list[0].GetType().GetProperties().ToList();
+            for (int i=0; i< colName.Count;i++) 
+            {
+                sheet.Cells[1, i+1].Value = colName[i];
+            }
+            // Format Column Headers and Column size
+            sheet.Row(1).Style.Font.Bold = true;
+            // Gán giá trị
+            int colprop = 0;
+            for (int i=0; i < list.Count; i++)
+            {
+                for (int j = 0; j< colName.Count; j++)
+                {
+                    var prop = props.FirstOrDefault(c => c.Name.ToUpper() == colName[j].ToUpper());
+                    if (prop!=null)
+                    {
+                        colprop = props.IndexOf(prop);
+                        sheet.Cells[2 + i, j + 1].Value = props[colprop].GetValue(list[i]);                    }
+                    }
+                }
+            sheet.Columns.AutoFit();
+            return;
+        }
         public ResultModel<T> ExcelToList(IFormFile file, string sheetName)
         {
             var model = new ResultModel<T>();
