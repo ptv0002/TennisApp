@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Library;
+using System.Net;
+
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -27,8 +29,16 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         }
         public IActionResult Index()
         {
-            var model = _context.Thong_Baos.Where(m => m.Hien_Thi && m.Tin_Nong).OrderByDescending(m => m.Ngay).ToList();
-            return View(model);
+            var result = new FileMethod(_context, _webHost).TestLicence("bitkhanhhoa.com","Câu Lạc Bộ Doanh Nghiệp CNTT Khánh Hòa");
+            if (result)
+            {
+                var model = _context.Thong_Baos.Where(m => m.Hien_Thi && m.Tin_Nong).OrderByDescending(m => m.Ngay).ToList();
+                return View(model);
+            }
+            else 
+            {
+                return View(); // Không cho sử dụng phần mềm
+            }
         }
         public IActionResult Announcement(bool isCurrent)
         {

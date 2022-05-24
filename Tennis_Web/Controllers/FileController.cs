@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Models;
 using OfficeOpenXml;
 using System;
@@ -207,13 +208,48 @@ namespace Tennis_Web.Controllers
         }
         public IActionResult ExportExcel()
         {
-            var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            //var model = _context.DS_Trinhs.Include(m => m.DS_Giai).OrderByDescending(m => m.DS_Giai.Ngay).ThenBy(m => m.Trinh).ToList();
+            var model = _context.DS_Giais.OrderByDescending(m => m.Ngay).ToList();
             return View(model);
         }
-        public IActionResult Export(int id)
+        public FileResult Export(int id)
         {
-
-            return View();
+            var stream = new MemoryStream();
+            using (var package = new ExcelPackage(stream))
+            {
+                //var mGiai1 = _context.DS_Giais.Where(m => m.Id == id).Select(m => new {m.Id,m.Ten}).ToList();
+                var mGiai  = _context.DS_Giais.Where(m => m.Id == id).ToList();
+                var mTrinh = _context.DS_Trinhs.Where(m => m.ID_Giai == id).ToList();
+                var mTran  = _context.DS_Trans.Include(m => m.DS_Trinh).Where(m => m.DS_Trinh.ID_Giai == id).ToList();
+                var mCap   = _context.DS_Caps.Include(m => m.DS_Trinh).Where(m => m.DS_Trinh.ID_Giai == id).ToList();
+                var mDiem  = _context.DS_Diems.Where(m => mCap.Contains(m.DS_Cap)).ToList();
+                var mVDV   = _context.DS_VDVs.Where(m => mCap.Select(n => n.ID_Vdv1).Contains(m.Id)  || mCap.Select(n => n.ID_Vdv2).Contains(m.Id)).ToList();
+                var mVDVDiem = _context.DS_VDVDiems.Where(m => mTrinh.Select(n => n.Id).Contains((int) m.ID_Trinh)).ToList();
+                new ExcelMethod<DS_Giai>().ListToExcel(mGiai,"DS_Giai", package, new List<string> { "Id","Ten"});
+                new ExcelMethod<DS_Trinh>().ListToExcel(mTrinh, "DS_Trinh", package, new List<string> { "Id", "Trinh" });
+                new ExcelMethod<DS_Tran>().ListToExcel(mTran, "DS_Tran", package, new List<string> { "Id","Ma_Tran","Id_Cap1","Id_Cap2","Kq_1","Kq_2","Id_Trinh","Ma_Vong" });
+                new ExcelMethod<DS_Cap>().ListToExcel(mCap, "DS_Cap", package, new List<string> { "Id", "Ma_Cap","Diem","Id_Trinh","Id_VDV1","ID_vdv2" });
+                new ExcelMethod<DS_Diem>().ListToExcel(mDiem, "DS_Diem", package, new List<string> { "Id", "Diem","Id_Cap","Id_Vong" });
+                new ExcelMethod<DS_VDV>().ListToExcel(mVDV, "DS_VDV", package, new List<string> { "Id", "Ten_Tat", "Diem", "Diem_Cu" });
+                new ExcelMethod<DS_VDVDiem>().ListToExcel(mVDVDiem, "DS_VDVDiem", package, new List<string> { "Id", "Id_Trinh","Diem","Id_VDV" });
+                package.Save();
+            }
+            stream.Position = 0;
+            var cFile = "Giai_" + id+".xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", cFile); ;
+        }
+        public void SheetMake(ExcelPackage fexcel, IEntityType table)
+        {
+            var sheet = fexcel.Workbook.Worksheets.Add(table.DisplayName());
+            int i = 1;
+            foreach (var f in table.GetProperties())
+            {
+                sheet.Cells[1, i].Value = f.Name;
+                i++;
+            }
+            // Format Column Headers and Column size
+            sheet.Columns.AutoFit();
+            sheet.Row(1).Style.Font.Bold = true;
         }
         // Download empty Excel format
         public FileResult DownloadExcel()
@@ -244,8 +280,6 @@ namespace Tennis_Web.Controllers
             }
             stream.Position = 0;
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Giai_Dau.xlsx");
-            // Eventually switching 
-            //string path = "/Doc/Giải Đấu.xlsx";
         }
     }
 }
