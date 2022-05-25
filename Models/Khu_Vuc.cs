@@ -11,6 +11,8 @@
         public Khu_Vuc()
         {
             DS_VDV = new HashSet<DS_VDV>();
+            DS_Giai = new HashSet<DS_Giai>();
+            Thong_Baos = new HashSet<Thong_Bao>();
         }
 
         [Key]
@@ -20,5 +22,7 @@
         [DisplayName("Tên")]
         public string Ten { get; set; }
         public virtual ICollection<DS_VDV> DS_VDV { get; set; }
+        public virtual ICollection<DS_Giai> DS_Giai { get; set; }
+        public virtual ICollection<Thong_Bao> Thong_Baos { get; set; }
     }
 }

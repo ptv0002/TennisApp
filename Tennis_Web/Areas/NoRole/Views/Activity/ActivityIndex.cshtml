@@ -1,23 +1,23 @@
 ﻿@{
     Layout = "/Areas/_Layout.cshtml";
-    ViewData["Title"] = "Giải cũ";
+    ViewData["Title"] = ViewBag.Title;
 }
-@model List<Models.DS_Giai>
+@model List<Models.Media>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h5>Chọn giải để xem kết quả</h5>
+        <h5>Chọn giải để xem hình ảnh/ video</h5>
     </div>
     <div class="card-body">
         <div class="form-group">
             @foreach (var item in Model)
             {
                 <div>
-                    <a asp-action="Result" asp-route-id="@item.Id">
-                        • Giải @item.Ten
+                    <a asp-action="ActivityDetail" asp-route-id="@item.Id">
+                        • Giải @item.DS_Giai.Ten
                     </a>
                 </div>
             }
         </div>
     </div>
-</div>       
+</div>

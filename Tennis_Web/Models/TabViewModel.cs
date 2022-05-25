@@ -12,6 +12,7 @@ namespace Tennis_Web.Models
         public Tab ActiveTab { get; set; }
         public bool IsCurrent { get; set; }
         public int ID { get; set; }
+        public bool Editable { get; set; }
         public string DetailedTitle { get; set; }
         public bool? Succeeded { get; set; }
         public string ErrorMsg { get; set; }

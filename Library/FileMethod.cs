@@ -112,7 +112,7 @@ namespace Library
             source.File.CopyTo(fileStream);
             fileStream.Dispose();
         }
-         public bool TestLicence(string domain, string name)
+        public bool TestLicence(string domain, string name)
         {
             IPAddress[] ip = Dns.GetHostAddresses(domain);
             string file_Test = HexPlus(HexFromString(ip[0].ToString() + name), HexFromString("Cong ty TNHH Tin Hung - 56 Quang Trung - Nha Trang"), '+');

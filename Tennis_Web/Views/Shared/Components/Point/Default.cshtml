@@ -68,12 +68,12 @@
             </div>
         </div>
     }
-    @if (User.IsInRole("Admin"))
+    @*@if (User.IsInRole("Admin") && ViewBag.Admin == true)
     {
         <div class="form-group">
             <a asp-action="End_Score" asp-controller="Result" asp-route-idTrinh="@idTrinh" class="btn btn-danger">Phân bổ điểm cá nhân</a>
         </div>
-    }
+    }*@
 }
 else
 {

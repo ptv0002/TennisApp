@@ -1,11 +1,12 @@
-﻿@model IEnumerable<Models.Thong_Bao>
+﻿@model IEnumerable<Models.Media>
 
 @{
-    ViewData["Title"] = "Danh sách thông báo";
-    ViewBag.AActive = "active";
+    ViewData["Title"] = "Danh sách media";
+    ViewBag.MActive = "active";
+    var activityMenu = Library.FileInitializer.Initializer.ActivityMenu();
 }
 <div class="form-group">
-    <a asp-action="AnnouncementUpdate" class="btn btn-success">Thêm mới</a>
+    <a asp-action="MediaUpdate" class="btn btn-success">Thêm mới</a>
 </div>
 <div class="card shadow mb-4">
     <div class="card-body">
@@ -14,67 +15,76 @@
                 <table class="table dataTable" id="normalTable">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Ten)
+                                Hoạt động
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Ngay)
+                                Giải
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Hien_Thi)
+                                Link hình
                             </th>
-
                             <th>
-                                @Html.DisplayNameFor(model => model.Tin_Nong)
+                                Link video
                             </th>
                             <th></th>
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>
+                                Hoạt động
+                            </th>
+                            <th>
+                                Giải
+                            </th>
+                            <th>
+                                Link hình
+                            </th>
+                            <th>
+                                Link video
+                            </th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
                             {
                                 BtnMsg = "Xóa",
-                                Message = "xóa thông báo " + item.Ten,
-                                ActionName = "DeleteAnnouncement",
+                                Message = "xóa media " + item.Id,
+                                ActionName = "DeleteMedia",
                                 ControllerName = "File",
                                 Id = item.Id.ToString()
                             };
                             <tr>
                                 <td>
-                                    <a asp-action="AnnouncementUpdate" asp-route-id="@item.Id">@item.Ten</a>
+                                    @activityMenu[item.Ma_Menu]
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Ngay)
+                                    @item.DS_Giai.Ten
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Hien_Thi)
+                                    <a href="@item.Link_Hinh">
+                                        <i class="fas fa-fw fa-picture-o"></i>
+                                    </a>
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Tin_Nong)
+                                    <a href="@item.Link_Video">
+                                        <i class="fas fa-fw fa-video-camera"></i>
+                                    </a>
                                 </td>
                                 <td>
+                                    <a class="btn btn-primary" asp-action="MediaUpdate" asp-route-id="@item.Id">Sửa</a>
                                     <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
                                 </td>
                             </tr>
 
                         }
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Ten)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Ngay)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Hien_Thi)
-                            </th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>

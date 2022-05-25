@@ -30,12 +30,51 @@ namespace Tennis_Web.Controllers
             _webHost = webHost;
             _notyf = notyf;
         }
+        public IActionResult MediaIndex()
+        {
+            var model = _context.Medias.Include(m => m.DS_Giai).OrderByDescending(m => m.Ma_Menu).ThenByDescending(m => m.DS_Giai.Ngay).ToList();
+            return View(model);
+        }
+        public IActionResult MediaUpdate(int id)
+        {
+            var destination = _context.Medias.Find(id);
+            ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
+            return View(destination);
+        }
+        [HttpPost]
+        public IActionResult MediaUpdate(int id, Media source)
+        {
+            ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
+            
+            if (source.Ma_Menu == 0 && source.ID_Giai == null)
+            {
+                ModelState.AddModelError(string.Empty, "Chọn hoạt động khác hoặc thêm thông tin giải!");
+                return View(source);
+            }
+            // Handle saving object
+            var columnsToSave = new List<string> { "Link_Video", "Link_Hinh", "ID_Giai", "Ma_Menu"};
+            var result = new DatabaseMethod<Media>(_context).SaveObjectToDB(id, source, columnsToSave);
+            if (result.Succeeded)
+            {
+                _context.SaveChanges();
+                return RedirectToAction(nameof(MediaIndex));
+            }
+            ModelState.AddModelError(string.Empty, result.Message);
+            return View(source);
+        }
+        public IActionResult DeleteMedia(string id)
+        {
+            var source = _context.Medias.Find(Convert.ToInt32(id));
+            _context.Remove(source);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(MediaIndex));
+        }
         public IActionResult AnnouncementIndex()
         {
             var model = _context.Thong_Baos.OrderByDescending(m => m.Ngay).ToList();
             return View(model);
         }
-        public IActionResult UpdateAnnouncement(int id)
+        public IActionResult AnnouncementUpdate(int id)
         {
             var destination = _context.Thong_Baos.Find(id);
             if (destination != null && destination.File_Path != null) _notyf.Warning("Upload file thông báo mới sẽ xóa file cũ!", 100);
@@ -43,7 +82,7 @@ namespace Tennis_Web.Controllers
             return View(destination);
         }
         [HttpPost]
-        public IActionResult UpdateAnnouncement(int id, Thong_Bao source)
+        public IActionResult AnnouncementUpdate(int id, Thong_Bao source)
         {
             var column = "";
             ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
@@ -61,21 +100,6 @@ namespace Tennis_Web.Controllers
                     string extension = Path.GetExtension(source.File.FileName).ToUpper();
                     if (extension == ".JPG" || extension == ".JPEG" || extension == ".PNG" || extension == ".PDF")
                     {
-                        //// Delete image if already exists
-                        //string wwwRootPath = _webHost.WebRootPath + "/uploads/Announcement/";
-                        //if (source.File_Path != null)
-                        //{
-                        //    string existPath = Path.Combine(wwwRootPath, source.File_Path);
-                        //    if (System.IO.File.Exists(existPath)) System.IO.File.Delete(existPath);
-                        //}
-
-                        //// Save image to wwwroot/PlayerImg
-                        //string fileName = Path.GetFileNameWithoutExtension(source.File.FileName);
-                        //source.File_Path = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                        //string path = Path.Combine(wwwRootPath, fileName);
-                        //using var fileStream = System.IO.File.Create(path);
-                        //source.File.CopyTo(fileStream);
-                        //fileStream.Dispose();
                         new FileMethod(_context, _webHost).SaveAnnouncement(source);
                     }
                     else
@@ -128,7 +152,7 @@ namespace Tennis_Web.Controllers
                 var result = new DatabaseMethod<Thong_Bao>(_context).SaveObjectToDB(id, source, new List<string> { "File_Path" });
                 if (result.Succeeded) _context.SaveChanges();
             }
-            return RedirectToAction(nameof(UpdateAnnouncement), Convert.ToInt32(id));
+            return RedirectToAction(nameof(AnnouncementUpdate), Convert.ToInt32(id));
         }
         public IActionResult ImportExcel()
         {

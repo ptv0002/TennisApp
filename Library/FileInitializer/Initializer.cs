@@ -33,6 +33,16 @@ namespace Library.FileInitializer
                             { 10,"Trích Điểm" }
                         };
         }
+        public static Dictionary<int, string> ActivityMenu()
+        {
+            // Display in descending order
+            return new Dictionary<int, string>
+                        {
+                            { 0, "Khác" },
+                            { 1, "Tennis"},
+                            { 2, "Từ thiện" }
+                        };
+        }
         public async void Special1stRoundGenerator()
         {
             // Get path for the Json file

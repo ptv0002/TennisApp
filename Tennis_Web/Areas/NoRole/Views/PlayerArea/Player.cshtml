@@ -42,52 +42,52 @@
                                 { tanggiam = "VĐV Mới";}
                                 else
                                 { tanggiam = (item.Diem-item.Diem_Cu).ToString();}
-                            <tr>
-                                <td>
-                                    @if (!ViewBag.Info && item.Phe_Duyet != true)
-                                    {
-                                        <button data-url="@Url.Action("CheckPassword", "NoRole", new
-                                                         {
-                                                             id = item.Id,
-                                                             nextAction = "Register",
-                                                             nextController = "CurrentTab",
-                                                             currentAction = "Player",
-                                                             currentController = "PlayerArea"
-                                                         })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">
-                                            @name
-                                        </button>}
-                                    else
-                                    {
-                                        <button data-url="@Url.Action("CheckPassword", "NoRole", new
-                                                             {
-                                                                 id = item.Id,
-                                                                 nextAction = "UpdatePlayer",
-                                                                 nextController = "PlayerArea",
-                                                                 currentAction = "Player",
-                                                                 currentController = "PlayerArea"
-                                                             })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">
-                                            @name
-                                        </button>}
-                                </td>
-                                <td>
-                                    <a asp-action="History" asp-route-id="@item.Id"> @item.Diem</a>
-                                </td>
-                                <td> @tanggiam</td>
+                                <tr>
+                                    <td>
+                                        @if (!ViewBag.Info && item.Phe_Duyet != true)
+                                        {
+                                            <button data-url="@Url.Action("CheckPassword", "NoRole", new
+                                                                 {
+                                                                     id = item.Id,
+                                                                     nextAction = "Register",
+                                                                     nextController = "CurrentTab",
+                                                                     currentAction = "Player",
+                                                                     currentController = "PlayerArea"
+                                                                 })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">
+                                                @name
+                                            </button>}
+                                        else
+                                        {
+                                            <button data-url="@Url.Action("CheckPassword", "NoRole", new
+                                                                     {
+                                                                         id = item.Id,
+                                                                         nextAction = "UpdatePlayer",
+                                                                         nextController = "PlayerArea",
+                                                                         currentAction = "Player",
+                                                                         currentController = "PlayerArea"
+                                                                     })" type="button" class="link" data-toggle="ajax-modal" data-target="#chkPw">
+                                                @name
+                                            </button>}
+                                    </td>
+                                    <td>
+                                        <a asp-action="History" asp-route-id="@item.Id"> @item.Diem</a>
+                                    </td>
+                                    <td> @tanggiam</td>
 
-                          <td>@item.Cong_Ty</td>
+                                    <td>@item.Cong_Ty</td>
 
-                          <td>@item.CLB</td>
+                                    <td>@item.CLB</td>
 
-                          <td>
-                              @if (item.File_Anh != null)
-                                    {
-                                        <img src="@("~/uploads/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />
-                                    }
-                                </td>
-                                <td>
-                                    @gender
-                                </td>
-                            </tr>
+                                    <td>
+                                        @if (item.File_Anh != null)
+                                        {
+                                            <img src="@("~/uploads/PlayerImg/" + item.File_Anh)" asp-append-version="true" width="70" />
+                                        }
+                                    </td>
+                                    <td>
+                                        @gender
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>

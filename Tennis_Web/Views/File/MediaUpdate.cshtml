@@ -1,0 +1,46 @@
+﻿@model Models.Media
+@{
+    ViewData["Title"] = "Thông tin media";
+    ViewBag.MActive = "active";
+    var menu = Library.FileInitializer.Initializer.ActivityMenu();
+    var ActivityList = new SelectList(menu, "Key", "Value");
+}
+<hr />
+<form asp-action="MediaUpdate" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <dl class="row">
+        <dt class="col-sm-2 font-weight-bold">
+            <label class="control-label">Hoạt động</label>
+        </dt>
+        <dd class="col-sm-10">
+            <select asp-for="@Model.Ma_Menu" class="form-control form-control-sm" asp-items="ActivityList"></select>
+        </dd>
+        <dt class="col-sm-2 font-weight-bold">
+            <label class="control-label">Giải</label>
+        </dt>
+        <dd class="col-sm-10">
+            <select asp-for="@Model.ID_Giai" class="form-control form-control-sm" asp-items="ViewBag.GiaiList">
+                @if (Model == null || Model.ID_Giai == null)
+                {
+                    <option selected></option>
+                }
+            </select>
+        </dd>
+        <dt class="col-sm-2 font-weight-bold">
+            <label asp-for="Link_Hinh" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-10">
+            <input asp-for="Link_Hinh" class="form-control" />
+        </dd>
+        <dt class="col-sm-2 font-weight-bold">
+            <label asp-for="Link_Video" class="control-label"></label>
+        </dt>
+        <dd class="col-sm-10">
+            <input asp-for="Link_Video" class="form-control" />
+        </dd>
+    </dl>
+    <div class="form-group">
+        <input type="submit" value="Lưu thay đổi" class="btn btn-success" />
+    </div>
+</form>

@@ -29,5 +29,8 @@
         public int? ID_Giai { get; set; }
         [ForeignKey("ID_Giai")]
         public virtual DS_Giai DS_Giai { get; set; }
+        public int ID_KhuVuc { get; set; }
+        [ForeignKey("ID_KhuVuc")]
+        public virtual Khu_Vuc Khu_Vucs { get; set; }
     }
 }

@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Library;
 using System.Net;
-
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -21,34 +22,41 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         private readonly TennisContext _context;
         private readonly IWebHostEnvironment _webHost;
         private readonly INotyfService _notyf;
-        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _webHost = webHost;
             _notyf = notyf;
+            _roleManager = roleManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync(/*int region*/)
         {
-            var result = new FileMethod(_context, _webHost).TestLicence("bitkhanhhoa.com","Câu Lạc Bộ Doanh Nghiệp CNTT Khánh Hòa");
-            if (result)
-            {
-                var model = _context.Thong_Baos.Where(m => m.Hien_Thi && m.Tin_Nong).OrderByDescending(m => m.Ngay).ToList();
-                return View(model);
-            }
-            else 
-            {
-                return View(); // Không cho sử dụng phần mềm
-            }
-        }
-        public IActionResult Activity(string tab)
-        {
+            //if (result)
+            //{
+            //    var model = _context.Thong_Baos.Where(m => m.Hien_Thi && m.Tin_Nong).OrderByDescending(m => m.Ngay).ToList();
+            //    return View(model);
+            //}
+            //else 
+            //{
+            //    return View(); // Không cho sử dụng phần mềm
+            //}
+            var newRole = new IdentityRole("Media");
+            var rsNewRole = await _roleManager.CreateAsync(newRole);
+            var model = _context.Thong_Baos.Where(m => m.Hien_Thi && m.Tin_Nong).OrderByDescending(m => m.Ngay).ToList();
             
-            return View();
+            return View(model);
         }
-        public IActionResult ActivityDetail(int id)
+        public IActionResult Region()
         {
-            return View();
+            //var result = new FileMethod(_context, _webHost).TestLicence("bitkhanhhoa.com", "Câu Lạc Bộ Doanh Nghiệp CNTT Khánh Hòa");
+            // error do không có thư mục uploads
+
+            return RedirectToAction(nameof(IndexAsync));
+            //return View(model);
         }
+        
+        
         public IActionResult Announcement(bool isCurrent)
         {
             var model = _context.Thong_Baos.Include(m => m.DS_Giai).Where(m => m.DS_Giai.Giai_Moi == isCurrent && m.Hien_Thi)

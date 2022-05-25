@@ -32,7 +32,8 @@
         public bool Tham_Gia { get; set; }
         [DisplayName("Giới tính")]
         public bool Gioi_Tinh { get; set; }
-
+        [DisplayName("Năm sinh")]
+        public int Nam_Sinh { get; set; }
         [StringLength(40)]
         public string CLB { get; set; }
         [DisplayName("Khách mời")]
@@ -67,9 +68,9 @@
         [DisplayName("Chức Vụ")]
         public string Chuc_Vu { get; set; }
 
+        public int ID_KhuVuc { get; set; }
         [ForeignKey("ID_KhuVuc")]
-        [DisplayName("ID Khu Vực")]
-        public virtual Khu_Vuc Khu_Vuc { get; set; }
+        public virtual Khu_Vuc Khu_Vucs { get; set; }
         public virtual ICollection<DS_Cap> DS_Caps { get; set; }
         public virtual ICollection<DS_VDVDiem> DS_VDV_Diem { get; set; }
     }

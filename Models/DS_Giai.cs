@@ -24,6 +24,9 @@
         public DateTime Ngay { get; set; }
         [DisplayName("Ghi Chú")]
         public string Ghi_Chu { get; set; }
+        public int ID_KhuVuc { get; set; }
+        [ForeignKey("ID_KhuVuc")]
+        public virtual Khu_Vuc Khu_Vucs { get; set; }
         public virtual ICollection<DS_Trinh> DS_Trinh { get; set; }
     }
 }
