@@ -6,6 +6,7 @@
     var indexPage = ViewData["Title"].ToString() == "Trang chủ";
     var align = indexPage ? "justify-content-xl-start" :"";
     var background = indexPage ? "background-img" : "color-background";
+    var activityMenu = Library.FileInitializer.Initializer.ActivityMenu();
 }
 <html lang="en">
 <head>
@@ -45,9 +46,10 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarActivity" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hoạt động</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarActivity">
-                                <li><a class="dropdown-item">Từ thiện</a></li>
-                                <li><a class="dropdown-item">Tennis</a></li>
-                                <li><a class="dropdown-item">Khác</a></li>
+                                @for (int i = activityMenu.Count - 1; i >= 0 ; i--)
+                                {
+                                    <li><a class="dropdown-item" asp-route-tab="@i" asp-action="ActivityIndex" asp-controller="Activity">@activityMenu[i]</a></li>
+                                }
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
@@ -112,7 +114,7 @@
             {
                 <div class="text-center mb-3">
                     <h1>@ViewData["Title"]</h1>
-                    <p class="lead mb-0 tagline">@ViewData["Tagline"]</p>
+                    <p class="mb-0 tagline">@ViewData["Tagline"]</p>
                     <div class="div-dec"></div>
                 </div>
             }
@@ -128,8 +130,6 @@
                 <div class="col-auto"><div class="m-0">Copyright © Veronica Vu 2022</div></div>
                 <div class="col-auto">
                     <span>Website khác</span>
-                    @*<a class="fs-5 px-2 link-light" href="https://www.facebook.com/bit.khanhhoa/"><i class="bi-facebook"></i></a>*@
-                    @*<a class="fs-5 link-light" href="https://photos.google.com/share/AF1QipN9cpiAEcWJdjdNth5DQ-wpr9aPvlS88FwBBT9FUdoEJDTkDCBCk8XT_QepChI-_Q?key=eVRIUXl3dHEzRGF6U1habkhRN3Nra0xGYWJpcnV3"><i class="btn-google"></i></a>*@
                     <a class="fs-5 px-2 link-light" href="https://www.facebook.com/groups/1466938593517889/?ref=share"><i class="bi-facebook"></i></a>
                     <a class="fs-5 link-light" href="https://kaict.org.vn/"><i class="bi-globe2"></i></a>
                 </div>

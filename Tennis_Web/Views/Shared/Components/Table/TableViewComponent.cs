@@ -55,6 +55,7 @@ namespace Tennis_Web.Views.Shared.Components.Table
                 ViewBag.ListTable = list.Select(m => m.Table).ToList();
                 ViewBag.ListNum = list.Select(m => m.Num).ToList();
                 ViewBag.IsCurrent = vm.IsCurrent;
+                ViewBag.Editable = vm.Editable;
                 return View(new RoundTabViewModel
                 {
                     ID_Trinh = vm.ID,

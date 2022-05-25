@@ -122,25 +122,25 @@ namespace Tennis_Web.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        //public IActionResult ScoreUpdate(int idVDV)
-        //{
-        //    var player = _context.DS_VDVs.Find(idVDV);
-        //    var model = new Extended_VDVDiem()
-        //    {
-        //        ID_Vdv = player.Id,
-        //        DS_VDV = player,
-        //        Diem_Cu = player.Diem_Cu,
-        //        Diem_Moi = player.Diem,
-        //        Ngay = DateTime.Now
-        //    };
-        //    return PartialView(model);
-        //}
-        //[HttpPost]
-        //public IActionResult ScoreUpdate(Extended_VDVDiem model)
-        //{
-        //    // Successfully update
-        //    TempData["SuccessfulScore"] = true;
-        //    return RedirectToAction(nameof(Update), new { id = model.ID_Vdv });
-        //}
+        public IActionResult ScoreUpdate(int idVDV)
+        {
+            var player = _context.DS_VDVs.Find(idVDV);
+            var model = new Extended_VDVDiem()
+            {
+                ID_Vdv = player.Id,
+                DS_VDV = player,
+                Diem_Cu = player.Diem_Cu,
+                Diem_Moi = player.Diem,
+                Ngay = DateTime.Now
+            };
+            return PartialView(model);
+        }
+        [HttpPost]
+        public IActionResult ScoreUpdate(Extended_VDVDiem model)
+        {
+            // Successfully update
+            TempData["SuccessfulScore"] = true;
+            return RedirectToAction(nameof(Update), new { id = model.ID_Vdv });
+        }
     }
 }

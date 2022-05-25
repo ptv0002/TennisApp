@@ -14,6 +14,7 @@
                     @*<table class="table dataTable" id="noPaging">*@
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th style="text-align:left;">
                                 @Html.DisplayNameFor(model => model.Ten_Tat)
                             </th>
@@ -53,6 +54,7 @@
                                 Id = item.Id.ToString()
                             };
                             <tr>
+                                <td>@item.Id</td>
                                 <td style="text-align:left">
                                     <a asp-action="Update" asp-route-id="@item.Id">@item.Ten_Tat</a>
                                 </td>

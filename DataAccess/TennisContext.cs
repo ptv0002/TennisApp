@@ -15,16 +15,17 @@ namespace DataAccess
     public class TennisContext : IdentityDbContext<AppUser>
     {
         public TennisContext(DbContextOptions<TennisContext> options) : base(options) { }
+        public virtual DbSet<DS_Bang> DS_Bangs { get; set; }
         public virtual DbSet<DS_Cap> DS_Caps { get; set; }
         public virtual DbSet<DS_Diem> DS_Diems { get; set; }
         public virtual DbSet<DS_Giai> DS_Giais { get; set; }
-        public virtual DbSet<Thong_Bao> Thong_Baos { get; set; }
         public virtual DbSet<DS_Tran> DS_Trans { get; set; }
         public virtual DbSet<DS_Trinh> DS_Trinhs { get; set; }
         public virtual DbSet<DS_VDV> DS_VDVs { get; set; }
         public virtual DbSet<DS_VDVDiem> DS_VDVDiems { get; set; }
+        public virtual DbSet<Thong_Bao> Thong_Baos { get; set; }
         public virtual DbSet<Khu_Vuc> Khu_Vucs { get; set; }
-        public virtual DbSet<DS_Bang> DS_Bangs { get; set; }
+        public virtual DbSet<Media> Medias { get; set; }
         [NotMapped]
         public virtual DbSet<AppUser> AppUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

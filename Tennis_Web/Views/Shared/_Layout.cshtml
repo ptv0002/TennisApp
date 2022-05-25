@@ -90,6 +90,21 @@
                         <span>Vận động viên</span>
                     </a>
                 </li>
+            }
+            <!-- =================== Media Management (Media_Manager)========================= -->
+            @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Media_Manager")))
+            {<!-- Divider -->
+                <li> <hr class="sidebar-divider"> </li>
+                <!-- Heading -->
+                <li class="sidebar-heading"> Quản lý media </li>
+
+                <li class="nav-item @ViewBag.MActive">
+                    <!-- Nav Item - Announcements -->
+                    <a class="nav-link" asp-controller="File" asp-action="MediaIndex">
+                        <i class="fas fa-fw fa-video-camera"></i>
+                        <span>Liên kết media</span>
+                    </a>
+                </li>
                 <li class="nav-item @ViewBag.AActive">
                     <!-- Nav Item - Announcements -->
                     <a class="nav-link" asp-controller="File" asp-action="AnnouncementIndex">

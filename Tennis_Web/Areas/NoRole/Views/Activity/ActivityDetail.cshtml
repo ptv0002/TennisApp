@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = ViewBag.Title;
+    ViewData["Tagline"] = "Giải " + Model.DS_Giai.Ten;
+    Layout = "/Areas/_Layout.cshtml";
+    string picStyle, vidStyle;
+    if (Model.Link_Hinh != null && Model.Link_Video != null)
+    {
+        picStyle = "text-align:right; padding-right:1rem";
+        vidStyle = "padding-left:1rem";
+    }
+    else
+    {
+        picStyle = vidStyle = "text - align:center";
+    }
+}
+@model Models.Media
+<table>
+    <tbody>
+        <tr>
+            @if (Model.Link_Hinh != null)
+            {
+                <td style="@picStyle" class="tagline">Hình ảnh</td>
+            }
+            @if (Model.Link_Video != null)
+            {
+                <td style="@vidStyle" class="tagline">Video</td>
+            }
+        </tr>
+        <tr>
+            @if (Model.Link_Hinh != null)
+            {
+                <td style="@picStyle">
+                    <a class="link-light" href="@Model.Link_Hinh">
+                        <i class="bi-image" style="font-size:3.75rem"></i>
+                    </a>
+                </td>
+            }
+            @if (Model.Link_Video != null)
+            {
+                <td style="@vidStyle">
+                    <a class="link-light" href="@Model.Link_Video">
+                        <i class="bi-camera-video" style="font-size:5rem"></i>
+                    </a>
+                </td>
+            }
+        </tr>
+    </tbody>
+</table>
+
+

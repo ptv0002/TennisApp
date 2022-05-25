@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Library;
 using System.Net;
-
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
@@ -21,13 +22,15 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         private readonly TennisContext _context;
         private readonly IWebHostEnvironment _webHost;
         private readonly INotyfService _notyf;
-        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _webHost = webHost;
             _notyf = notyf;
+            _roleManager = roleManager;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync(/*int region*/)
         {
             var result = new FileMethod(_context, _webHost).TestLicence("bitkhanhhoa.com","Câu Lạc Bộ Doanh Nghiệp CNTT Khánh Hòa");
             if (result)
