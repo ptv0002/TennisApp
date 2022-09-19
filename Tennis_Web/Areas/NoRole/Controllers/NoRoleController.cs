@@ -22,15 +22,13 @@ namespace Tennis_Web.Areas.NoRole.Controllers
         private readonly TennisContext _context;
         private readonly IWebHostEnvironment _webHost;
         private readonly INotyfService _notyf;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf, RoleManager<IdentityRole> roleManager)
+        public NoRoleController(TennisContext context, IWebHostEnvironment webHost, INotyfService notyf)
         {
             _context = context;
             _webHost = webHost;
             _notyf = notyf;
-            _roleManager = roleManager;
         }
-        public async Task<IActionResult> IndexAsync(/*int region*/)
+        public IActionResult Index(/*int region*/)
         {
             //if (result)
             //{
@@ -41,8 +39,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             //{
             //    return View(); // Không cho sử dụng phần mềm
             //}
-            var newRole = new IdentityRole("Media");
-            var rsNewRole = await _roleManager.CreateAsync(newRole);
+            
             var model = _context.Thong_Baos.Where(m => m.Hien_Thi && m.Tin_Nong).OrderByDescending(m => m.Ngay).ToList();
             
             return View(model);
@@ -52,7 +49,7 @@ namespace Tennis_Web.Areas.NoRole.Controllers
             //var result = new FileMethod(_context, _webHost).TestLicence("bitkhanhhoa.com", "Câu Lạc Bộ Doanh Nghiệp CNTT Khánh Hòa");
             // error do không có thư mục uploads
 
-            return RedirectToAction(nameof(IndexAsync));
+            return RedirectToAction(nameof(Index));
             //return View(model);
         }
         

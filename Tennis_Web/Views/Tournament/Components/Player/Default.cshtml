@@ -16,7 +16,7 @@
 <form asp-action="SavePlayerState" asp-controller="Tournament">
     @if (a1)
     {
-        <div class="form-group" style="text-align:right">
+        <div class="fixed-bar" style="text-align:right">
             <input type="hidden" name="idGiai" value="@ViewBag.ID_Giai" />
             <input type="submit" value="Lưu thay đổi" class="btn btn-success" formmethod="post" />
         </div>

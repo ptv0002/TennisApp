@@ -92,7 +92,7 @@
                 </li>
             }
             <!-- =================== Media Management (Media_Manager)========================= -->
-            @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Media_Manager")))
+            @if (signInManager.IsSignedIn(User) && (User.IsInRole("Admin") || User.IsInRole("Media")))
             {<!-- Divider -->
                 <li> <hr class="sidebar-divider"> </li>
                 <!-- Heading -->

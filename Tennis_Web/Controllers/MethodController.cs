@@ -83,8 +83,8 @@ namespace Tennis_Web.Controllers
                     return RedirectToAction("MatchInfo", "Match", vm);
             }
         }
-        public IActionResult TabVMGenerator_Level(int idTrinh, bool result, Tab tabName, string msg,
-            string action, string controller)
+        public IActionResult TabVMGenerator_Level(int idTrinh, bool? result, Tab tabName, string msg,
+            string action, string controller, bool editable)
         {
             var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).FirstOrDefault(m => m.Id == idTrinh);
             var vm = new TabViewModel
@@ -94,6 +94,7 @@ namespace Tennis_Web.Controllers
                 ID = temp.Id,
                 DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
                 Succeeded = result,
+                Editable = editable,
                 ErrorMsg = msg
             };
             // If save successfully, view error and display View with model from DB 

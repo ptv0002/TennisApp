@@ -4,6 +4,7 @@
 @{
     int idTran = 0, idCap = 0;
     bool hasRole = ViewBag.Admin == true && ViewBag.IsCurrent == true;
+    bool editable = ViewBag.Editable == true;
     bool highRole = User.IsInRole("Manager") || User.IsInRole("Admin");
 }
 @model RoundTabViewModel
@@ -11,23 +12,6 @@
 {
     <form asp-action="Table_UpdateTable" asp-controller="Result">
         <input type="hidden" asp-for="@Model.ID_Trinh" />
-        @if (hasRole)
-        {
-            <div class="form-group">
-                @if (ViewBag.Editable == true)
-                {
-                    <input type="submit" value="Lưu KQ bảng" class="btn btn-success mr-2" formmethod="post" />
-                    @if (highRole)
-                    {
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">Tính xếp hạng</button>
-                    }
-                }
-                else
-                {
-                
-                }
-            </div>
-        }
         @for (int i = 0; i < ViewBag.ListTable.Count; i++)
         {
             var reflectCount = new List<int>();
@@ -81,8 +65,9 @@
                                             if (hasRole)
                                             {
                                                 <td name="ketqua">
-                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0))
+                                                    @if (editable && (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0)))
                                                     {
+                                                        // Page must be editable 1st
                                                         // If role is Manager or Admin => full editing
                                                         // If role is Referee => Only edit 0 field
                                                         <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" min="0" max="7" />
@@ -91,8 +76,9 @@
                                                     { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_1" disabled min="0" max="7" />}
 
                                                     <span>-</span>
-                                                    @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0))
+                                                    @if (editable && (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0 && Model.DS_Tran[idTran].Kq_2 <= 0)))
                                                     {
+                                                        // Page must be editable 1st
                                                         // If role is Manager or Admin => full editing
                                                         // If role is Referee => Only edit 0 field
                                                         <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[idTran].Kq_2" min="0" max="7" />
@@ -130,7 +116,7 @@
                                         <td>@Model.DS_Cap[idCap].Hieu_so</td>
                                     }
                                     <td>
-                                        @if (highRole && ViewBag.Admin == true)
+                                        @if (editable && (highRole && ViewBag.Admin == true))
                                         {<input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Cap[idCap].Boc_Tham" /> }
                                         else
                                         {@Model.DS_Cap[idCap].Boc_Tham}
@@ -177,8 +163,9 @@
                                     @if (Model.DS_Tran[i].ID_Cap1 != null && Model.DS_Tran[i].ID_Cap2 != null && hasRole)
                                     {
                                         <td>
-                                            @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0))
+                                            @if (editable && (highRole || (!highRole && Model.DS_Tran[idTran].Kq_1 <= 0)))
                                             {
+                                                // Page must be editable 1st
                                                 // If role is Manager or Admin => full editing
                                                 // If role is Referee => Only edit 0 field
                                                 <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[i].Kq_1" min="0" max="7" />
@@ -186,8 +173,9 @@
                                             else
                                             { <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[i].Kq_1" min="0" max="7" disabled />}
                                             <span>-</span>
-                                            @if (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0))
+                                            @if (editable && (highRole || (!highRole && Model.DS_Tran[idTran].Kq_2 <= 0)))
                                             {
+                                                // Page must be editable 1st
                                                 // If role is Manager or Admin => full editing
                                                 // If role is Referee => Only edit 0 field
                                                 <input class="form-control form-control-sm sm-input" asp-for="@Model.DS_Tran[i].Kq_2" min="0" max="7" />
@@ -220,13 +208,27 @@
                     </table>
                 </div>
             </div>
-
-            @if (hasRole && Model.DS_Tran.All(m => m.ID_Cap1 != null && m.ID_Cap2 != null))
-            {
-                <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
-                    <input type="submit" value="Lưu KQ playoff" class="btn btn-success" formaction="/Result/Playoff_Update" />
-                </div>
-            }
+        }
+        @if (hasRole)
+        {
+            <div class="fixed-bar">
+                @if (editable)
+                {
+                    <input type="submit" value="Lưu KQ bảng" class="btn btn-success mr-2" formmethod="post" />
+                    @if (highRole)
+                    {
+                        <button type="button" class="btn btn-warning mr-2" data-bs-toggle="modal" data-bs-target="#confirmModal">Tính xếp hạng</button>
+                    }
+                    if (Model.DS_Tran.All(m => m.ID_Cap1 != null && m.ID_Cap2 != null))
+                    {
+                        <input type="submit" value="Lưu KQ playoff" class="btn btn-primary mr-2" formaction="/Result/Playoff_Update" />
+                    }
+                }
+                else
+                {
+                    <a class="btn btn-primary mr-2" asp-action="Editable" asp-controller="Result" asp-route-idTrinh="@Model.ID_Trinh" asp-route-isTable="true">Nhập KQ</a>
+                }
+            </div>
         }
         @if (highRole)
         {

@@ -8,7 +8,7 @@
 
 @if (a1)
 {
-    <div class="form-group" style="text-align:right">
+    <div class="fixed-bar">
         <button type="button" class="btn btn-success" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { idTrinh = ViewBag.ID_Trinh })">Thêm cặp</button>
     </div>
 }
@@ -22,40 +22,22 @@
                 <table class="table dataTable" id="normalTable">
                     <thead>
                         <tr>
+                            @if (a1)
+                            {
+                                <th></th>
+                            }
                             <th>Mã cặp</th>
                             <th>VĐV 1</th>
                             <th>VĐV 2</th>
                             <th>Điểm cặp</th>
                             <th>Lệch trình</th>
-                            @if (a1)
-                            {
-                                <th></th>
-                            }
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Mã cặp</th>
-                            <th>VĐV 1</th>
-                            <th>VĐV 2</th>
-                            <th>Điểm cặp</th>
-                            <th>Lệch trình</th>
-                            @if (a1)
-                            {
-                                <th></th>
-                            }
-                        </tr>
-                    </tfoot>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             int difference = item.Diem - item.DS_Trinh.Trinh;
                             <tr>
-                                <td>@item.Ma_Cap</td>
-                                <td>@item.VDV1.Ten_Tat</td>
-                                <td>@item.VDV2.Ten_Tat</td>
-                                <td>@item.Diem</td>
-                                <td>@difference</td>
                                 @if (a1)
                                 {
                                     var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
@@ -67,10 +49,19 @@
                                         Id = item.Id.ToString()
                                     };
                                     <td>
-                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
-                                        <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { id = item.Id, idTrinh = item.ID_Trinh })">Sửa</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="ajax-modal" data-target="#updatePair" data-url="@Url.Action("UpdatePair", "Level", new { id = item.Id, idTrinh = item.ID_Trinh })">
+                                            <i class="fa fa-edit small-icon"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">
+                                            <i class="fa fa-trash small-icon"></i>
+                                        </button>
                                     </td>
                                 }
+                                <td>@item.Ma_Cap</td>
+                                <td>@item.VDV1.Ten_Tat</td>
+                                <td>@item.VDV2.Ten_Tat</td>
+                                <td>@item.Diem</td>
+                                <td>@difference</td>
                             </tr>
                         }
                     </tbody>

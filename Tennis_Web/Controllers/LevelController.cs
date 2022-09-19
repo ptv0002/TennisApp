@@ -44,7 +44,7 @@ namespace Tennis_Web.Controllers
             TempData["ParameterInfo"] = JsonSerializer.Serialize(item);
             // If save successfully, view error and display View with model from DB 
             return new MethodController(_context).TabVMGenerator_Level(item.Id, result.Succeeded,
-                Tab.Parameter, "", "LevelInfo", "Level");
+                Tab.Parameter, "", "LevelInfo", "Level", false);
         }
         public List<DS_VDV> PopulateAutoComplete(int idTrinh)
         {
@@ -101,7 +101,7 @@ namespace Tennis_Web.Controllers
             }
             new ScoreCalculation(_context).Point_Deposit(item.ID_Trinh);
             return new MethodController(_context).TabVMGenerator_Level(item.ID_Trinh, true,
-                Tab.Pair, "", "LevelInfo", "Level");
+                Tab.Pair, "", "LevelInfo", "Level", false);
         }
         public IActionResult DeletePair(string id)
         {
@@ -109,7 +109,7 @@ namespace Tennis_Web.Controllers
             var methods = new MethodController(_context);
             methods.DeletePair_Method(pair);
             return methods.TabVMGenerator_Level(pair.ID_Trinh, true,
-                Tab.Pair, "", "LevelInfo", "Level");
+                Tab.Pair, "", "LevelInfo", "Level", false);
         }
         //IActionResult TabVMGenerator (Tab tabName, int idTrinh)
         //{

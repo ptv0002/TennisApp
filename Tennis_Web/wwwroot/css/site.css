@@ -25,12 +25,18 @@ body {
     position: fixed;
     display: flex;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
+    padding-right: 0;
     right: 0%;
     bottom: 0%;
     z-index: 1030;
     background-color: #fff;
     box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15);
-    margin-bottom: 1.5rem;
-    height: 4.375rem;
+}
+
+    .fixed-bar .btn {
+        margin-right: 0.5rem;
+    }
+.scroll-to-top {
+    bottom: 4rem;
 }

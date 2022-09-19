@@ -14,14 +14,14 @@
             <label class="control-label">Hoạt động</label>
         </dt>
         <dd class="col-sm-10">
-            <select asp-for="@Model.Ma_Menu" class="form-control form-control-sm" asp-items="ActivityList"></select>
+            <select asp-for="@Model.Ma_Menu" class="form-control form-control-sm" asp-items="@ActivityList"></select>
         </dd>
         <dt class="col-sm-2 font-weight-bold">
             <label class="control-label">Giải</label>
         </dt>
         <dd class="col-sm-10">
-            <select asp-for="@Model.ID_Giai" class="form-control form-control-sm" asp-items="ViewBag.GiaiList">
-                @if (Model == null || Model.ID_Giai == null)
+            <select asp-for="@Model.ID_Giai" class="form-control form-control-sm" asp-items="@ViewBag.GiaiList">
+                @if (Model == null || Model.ID_Giai == 0)
                 {
                     <option selected></option>
                 }

@@ -15,48 +15,50 @@
                     <table class="table dataTable" id="noPaging">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>VĐV 1</th>
                                 <th>VĐV 2</th>
                                 <th>Trình</th>
                                 <th>Điểm cặp</th>
                                 <th>Lệch trình</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
+                                <th></th>
                                 <th>VĐV 1</th>
                                 <th>VĐV 2</th>
                                 <th>Trình</th>
                                 <th>Điểm cặp</th>
                                 <th>Lệch trình</th>
-                                <th></th>
                             </tr>
                         </tfoot>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 int difference = item.Diem - item.DS_Trinh.Trinh;
+                                var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                                {
+                                    BtnMsg = "Xóa",
+                                    Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
+                                    ActionName = "DeletePair",
+                                    ControllerName = "Tournament",
+                                    Id = item.Id.ToString()
+                                };
                                 <tr>
+                                    <td>
+                                        <a asp-action="ApprovePairAction" asp-controller="Tournament" class="btn btn-primary" asp-route-id="@item.Id">
+                                            <i class="fa fa-check small-icon"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">
+                                            <i class="fa fa-trash small-icon"></i>
+                                        </button>
+                                    </td>
                                     <td>@item.VDV1.Ten_Tat</td>
                                     <td>@item.VDV2.Ten_Tat</td>
                                     <td>@item.DS_Trinh.Trinh</td>
                                     <td>@item.Diem</td>
                                     <td>@difference</td>
-                                    @{
-                                        var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-                                        {
-                                            BtnMsg = "Xóa",
-                                            Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
-                                            ActionName = "DeletePair",
-                                            ControllerName = "Tournament",
-                                            Id = item.Id.ToString()
-                                        };
-                                    }
-                                    <td>
-                                        <a asp-action="ApprovePairAction" asp-controller="Tournament" class="btn btn-primary" asp-route-id="@item.Id">Phê duyệt</a>
-                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
-                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -82,47 +84,47 @@ else
                     <table class="table dataTable" id="noPaging">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>VĐV 1</th>
                                 <th>VĐV 2</th>
                                 <th>Trình</th>
                                 <th>Điểm cặp</th>
                                 <th>Lệch trình</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
+                                <th></th>
                                 <th>VĐV 1</th>
                                 <th>VĐV 2</th>
                                 <th>Trình</th>
                                 <th>Điểm cặp</th>
                                 <th>Lệch trình</th>
-                                <th></th>
                             </tr>
                         </tfoot>
                         <tbody>
                             @foreach (var item in ViewBag.NotEnough)
                             {
                                 int difference = item.Diem - item.DS_Trinh.Trinh;
+                                var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
+                                {
+                                    BtnMsg = "Xóa",
+                                    Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
+                                    ActionName = "DeletePair",
+                                    ControllerName = "Tournament",
+                                    Id = item.Id.ToString()
+                                };
                                 <tr>
+                                    <td>
+                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">
+                                            <i class="fa fa-trash small-icon"></i>
+                                        </button>
+                                    </td>
                                     <td>@item.VDV1.Ten_Tat</td>
                                     <td>@item.VDV2.Ten_Tat</td>
                                     <td>@item.DS_Trinh.Trinh</td>
                                     <td>@item.Diem</td>
                                     <td>@difference</td>
-                                    @{
-                                        var arg = new Tennis_Web.Controllers.MethodController.ConfirmViewModal()
-                                        {
-                                            BtnMsg = "Xóa",
-                                            Message = "xóa cặp VĐV " + item.VDV1.Ten_Tat + " và " + item.VDV2.Ten_Tat,
-                                            ActionName = "DeletePair",
-                                            ControllerName = "Tournament",
-                                            Id = item.Id.ToString()
-                                        };
-                                    }
-                                    <td>
-                                        <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
-                                    </td>
                                 </tr>
                             }
                         </tbody>

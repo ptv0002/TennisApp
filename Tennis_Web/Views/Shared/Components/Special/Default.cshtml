@@ -6,6 +6,7 @@
     int bracket = 1;
     int count = 0;
 
+    bool editable = ViewBag.Editable == true;
     bool highRole = User.IsInRole("Manager") || User.IsInRole("Admin");
     var idTrinh = Model.FirstOrDefault() != null ? Model.FirstOrDefault().ID_Trinh : 0;
 
@@ -60,7 +61,7 @@
                                         <div class="col">
                                             @if (hasRole)
                                             {
-                                                if (highRole)
+                                                if (editable && highRole)
                                                 {
                                                     // If role is Manager or Admin => full editing
                                                     <input class="form-control form-control-sm template" asp-for="@Model[j].Chon_Cap_1" />
@@ -74,7 +75,7 @@
                                         </div>
                                     }
                                     <div class="col middle">
-                                        @if (hasRole && highRole && first && select)
+                                        @if (editable && hasRole && highRole && first && select)
                                         {
                                             <select asp-for="@Model[count].ID_Cap1" class="form-control form-control-sm" asp-items="ViewBag.PairIds">
                                                 @if (Model[count].ID_Cap1 == null)
@@ -89,7 +90,7 @@
                                     <div class="result">
                                         @if (hasRole)
                                         {
-                                            if (highRole || (!highRole && Model[count].Kq_1 <= 0))
+                                            if (editable && (highRole || (!highRole && Model[count].Kq_1 <= 0)))
                                             {
                                                 // If role is Manager or Admin => full editing
                                                 // If role is Referee => Only edit 0 field
@@ -112,7 +113,7 @@
                                         <div class="col">
                                             @if (hasRole)
                                             {
-                                                if (highRole)
+                                                if (editable && highRole)
                                                 {
                                                     // If role is Manager or Admin => full editing
                                                     <input class="form-control form-control-sm template" asp-for="@Model[j].Chon_Cap_2" />
@@ -125,7 +126,7 @@
                                         </div>
                                     }
                                     <div class="col middle">
-                                        @if (hasRole && highRole && first && select)
+                                        @if (editable && hasRole && highRole && first && select)
                                         {
                                             <select asp-for="@Model[count].ID_Cap2" class="form-control form-control-sm" asp-items="ViewBag.PairIds">
                                                 @if (Model[count].ID_Cap2 == null)
@@ -140,7 +141,7 @@
                                     <div class="result">
                                         @if (hasRole)
                                         {
-                                            if (highRole || (!highRole && Model[count].Kq_2 <= 0))
+                                            if (editable && (highRole || (!highRole && Model[count].Kq_2 <= 0)))
                                             {
                                                 // If role is Manager or Admin => full editing
                                                 // If role is Referee => Only edit 0 field
@@ -175,9 +176,18 @@
                 ControllerName = "Result",
                 Id = idTrinh.ToString()
             };
-            <div class="form-group" style="position: -webkit-sticky; /* Safari */ position: sticky;">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" formmethod="post" />
-                @if (highRole) { <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa kết quả</button> } 
+            <div class="fixed-bar">
+
+                @if (editable)
+                {
+                    <input type="submit" value="Lưu thay đổi" class="btn btn-success mr-2" formmethod="post" />
+                    @if (highRole)
+                    {<button type="button" class="btn btn-danger mr-2" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa kết quả</button>}
+                }
+                else
+                {
+                    <a class="btn btn-primary mr-2" asp-action="Editable" asp-controller="Result" asp-route-idTrinh="@idTrinh">Nhập KQ</a>
+                }
             </div>
         }
     </form>

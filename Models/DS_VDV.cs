@@ -68,7 +68,7 @@
         [DisplayName("Chức Vụ")]
         public string Chuc_Vu { get; set; }
 
-        public int ID_KhuVuc { get; set; }
+        public int? ID_KhuVuc { get; set; }
         [ForeignKey("ID_KhuVuc")]
         public virtual Khu_Vuc Khu_Vucs { get; set; }
         public virtual ICollection<DS_Cap> DS_Caps { get; set; }

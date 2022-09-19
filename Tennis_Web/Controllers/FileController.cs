@@ -39,16 +39,18 @@ namespace Tennis_Web.Controllers
         {
             var destination = _context.Medias.Find(id);
             ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
+            if (destination == null) destination = new Media();
             return View(destination);
         }
         [HttpPost]
         public IActionResult MediaUpdate(int id, Media source)
         {
             ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
-            
-            if (source.Ma_Menu == 0 && source.ID_Giai == null)
+
+            bool exist = _context.Medias.Any(m => m.Ma_Menu == source.Ma_Menu && m.ID_Giai == source.ID_Giai);
+            if (exist)
             {
-                ModelState.AddModelError(string.Empty, "Chọn hoạt động khác hoặc thêm thông tin giải!");
+                ModelState.AddModelError(string.Empty, "Trùng tên giải và hoạt động! Sửa media cũ hoặc thêm mới.");
                 return View(source);
             }
             // Handle saving object
@@ -79,6 +81,7 @@ namespace Tennis_Web.Controllers
             var destination = _context.Thong_Baos.Find(id);
             if (destination != null && destination.File_Path != null) _notyf.Warning("Upload file thông báo mới sẽ xóa file cũ!", 100);
             ViewBag.GiaiList = new SelectList(_context.DS_Giais.OrderByDescending(m => m.Ngay), "Id", "Ten");
+            if (destination == null) destination = new Thong_Bao();
             return View(destination);
         }
         [HttpPost]

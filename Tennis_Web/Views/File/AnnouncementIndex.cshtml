@@ -4,7 +4,7 @@
     ViewData["Title"] = "Danh sách thông báo";
     ViewBag.AActive = "active";
 }
-<div class="form-group">
+<div class="fixed-bar">
     <a asp-action="AnnouncementUpdate" class="btn btn-success">Thêm mới</a>
 </div>
 <div class="card shadow mb-4">
@@ -14,6 +14,7 @@
                 <table class="table dataTable" id="normalTable">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Ten)
                             </th>
@@ -23,11 +24,9 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Hien_Thi)
                             </th>
-
                             <th>
                                 @Html.DisplayNameFor(model => model.Tin_Nong)
                             </th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,6 +42,11 @@
                             };
                             <tr>
                                 <td>
+                                    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">
+                                        <i class="fa fa-trash small-icon"></i>
+                                    </button>
+                                </td>
+                                <td>
                                     <a asp-action="AnnouncementUpdate" asp-route-id="@item.Id">@item.Ten</a>
                                 </td>
                                 <td>
@@ -54,15 +58,13 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Tin_Nong)
                                 </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button>
-                                </td>
                             </tr>
 
                         }
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th></th>
                             <th>
                                 @Html.DisplayNameFor(model => model.Ten)
                             </th>
@@ -72,7 +74,9 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Hien_Thi)
                             </th>
-                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Tin_Nong)
+                            </th>
                         </tr>
                     </tfoot>
                 </table>

@@ -41,7 +41,8 @@
                                         ControllerName = "Tournament",
                                         Id = item.Id.ToString()
                                     };
-                                    <td><button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">Xóa</button></td>
+                                    <td><button type="button" class="btn btn-danger" data-toggle="ajax-modal" data-target="#confirmModal" data-url="@Url.Action("ConfirmModal", "Method", arg)">
+                                            <i class="fa fa-trash small-icon"></i></button></td>
                                 }
                             </tr>
                         }
@@ -55,7 +56,7 @@
                                     <input type="hidden" value="@ViewBag.ID_Giai" name="idGiai" />
                                 </td>
                                 <td>
-                                    <input type="submit" value="Thêm" class="btn btn-success" />
+                                    <input type="submit" value="+" class="btn btn-success font-weight-bold" />
                                 </td>
                             </tr>
                         </tfoot>

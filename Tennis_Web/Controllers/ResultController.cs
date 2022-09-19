@@ -24,27 +24,18 @@ namespace Tennis_Web.Controllers
             _context = context;
             _webHost = webHost;
         }
-
-        //IActionResult TabVMGenerator(int idTrinh, bool result, Tab tabName, string msg)
-        //{
-        //    var temp = _context.DS_Trinhs.Include(m => m.DS_Giai).FirstOrDefault(m => m.Id == idTrinh);
-        //    var vm = new TabViewModel
-        //    {
-        //        ActiveTab = tabName,
-        //        IsCurrent = true,
-        //        ID = temp.Id,
-        //        DetailedTitle = "Giải " + temp.DS_Giai.Ten + " - Trình " + temp.Trinh,
-        //        Succeeded = result,
-        //        ErrorMsg = msg
-        //    };
-        //    // If save successfully, view error and display View with model from DB 
-        //    return RedirectToAction("MatchInfo", "Match", vm);
-        //}
+        public IActionResult Editable(bool isTable, int idTrinh) {
+            Tab tab;
+            if (isTable) tab = Tab.Table;
+            else tab = Tab.Special;
+            return new MethodController(_context).TabVMGenerator_Level(idTrinh, null,
+                tab, "", "MatchInfo", "Match", true); 
+        }
         public IActionResult Table_UpdateTable(RoundTabViewModel model)
         {
             bool result = Table_UpdateResult(model);
             return new MethodController(_context).TabVMGenerator_Level(model.ID_Trinh, result,
-                Tab.Table, "", "MatchInfo", "Match");
+                Tab.Table, "", "MatchInfo", "Match",false);
         }
         /// <summary>
         /// Cập nhật kết quả thi đấu các bảng
@@ -163,7 +154,7 @@ namespace Tennis_Web.Controllers
                 }
             }
             return new MethodController(_context).TabVMGenerator_Level(model.ID_Trinh, result,
-                Tab.Table, msg, "MatchInfo", "Match");
+                Tab.Table, msg, "MatchInfo", "Match", false);
         }
         /// <summary>
         /// Tính điểm toàn bộ bảng trong trình
@@ -436,7 +427,7 @@ namespace Tennis_Web.Controllers
             }
             if (result) _context.SaveChanges();
             return new MethodController(_context).TabVMGenerator_Level(model.ID_Trinh, result,
-                Tab.Table, msg, "MatchInfo", "Match");
+                Tab.Table, msg, "MatchInfo", "Match", false);
         }
         public IActionResult Special_Update(List<DS_Tran> model)
         {
@@ -471,13 +462,13 @@ namespace Tennis_Web.Controllers
             // Save all changes to DB
             if (result) _context.SaveChanges();
             return new MethodController(_context).TabVMGenerator_Level(model.FirstOrDefault().ID_Trinh, result,
-                Tab.Special, "", "MatchInfo", "Match");
+                Tab.Special, "", "MatchInfo", "Match", false);
         }
         public IActionResult Special_Reset(int id)
         {
             bool result = Special_ResetResult(id);
             return new MethodController(_context).TabVMGenerator_Level(id, result,
-                Tab.Table, "", "MatchInfo", "Match");
+                Tab.Table, "", "MatchInfo", "Match", false);
         }
                 
         bool Special_ResetResult(int idTrinh)
@@ -498,7 +489,7 @@ namespace Tennis_Web.Controllers
         {
             new ScoreCalculation(_context).Player_PointDistribution(idTrinh);
             return new MethodController(_context).TabVMGenerator_Level(idTrinh, true,
-                Tab.Point, "", "MatchInfo", "Match");
+                Tab.Point, "", "MatchInfo", "Match", false);
         }
         void UpdateScore(List<DS_Diem> scoreList)
         {

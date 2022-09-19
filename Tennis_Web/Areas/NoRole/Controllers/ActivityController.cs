@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Tennis_Web.Areas.NoRole.Controllers
 {
+    [Area("NoRole")]
+    [Route("[Action]")]
     public class ActivityController : Controller
     {
         private readonly TennisContext _context;

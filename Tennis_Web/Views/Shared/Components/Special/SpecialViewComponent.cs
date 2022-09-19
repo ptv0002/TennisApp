@@ -51,6 +51,7 @@ namespace Tennis_Web.Views.Shared.Components.Special
                 .Where(m => m.ID_Trinh == vm.ID && m.Ma_Vong <= 6) // Ma_Vong <= 6 are special rounds
                 .ToList().OrderBy(m => m.Ma_Tran[^3..]).ToList();
             ViewBag.IsCurrent = vm.IsCurrent;
+            ViewBag.Editable = vm.Editable;
             if (matches.Any()) 
             {
                 var pairIds = matches.SelectMany(m => new[] { m.ID_Cap1, m.ID_Cap2 });

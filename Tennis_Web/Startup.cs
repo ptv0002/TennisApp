@@ -30,7 +30,7 @@ namespace Tennis_Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Toast Notification Extension Configuration
-            services.AddNotyf(config => 
+            services.AddNotyf(config =>
             {
                 config.DurationInSeconds = 15;
                 config.IsDismissable = true;
@@ -38,7 +38,8 @@ namespace Tennis_Web
             });
 
             // Đăng ký TennisContext
-            services.AddDbContext<TennisContext>(options => {
+            services.AddDbContext<TennisContext>(options =>
+            {
                 // Read connection string
                 string connectstring = Configuration.GetConnectionString("TennisConnection");
                 // User MS SQL Server
@@ -54,7 +55,8 @@ namespace Tennis_Web
             //    .AddDefaultTokenProviders();
 
             // Truy cập IdentityOptions
-            services.Configure<IdentityOptions>(options => {
+            services.Configure<IdentityOptions>(options =>
+            {
                 // Thiết lập về Password
                 options.Password.RequireDigit = false; // Không bắt phải có số
                 options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
@@ -77,15 +79,21 @@ namespace Tennis_Web
                 options.SignIn.RequireConfirmedEmail = false;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
                 options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
 
-                // Config Cookie
-                services.ConfigureApplicationCookie(options =>
-                {
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                    options.LoginPath = $"/Account/Login";                                 // Url login page
-                    options.LogoutPath = $"/Account/Logout";
-                    options.AccessDeniedPath = $"/Account/AccessDenied";
-                });
             });
+
+            // Config Cookie
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.LoginPath = $"/Account/Login";                                 // Url login page
+                    options.LogoutPath = $"/Account/Logout";
+                options.AccessDeniedPath = $"/Account/AccessDenied";
+            });
+
+            //services.AddSession(options => {
+            //    options.IdleTimeout = TimeSpan.FromMinutes(10);
+                
+            //});
 
             services.AddControllersWithViews();
         }
@@ -112,6 +120,8 @@ namespace Tennis_Web
 
             app.UseAuthorization();
             app.UseNotyf();
+
+            //app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

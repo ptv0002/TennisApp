@@ -122,6 +122,8 @@ namespace Tennis_Web.Controllers
                     var result1 = await _roleManager.FindByNameAsync("Admin"); // Check for "Admin" role in DB
                     var result2 = await _roleManager.FindByNameAsync("Manager"); // Check for "Manager" role in DB
                     var result3 = await _roleManager.FindByNameAsync("Referee"); // Check for "Referee" role in DB
+                    var result4 = await _roleManager.FindByNameAsync("Media"); // Check for "Media" role in DB
+
                     bool upfail = false;
 
                     new Initializer(_webHost).Special1stRoundGenerator();
@@ -144,6 +146,13 @@ namespace Tennis_Web.Controllers
                     {
                         // Create new role
                         var newRole = new IdentityRole("Referee");
+                        var rsNewRole = await _roleManager.CreateAsync(newRole);
+                        upfail = upfail && rsNewRole.Succeeded;
+                    }
+                    if (result4 == null)  // No "Media" role found
+                    {
+                        // Create new role
+                        var newRole = new IdentityRole("Media");
                         var rsNewRole = await _roleManager.CreateAsync(newRole);
                         upfail = upfail && rsNewRole.Succeeded;
                     }
